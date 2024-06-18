@@ -4,17 +4,17 @@ import 'package:get/get.dart';
 import 'verify_success.dart'; // 导入成功页面
 import '../service/token_service.dart'; // 导入 token_service.dart
 
-class VerifyEmailPage extends StatefulWidget {
+class VerifyEmail extends StatefulWidget {
   final String email;
   final String verificationKey; // 重命名 key 为 verificationKey
 
-  VerifyEmailPage({required this.email, required this.verificationKey});
+  VerifyEmail({required this.email, required this.verificationKey});
 
   @override
   _VerifyEmailPageState createState() => _VerifyEmailPageState();
 }
 
-class _VerifyEmailPageState extends State<VerifyEmailPage> {
+class _VerifyEmailPageState extends State<VerifyEmail> {
   final TextEditingController _codeController = TextEditingController();
   final Dio _dio = Dio();
   bool _isLoading = false;
@@ -88,7 +88,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
       );
 
       if (response.data['code'] == 200 && response.data['data']['ret'] == true) {
-        Get.to(() => VerifySuccessPage(message: response.data['message']));
+        Get.to(() => VerifySuccess(message: response.data['message']));
       } else {
         setState(() {
           _errorMessage = "验证失败: ${response.data['message']}";
