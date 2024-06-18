@@ -1,8 +1,10 @@
+import 'package:first_app/page/verify_email_page.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-import '../verify_email.dart'; // 导入验证码页面
-import '../service/token_service.dart'; // 导入 token_service.dart
+import '../service/token_service.dart';
+import '../verify_email.dart';
+
 
 class GetEmailCodeModel extends ChangeNotifier {
   final TextEditingController emailController = TextEditingController();
@@ -19,15 +21,16 @@ class GetEmailCodeModel extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
 
   Future<void> _initializeToken() async {
-    Map<String, String>? tokenData = await getToken();
-    if (tokenData != null) {
-      _accessToken = tokenData['access_token'];
-      print('Token initialized: $_accessToken');
-    } else {
-      _errorMessage = "无法获取访问令牌。";
-      print('Failed to initialize token');
-      notifyListeners();
-    }
+    await initializeToken(
+      onSuccess: (token) {
+        _accessToken = token;
+        notifyListeners();
+      },
+      onError: (errorMessage) {
+        _errorMessage = errorMessage;
+        notifyListeners();
+      },
+    );
   }
 
   Future<void> sendVerificationCode() async {
@@ -53,7 +56,7 @@ class GetEmailCodeModel extends ChangeNotifier {
 
       if (response.statusCode == 200) {
         final verificationKey = response.data['data']['key']; // 重命名 key 为 verificationKey
-        Get.to(() => VerifyEmailPage(email: email, verificationKey: verificationKey)); // 传递 verificationKey
+        Get.to(() => VerifyEmail(email: email, verificationKey: verificationKey)); // 传递 verificationKey
       } else {
         _errorMessage = "错误: ${response.statusMessage}";
         print('Error: ${response.statusMessage}');
