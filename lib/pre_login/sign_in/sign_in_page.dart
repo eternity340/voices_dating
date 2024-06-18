@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'sign_in_model.dart';
+import 'package:get/get.dart' as getx;
 
 class SignInPage extends StatelessWidget {
   @override
@@ -40,13 +41,19 @@ class SignInPage extends StatelessWidget {
                   onPressed: model.signIn,
                   child: Text("登录"),
                 ),
-                if (model.errorMessage != null) ...[
-                  SizedBox(height: 20),
-                  Text(
-                    model.errorMessage!,
-                    style: TextStyle(color: Colors.red),
-                  ),
-                ]
+                SizedBox(height: 20),
+                TextButton(
+                  onPressed: () {
+                    getx.Get.toNamed('/sign_up'); // 跳转到注册页面
+                  },
+                  child: Text("没有账户？注册"),
+                ),
+                model.errorMessage != null
+                    ? Text(
+                  model.errorMessage!,
+                  style: TextStyle(color: Colors.red),
+                )
+                    : Container(),
               ],
             );
           },
