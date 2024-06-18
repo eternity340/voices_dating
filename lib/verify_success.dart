@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class VerifySuccessPage extends StatelessWidget {
+class VerifySuccess extends StatelessWidget {
   final String message;
 
-  VerifySuccessPage({required this.message});
+  VerifySuccess({required this.message});
 
   @override
   Widget build(BuildContext context) {
