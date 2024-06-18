@@ -66,3 +66,17 @@ String generateNonce(int length) {
 String generateMD5(String input) {
   return md5.convert(utf8.encode(input)).toString();
 }
+
+Future<void> initializeToken({
+  required Function(String) onSuccess,
+  required Function(String) onError,
+}) async {
+  Map<String, String>? tokenData = await getToken();
+  if (tokenData != null) {
+    onSuccess(tokenData['access_token']!);
+    print('Token initialized: ${tokenData['access_token']}');
+  } else {
+    onError("无法获取访问令牌。");
+    print('Failed to initialize token');
+  }
+}
