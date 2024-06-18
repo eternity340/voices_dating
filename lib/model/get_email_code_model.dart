@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import '../service/token_service.dart';
-import '../verify_email.dart';
+
 
 
 class GetEmailCodeModel extends ChangeNotifier {
@@ -56,7 +56,7 @@ class GetEmailCodeModel extends ChangeNotifier {
 
       if (response.statusCode == 200) {
         final verificationKey = response.data['data']['key']; // 重命名 key 为 verificationKey
-        Get.to(() => VerifyEmail(email: email, verificationKey: verificationKey)); // 传递 verificationKey
+        Get.to(() => VerifyEmailPage(email: email, verificationKey: verificationKey)); // 传递 verificationKey
       } else {
         _errorMessage = "错误: ${response.statusMessage}";
         print('Error: ${response.statusMessage}');
