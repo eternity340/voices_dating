@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../model/verify_email_model.dart';
 import '../provider/verify_email_provider.dart';
+
 
 class VerifyEmailPage extends StatelessWidget {
   final String email;
