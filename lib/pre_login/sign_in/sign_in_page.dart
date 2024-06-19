@@ -1,64 +1,63 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'sign_in_model.dart';
 import 'package:get/get.dart' as getx;
+import '../../responsive.dart';
+import '../components/background.dart';
+import 'sign_in_model.dart';
+import 'components/sign_form.dart';
+import 'components/sign_screen_top_image.dart';
 
 class SignInPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("登录")),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Consumer<SignInModel>(
-          builder: (context, model, child) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextField(
-                  controller: model.emailController,
-                  decoration: InputDecoration(
-                    labelText: "电子邮件",
-                    border: OutlineInputBorder(),
-                    errorText: model.emailErrorMessage,
-                  ),
-                  keyboardType: TextInputType.emailAddress,
+    return const Background(
+      child: SingleChildScrollView(
+        child: Responsive(
+          mobile: MobileSignInScreen(),
+          desktop: Row(
+            children: [
+              Expanded(
+                child: SignScreenTopImage(),
+              ),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 450,
+                      child: SignForm(),
+                    ),
+                  ],
                 ),
-                SizedBox(height: 20),
-                TextField(
-                  controller: model.passwordController,
-                  decoration: InputDecoration(
-                    labelText: "密码",
-                    border: OutlineInputBorder(),
-                    errorText: model.passwordErrorMessage,
-                  ),
-                  obscureText: true,
-                ),
-                SizedBox(height: 20),
-                model.isLoading
-                    ? CircularProgressIndicator()
-                    : ElevatedButton(
-                  onPressed: model.signIn,
-                  child: Text("登录"),
-                ),
-                SizedBox(height: 20),
-                TextButton(
-                  onPressed: () {
-                    getx.Get.toNamed('/sign_up'); // 跳转到注册页面
-                  },
-                  child: Text("没有账户？注册"),
-                ),
-                model.errorMessage != null
-                    ? Text(
-                  model.errorMessage!,
-                  style: TextStyle(color: Colors.red),
-                )
-                    : Container(),
-              ],
-            );
-          },
+              ),
+            ],
+          ),
         ),
       ),
+    );
+  }
+}
+
+class MobileSignInScreen extends StatelessWidget {
+  const MobileSignInScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        SignScreenTopImage(),
+        Row(
+          children: [
+            Spacer(),
+            Expanded(
+              flex: 8,
+              child: SignForm(),
+            ),
+            Spacer(),
+          ],
+        ),
+      ],
     );
   }
 }
