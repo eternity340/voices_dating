@@ -1,8 +1,8 @@
-import 'package:first_app/page/verify_email_page.dart';
+import 'package:first_app/email/page/verify_email_page.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-import '../service/token_service.dart';
+import '../../service/token_service.dart';
 
 
 

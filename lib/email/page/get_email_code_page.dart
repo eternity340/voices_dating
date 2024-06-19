@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../model/get_email_code_model.dart';
 
 class GetMailCodePage extends StatelessWidget {
