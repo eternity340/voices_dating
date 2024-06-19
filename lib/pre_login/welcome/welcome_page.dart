@@ -1,9 +1,9 @@
-import 'package:first_app/pre_login/welcome/components/sign_btn.dart';
+import 'package:first_app/pre_login/components/sign_btn.dart';
 import 'package:first_app/pre_login/welcome/components/welcome_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as getx;
 import '../../responsive.dart';
-import 'components/background.dart';
+import '../components/background.dart';
 
 
 class WelcomePage extends StatelessWidget {
