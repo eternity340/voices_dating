@@ -6,7 +6,7 @@ sync_job:
   script:
     - git config --global user.name "eternity340"
     - git config --global user.email "2698182174@qq.com"
-    - git clone --mirror https://$GITHUB_USERNAME:$GITHUB_TOKEN@github.com/eternity340/app_test.git
+    - git clone --mirror https://github.com/eternity340/app_test.git
     - cd app_test.git
     - git remote add gitlab http://gitlab.masonvips.com/app-ca/app_test.git
     - git push --mirror gitlab
