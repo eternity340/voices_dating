@@ -41,7 +41,7 @@ class SignInModel extends ChangeNotifier {
     final String password = passwordController.text.trim();
 
     if (email.isEmpty) {
-      _emailErrorMessage = "电子邮件不能为空";
+      _emailErrorMessage = "Email cannot be empty!";
       notifyListeners();
       return;
     } else {
@@ -49,7 +49,7 @@ class SignInModel extends ChangeNotifier {
     }
 
     if (password.isEmpty) {
-      _passwordErrorMessage = "密码不能为空";
+      _passwordErrorMessage = "Password cannot be empty!";
       notifyListeners();
       return;
     } else {
@@ -57,7 +57,7 @@ class SignInModel extends ChangeNotifier {
     }
 
     if (_accessToken == null) {
-      _errorMessage = "没有可用的访问令牌。";
+      _errorMessage = "No access token available.";
       notifyListeners();
       return;
     }
@@ -85,10 +85,10 @@ class SignInModel extends ChangeNotifier {
       if (response.data['code'] == 200) {
         getx.Get.toNamed('/get_mail_code');
       } else {
-        _errorMessage = "错误: ${response.data['message']}";
+        _errorMessage = "error: ${response.data['message']}";
       }
     } catch (e) {
-      _errorMessage = "异常: $e";
+      _errorMessage = "exception: $e";
     } finally {
       _isLoading = false;
       notifyListeners();

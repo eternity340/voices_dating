@@ -8,6 +8,8 @@ import 'components/sign_form.dart';
 import 'components/sign_screen_top_image.dart';
 
 class SignInPage extends StatelessWidget {
+  const SignInPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return const Background(

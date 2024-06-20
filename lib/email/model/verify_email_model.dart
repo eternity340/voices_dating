@@ -26,14 +26,14 @@ class VerifyEmailModel extends ChangeNotifier {
       _accessToken = tokenData['access_token'];
       notifyListeners();
     } else {
-      _errorMessage = "无法获取访问令牌。";
+      _errorMessage = "Unable to obtain access token.";
       notifyListeners();
     }
   }
 
   Future<void> verifyEmail() async {
     if (_accessToken == null) {
-      _errorMessage = "没有可用的访问令牌。";
+      _errorMessage = "No access token available.";
       notifyListeners();
       return;
     }
@@ -41,7 +41,7 @@ class VerifyEmailModel extends ChangeNotifier {
     final String code = codeController.text.trim();
 
     if (verificationKey.isEmpty) {
-      _errorMessage = "验证密钥为空。";
+      _errorMessage = "Verify that the key is empty.";
       notifyListeners();
       return;
     }
@@ -66,10 +66,10 @@ class VerifyEmailModel extends ChangeNotifier {
           'message': response.data['message'],
         });
       } else {
-        _errorMessage = "验证失败: ${response.data['message']}";
+        _errorMessage = "verification failed: ${response.data['message']}";
       }
     } catch (e) {
-      _errorMessage = "发生异常: $e";
+      _errorMessage = "Exception occurred: $e";
     } finally {
       _isLoading = false;
       notifyListeners();

@@ -5,7 +5,7 @@ import 'sign_in_model.dart';
 class SignInProvider extends StatelessWidget {
   final Widget child;
 
-  SignInProvider({required this.child});
+  const SignInProvider({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {

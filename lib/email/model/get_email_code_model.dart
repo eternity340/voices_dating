@@ -35,7 +35,7 @@ class GetEmailCodeModel extends ChangeNotifier {
 
   Future<void> sendVerificationCode() async {
     if (_accessToken == null) {
-      _errorMessage = "没有可用的访问令牌。";
+      _errorMessage = "No access token available.";
       print('No access token available');
       notifyListeners();
       return;
@@ -58,11 +58,11 @@ class GetEmailCodeModel extends ChangeNotifier {
         final verificationKey = response.data['data']['key']; // 重命名 key 为 verificationKey
         Get.to(() => VerifyEmailPage(email: email, verificationKey: verificationKey)); // 传递 verificationKey
       } else {
-        _errorMessage = "错误: ${response.statusMessage}";
+        _errorMessage = "Error: ${response.statusMessage}";
         print('Error: ${response.statusMessage}');
       }
     } catch (e) {
-      _errorMessage = "异常: $e";
+      _errorMessage = "Exception: $e";
       print('Exception: $e');
     } finally {
       _isLoading = false;

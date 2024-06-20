@@ -17,7 +17,7 @@ class VerifyEmailPage extends StatelessWidget {
       email: email,
       verificationKey: verificationKey,
       child: Scaffold(
-        appBar: AppBar(title: Text("验证邮箱")),
+        appBar: AppBar(title: Text("Verify Email")),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Consumer<VerifyEmailModel>(
@@ -26,7 +26,7 @@ class VerifyEmailPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "验证码已发送至 $email。",
+                    "Verification code has been sent to $email。",
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 16),
                   ),
@@ -34,7 +34,7 @@ class VerifyEmailPage extends StatelessWidget {
                   TextField(
                     controller: model.codeController,
                     decoration: InputDecoration(
-                      labelText: "验证码",
+                      labelText: "Verification Code",
                       border: OutlineInputBorder(),
                       errorText: model.errorMessage,
                     ),
@@ -45,7 +45,7 @@ class VerifyEmailPage extends StatelessWidget {
                       ? CircularProgressIndicator()
                       : ElevatedButton(
                     onPressed: model.verifyEmail,
-                    child: Text("验证"),
+                    child: Text("Verification"),
                   ),
                 ],
               );

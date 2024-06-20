@@ -7,7 +7,7 @@ import '../components/background.dart';
 
 
 class WelcomePage extends StatelessWidget {
-  const WelcomePage({Key? key}) : super(key: key);
+  const WelcomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +44,8 @@ class WelcomePage extends StatelessWidget {
 
 class MobileWelcomeScreen extends StatelessWidget {
   const MobileWelcomeScreen({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

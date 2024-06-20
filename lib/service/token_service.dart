@@ -76,7 +76,7 @@ Future<void> initializeToken({
     onSuccess(tokenData['access_token']!);
     print('Token initialized: ${tokenData['access_token']}');
   } else {
-    onError("无法获取访问令牌。");
+    onError("Unable to obtain access token.");
     print('Failed to initialize token');
   }
 }

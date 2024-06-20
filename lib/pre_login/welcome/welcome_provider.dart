@@ -5,7 +5,7 @@ import 'welcome_model.dart';
 class WelcomeProvider extends StatelessWidget {
   final Widget child;
 
-  WelcomeProvider({required this.child});
+  WelcomeProvider({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {

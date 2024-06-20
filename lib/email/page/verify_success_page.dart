@@ -9,7 +9,7 @@ class VerifySuccessPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("验证成功"),
+        title: Text("Verification Success"),
       ),
       body: Center(
         child: Padding(
@@ -17,20 +17,20 @@ class VerifySuccessPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
+              const Icon(
                 Icons.check_circle_outline,
                 color: Colors.green,
                 size: 100,
               ),
               SizedBox(height: 20),
-              Text(
-                "邮箱验证成功！",
+              const Text(
+                "Email verification successful！",
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 20),
               Text(
-                message.isEmpty ? "您的邮箱已成功验证。" : message,
+                message.isEmpty ? "Your email has been successfully verified." : message,
                 style: TextStyle(fontSize: 16),
                 textAlign: TextAlign.center,
               ),
@@ -40,7 +40,7 @@ class VerifySuccessPage extends StatelessWidget {
                   // Navigate back to home or any other page
                   Get.offAllNamed('/'); // 假设 '/' 是你的主页路由
                 },
-                child: Text("返回首页"),
+                child: Text("Back to Home"),
               ),
             ],
           ),
