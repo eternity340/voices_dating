@@ -67,6 +67,19 @@ class SignForm extends StatelessWidget {
               "Login".toUpperCase(),
             ),
           ),
+          const SizedBox(height: defaultPadding),
+          TextButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/sign_up');
+            },
+            style: ButtonStyle(
+              overlayColor: WidgetStateProperty.all(Colors.transparent),
+            ),
+            child: const Text(
+              "没有账户？注册",
+              style: TextStyle(color: kPrimaryColor),
+            ),
+          ),
         ],
       ),
     );

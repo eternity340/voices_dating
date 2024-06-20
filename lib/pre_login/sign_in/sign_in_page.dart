@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:get/get.dart' as getx;
+
 import '../../responsive.dart';
 import '../components/background.dart';
 import 'sign_in_model.dart';

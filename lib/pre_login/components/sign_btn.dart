@@ -11,26 +11,51 @@ class SignBtn extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ElevatedButton(
-          onPressed: () {
+        GestureDetector(
+          onTap: () {
             getx.Get.toNamed('/sign_in');
           },
-          child: Text(
-            "Login".toUpperCase(),
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFF20E2D7), Color(0xFFD8FAAD)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Center(
+              child: Text(
+                "Login".toUpperCase(),
+                style: const TextStyle(
+                  color: Colors.black,  // 设置字体颜色为黑色
+                ),
+              ),
+            ),
           ),
         ),
         const SizedBox(height: 16),
-        ElevatedButton(
-          onPressed: () {
-            getx.Get.toNamed('/sign_up');
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: kPrimaryLightColor,
-            elevation: 0,
-          ),
-          child: Text(
-            "Sign Up".toUpperCase(),
-            style: const TextStyle(color: Colors.black),
+        SizedBox(
+          width: double.infinity, // 扩展以填充可用空间
+          child: OutlinedButton(
+            onPressed: () {
+              getx.Get.toNamed('/sign_up');
+            },
+            style: OutlinedButton.styleFrom(
+              side: const BorderSide(color: Colors.black, width: 2.0),  // 设置边框颜色为黑色，并加粗为 2.0
+              backgroundColor: Colors.transparent,  // 设置背景颜色为透明
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),  // 设置圆角半径为 20
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12), // 调整垂直内边距
+              child: Text(
+                "Sign Up".toUpperCase(),
+                style: const TextStyle(color: Colors.black),
+              ),
+            ),
           ),
         ),
       ],
