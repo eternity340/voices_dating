@@ -1,0 +1,14 @@
+stages:
+  - sync
+
+sync_job:
+  stage: sync
+  script:
+    - git config --global user.name "Your Name"
+    - git config --global user.email "your-email@example.com"
+    - git clone --mirror https://$GITHUB_USERNAME:$GITHUB_TOKEN@github.com/eternity340/app_test.git
+    - cd app_test.git
+    - git remote add gitlab http://gitlab.masonvips.com/app-ca/app_test.git
+    - git push --mirror gitlab
+  only:
+    - schedules
