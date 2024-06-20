@@ -10,5 +10,4 @@ sync_job:
     - cd app_test.git
     - git remote add gitlab http://gitlab.masonvips.com/app-ca/app_test.git
     - git push --mirror gitlab
-  only:
-    - schedules
+
