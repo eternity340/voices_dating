@@ -3,6 +3,9 @@ import 'package:provider/provider.dart';
 import '../../../constants.dart';
 import '../sign_in_model.dart';
 
+import 'package:get/get.dart' as getx;
+
+
 class SignForm extends StatelessWidget {
   const SignForm({super.key});
 
@@ -64,19 +67,19 @@ class SignForm extends StatelessWidget {
               valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
             )
                 : Text(
-              "Login".toUpperCase(),
+              "SIGN IN".toUpperCase(),
             ),
           ),
           const SizedBox(height: defaultPadding),
           TextButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/sign_up');
+              getx.Get.toNamed('/forget_pwd'); // 使用 GetX 导航
             },
             style: ButtonStyle(
               overlayColor: WidgetStateProperty.all(Colors.transparent),
             ),
             child: const Text(
-              "没有账户？注册",
+              "Forget Password?",
               style: TextStyle(color: kPrimaryColor),
             ),
           ),

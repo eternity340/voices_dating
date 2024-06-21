@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 import '../../responsive.dart';
 import '../components/background.dart';
-import 'sign_in_model.dart';
 import 'components/sign_form.dart';
 import 'components/sign_screen_top_image.dart';
 

@@ -27,7 +27,7 @@ class SignBtn extends StatelessWidget {
             ),
             child: Center(
               child: Text(
-                "Login".toUpperCase(),
+                "SIGN IN".toUpperCase(),
                 style: const TextStyle(
                   color: Colors.black,  // 设置字体颜色为黑色
                 ),
