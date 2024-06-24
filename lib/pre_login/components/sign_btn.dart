@@ -40,13 +40,13 @@ class SignBtn extends StatelessWidget {
           width: double.infinity, // 扩展以填充可用空间
           child: OutlinedButton(
             onPressed: () {
-              getx.Get.toNamed('/sign_up');
+              getx.Get.toNamed('/get_mail_code');
             },
             style: OutlinedButton.styleFrom(
               side: const BorderSide(color: Colors.black, width: 2.0),  // 设置边框颜色为黑色，并加粗为 2.0
               backgroundColor: Colors.transparent,  // 设置背景颜色为透明
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(24),  // 设置圆角半径为 20
+                borderRadius: BorderRadius.circular(24),  // 设置圆角半径
               ),
             ),
             child: Padding(
