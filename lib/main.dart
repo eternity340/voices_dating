@@ -1,10 +1,10 @@
-import 'package:first_app/pre_login/welcome/welcome_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as getx;
 import 'package:provider/provider.dart';
 import 'constants.dart';
 import 'routes/app_route.dart';
 import 'pre_login/forget_pwd/forget_pwd_model.dart';
+import 'pre_login/welcome/welcome_page.dart';
 
 void main() => runApp(const MyApp());
 
