@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import '../../pre_login/components/gradient_btn.dart';
 import '../model/verify_email_model.dart';
 import '../provider/verify_email_provider.dart';
-
 
 class VerifyEmailPage extends StatelessWidget {
   final String email;
@@ -26,7 +25,7 @@ class VerifyEmailPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Verification code has been sent to $email。",
+                    "Verification code has been sent to $email.",
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 16),
                   ),
@@ -43,9 +42,9 @@ class VerifyEmailPage extends StatelessWidget {
                   SizedBox(height: 20),
                   model.isLoading
                       ? CircularProgressIndicator()
-                      : ElevatedButton(
+                      : GradientButton(
+                    text: "Verification",
                     onPressed: model.verifyEmail,
-                    child: Text("Verification"),
                   ),
                 ],
               );

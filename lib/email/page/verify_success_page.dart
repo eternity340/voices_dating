@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../entity/User.dart';
+
 class VerifySuccessPage extends StatelessWidget {
   final String message;
+  final User user;
 
-  VerifySuccessPage({required this.message});
+  VerifySuccessPage({required this.message, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +40,9 @@ class VerifySuccessPage extends StatelessWidget {
               SizedBox(height: 40),
               ElevatedButton(
                 onPressed: () {
-                  // Navigate back to home or any other page
-                  Get.offAllNamed('/'); // 假设 '/' 是你的主页路由
+                  Get.toNamed('/select_gender', arguments: user);
                 },
-                child: Text("Back to Home"),
+                child: Text("Select Gender"),
               ),
             ],
           ),

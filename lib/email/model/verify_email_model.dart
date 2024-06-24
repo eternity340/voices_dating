@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-import '../page/verify_success_page.dart';
+
 import '../../service/token_service.dart';
+import '../../entity/User.dart';
 
 class VerifyEmailModel extends ChangeNotifier {
   final String email;
@@ -62,8 +63,10 @@ class VerifyEmailModel extends ChangeNotifier {
       );
 
       if (response.data['code'] == 200 && response.data['data']['ret'] == true) {
+        User user = User(email: email);
         Get.toNamed('/verify_success', arguments: {
           'message': response.data['message'],
+          'user': user,
         });
       } else {
         _errorMessage = "verification failed: ${response.data['message']}";
