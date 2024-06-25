@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../entity/User.dart';
-import '../components/gradient_btn.dart';
+import '../../components/gradient_btn.dart';
 
 
 class SelectBirthdayPage extends StatelessWidget {

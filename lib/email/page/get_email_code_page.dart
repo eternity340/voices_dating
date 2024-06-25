@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../pre_login/components/gradient_btn.dart';
-import '../components/background.dart';
+import '../../components/gradient_btn.dart';
+import '../../components/background.dart';
 import '../model/get_email_code_model.dart';
 
 class GetMailCodePage extends StatelessWidget {
