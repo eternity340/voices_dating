@@ -1,0 +1,12 @@
+stages:
+  - sync
+
+sync_job:
+  stage: sync
+  script:
+    - git clone --mirror https://github.com/eternity340/app_test.git
+    - cd app_test.git
+    - git remote add gitlab http://gitlab.masonvips.com/app-ca/app_test.git
+    - git push --mirror gitlab
+  only:
+    - web
