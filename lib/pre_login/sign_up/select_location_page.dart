@@ -2,81 +2,68 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../entity/User.dart';
 import '../../../constants.dart';
-import '../components/gradient_btn.dart';
+import '../../components/background.dart';
+import '../../components/gradient_btn.dart';
 
-class SelectLocationPage extends StatelessWidget {
+import 'components/location_box.dart';
+
+class SelectLocationPage extends StatefulWidget {
   final User user;
 
-  SelectLocationPage({required this.user});
+  SelectLocationPage({super.key, required this.user});
+
+  @override
+  _SelectLocationPageState createState() => _SelectLocationPageState();
+}
+
+class _SelectLocationPageState extends State<SelectLocationPage> {
+  String? selectedCountry;
+  String? selectedState;
+  String? selectedCity;
 
   @override
   Widget build(BuildContext context) {
-    String? selectedCountry;
-    String? selectedState;
-    String? selectedCity;
-
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Select Location"),
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              DropdownButtonFormField<String>(
-                value: selectedCountry,
-                items: ['Country1', 'Country2', 'Country3'] // 示例数据，实际应用中应从API获取
-                    .map((country) => DropdownMenuItem(
-                  value: country,
-                  child: Text(country),
-                ))
-                    .toList(),
-                onChanged: (value) {
-                  selectedCountry = value;
-                },
-                decoration: InputDecoration(labelText: "Select Country"),
-              ),
-              SizedBox(height: 20),
-              DropdownButtonFormField<String>(
-                value: selectedState,
-                items: ['State1', 'State2', 'State3'] // 示例数据
-                    .map((state) => DropdownMenuItem(
-                  value: state,
-                  child: Text(state),
-                ))
-                    .toList(),
-                onChanged: (value) {
-                  selectedState = value;
-                },
-                decoration: InputDecoration(labelText: "Select State"),
-              ),
-              SizedBox(height: 20),
-              DropdownButtonFormField<String>(
-                value: selectedCity,
-                items: ['City1', 'City2', 'City3'] // 示例数据
-                    .map((city) => DropdownMenuItem(
-                  value: city,
-                  child: Text(city),
-                ))
-                    .toList(),
-                onChanged: (value) {
-                  selectedCity = value;
-                },
-                decoration: InputDecoration(labelText: "Select City"),
-              ),
-              SizedBox(height: 20),
-              GradientButton(
-                text: "Continue",
-                onPressed: () {
-                  user.country = selectedCountry;
-                  user.state = selectedState;
-                  user.city = selectedCity;
-                  Get.toNamed('/select_birthday', arguments: user);
-                },
-              ),
-            ],
+      body: Background(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(height: 100),
+                const Text(
+                  "Location",
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.bold,
+                    height: 44 / 32,
+                    letterSpacing: -0.02,
+                    color: Color(0xFF000000),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 20),
+                LocationBox(
+                  text: 'Select a location',
+                  onTap: () {
+                    Get.toNamed('/location_detail', arguments: widget.user); // 跳转到 location_detail 页面
+                  },
+                ),
+                SizedBox(height: 300),
+                GradientButton(
+                  text: "Continue",
+                  onPressed: () {
+                    widget.user.country = selectedCountry;
+                    widget.user.state = selectedState;
+                    widget.user.city = selectedCity;
+                    Get.toNamed('/select_birthday', arguments: widget.user);
+                  },
+                  width: 200,
+                ),
+              ],
+            ),
           ),
         ),
       ),
