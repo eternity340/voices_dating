@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../../service/token_service.dart';
 import '../../entity/User.dart';
+import '../../net/error_handler.dart';  // 确保导入错误处理模块
 
 class VerifyEmailModel extends ChangeNotifier {
   final String email;
@@ -36,14 +37,16 @@ class VerifyEmailModel extends ChangeNotifier {
     if (_accessToken == null) {
       _errorMessage = "No access token available.";
       notifyListeners();
+      _showErrorDialog(_errorMessage!);
       return;
     }
 
     final String code = codeController.text.trim();
 
     if (verificationKey.isEmpty) {
-      _errorMessage = "Verify that the key is empty.";
+      _errorMessage = "Verification key is empty.";
       notifyListeners();
+      _showErrorDialog(_errorMessage!);
       return;
     }
 
@@ -69,13 +72,33 @@ class VerifyEmailModel extends ChangeNotifier {
           'user': user,
         });
       } else {
-        _errorMessage = "verification failed: ${response.data['message']}";
+        _errorMessage = "Verification failed: ${response.data['message']}";
+        _showErrorDialog(_errorMessage!);
       }
     } catch (e) {
-      _errorMessage = "Exception occurred: $e";
+      final netError = ExceptionHandler.handleException(e);
+      _errorMessage = netError?.msg ?? "Unexpected exception occurred.";
+      _showErrorDialog(_errorMessage!);
     } finally {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  void _showErrorDialog(String message) {
+    Get.dialog(
+      AlertDialog(
+        title: Text('Error'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Get.back();
+            },
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 }

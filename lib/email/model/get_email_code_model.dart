@@ -2,9 +2,8 @@ import 'package:first_app/email/page/verify_email_page.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
+import '../../net/error_handler.dart';
 import '../../service/token_service.dart';
-
-
 
 class GetEmailCodeModel extends ChangeNotifier {
   final TextEditingController emailController = TextEditingController();
@@ -33,7 +32,7 @@ class GetEmailCodeModel extends ChangeNotifier {
     );
   }
 
-  Future<void> sendVerificationCode() async {
+  Future<void> sendVerificationCode(BuildContext context) async {
     if (_accessToken == null) {
       _errorMessage = "No access token available.";
       print('No access token available');
@@ -60,13 +59,40 @@ class GetEmailCodeModel extends ChangeNotifier {
       } else {
         _errorMessage = "Error: ${response.statusMessage}";
         print('Error: ${response.statusMessage}');
+        _showErrorDialog(context, _errorMessage!);
       }
+    } on DioError catch (e) {
+      final netError = ExceptionHandler.handleException(e);
+      _errorMessage = netError?.msg;
+      print(_errorMessage);
+      _showErrorDialog(context, _errorMessage!);
     } catch (e) {
-      _errorMessage = "Exception: $e";
-      print('Exception: $e');
+      _errorMessage = "Unexpected exception: $e";
+      print(_errorMessage);
+      _showErrorDialog(context, _errorMessage!);
     } finally {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  void _showErrorDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

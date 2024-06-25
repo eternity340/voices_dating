@@ -51,10 +51,12 @@ class GetMailCodePage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 0),
+                    const SizedBox(height: 20),
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start, // 改变对齐方式为顶部对齐
                       children: [
                         Expanded(
+                          flex: 2,
                           child: TextField(
                             controller: model.emailController,
                             decoration: InputDecoration(
@@ -67,39 +69,59 @@ class GetMailCodePage extends StatelessWidget {
                             keyboardType: TextInputType.emailAddress,
                             style: const TextStyle(
                               fontFamily: 'Poppins',
-                              fontSize: 18, // 调整为18sp
+                              fontSize: 18,
                             ),
                           ),
                         ),
                         SizedBox(width: 10),
-                        DropdownButton<String>(
-                          value: selectedDomain,
-                          items: emailDomains.map((String domain) {
-                            return DropdownMenuItem<String>(
-                              value: domain,
-                              child: Text(
-                                domain,
-                                style: const TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 18, // 调整为18sp
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                          onChanged: (String? newValue) {
-                            selectedDomain = newValue!;
-                            model.emailController.text = model.emailController.text.split('@')[0] + selectedDomain;
-                          },
+                        Expanded(
+                          flex: 3,
+                          child: Container(
+                            margin: EdgeInsets.only(top: 20), // 增加上边距以调整位置
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8), // 圆角边框
+                              color: Colors.white, // 白色背景
+                            ),
+                            child: DropdownButton<String>(
+                              value: selectedDomain,
+                              items: emailDomains.map((String domain) {
+                                return DropdownMenuItem<String>(
+                                  value: domain,
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12), // 调整内边距
+                                    child: Text(
+                                      domain,
+                                      style: const TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                if (newValue != null) {
+                                  selectedDomain = newValue;
+                                  String emailText = model.emailController.text;
+                                  if (emailText.contains('@')) {
+                                    emailText = emailText.split('@')[0];
+                                  }
+                                  model.emailController.text = emailText + selectedDomain;
+                                }
+                              },
+                              underline: SizedBox(), // 去掉下划线
+                            ),
+                          ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 400), // 调整间距
+                    const SizedBox(height: 400), // 调整间距
                     model.isLoading
                         ? CircularProgressIndicator()
-                        : Center( // 将按钮居中显示
+                        : Center(
                       child: GradientButton(
                         text: "Next",
-                        onPressed: model.sendVerificationCode,
+                        onPressed: () => model.sendVerificationCode(context), // 传递 context
                         width: 200,
                       ),
                     ),
