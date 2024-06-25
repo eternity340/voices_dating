@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../pre_login/components/gradient_btn.dart';
+import '../../components/gradient_btn.dart';
 import '../model/verify_email_model.dart';
 import '../provider/verify_email_provider.dart';
-import '../components/background.dart';
+import '../../components/background.dart';
 import '../components/verify_code_input.dart';  // 更新导入
 
 class VerifyEmailPage extends StatefulWidget {

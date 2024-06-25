@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-
-import '../../service/token_service.dart';
 import '../../entity/User.dart';
-import '../../net/error_handler.dart';  // 确保导入错误处理模块
+import '../../net/error_handler.dart';
+import '../../service/token_service.dart';
+import 'get_email_code_model.dart'; // 导入 VerifyEmailPage 页面
 
 class VerifyEmailModel extends ChangeNotifier {
   final String email;
@@ -14,6 +14,7 @@ class VerifyEmailModel extends ChangeNotifier {
   bool _isLoading = false;
   String? _errorMessage;
   String? _accessToken;
+  GetEmailCodeModel _getEmailCodeModel = GetEmailCodeModel(); // 创建 GetEmailCodeModel 实例
 
   VerifyEmailModel({required this.email, required this.verificationKey}) {
     _initializeToken();
@@ -66,6 +67,7 @@ class VerifyEmailModel extends ChangeNotifier {
       );
 
       if (response.data['code'] == 200 && response.data['data']['ret'] == true) {
+        // Verification successful
         User user = User(email: email);
         Get.toNamed('/verify_success', arguments: {
           'message': response.data['message'],
@@ -83,6 +85,11 @@ class VerifyEmailModel extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  Future<void> resendVerificationCode(BuildContext context) async {
+    // 调用 GetEmailCodeModel 中的 sendVerificationCode 方法重新发送验证码
+    await _getEmailCodeModel.sendVerificationCode(context);
   }
 
   void _showErrorDialog(String message) {
