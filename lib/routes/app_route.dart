@@ -5,6 +5,7 @@ import '../email/page/verify_success_page.dart';
 import '../entity/User.dart';
 import '../pre_login/forget_pwd/forget_pwd_page.dart';
 import '../pre_login/forget_pwd/forget_pwd_provider.dart';
+import '../pre_login/sign_up/components/location_detail.dart';
 import '../pre_login/sign_up/display_userinfo_page.dart';
 import '../pre_login/sign_up/select_birthday_page.dart';
 import '../pre_login/sign_up/select_gender_page.dart';
@@ -15,6 +16,7 @@ import '../pre_login/welcome/welcome_provider.dart';
 import '../email/provider/get_email_code_provider.dart';
 import '../pre_login/sign_in/sign_in_page.dart';
 import '../pre_login/sign_in/sign_in_provider.dart';
+
 
 class AppRoutes {
   static final routes = [
@@ -50,7 +52,6 @@ class AppRoutes {
         user: args['user'],
       );
     }),
-
     getx.GetPage(
       name: '/forget_pwd',
       page: () => const ForgetPwdProvider(
@@ -82,5 +83,10 @@ class AppRoutes {
         return DisplayUserInfoPage();
       },
     ),
+    // 添加 location_detail 页面
+    getx.GetPage(name: '/location_detail', page: () {
+      final user = getx.Get.arguments as User;
+      return LocationDetailPage(user: user);
+    }),
   ];
 }
