@@ -11,6 +11,7 @@ import '../pages/pre_login/sign_up/components/location_detail.dart';
 import '../pages/pre_login/sign_up/display_userinfo_page.dart';
 import '../pages/pre_login/sign_up/select_birthday_page.dart';
 import '../pages/pre_login/sign_up/select_gender_page.dart';
+import '../pages/pre_login/sign_up/select_height_page.dart';
 import '../pages/pre_login/sign_up/select_location_page.dart';
 import '../pages/pre_login/sign_up/sign_up_page.dart';
 import '../pages/pre_login/welcome/welcome_page.dart';
@@ -29,7 +30,7 @@ class AppRoutes {
     ),
     getx.GetPage(
       name: '/sign_in',
-      page: () => SignInProvider(
+      page: () => const SignInProvider(
         child: SignInPage(),
       ),
     ),
@@ -71,6 +72,11 @@ class AppRoutes {
       final user = getx.Get.arguments as User;
       return SelectBirthdayPage(user: user);
     }),
+    getx.GetPage(name: '/select_height', page: () {
+      final user = getx.Get.arguments as User;
+      return SelectHeightPage(user: user);
+    }),
+
     getx.GetPage(
       name: '/sign_up',
       page: () {
