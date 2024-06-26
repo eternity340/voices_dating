@@ -39,7 +39,7 @@ class Background extends StatelessWidget {
           // 返回按钮（根据 showBackButton 来决定是否显示）
           if (showBackButton)
             Positioned(
-              top: MediaQuery.of(context).padding.top + 8.0, // 紧贴状态栏，并留出一些间距
+              top: MediaQuery.of(context).padding.top + 16.0, // 紧贴状态栏，并留出一些间距
               left: 16.0, // 添加左侧间距
               child: GestureDetector(
                 onTap: () {
