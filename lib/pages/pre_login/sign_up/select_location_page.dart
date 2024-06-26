@@ -51,7 +51,7 @@
                       Get.toNamed('/location_detail', arguments: widget.user); // 跳转到 location_detail 页面
                     },
                   ),
-                  SizedBox(height: 300),
+                  SizedBox(height: 400),
                   GradientButton(
                     text: "Continue",
                     onPressed: () {

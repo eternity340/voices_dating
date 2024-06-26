@@ -8,6 +8,7 @@ class User {
   int? age;
   String? username;
   String? password;
+  String? height;
 
   User({
     this.email,
@@ -19,5 +20,6 @@ class User {
     this.age,
     this.username,
     this.password,
+    this.height
   });
 }

@@ -1,8 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../entity/User.dart';
-import '../../../components/gradient_btn.dart';
 import '../../../components/background.dart';
+import '../../../components/gradient_btn.dart';
+import '../../../entity/User.dart';
 
 class SelectBirthdayPage extends StatefulWidget {
   final User user;
@@ -56,7 +57,7 @@ class _SelectBirthdayPageState extends State<SelectBirthdayPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: 50),
+                SizedBox(height: 100),
                 const Text(
                   "Birthday",
                   style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, fontFamily: 'Poppins'), // Use appropriate font family here
@@ -181,14 +182,22 @@ class _SelectBirthdayPageState extends State<SelectBirthdayPage> {
                     ),
                   ],
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 200),
                 // Continue button
                 GradientButton(
                   text: "Continue",
                   onPressed: () {
                     DateTime selectedDate = DateTime(selectedYear, selectedMonth, selectedDay);
                     widget.user.birthday = selectedDate;
-                    Get.toNamed('/profile_summary', arguments: widget.user);
+
+                    // Calculate age
+                    int age = DateTime.now().year - selectedYear;
+                    if (DateTime.now().month < selectedMonth || (DateTime.now().month == selectedMonth && DateTime.now().day < selectedDay)) {
+                      age--;
+                    }
+                    widget.user.age = age;
+
+                    Get.toNamed('/select_height', arguments: widget.user);
                   },
                 ),
               ],
