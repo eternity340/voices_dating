@@ -1,4 +1,5 @@
 import 'package:first_app/pages/pre_login/forget_pwd/forget_pwd_model.dart';
+import 'package:first_app/pages/pre_login/sign_up/sign_up_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as getx;
 import 'package:provider/provider.dart';
@@ -17,6 +18,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<ForgetPwdModel>(
           create: (_) => ForgetPwdModel(),
+        ),
+        ChangeNotifierProvider<SignUpModel>( // 添加 SignUpModel
+          create: (_) => SignUpModel(),
         ),
       ],
       child: getx.GetMaterialApp(

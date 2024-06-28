@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as getx;
-import '../../../../constants.dart';
 
 class SignBtn extends StatelessWidget {
   const SignBtn({

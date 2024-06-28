@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' as getx;
-
-import '../../../service/token_service.dart';  // 确保这个路径是正确的
+import '../../../constants/constant_data.dart';
+import '../../../service/token_service.dart';
 
 class SignInModel extends ChangeNotifier {
   final TextEditingController emailController = TextEditingController();
@@ -82,16 +82,40 @@ class SignInModel extends ChangeNotifier {
           },
         ),
       );
-      if (response.data['code'] == 200) {
-        getx.Get.toNamed('/get_mail_code');
+
+      if (response.data[ConstantData.code] == 200) {
+        // 登录成功，跳转到首页
+        getx.Get.toNamed('/home');
+      } else if (response.data[ConstantData.code] == ConstantData.errorCodeInvalidEmailOrPassword) {
+        _errorMessage = response.data[ConstantData.message];
+        _showErrorDialog(_errorMessage);
       } else {
-        _errorMessage = "error: ${response.data['message']}";
+        _errorMessage = "error: ${response.data[ConstantData.message]}";
+        _showErrorDialog(_errorMessage);
       }
     } catch (e) {
       _errorMessage = "exception: $e";
+      _showErrorDialog(_errorMessage);
     } finally {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  void _showErrorDialog(String? message) {
+    getx.Get.dialog(
+      AlertDialog(
+        title: const Text('Login Error'),
+        content: Text(message ?? 'An unknown error occurred.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              getx.Get.back();
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 }

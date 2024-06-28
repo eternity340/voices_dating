@@ -1,3 +1,4 @@
+// user.dart
 class User {
   String? email;
   String? gender;
@@ -20,6 +21,23 @@ class User {
     this.age,
     this.username,
     this.password,
-    this.height
+    this.height,
   });
+
+// 将对象转换为 JSON 格式
+  Map<String, dynamic> toJson() {
+    return {
+      'user[email]': email,
+      'user[gender]': gender,
+      'user[country]': country,
+      'user[state]': state,
+      'user[city]': city,
+      'user[birthday]': birthday?.toIso8601String(),
+      'user[age]': age,
+      'user[username]': username,
+      'user[password]': password,
+      'user[height]': height,
+    };
+  }
+
 }

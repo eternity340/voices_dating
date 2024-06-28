@@ -4,6 +4,7 @@ import '../pages/email/page/get_email_code_page.dart';
 import '../pages/email/page/verify_email_page.dart';
 import '../pages/email/page/verify_success_page.dart';
 import '../pages/email/provider/get_email_code_provider.dart';
+import '../pages/home/home_page.dart';
 import '../pages/pre_login/forget_pwd/forget_pwd_page.dart';
 import '../pages/pre_login/forget_pwd/forget_pwd_provider.dart';
 import '../pages/pre_login/sign_in/sign_in_provider.dart';
@@ -76,7 +77,6 @@ class AppRoutes {
       final user = getx.Get.arguments as User;
       return SelectHeightPage(user: user);
     }),
-
     getx.GetPage(
       name: '/sign_up',
       page: () {
@@ -95,5 +95,10 @@ class AppRoutes {
       final user = getx.Get.arguments as User;
       return LocationDetailPage(user: user);
     }),
+    getx.GetPage(
+      name: '/home',
+      page: () => HomePage(),
+    ),
+
   ];
 }

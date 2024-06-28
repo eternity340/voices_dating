@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../../components/background.dart';
 import '../../../responsive.dart';
-import '../components/background.dart';
+
 import 'components/sign_form.dart';
 import 'components/sign_screen_top_image.dart';
 

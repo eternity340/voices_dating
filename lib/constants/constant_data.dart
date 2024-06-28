@@ -51,7 +51,7 @@ class ConstantData{
   static const errorUserUnavailable = 30001029;
   static const errorEmailExists = 30001018;
   static const errorUserInactive = 30001021;
-
+  static const errorCodeInvalidEmailOrPassword = 30001013;
 
   //get route params
   static const paramsUserId = "userId";

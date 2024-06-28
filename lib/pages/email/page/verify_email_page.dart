@@ -144,7 +144,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
                         ),
                       )
                           : Container(),
-                      const SizedBox(height: 400), // 调整间距
+                      const SizedBox(height: 300), // 调整间距
                       model.isLoading
                           ? const CircularProgressIndicator()
                           : Center(
