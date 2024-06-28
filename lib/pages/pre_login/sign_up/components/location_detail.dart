@@ -1,28 +1,95 @@
 import 'package:flutter/material.dart';
 import '../../../../entity/User.dart';
 import '../../../../components/background.dart';
-import 'location_box.dart'; // 导入新的组件
+import '../../../../storage/location_data_db.dart';
 
-class LocationDetailPage extends StatelessWidget {
+class LocationDetailPage extends StatefulWidget {
   final User user;
 
   const LocationDetailPage({Key? key, required this.user}) : super(key: key);
 
   @override
+  _LocationDetailPageState createState() => _LocationDetailPageState();
+}
+
+class _LocationDetailPageState extends State<LocationDetailPage> {
+  String selectedCountry = "Select Country";
+  String selectedState = "Select State";
+  String selectedCity = "Select City";
+
+  void _showLocationSelection(BuildContext context, String type) async {
+    final items = await _getItemsByType(type);
+
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: 250,
+          child: ListView.builder(
+            itemCount: items.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                title: Text(items[index].toString()),
+                onTap: () {
+                  setState(() {
+                    if (type == 'country') {
+                      selectedCountry = items[index].toString();
+                      selectedState = "Select State";
+                      selectedCity = "Select City";
+                    } else if (type == 'state') {
+                      selectedState = items[index].toString();
+                      selectedCity = "Select City";
+                    } else if (type == 'city') {
+                      selectedCity = items[index].toString();
+                    }
+                  });
+                  Navigator.pop(context);
+                },
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Future<List<String>> _getItemsByType(String type) async {
+    if (type == 'country') {
+      return (await LocationDataDB.db.getCountries).map((country) => country.couName!).toList();
+    } else if (type == 'state') {
+      if (selectedCountry != "Select Country") {
+        int countryId = await LocationDataDB.db.getCountryIdByName(selectedCountry) ?? -1;
+        if (countryId != -1) {
+          return (await LocationDataDB.db.getStatesListById(countryId)).map((state) => state.sttName!).toList();
+        }
+      }
+    } else if (type == 'city') {
+      if (selectedState != "Select State") {
+        int stateId = await LocationDataDB.db.getStateIdByName(selectedState) ?? -1;
+        int countryId = await LocationDataDB.db.getCountryIdByName(selectedCountry) ?? -1;
+        if (stateId != -1 && countryId != -1) {
+          return (await LocationDataDB.db.getCitiesListById(stateId, countryId)).map((city) => city.cityName!).toList();
+        }
+      }
+    }
+    return [];
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Background(
-      showBackButton: false, // 设置不显示返回按钮
+      showBackButton: false,
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 16.0), // 添加顶部间距
+            padding: const EdgeInsets.only(top: 16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 GestureDetector(
                   onTap: () {
                     Navigator.of(context).pop();
-                    },
+                  },
                   child: Row(
                     children: [
                       Image.asset(
@@ -54,14 +121,14 @@ class LocationDetailPage extends StatelessWidget {
                   ),
                 ),
                 AnimatedContainer(
-                  duration: Duration(milliseconds: 300), // 设置动画持续时间
-                  curve: Curves.easeOut, // 设置动画曲线
-                  transform: Matrix4.translationValues(-8, 0, 0), // 向左移动的动画效果
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.easeOut,
+                  transform: Matrix4.translationValues(-8, 0, 0),
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
-                      begin: Alignment.centerLeft, // 调整开始位置
-                      end: Alignment.centerRight, // 调整结束位置
-                      colors: [Color(0xFFD6FAAE), Color(0xFF20E2D7)], // 调整颜色顺序
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: [Color(0xFFD6FAAE), Color(0xFF20E2D7)],
                     ),
                     borderRadius: BorderRadius.circular(24.5),
                   ),
@@ -69,7 +136,11 @@ class LocationDetailPage extends StatelessWidget {
                   height: 36,
                   child: TextButton(
                     onPressed: () {
-                      // Logic for saving selected data
+                      Navigator.of(context).pop({
+                        'country': selectedCountry,
+                        'state': selectedState,
+                        'city': selectedCity,
+                      });
                     },
                     child: const Text(
                       'Save',
@@ -84,45 +155,44 @@ class LocationDetailPage extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 100), // 添加间距
-
-          // 添加三个 LocationBox
-          _buildLocationBox('Location Box 1', 'assets/images/Path.png'),
-          SizedBox(height: 20), // 添加间距
-          _buildLocationBox('Location Box 2', 'assets/images/Path.png'),
-          SizedBox(height: 20), // 添加间距
-          _buildLocationBox('Location Box 3', 'assets/images/Path.png'),
-
-          // Other page content
+          SizedBox(height: 100),
+          _buildLocationBox('Country: $selectedCountry', 'assets/images/Path.png', 'country'),
+          SizedBox(height: 20),
+          _buildLocationBox('State: $selectedState', 'assets/images/Path.png', 'state'),
+          SizedBox(height: 20),
+          _buildLocationBox('City: $selectedCity', 'assets/images/Path.png', 'city'),
         ],
       ),
     );
   }
 
-  Widget _buildLocationBox(String text, String iconPath) {
+  Widget _buildLocationBox(String text, String iconPath, String type) {
     return GestureDetector(
       onTap: () {
-        // 处理点击事件
+        _showLocationSelection(context, type);
       },
       child: Container(
         width: 335,
         height: 69,
         decoration: BoxDecoration(
-          color: Color(0xFFF8F8F9), // 背景颜色
-          borderRadius: BorderRadius.circular(10), // 圆角
+          color: Color(0xFFF8F8F9),
+          borderRadius: BorderRadius.circular(10),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0), // 内边距
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                text,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black,
+              Flexible(
+                child: Text(
+                  text,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               Image.asset(
