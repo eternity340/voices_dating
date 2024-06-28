@@ -116,7 +116,7 @@ class _SelectHeightPageState extends State<SelectHeightPage> {
                   text: "Continue",
                   onPressed: () {
                     widget.user.height = selectedHeight.toString();
-                    Get.toNamed('/', arguments: widget.user);
+                    Get.toNamed('/sign_up', arguments: widget.user);
                   },
                 ),
               ],
