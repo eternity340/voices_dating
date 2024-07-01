@@ -1,5 +1,4 @@
 import 'package:get/get.dart' as getx;
-import '../entity/User.dart';
 import '../pages/email/page/get_email_code_page.dart';
 import '../pages/email/page/verify_email_page.dart';
 import '../pages/email/page/verify_success_page.dart';
@@ -18,7 +17,7 @@ import '../pages/pre_login/sign_up/sign_up_page.dart';
 import '../pages/pre_login/welcome/welcome_page.dart';
 import '../pages/pre_login/welcome/welcome_provider.dart';
 import '../pages/pre_login/sign_in/sign_in_page.dart';
-
+import '../entity/User.dart';
 
 
 class AppRoutes {

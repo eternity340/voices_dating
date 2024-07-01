@@ -1,7 +1,6 @@
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class SharedPresKeys{
+class SharedPresKeys {
   static const fireToken = "fireToken";
   static const userToken = "userToken";
   static const isLogin = "isLogin";
@@ -19,11 +18,10 @@ class SharedPresKeys{
   static const primaryLanguage = "primaryLanguage";
   static const viewRecommendUserCount = "viewRecommendUserCount";
   static const isOpenToMain = "isOpenToMain";
-
 }
 
-class ConstantData{
-  static final successResponseCode = [200,201,202,203,204,205,206];
+class ConstantData {
+  static final successResponseCode = [200, 201, 202, 203, 204, 205, 206];
 
   static const code = "code";
   static const message = "message";
@@ -40,7 +38,6 @@ class ConstantData{
   static const String sortSmart = "Smart";
 
   static const double maxMessageImageSize = 200;
-
 
   static const errorTokenInvalid = 2000110;
   static const errorRefreshToken = 2000116;
@@ -77,7 +74,6 @@ class ConstantData{
 
   static const googleHelpCenter = "https://support.google.com/googleplay/answer/2476088?hl=en&ref_topic=1689236";
 
-
   static const String serviceAgreementUrl = "";
   static const String privacyPolicyUrl = "";
 
@@ -97,8 +93,19 @@ class ConstantData{
   static const userQuestion = "myQuestion";
 
   static final normalBtnWidth = 312.w;
-  static final normalBtnHeight= 54.w;
+  static final normalBtnHeight = 54.w;
 
   static const notificationComment = "11";
   static const notificationReply = "20";
+
+  static const honeyOption = 'Honey';
+  static const nearbyOption = 'Nearby';
+  static const honeyPageContent = 'Honey Page Content';
+  static const nearbyPageContent = 'Nearby Page Content';
+
+  static const imagePathLike = 'assets/images/icon_like.png';
+  static const imagePathClock = 'assets/images/icon_clock.png';
+  static const imagePathGame = 'assets/images/icon_game.png';
+  static const imagePathFeel = 'assets/images/icon_feel.png';
+  static const imagePathDecorate = 'assets/images/decorate.png';
 }
