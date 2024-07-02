@@ -44,7 +44,6 @@ class HomePage extends StatelessWidget {
                             ],
                           ),
                         ),
-                        SizedBox(height: 20), // Add space between options and content
                         Container(
                           height: 1000, // Adjust the height as needed
                           child: PageView(
@@ -54,7 +53,6 @@ class HomePage extends StatelessWidget {
                               ListView(
                                 children: [
                                   _buildButtonRow(),
-                                  SizedBox(height: 20),
                                   if (model.isLoading)
                                     CircularProgressIndicator()
                                   else if (model.errorMessage != null)
