@@ -1,109 +1,100 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:get/get.dart' as getx;
 import '../../components/background.dart';
+import 'components/home_icon_button.dart';
+import 'home_controller.dart';
+import 'home_provider.dart';
+import '../../constants/constant_data.dart';
+import 'components/user_card.dart';
 
-class HomePage extends StatefulWidget {
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  String selectedOption = 'Honey';
-  late PageController _pageController;
-
-  @override
-  void initState() {
-    super.initState();
-    _pageController = PageController(initialPage: 0);
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  void _selectOption(String option) {
-    setState(() {
-      selectedOption = option;
-      if (option == 'Honey') {
-        _pageController.animateToPage(0,
-            duration: Duration(milliseconds: 300), curve: Curves.ease);
-      } else {
-        _pageController.animateToPage(1,
-            duration: Duration(milliseconds: 300), curve: Curves.ease);
-      }
-    });
-  }
-
-  void _onPageChanged(int index) {
-    setState(() {
-      selectedOption = index == 0 ? 'Honey' : 'Nearby';
-    });
-  }
-
+class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Background(
-        showBackButton: false,
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: double.infinity,
-                  height: 71,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildOption('Honey'),
-                      SizedBox(width: 50), // Space between options
-                      _buildOption('Nearby'),
-                    ],
+    final Map<String, dynamic> arguments = getx.Get.arguments as Map<String, dynamic>;
+    final String token = arguments['token'];
+
+    return HomePageProvider(
+      token: token,
+      child: Consumer<HomeController>(
+        builder: (context, model, child) {
+          return Scaffold(
+            body: Background(
+              showBackButton: false,
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          height: 71,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: _buildOption(model, ConstantData.honeyOption),
+                              ),
+                              SizedBox(width: 50), // Space between options
+                              Expanded(
+                                child: _buildOption(model, ConstantData.nearbyOption),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 20), // Add space between options and content
+                        Container(
+                          height: 1000, // Adjust the height as needed
+                          child: PageView(
+                            controller: model.pageController,
+                            onPageChanged: model.onPageChanged,
+                            children: [
+                              ListView(
+                                children: [
+                                  _buildButtonRow(),
+                                  SizedBox(height: 20),
+                                  if (model.isLoading)
+                                    CircularProgressIndicator()
+                                  else if (model.errorMessage != null)
+                                    Text('Error: ${model.errorMessage}')
+                                  else
+                                    ...model.users.map((user) => Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                      child: UserCard(userEntity: user),
+                                    )),
+                                ],
+                              ),
+                              Center(child: Text(ConstantData.nearbyPageContent)),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                SizedBox(height: 0),
-                Container(
-                  height: 200, // Example height constraint for PageView
-                  child: PageView(
-                    controller: _pageController,
-                    onPageChanged: _onPageChanged,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _buildButtonRow(),
-                          SizedBox(height: 20),
-                          _buildHoneyPageContent(),
-                        ],
-                      ),
-                      Center(child: Text('Nearby Page Content')),
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
 
-  Widget _buildOption(String option) {
-    bool isSelected = selectedOption == option;
+  Widget _buildOption(HomeController model, String option) {
+    bool isSelected = model.selectedOption == option;
     return GestureDetector(
-      onTap: () => _selectOption(option),
+      onTap: () => model.selectOption(option),
       child: Stack(
         alignment: Alignment.center,
         children: [
           if (isSelected)
             Positioned(
-              top: 0, // Adjusted to bring closer to text
-              right: 0, // Adjusted to bring closer to text
+              top: 0,
+              right: 0,
               child: Image.asset(
-                'assets/images/decorate.png',
+                ConstantData.imagePathDecorate,
                 width: 17,
                 height: 17,
               ),
@@ -113,7 +104,6 @@ class _HomePageState extends State<HomePage> {
             style: TextStyle(
               fontSize: 24,
               height: 22 / 18,
-              // Line height in terms of font size
               letterSpacing: -0.011249999515712261,
               fontFamily: 'Open Sans',
               color: isSelected ? Color(0xFF000000) : Color(0xFF8E8E93),
@@ -124,45 +114,18 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildHoneyPageContent() {
-    return const Column(
+  Widget _buildButtonRow() {
+    return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text('Honey Page Content'),
+        HomeIconButton(imagePath: ConstantData.imagePathLike, shadowColor: Color(0xFFFFD1D1).withOpacity(0.3736)),
+        HomeIconButton(imagePath: ConstantData.imagePathClock, shadowColor: Color(0xFFF6D3FF).withOpacity(0.369)),
+        HomeIconButton(imagePath: ConstantData.imagePathGame, shadowColor: Color(0xFFFCA6C5).withOpacity(0.2741)),
+        HomeIconButton(imagePath: ConstantData.imagePathFeel, shadowColor: Color(0xFFFFEA31).withOpacity(0.3495)),
       ],
-    );
-  }
-
-  Widget _buildButtonRow() {
-    return Wrap(
-      alignment: WrapAlignment.center,
-      spacing: 0, // Space between buttons
-      children: [
-        _buildButton('assets/images/icon_like.png', Color(0xFFFFD1D1).withOpacity(0.3736)),
-        _buildButton('assets/images/icon_clock.png', Color(0xFFF6D3FF).withOpacity(0.369)),
-        _buildButton('assets/images/icon_game.png', Color(0xFFFCA6C5).withOpacity(0.2741)),
-        _buildButton('assets/images/icon_feel.png', Color(0xFFFFEA31).withOpacity(0.3495)),
-      ],
-    );
-  }
-
-  Widget _buildButton(String imagePath, Color shadowColor) {
-    return Container(
-      width: 90,
-      height: 90,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: shadowColor,
-            offset: Offset(0, 7),
-            blurRadius: 15,
-          ),
-        ],
-      ),
-      child: ClipOval(
-        child: Image.asset(imagePath),
-      ),
     );
   }
 }
+
+
+

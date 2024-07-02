@@ -84,8 +84,8 @@ class SignInModel extends ChangeNotifier {
       );
 
       if (response.data[ConstantData.code] == 200) {
-        // 登录成功，跳转到首页
-        getx.Get.toNamed('/home');
+        // 登录成功，跳转到首页并传递 token
+        getx.Get.toNamed('/home', arguments: {'token': _accessToken});
       } else if (response.data[ConstantData.code] == ConstantData.errorCodeInvalidEmailOrPassword) {
         _errorMessage = response.data[ConstantData.message];
         _showErrorDialog(_errorMessage);
