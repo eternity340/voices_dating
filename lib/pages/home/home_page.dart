@@ -37,7 +37,7 @@ class HomePage extends StatelessWidget {
                               Expanded(
                                 child: _buildOption(model, ConstantData.honeyOption),
                               ),
-                              SizedBox(width: 50), // Space between options
+                              SizedBox(width: 20), // Space between options
                               Expanded(
                                 child: _buildOption(model, ConstantData.nearbyOption),
                               ),
@@ -91,8 +91,8 @@ class HomePage extends StatelessWidget {
         children: [
           if (isSelected)
             Positioned(
-              top: 0,
-              right: 0,
+              top: 0, // Adjust as needed to move the image closer to the text
+              right: 40, // Adjust as needed to position it to the right
               child: Image.asset(
                 ConstantData.imagePathDecorate,
                 width: 17,
@@ -102,7 +102,7 @@ class HomePage extends StatelessWidget {
           Text(
             option,
             style: TextStyle(
-              fontSize: 24,
+              fontSize: 28,
               height: 22 / 18,
               letterSpacing: -0.011249999515712261,
               fontFamily: 'Open Sans',
