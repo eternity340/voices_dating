@@ -8,20 +8,20 @@ class TokenEntity {
   TokenEntity({
     this.accessToken,
     this.refreshToken,
-    this.expriedIn,
+    this.expiredIn,
     this.requestTime,
   });
 
   factory TokenEntity.fromJson(Map<String, dynamic> jsonRes) => TokenEntity(
     accessToken: asT<String?>(jsonRes['access_token']),
     refreshToken: asT<String?>(jsonRes['refresh_token']),
-    expriedIn: asT<int?>(jsonRes['expried_in']),
+    expiredIn: asT<int?>(jsonRes['expired_in']),
     requestTime: asT<int?>(jsonRes['request_time']),
   );
 
   String? accessToken;
   String? refreshToken;
-  int? expriedIn;
+  int? expiredIn;
   int? requestTime;
 
   @override
@@ -32,7 +32,7 @@ class TokenEntity {
   Map<String, dynamic> toJson() => <String, dynamic>{
     'access_token': accessToken,
     'refresh_token': refreshToken,
-    'expried_in': expriedIn,
+    'expired_in': expiredIn,
     'request_time':requestTime
   };
 

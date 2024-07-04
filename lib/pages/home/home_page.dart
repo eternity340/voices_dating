@@ -7,6 +7,7 @@ import 'home_controller.dart';
 import 'home_provider.dart';
 import '../../constants/constant_data.dart';
 import 'components/user_card.dart';
+import 'components/home_navigation_bar.dart'; // 导入修改后的组件
 
 class HomePage extends StatelessWidget {
   @override
@@ -19,60 +20,77 @@ class HomePage extends StatelessWidget {
       child: Consumer<HomeController>(
         builder: (context, model, child) {
           return Scaffold(
-            body: Background(
-              showBackButton: false,
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: double.infinity,
-                          height: 71,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: _buildOption(model, ConstantData.honeyOption),
-                              ),
-                              SizedBox(width: 20), // Space between options
-                              Expanded(
-                                child: _buildOption(model, ConstantData.nearbyOption),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          height: 1000, // Adjust the height as needed
-                          child: PageView(
-                            controller: model.pageController,
-                            onPageChanged: model.onPageChanged,
-                            children: [
-                              ListView(
+            body: Stack(
+              children: [
+                Background(
+                  showBackButton: false,
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: double.infinity,
+                              height: 40,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  _buildButtonRow(),
-                                  if (model.isLoading)
-                                    CircularProgressIndicator()
-                                  else if (model.errorMessage != null)
-                                    Text('Error: ${model.errorMessage}')
-                                  else
-                                    ...model.users.map((user) => Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                                      child: UserCard(userEntity: user),
-                                    )),
+                                  Expanded(
+                                    child: _buildOption(model, ConstantData.honeyOption),
+                                  ),
+                                  SizedBox(width: 20), // Space between options
+                                  Expanded(
+                                    child: _buildOption(model, ConstantData.nearbyOption),
+                                  ),
                                 ],
                               ),
-                              Center(child: Text(ConstantData.nearbyPageContent)),
-                            ],
-                          ),
+                            ),
+                            Container(
+                              height: 800, // Adjust the height as needed
+                              child: PageView(
+                                controller: model.pageController,
+                                onPageChanged: model.onPageChanged,
+                                children: [
+                                  ListView(
+                                    children: [
+                                      _buildButtonRow(),
+                                      if (model.isLoading)
+                                        CircularProgressIndicator()
+                                      else if (model.errorMessage != null)
+                                        Text('Error: ${model.errorMessage}')
+                                      else
+                                        ...model.users.map((user) => Padding(
+                                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                          child: UserCard(userEntity: user),
+                                        )),
+                                    ],
+                                  ),
+                                  ListView(
+                                    children: [
+                                      if (model.isLoading)
+                                        CircularProgressIndicator()
+                                      else if (model.errorMessage != null)
+                                        Text('Error: ${model.errorMessage}')
+                                      else
+                                        ...model.users.map((user) => Padding(
+                                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                          child: UserCard(userEntity: user),
+                                        )),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
-              ),
+                HomeNavigationBar(), // 使用重命名后的组件
+              ],
             ),
           );
         },
@@ -89,8 +107,8 @@ class HomePage extends StatelessWidget {
         children: [
           if (isSelected)
             Positioned(
-              top: 0, // Adjust as needed to move the image closer to the text
-              right: 40, // Adjust as needed to position it to the right
+              top: 3, // Adjust as needed to move the image closer to the text
+              right: 45, // Adjust as needed to position it to the right
               child: Image.asset(
                 ConstantData.imagePathDecorate,
                 width: 17,
@@ -100,7 +118,7 @@ class HomePage extends StatelessWidget {
           Text(
             option,
             style: TextStyle(
-              fontSize: 28,
+              fontSize: 26,
               height: 22 / 18,
               letterSpacing: -0.011249999515712261,
               fontFamily: 'Open Sans',

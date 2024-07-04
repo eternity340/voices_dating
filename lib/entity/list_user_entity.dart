@@ -1,9 +1,7 @@
 import 'dart:convert';
-
+import 'package:first_app/entity/user_photo_entity.dart';
 import '../utils/config_options_utils.dart';
 import 'json_format/json_format.dart';
-
-
 
 class ListUserEntity {
   ListUserEntity({
@@ -56,7 +54,8 @@ class ListUserEntity {
     this.winkedMe,
     this.visitedMeCnt,
     this.language,
-    this.matchLanguage
+    this.matchLanguage,
+    this.photos, // 新增字段用于存储图片信息
   });
 
   factory ListUserEntity.fromJson(Map<String, dynamic> json) {
@@ -69,12 +68,23 @@ class ListUserEntity {
         }
       }
     }
+
+
     final List<Object>? videoList =
     json['videoList'] is List ? <Object>[] : null;
     if (videoList != null) {
       for (final dynamic item in json['videoList']!) {
         if (item != null) {
           videoList.add(asT<Object>(item)!);
+        }
+      }
+    }
+
+    final List<UserPhotoEntity>? photos = json['photos'] is List ? <UserPhotoEntity>[] : null;
+    if (photos != null) {
+      for (final dynamic item in json['photos']!) {
+        if (item != null) {
+          photos.add(UserPhotoEntity.fromJson(asT<Map<String, dynamic>>(item)!));
         }
       }
     }
@@ -117,6 +127,7 @@ class ListUserEntity {
       member: asT<String?>(json['member']),
       online: asT<String?>(json['online']),
       photoCnt: asT<String?>(json['photoCnt']),
+      photos: photos,
       regDays: asT<int?>(json['regDays']),
       roomId: asT<String?>(json['roomId']),
       superLikeMeCnt: asT<int?>(json['superLikeMeCnt']),
@@ -134,6 +145,7 @@ class ListUserEntity {
       visitedMeCnt: asT<String?>(json['visitedMeCnt']),
       language: asT<String?>(json['language']),
       matchLanguage: asT<String?>(json['matchLanguage']),
+
     );
   }
 
@@ -170,6 +182,7 @@ class ListUserEntity {
   String? member;
   String? online;
   String? photoCnt;
+  List<UserPhotoEntity>? photos; // 添加存储图片信息的字段
   int? regDays;
   String? roomId;
   int? superLikeMeCnt;
@@ -187,6 +200,7 @@ class ListUserEntity {
   String? visitedMeCnt;
   String? language;
   String? matchLanguage;
+
 
   @override
   String toString() {
@@ -244,20 +258,24 @@ class ListUserEntity {
     'visitedMeCnt': visitedMeCnt,
     'language': language,
     'matchLanguage': matchLanguage,
+    'photos': photos,
   };
 
-  String getUserBasicInfo(){
+  String getUserBasicInfo() {
     StringBuffer buffer = StringBuffer();
     buffer.write(username);
 
     buffer.write(", ${getGenderStr()}");
-    buffer.write(", ${age??42}");
+    buffer.write(", ${age ?? 42}");
     return buffer.toString();
   }
 
-  String getGenderStr() => ConfigOptionsUtils.getValueByKey(type:
-  ProfileType.gender, key:int.tryParse(gender??"")??0);
+  String getGenderStr() =>
+      ConfigOptionsUtils.getValueByKey(type: ProfileType.gender,
+          key: int.tryParse(gender ?? "") ?? 0);
 }
+
+
 
 class CurrentLocation {
   CurrentLocation({
@@ -272,18 +290,17 @@ class CurrentLocation {
     this.curStateId,
   });
 
-  factory CurrentLocation.fromJson(Map<String, dynamic> json) =>
-      CurrentLocation(
-        countAbbr: asT<String?>(json['countAbbr']),
-        countCode: asT<String?>(json['countCode']),
-        curAddress: asT<String?>(json['curAddress']),
-        curCity: asT<String?>(json['curCity']),
-        curCityId: asT<String?>(json['curCityId']),
-        curCountry: asT<String?>(json['curCountry']),
-        curCountryId: asT<String?>(json['curCountryId']),
-        curState: asT<String?>(json['curState']),
-        curStateId: asT<String?>(json['curStateId']),
-      );
+  factory CurrentLocation.fromJson(Map<String, dynamic> json) => CurrentLocation(
+    countAbbr: asT<String?>(json['countAbbr']),
+    countCode: asT<String?>(json['countCode']),
+    curAddress: asT<String?>(json['curAddress']),
+    curCity: asT<String?>(json['curCity']),
+    curCityId: asT<String?>(json['curCityId']),
+    curCountry: asT<String?>(json['curCountry']),
+    curCountryId: asT<String?>(json['curCountryId']),
+    curState: asT<String?>(json['curState']),
+    curStateId: asT<String?>(json['curStateId']),
+  );
 
   String? countAbbr;
   String? countCode;

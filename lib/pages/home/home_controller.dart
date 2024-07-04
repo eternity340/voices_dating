@@ -22,11 +22,8 @@ class HomeController extends ChangeNotifier {
 
   void selectOption(String option) {
     selectedOption = option;
-    if (option == 'Honey') {
-      pageController.animateToPage(0, duration: Duration(milliseconds: 300), curve: Curves.ease);
-    } else {
-      pageController.animateToPage(1, duration: Duration(milliseconds: 300), curve: Curves.ease);
-    }
+    int pageIndex = (option == 'Honey') ? 0 : 1;
+    pageController.animateToPage(pageIndex, duration: Duration(milliseconds: 300), curve: Curves.ease);
     notifyListeners();
   }
 
@@ -38,9 +35,7 @@ class HomeController extends ChangeNotifier {
   Future<void> fetchUsers() async {
     if (isLoading || !hasMoreData) return;
 
-    isLoading = true;
-    errorMessage = null;
-    notifyListeners();
+    _setLoading(true);
 
     final Dio dio = Dio();
     const String url = 'https://api.masonvips.com/v1/search';
@@ -55,16 +50,18 @@ class HomeController extends ChangeNotifier {
           hasMoreData = false;
         } else {
           users.addAll(newUsers);
+          for (var user in newUsers) {
+            print(user.photos); // Print photos of each user
+          }
           currentPage++;
         }
       } else {
-        errorMessage = "Failed to fetch users: ${response.statusCode}";
+        _setErrorMessage("Failed to fetch users: ${response.statusCode}");
       }
     } catch (e) {
-      errorMessage = "Error fetching users: $e";
+      _setErrorMessage("Error fetching users: $e");
     } finally {
-      isLoading = false;
-      notifyListeners();
+      _setLoading(false);
     }
   }
 
@@ -72,6 +69,16 @@ class HomeController extends ChangeNotifier {
     if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
       fetchUsers();
     }
+  }
+
+  void _setLoading(bool value) {
+    isLoading = value;
+    notifyListeners();
+  }
+
+  void _setErrorMessage(String message) {
+    errorMessage = message;
+    notifyListeners();
   }
 
   @override

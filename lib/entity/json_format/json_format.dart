@@ -125,7 +125,7 @@ M _generateItemOBJ<M>(String typeStr, dynamic jsonObj) {
       obj = MomentEntity.fromJson(jsonObj);
       break;
     case 'ListUserEntity':
-      obj = ListUserEntity.fromJson(jsonObj);
+       obj = ListUserEntity.fromJson(jsonObj);
       break;
     case 'CityEntity':
       obj = CityEntity.fromJson(jsonObj);

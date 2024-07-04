@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'json_format/json_format.dart';
-
 
 class UserPhotoEntity {
   UserPhotoEntity({
