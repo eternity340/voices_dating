@@ -1,0 +1,75 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../constants/constant_data.dart';
+import '../entity/token_entity.dart';
+
+class AllNavigationBar extends StatelessWidget {
+  // final TokenEntity tokenEntity;
+  //
+  // AllNavigationBar({required this.tokenEntity});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Positioned(
+          bottom: 20, // 根据需要调整位置
+          left: 0,
+          right: 0,
+          child: Center(
+            child: Container(
+              width: 355, // 调整容器的宽度
+              height: 72,
+              child: Stack(
+                children: [
+                  Image.asset(
+                    ConstantData.imagePathNavigationBar,
+                    width: 355,
+                    height: 72,
+                    fit: BoxFit.cover,
+                  ),
+                  Container(
+                    width: 355,
+                    height: 72,
+                    color: Colors.white.withOpacity(0.6),
+                  ),
+                  Positioned(
+                    left: 40,
+                    top: 26,
+                    child: Row(
+                      children: [
+                        _buildNavItem(ConstantData.imagePathIconHomeActive, ConstantData.imagePathIconHomeInactive, '/home'),
+                        SizedBox(width: 43),
+                        _buildNavItem(ConstantData.imagePathIconBlogActive, ConstantData.imagePathIconBlogInactive, '/blog'),
+                        SizedBox(width: 43),
+                        _buildNavItem(ConstantData.imagePathIconVoiceActive, ConstantData.imagePathIconVoiceInactive, '/voice'),
+                        SizedBox(width: 43),
+                        _buildNavItem(ConstantData.imagePathIconMessageActive, ConstantData.imagePathIconMessageInactive, '/message'),
+                        SizedBox(width: 43),
+                        _buildNavItem(ConstantData.imagePathIconMeActive, ConstantData.imagePathIconMeInactive, '/me'),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNavItem(String activeIcon, String inactiveIcon, String route) {
+    bool isActive = Get.currentRoute == route;
+    return GestureDetector(
+      onTap: () {
+        Get.toNamed(route);
+      },
+      child: Image.asset(
+        isActive ? activeIcon : inactiveIcon,
+        width: 23,
+        height: 24,
+      ),
+    );
+  }
+}

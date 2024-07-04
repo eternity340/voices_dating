@@ -2,81 +2,81 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:math';
+import '../entity/token_entity.dart';
 
-Future<Map<String, String>?> getToken() async {
-  String appId = 'fed327531298e7f863cdf2c2ad0903e9';
-  String appSecret = '0013ce26-7219-b304-1d18-072c46c0aab2';
-  int currentTimeStamp = (DateTime.now().millisecondsSinceEpoch / 1000).round();
-  String nonce = generateNonce(4);
-  String signKey = generateMD5('$currentTimeStamp$appId$appSecret$nonce');
+class TokenService {
+  static const String _appId = 'fed327531298e7f863cdf2c2ad0903e9';
+  static const String _appSecret = '0013ce26-7219-b304-1d18-072c46c0aab2';
 
-  // 创建请求头
-  Map<String, dynamic> tokenHeader = {
-    'AppId': appId,
-    'Signature': signKey,
-    'Nonce': nonce,
-    'Timestamp': currentTimeStamp,
-  };
+  Dio _dio = Dio();
 
-  Dio dio = Dio();
+  Future<TokenEntity?> getToken() async {
+    int currentTimeStamp = (DateTime.now().millisecondsSinceEpoch / 1000).round();
+    String nonce = _generateNonce(4);
+    String signKey = _generateMD5('$currentTimeStamp$_appId$_appSecret$nonce');
 
-  int retryCount = 0;
-  int maxRetries = 3;
+    // 创建请求头
+    Map<String, dynamic> tokenHeader = {
+      'AppId': _appId,
+      'Signature': signKey,
+      'Nonce': nonce,
+      'Timestamp': currentTimeStamp,
+    };
 
-  while (retryCount < maxRetries) {
-    try {
-      Response response = await dio.post(
-        'https://api.masonvips.com/v1/access_token',
-        options: Options(
-          headers: tokenHeader,
-        ),
-      );
+    int retryCount = 0;
+    int maxRetries = 3;
 
-      if (response.statusCode == 200) {
-        print('Token received: ${response.data['access_token']}');
-        return {
-          'access_token': response.data['access_token'],
-          'Signature': signKey,
-        }; // 返回包含 access_token 和 Signature 的 Map
-      } else {
-        print('Failed to get token: ${response.statusCode}, ${response.data}');
-        return null;
-      }
-    } catch (e) {
-      print('Error: $e');
-      retryCount++;
-      if (retryCount < maxRetries) {
-        print('Retrying to get token... attempt $retryCount');
-        await Future.delayed(Duration(seconds: 2));
-      } else {
-        print('Failed to get token after $retryCount attempts');
-        return null;
+    while (retryCount < maxRetries) {
+      try {
+        Response response = await _dio.post(
+          'https://api.masonvips.com/v1/access_token',
+          options: Options(
+            headers: tokenHeader,
+          ),
+        );
+
+        if (response.statusCode == 200) {
+          print('Token received: ${response.data['access_token']}');
+          return TokenEntity.fromJson(response.data); // 返回 TokenEntity 实例
+        } else {
+          print('Failed to get token: ${response.statusCode}, ${response.data}');
+          return null;
+        }
+      } catch (e) {
+        print('Error: $e');
+        retryCount++;
+        if (retryCount < maxRetries) {
+          print('Retrying to get token... attempt $retryCount');
+          await Future.delayed(Duration(seconds: 2));
+        } else {
+          print('Failed to get token after $retryCount attempts');
+          return null;
+        }
       }
     }
+    return null;
   }
-  return null;
-}
 
-String generateNonce(int length) {
-  const chars = '0123456789';
-  Random rnd = Random();
-  return String.fromCharCodes(Iterable.generate(length, (_) => chars.codeUnitAt(rnd.nextInt(chars.length))));
-}
+  String _generateNonce(int length) {
+    const chars = '0123456789';
+    Random rnd = Random();
+    return String.fromCharCodes(Iterable.generate(length, (_) => chars.codeUnitAt(rnd.nextInt(chars.length))));
+  }
 
-String generateMD5(String input) {
-  return md5.convert(utf8.encode(input)).toString();
+  String _generateMD5(String input) {
+    return md5.convert(utf8.encode(input)).toString();
+  }
 }
 
 Future<void> initializeToken({
-  required Function(String) onSuccess,
+  required Function(TokenEntity) onSuccess,
   required Function(String) onError,
 }) async {
-  Map<String, String>? tokenData = await getToken();
-  if (tokenData != null) {
-    onSuccess(tokenData['access_token']!);
-    print('Token initialized: ${tokenData['access_token']}');
+  TokenService tokenService = TokenService();
+  TokenEntity? tokenEntity = await tokenService.getToken();
+  if (tokenEntity != null) {
+    onSuccess(tokenEntity);
   } else {
     onError("Unable to obtain access token.");
-    print('Failed to initialize token');
   }
 }

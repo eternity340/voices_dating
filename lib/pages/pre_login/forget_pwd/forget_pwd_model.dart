@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:get/get.dart';
 import '../../../service/token_service.dart';
+import '../../../entity/token_entity.dart'; // 导入 TokenEntity 类
 
 class ForgetPwdModel extends ChangeNotifier {
   final TextEditingController emailController = TextEditingController();
   final dio.Dio _dio = dio.Dio();
   bool _isLoading = false;
   String? _errorMessage;
-  String? _accessToken;
+  TokenEntity? _tokenEntity; // 使用 TokenEntity 替代 _accessToken
 
   ForgetPwdModel() {
     _initializeToken();
@@ -19,8 +20,8 @@ class ForgetPwdModel extends ChangeNotifier {
 
   Future<void> _initializeToken() async {
     await initializeToken(
-      onSuccess: (token) {
-        _accessToken = token;
+      onSuccess: (tokenEntity) {
+        _tokenEntity = tokenEntity;
         notifyListeners();
       },
       onError: (errorMessage) {
@@ -31,8 +32,8 @@ class ForgetPwdModel extends ChangeNotifier {
   }
 
   Future<void> sendResetEmail() async {
-    if (_accessToken == null) {
-      _errorMessage = "无可用的访问令牌。";
+    if (_tokenEntity == null || _tokenEntity?.accessToken == null) {
+      _errorMessage = "No access token available";
       notifyListeners();
       return;
     }
@@ -40,7 +41,7 @@ class ForgetPwdModel extends ChangeNotifier {
     final String email = emailController.text.trim();
 
     if (email.isEmpty) {
-      _errorMessage = "邮箱不能为空。";
+      _errorMessage = "email can not be empty";
       notifyListeners();
       return;
     }
@@ -57,23 +58,23 @@ class ForgetPwdModel extends ChangeNotifier {
       final response = await _dio.post(
         'https://api.masonvips.com/v1/forget_password',
         data: formData,
-        options: dio.Options(headers: {'token': _accessToken}),
+        options: dio.Options(headers: {'token': _tokenEntity!.accessToken}),
       );
 
       if (response.data['code'] == 200) {
         final bool ret = response.data['data']['ret'];
         if (ret) {
-          _showDialog("成功", "重置邮件发送成功");
+          _showDialog("success", "Reset email sent successfully");
         } else {
-          _errorMessage = "发送重置邮件失败";
+          _errorMessage = "Failed to send reset email";
         }
       } else {
         final errCode = response.data['errCode'];
         final errMsg = response.data['errMsg'];
-        _errorMessage = "错误 $errCode: $errMsg";
+        _errorMessage = "error $errCode: $errMsg";
       }
     } catch (e) {
-      _errorMessage = "异常: $e";
+      _errorMessage = "exception: $e";
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -92,7 +93,7 @@ class ForgetPwdModel extends ChangeNotifier {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text("确定"),
+              child: const Text("Confirm"),
             ),
           ],
         );

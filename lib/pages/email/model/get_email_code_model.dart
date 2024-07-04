@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import '../../../net/error_handler.dart';
 import '../../../service/token_service.dart';
+import '../../../entity/token_entity.dart';
 import '../page/verify_email_page.dart';
 
 class GetEmailCodeModel extends ChangeNotifier {
@@ -10,7 +11,7 @@ class GetEmailCodeModel extends ChangeNotifier {
   final Dio _dio = Dio();
   bool _isLoading = false;
   String? _errorMessage;
-  String? _accessToken;
+  TokenEntity? _tokenEntity;
 
   GetEmailCodeModel() {
     _initializeToken();
@@ -21,8 +22,8 @@ class GetEmailCodeModel extends ChangeNotifier {
 
   Future<void> _initializeToken() async {
     await initializeToken(
-      onSuccess: (token) {
-        _accessToken = token;
+      onSuccess: (tokenEntity) {
+        _tokenEntity = tokenEntity;
         notifyListeners();
       },
       onError: (errorMessage) {
@@ -33,7 +34,7 @@ class GetEmailCodeModel extends ChangeNotifier {
   }
 
   Future<void> sendVerificationCode(BuildContext context) async {
-    if (_accessToken == null) {
+    if (_tokenEntity == null || _tokenEntity?.accessToken == null) {
       _errorMessage = "No access token available.";
       print('No access token available');
       notifyListeners();
@@ -50,7 +51,7 @@ class GetEmailCodeModel extends ChangeNotifier {
       final response = await _dio.get(
         'https://api.masonvips.com/v1/email_verification_code',
         queryParameters: {'email': email},
-        options: Options(headers: {'token': _accessToken}),
+        options: Options(headers: {'token': _tokenEntity!.accessToken}),
       );
 
       if (response.statusCode == 200) {

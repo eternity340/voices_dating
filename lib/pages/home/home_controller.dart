@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import '../../../entity/list_user_entity.dart';
+import '../../../entity/token_entity.dart'; // 导入 TokenEntity
 
 class HomeController extends ChangeNotifier {
   String selectedOption = 'Honey';
@@ -9,11 +10,11 @@ class HomeController extends ChangeNotifier {
   List<ListUserEntity> users = [];
   bool isLoading = false;
   String? errorMessage;
-  late String _accessToken;
+  TokenEntity? _tokenEntity; // 使用 TokenEntity 类型
   int currentPage = 1;
   bool hasMoreData = true;
 
-  HomeController(this._accessToken) {
+  HomeController(this._tokenEntity) {
     pageController = PageController(initialPage: 0);
     scrollController = ScrollController();
     fetchUsers(); // Automatically fetch users when token is initialized
@@ -41,7 +42,7 @@ class HomeController extends ChangeNotifier {
     const String url = 'https://api.masonvips.com/v1/search';
 
     try {
-      final response = await dio.get(url, queryParameters: {'page': currentPage}, options: Options(headers: {'token': _accessToken}));
+      final response = await dio.get(url, queryParameters: {'page': currentPage}, options: Options(headers: {'token': _tokenEntity?.accessToken}));
       if (response.statusCode == 200) {
         print(response.data); // Print raw response to debug
         final List<dynamic> jsonList = response.data['data'] as List<dynamic>;

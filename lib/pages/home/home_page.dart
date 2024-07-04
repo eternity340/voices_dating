@@ -1,22 +1,24 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:get/get.dart' as getx;
 import '../../components/background.dart';
 import 'components/home_icon_button.dart';
 import 'home_controller.dart';
 import 'home_provider.dart';
 import '../../constants/constant_data.dart';
 import 'components/user_card.dart';
-import 'components/home_navigation_bar.dart'; // 导入修改后的组件
+import '../../components/all_navigation_bar.dart';
+import '../../../entity/token_entity.dart';
 
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final Map<String, dynamic> arguments = getx.Get.arguments as Map<String, dynamic>;
-    final String token = arguments['token'];
+    final Map<String, dynamic> arguments = Get.arguments as Map<String, dynamic>;
+    final TokenEntity tokenEntity = arguments['token'] as TokenEntity;
 
     return HomePageProvider(
-      token: token,
+      tokenEntity: tokenEntity,
       child: Consumer<HomeController>(
         builder: (context, model, child) {
           return Scaffold(
@@ -89,7 +91,7 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                 ),
-                HomeNavigationBar(), // 使用重命名后的组件
+                AllNavigationBar(), // 传递 tokenEntity
               ],
             ),
           );

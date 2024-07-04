@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart' as getx;
 import '../../../constants/constant_data.dart';
 import '../../../service/token_service.dart';
+import '../../../entity/token_entity.dart';
 
 class SignInModel extends ChangeNotifier {
   final TextEditingController emailController = TextEditingController();
@@ -12,7 +13,7 @@ class SignInModel extends ChangeNotifier {
   String? _emailErrorMessage;
   String? _passwordErrorMessage;
   String? _errorMessage;
-  String? _accessToken;
+  TokenEntity? _tokenEntity;
 
   SignInModel() {
     _initializeToken();
@@ -25,8 +26,8 @@ class SignInModel extends ChangeNotifier {
 
   Future<void> _initializeToken() async {
     await initializeToken(
-      onSuccess: (token) {
-        _accessToken = token;
+      onSuccess: (tokenEntity) {
+        _tokenEntity = tokenEntity;
         notifyListeners();
       },
       onError: (errorMessage) {
@@ -56,7 +57,7 @@ class SignInModel extends ChangeNotifier {
       _passwordErrorMessage = null;
     }
 
-    if (_accessToken == null) {
+    if (_tokenEntity == null || _tokenEntity?.accessToken == null) {
       _errorMessage = "No access token available.";
       notifyListeners();
       return;
@@ -78,14 +79,14 @@ class SignInModel extends ChangeNotifier {
         options: Options(
           headers: {
             'Content-Type': 'multipart/form-data',
-            'token': _accessToken,
+            'token': _tokenEntity?.accessToken,
           },
         ),
       );
 
       if (response.data[ConstantData.code] == 200) {
         // 登录成功，跳转到首页并传递 token
-        getx.Get.toNamed('/home', arguments: {'token': _accessToken});
+        getx.Get.toNamed('/home', arguments: {'token': _tokenEntity});
       } else if (response.data[ConstantData.code] == ConstantData.errorCodeInvalidEmailOrPassword) {
         _errorMessage = response.data[ConstantData.message];
         _showErrorDialog(_errorMessage);

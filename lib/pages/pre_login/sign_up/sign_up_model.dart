@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart' as getx;
 import '../../../constants/constant_data.dart';
 import '../../../entity/User.dart'; // 确保路径正确
+import '../../../entity/token_entity.dart'; // 确保路径正确
 import '../../../service/token_service.dart'; // 确保路径正确
 
 class SignUpModel extends ChangeNotifier {
@@ -13,7 +14,7 @@ class SignUpModel extends ChangeNotifier {
   String? _usernameErrorMessage;
   String? _passwordErrorMessage;
   String? _errorMessage;
-  String? _accessToken;
+  TokenEntity? _tokenEntity; // 使用 TokenEntity 替代 _accessToken
 
   SignUpModel() {
     _initializeToken();
@@ -27,8 +28,8 @@ class SignUpModel extends ChangeNotifier {
 
   Future<void> _initializeToken() async {
     await initializeToken(
-      onSuccess: (token) {
-        _accessToken = token;
+      onSuccess: (tokenEntity) {
+        _tokenEntity = tokenEntity;
         notifyListeners();
       },
       onError: (errorMessage) {
@@ -82,7 +83,7 @@ class SignUpModel extends ChangeNotifier {
       notifyListeners();
       return;
     }
-    if (_accessToken == null) {
+    if (_tokenEntity == null || _tokenEntity?.accessToken == null) {
       _errorMessage = "No access token available.";
       notifyListeners();
       return;
@@ -101,7 +102,7 @@ class SignUpModel extends ChangeNotifier {
         options: Options(
           headers: {
             'Content-Type': 'multipart/form-data',
-            'token': _accessToken,
+            'token': _tokenEntity!.accessToken, // 使用 _tokenEntity 的 accessToken
           },
         ),
       );
