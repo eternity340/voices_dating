@@ -4,9 +4,11 @@ class GradientButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
   final double? width;
-  final TextStyle? textStyle; // 声明 textStyle 参数
+  final TextStyle? textStyle;
 
-  GradientButton({required this.text, required this.onPressed, this.width, this.textStyle});
+  var height; // 声明 textStyle 参数
+
+  GradientButton({required this.text, required this.onPressed, this.width ,this.height , this.textStyle});
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +16,7 @@ class GradientButton extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         width: width ?? 248,
+        height: height ?? 49,
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
         decoration: BoxDecoration(
           gradient: const LinearGradient(

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-
 class Background extends StatelessWidget {
   final Widget child;
-  final bool showBackButton; // 新增参数控制是否显示返回按钮
+  final bool showBackButton; // 控制是否显示返回按钮
+  final bool showSettingButton; // 控制是否显示设置按钮
 
   const Background({
     Key? key,
     required this.child,
     this.showBackButton = true, // 默认显示返回按钮
+    this.showSettingButton = false, // 默认不显示设置按钮
   }) : super(key: key);
 
   @override
@@ -61,6 +62,22 @@ class Background extends StatelessWidget {
                       ),
                     ),
                   ],
+                ),
+              ),
+            ),
+          if (showSettingButton)
+            Positioned(
+              top: MediaQuery.of(context).padding.top + 16.0, // 紧贴状态栏，并留出一些间距
+              right: 16.0, // 添加右侧间距
+              child: GestureDetector(
+                onTap: () {
+                  // 处理设置按钮点击事件
+                  // 这里可以实现跳转到设置页面或其他设置相关操作
+                },
+                child: Image.asset(
+                  'assets/images/button_round_setting.png',
+                  width: 40,
+                  height: 40,
                 ),
               ),
             ),
