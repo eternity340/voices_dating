@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -33,69 +32,38 @@ class HomePage extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Container(
-                              width: double.infinity,
-                              height: 40,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    child: _buildOption(model, ConstantData.honeyOption),
-                                  ),
-                                  SizedBox(width: 20), // Space between options
-                                  Expanded(
-                                    child: _buildOption(model, ConstantData.nearbyOption),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              height: 800, // Adjust the height as needed
-                              child: PageView(
-                                controller: model.pageController,
-                                onPageChanged: model.onPageChanged,
-                                children: [
-                                  ListView(
-                                    children: [
-                                      _buildButtonRow(),
-                                      if (model.isLoading)
-                                        CircularProgressIndicator()
-                                      else if (model.errorMessage != null)
-                                        Text('Error: ${model.errorMessage}')
-                                      else
-                                        ...model.users.map((user) => Padding(
-                                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                                          child: UserCard(userEntity: user),
-                                        )),
-                                    ],
-                                  ),
-                                  ListView(
-                                    children: [
-                                      if (model.isLoading)
-                                        CircularProgressIndicator()
-                                      else if (model.errorMessage != null)
-                                        Text('Error: ${model.errorMessage}')
-                                      else
-                                        ...model.users.map((user) => Padding(
-                                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                                          child: UserCard(userEntity: user),
-                                        )),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
+                            _buildOptionsRow(model),
+                            _buildPageView(model),
                           ],
                         ),
                       ),
                     ),
                   ),
                 ),
-                AllNavigationBar(), // 传递 tokenEntity
+                AllNavigationBar(tokenEntity: tokenEntity), // 传递 tokenEntity
               ],
             ),
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildOptionsRow(HomeController model) {
+    return Container(
+      width: double.infinity,
+      height: 40,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: _buildOption(model, ConstantData.honeyOption),
+          ),
+          SizedBox(width: 20), // Space between options
+          Expanded(
+            child: _buildOption(model, ConstantData.nearbyOption),
+          ),
+        ],
       ),
     );
   }
@@ -129,6 +97,37 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildPageView(HomeController model) {
+    return Container(
+      height: 800, // Adjust the height as needed
+      child: PageView(
+        controller: model.pageController,
+        onPageChanged: model.onPageChanged,
+        children: [
+          _buildUserList(model),
+          _buildUserList(model),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUserList(HomeController model) {
+    return ListView(
+      children: [
+        _buildButtonRow(),
+        if (model.isLoading)
+          CircularProgressIndicator()
+        else if (model.errorMessage != null)
+          Text('Error: ${model.errorMessage}')
+        else
+          ...model.users.map((user) => Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            child: UserCard(userEntity: user),
+          )),
+      ],
     );
   }
 

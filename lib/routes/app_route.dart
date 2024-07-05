@@ -1,3 +1,5 @@
+import 'package:first_app/pages/blog/blog_page.dart';
+import 'package:first_app/pages/voice/voice_page.dart';
 import 'package:get/get.dart' as getx;
 import '../pages/email/page/get_email_code_page.dart';
 import '../pages/email/page/verify_email_page.dart';
@@ -98,6 +100,13 @@ class AppRoutes {
       name: '/home',
       page: () => HomePage(),
     ),
-
+    getx.GetPage(
+      name: '/blog',
+      page: () => BlogPage(),
+    ),
+    getx.GetPage(
+      name: '/voice',
+      page: () => VoicePage(),
+    ),
   ];
 }

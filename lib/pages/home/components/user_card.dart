@@ -125,7 +125,7 @@ class UserCard extends StatelessWidget {
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              '${userEntity.age ?? 0} years old',
+                              '${userEntity.age ?? 0} ',
                               style: const TextStyle(
                                 fontSize: 12,
                                 fontFamily: 'Open Sans',

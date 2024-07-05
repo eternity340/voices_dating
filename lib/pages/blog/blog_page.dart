@@ -13,14 +13,14 @@ class BlogPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Blog'),
       ),
-      body: Stack(
+      body: const Stack(
         children: [
           Center(
             child: Text('Welcome to the Blog Page!'),
           ),
           Align(
             alignment: Alignment.bottomCenter,
-            child: AllNavigationBar(), // Pass tokenEntity to AllNavigationBar
+
           ),
         ],
       ),

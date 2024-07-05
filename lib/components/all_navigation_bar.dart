@@ -4,21 +4,21 @@ import '../constants/constant_data.dart';
 import '../entity/token_entity.dart';
 
 class AllNavigationBar extends StatelessWidget {
-  // final TokenEntity tokenEntity;
-  //
-  // AllNavigationBar({required this.tokenEntity});
+  final TokenEntity tokenEntity; // 添加 tokenEntity 属性
+
+  AllNavigationBar({required this.tokenEntity}); // 构造函数接收 tokenEntity
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         Positioned(
-          bottom: 20, // 根据需要调整位置
+          bottom: 20,
           left: 0,
           right: 0,
           child: Center(
             child: Container(
-              width: 355, // 调整容器的宽度
+              width: 355,
               height: 72,
               child: Stack(
                 children: [
@@ -63,7 +63,7 @@ class AllNavigationBar extends StatelessWidget {
     bool isActive = Get.currentRoute == route;
     return GestureDetector(
       onTap: () {
-        Get.toNamed(route);
+        Get.toNamed(route, arguments: {'token': tokenEntity}); // 传递 tokenEntity
       },
       child: Image.asset(
         isActive ? activeIcon : inactiveIcon,

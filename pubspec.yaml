@@ -90,6 +90,7 @@ flutter:
     - family: OpenSans
       fonts:
         - asset: assets/fonts/OpenSans/OpenSans-Regular.ttf
+          weight: 600
     - family: Poppins
       fonts:
         - asset: assets/fonts/Poppins/Poppins-Regular.ttf
