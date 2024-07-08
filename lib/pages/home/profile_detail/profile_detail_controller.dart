@@ -1,9 +1,9 @@
 import '../../../entity/list_user_entity.dart';
 
-class UserDetailController {
+class ProfileDetailController {
   final ListUserEntity userEntity;
 
-  UserDetailController({required this.userEntity});
+  ProfileDetailController({required this.userEntity});
 
 
 }

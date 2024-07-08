@@ -6,6 +6,7 @@ import '../pages/email/page/verify_email_page.dart';
 import '../pages/email/page/verify_success_page.dart';
 import '../pages/email/provider/get_email_code_provider.dart';
 import '../pages/home/home_page.dart';
+import '../pages/me/me_page.dart';
 import '../pages/pre_login/forget_pwd/forget_pwd_page.dart';
 import '../pages/pre_login/forget_pwd/forget_pwd_provider.dart';
 import '../pages/pre_login/sign_in/sign_in_provider.dart';
@@ -107,6 +108,10 @@ class AppRoutes {
     getx.GetPage(
       name: '/voice',
       page: () => VoicePage(),
+    ),
+    getx.GetPage(
+      name: '/me',
+      page: () => MePage(),
     ),
   ];
 }

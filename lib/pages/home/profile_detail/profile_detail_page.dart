@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import '../../../components/background.dart';
 import '../../../components/gradient_btn.dart';
 import '../components/profile_photo_wall.dart';
-import 'user_detail_controller.dart';
+import 'profile_detail_controller.dart';
 import '../../../entity/list_user_entity.dart';
 import '../components/profile_card.dart'; // Import the ProfileCard component
 
-class UserDetailPage extends StatelessWidget {
-  final UserDetailController controller;
+class ProfileDetailPage extends StatelessWidget {
+  final ProfileDetailController controller;
 
-  UserDetailPage({Key? key, required ListUserEntity userEntity})
-      : controller = UserDetailController(userEntity: userEntity),
+  ProfileDetailPage({Key? key, required ListUserEntity userEntity})
+      : controller = ProfileDetailController(userEntity: userEntity),
         super(key: key);
 
   @override
@@ -92,9 +92,11 @@ class UserDetailPage extends StatelessWidget {
                       ),
                     ],
                   ),
+
                   SizedBox(height: 156), // Space between ProfileCard and Headline
+
                   Container(
-                    width: 283,
+                    width: 355,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -117,7 +119,42 @@ class UserDetailPage extends StatelessWidget {
                             color: Color(0xFF000000),
                           ),
                         ),
-                        SizedBox(height: 50), // Space between headline and About Me
+                        SizedBox(height: 50), // Space between headline and moments
+                        const Text(
+                          'Moments',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontFamily: 'Open Sans',
+                            color: Color(0xFF000000),
+                          ),
+                        ),
+                        SizedBox(height: 16), // Space between moments and photo slider
+                        Stack(
+                          children: [
+                            Container(
+                              height: 105,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: 5,
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(right: 16.0),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      child: Image.asset(
+                                        'assets/images/0${index + 1}.jpg',
+                                        width: 105,
+                                        height: 105,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 50), // Space between moments and About Me
                         const Text(
                           'About Me',
                           style: TextStyle(

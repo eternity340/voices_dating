@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' as getx;
 import '../../../constants/constant_data.dart';
+import '../../../entity/user_data_entity.dart';
 import '../../../service/token_service.dart';
 import '../../../entity/token_entity.dart';
 

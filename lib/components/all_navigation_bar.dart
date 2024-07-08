@@ -1,3 +1,4 @@
+import 'package:first_app/entity/user_data_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../constants/constant_data.dart';
@@ -22,16 +23,22 @@ class AllNavigationBar extends StatelessWidget {
               height: 72,
               child: Stack(
                 children: [
-                  Image.asset(
-                    ConstantData.imagePathNavigationBar,
-                    width: 355,
-                    height: 72,
-                    fit: BoxFit.cover,
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10), // 设置圆角半径
+                    child: Image.asset(
+                      ConstantData.imagePathNavigationBar,
+                      width: 355,
+                      height: 72,
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                  Container(
-                    width: 355,
-                    height: 72,
-                    color: Colors.white.withOpacity(0.6),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(25), // 设置与图片相同的圆角半径
+                    child: Container(
+                      width: 355,
+                      height: 72,
+                      color: Colors.white.withOpacity(0.6),
+                    ),
                   ),
                   Positioned(
                     left: 40,

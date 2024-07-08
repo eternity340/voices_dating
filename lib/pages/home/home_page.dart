@@ -1,3 +1,4 @@
+import 'package:first_app/entity/user_data_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +16,6 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final Map<String, dynamic> arguments = Get.arguments as Map<String, dynamic>;
     final TokenEntity tokenEntity = arguments['token'] as TokenEntity;
-
     return HomePageProvider(
       tokenEntity: tokenEntity,
       child: Consumer<HomeController>(
@@ -25,22 +25,35 @@ class HomePage extends StatelessWidget {
               children: [
                 Background(
                   showBackButton: false,
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: SingleChildScrollView(
+                  child: SingleChildScrollView(
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            _buildOptionsRow(model),
+                            SizedBox(height: 200),
                             _buildPageView(model),
+                            SizedBox(height: 150),
                           ],
                         ),
                       ),
                     ),
                   ),
                 ),
-                AllNavigationBar(tokenEntity: tokenEntity), // 传递 tokenEntity
+                Positioned(
+                  top: 70,
+                  left: 0,
+                  right: 0,
+                  child: Column(
+                    children: [
+                      _buildOptionsRow(model),
+                      SizedBox(height: 20), // Space between options and buttons
+                      _buildButtonRow(),
+                    ],
+                  ),
+                ),
+                AllNavigationBar(tokenEntity: tokenEntity),
               ],
             ),
           );
@@ -53,6 +66,7 @@ class HomePage extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: 40,
+      color: Colors.transparent, // Adjust color as needed
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -102,44 +116,66 @@ class HomePage extends StatelessWidget {
 
   Widget _buildPageView(HomeController model) {
     return Container(
-      height: 800, // Adjust the height as needed
+      height: 700, // Adjust the height as needed
       child: PageView(
         controller: model.pageController,
         onPageChanged: model.onPageChanged,
         children: [
-          _buildUserList(model),
-          _buildUserList(model),
+          _buildUserListView(model),
+          _buildUserListView(model),
         ],
       ),
     );
   }
 
-  Widget _buildUserList(HomeController model) {
-    return ListView(
-      children: [
-        _buildButtonRow(),
-        if (model.isLoading)
-          CircularProgressIndicator()
-        else if (model.errorMessage != null)
-          Text('Error: ${model.errorMessage}')
-        else
-          ...model.users.map((user) => Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10.0),
-            child: UserCard(userEntity: user),
-          )),
-      ],
+  Widget _buildUserListView(HomeController model) {
+    return SingleChildScrollView(
+      child: ListView(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        children: [
+          if (model.isLoading)
+            CircularProgressIndicator()
+          else if (model.errorMessage != null)
+            Text('Error: ${model.errorMessage}')
+          else
+            ...model.users.map((user) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              child: UserCard(userEntity: user),
+            )),
+        ],
+      ),
     );
   }
 
   Widget _buildButtonRow() {
     return Row(
+
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        HomeIconButton(imagePath: ConstantData.imagePathLike, shadowColor: Color(0xFFFFD1D1).withOpacity(0.3736)),
-        HomeIconButton(imagePath: ConstantData.imagePathClock, shadowColor: Color(0xFFF6D3FF).withOpacity(0.369)),
-        HomeIconButton(imagePath: ConstantData.imagePathGame, shadowColor: Color(0xFFFCA6C5).withOpacity(0.2741)),
-        HomeIconButton(imagePath: ConstantData.imagePathFeel, shadowColor: Color(0xFFFFEA31).withOpacity(0.3495)),
+        HomeIconButton(
+          imagePath: ConstantData.imagePathLike,
+          shadowColor: Color(0xFFFFD1D1).withOpacity(0.3736),
+          // labelText: 'Feel',
+        ),
+        HomeIconButton(
+          imagePath: ConstantData.imagePathClock,
+          shadowColor: Color(0xFFF6D3FF).withOpacity(0.369),
+          // labelText: 'Get up',
+        ),
+        HomeIconButton(
+          imagePath: ConstantData.imagePathGame,
+          shadowColor: Color(0xFFFCA6C5).withOpacity(0.2741),
+          // labelText: 'Game',
+        ),
+        HomeIconButton(
+          imagePath: ConstantData.imagePathFeel,
+          shadowColor: Color(0xFFFFEA31).withOpacity(0.3495),
+          // labelText: 'Gossip',
+        ),
+        SizedBox(height: 100),
       ],
     );
+
   }
 }

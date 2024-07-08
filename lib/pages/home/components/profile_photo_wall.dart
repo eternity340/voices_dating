@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import '../user_detail/user_detail_controller.dart';
+import '../profile_detail/profile_detail_controller.dart';
 
 
 class ProfilePhotoWall extends StatefulWidget {
-  final UserDetailController controller;
+  final ProfileDetailController controller;
 
   ProfilePhotoWall({required this.controller});
 

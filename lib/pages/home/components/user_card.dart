@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../entity/list_user_entity.dart';
-import '../user_detail/user_detail_page.dart';
+import '../profile_detail/profile_detail_page.dart';
 
 class UserCard extends StatelessWidget {
   final ListUserEntity userEntity;
@@ -12,7 +12,7 @@ class UserCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.to(() => UserDetailPage(userEntity: userEntity));
+        Get.to(() => ProfileDetailPage(userEntity: userEntity));
       },
       child: Container(
         width: 335,
