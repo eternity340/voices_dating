@@ -29,7 +29,7 @@ class Background extends StatelessWidget {
               ),
             ),
           // 页面内容
-          Positioned.fill(
+            Positioned.fill(
             child: Padding(
               padding: EdgeInsets.only(
                 top: MediaQuery.of(context).padding.top + 8.0, // 留出顶部间距

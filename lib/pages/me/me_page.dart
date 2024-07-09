@@ -9,9 +9,6 @@ import 'me_controller.dart';
 class MePage extends StatelessWidget {
   final MeController controller = Get.put(MeController());
 
-
-
-
   @override
   Widget build(BuildContext context) {
     final tokenEntity = Get.arguments['token'] as TokenEntity;
@@ -24,279 +21,173 @@ class MePage extends StatelessWidget {
             showSettingButton: false,
             child: Container(), // 保持child参数的存在
           ),
-          Positioned(
-            top: 60.0,
-            right: 24.0,
-            child: Row(
-              children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  color: Colors.red.withOpacity(0.5), // 添加一个半透明的红色背景以便调试
-                  child: IconButton(
-                    icon: Image.asset(
-                      'assets/images/icon_me_left.png',
-                      width: 40,
-                      height: 40,
-                    ),
-                    onPressed: () {
-                      // Add your onPressed logic here
-                    },
-                  ),
-                ),
-                SizedBox(width: 24), // 间隔24px
-                Container(
-                  width: 40,
-                  height: 40,
-                  color: Colors.blue.withOpacity(0.5), // 添加一个半透明的蓝色背景以便调试
-                  child: IconButton(
-                    icon: Image.asset(
-                      'assets/images/icon_me_right.png',
-                      width: 40,
-                      height: 40,
-                    ),
-                    onPressed: () {
-                      // Add your onPressed logic here
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Positioned(
-            top: 130.0,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  // 外部椭圆形的线圈
-                  CustomPaint(
-                    size: Size(95, 95),
-                    painter: OuterOvalPainter(),
-                  ),
-                  // 内部的椭圆形图片
-                  ClipOval(
-                    child: Image.network(
-                      userData.avatar ?? 'assets/images/placeholder1.png', // 提供默认头像路径
-                      width: 95,
-                      height: 95,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Image.asset(
-                          'assets/images/placeholder1.png',
-                          width: 95,
-                          height: 95,
-                          fit: BoxFit.cover,
-                        );
-                      },
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: Container(
-                      width: 34,
-                      height: 34,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Color(0xFFD7FAAD),
-                      ),
-                      child: IconButton(
-                        icon: Image.asset(
-                          'assets/images/icon_add_photo.png',
-                          width: 24,
-                          height: 24,
-                        ),
-                        onPressed: () {
-                          // Add your onPressed logic here
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Positioned(
-            top: 240.0, // 调整这个值以控制文字相对于图片的垂直位置
-            left: 0,
-            right: 0,
-            child: Center(
-              child: Column(
-                children: [
-                  Text(
-                    userData.username,
-                    style: TextStyle(
-                      fontFamily: 'Open Sans',
-                      fontSize: 20,
-                      color: Colors.black,
-                    ),
-                  ),
-                  SizedBox(height: 2), // 文字间距
-                  Row(
-                    mainAxisSize: MainAxisSize.min, // 使 Row 的宽度适应其子组件的宽度
-                    children: [
-                      Text(
-                        userData.location!.country.toString(),
-                        style: TextStyle(
-                          fontFamily: 'Open Sans',
-                          fontSize: 14,
-                          color: Color(0xFF8E8E93),
-                        ),
-                      ),
-                      SizedBox(width: 2),
-                      Text(
-                        '|',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontFamily: 'Open Sans',
-                          color: Color(0xFF8E8E93),
-                        ),
-                      ), // 数字和文字间距
-                      SizedBox(width: 2),
-                      Text(
-                        userData.age.toString(),
-                        style: TextStyle(
-                          fontFamily: 'Open Sans',
-                          fontSize: 14,
-                          color: Color(0xFF8E8E93),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Positioned(
-            top: 330,
-            left: MediaQuery.of(context).size.width / 2 - 167.5, // 居中放置
-            child: Stack(
-              children: [
-                // 这里是你需要添加的蒙版
-                Container(
-                  width: 335,
-                  height: 116,
-                  decoration: BoxDecoration(
-                    color: Color.fromRGBO(216, 216, 216, 0.01), // 填充颜色
-                    borderRadius: BorderRadius.circular(10), // 圆角
-                    border: Border.all(
-                      color: Colors.black,
-                      width: 2, // 外描边
-                    ),
-                  ),
-                ),
-                Image.asset(
-                  'assets/images/buy_cactus.png',
-                  width: 335,
-                  height: 117,
-                  fit: BoxFit.contain, // 根据需要调整 fit 属性
-                ),
-              ],
-            ),
-          ),
-          Positioned(
-            top: 500, // Adjust according to your layout
-            left: MediaQuery.of(context).size.width / 2 - 167.5, // Center horizontally
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Get.toNamed('/my_profile');
-                  },
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Image.asset(
-                        'assets/images/icon_person.png',
-                        width: 24,
-                        height: 24,
-                      ),
-                      SizedBox(width: 16), // Adjust spacing as needed
-                      const Text(
-                        'My Profile',
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontSize: 18,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 20),// Space between "My Profile" and the line
-
-                // Line 1
-                Container(
-                  width: 303,
-                  height: 1,
-                  color: Color(0xFFEBEBEB),
-                ),
-                SizedBox(height: 30), // Space between line and "Verify"
-
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Image.asset(
-                      'assets/images/icon_verify.png',
-                      width: 24,
-                      height: 24,
-                    ),
-                    SizedBox(width: 16), // Adjust spacing as needed
-                    Text(
-                      'Verify',
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 18,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20), // Space between "Verify" and the line
-
-                // Line 2
-                Container(
-                  width: 303,
-                  height: 1,
-                  color: Color(0xFFEBEBEB),
-                ),
-                SizedBox(height: 30), // Space between line and "icon_host"
-
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Image.asset(
-                      'assets/images/icon_host.png',
-                      width: 24,
-                      height: 24,
-                    ),
-                    SizedBox(width: 16), // Adjust spacing as needed
-                    Text(
-                      'I am Host',
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 18,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                Container(
-                  width: 303,
-                  height: 1,
-                  color: Color(0xFFEBEBEB),
-                ),
-              ],
-            ),
-          ),
-          AllNavigationBar(tokenEntity: tokenEntity,userData: userData,),
+          _buildTopIcons(),
+          _buildProfileSection(userData),
+          _buildMiddleImageSection(context),
+          _buildOptionsSection(context, tokenEntity, userData),
+          AllNavigationBar(tokenEntity: tokenEntity, userData: userData),
         ],
       ),
+    );
+  }
+
+  Positioned _buildTopIcons() {
+    return Positioned(
+      top: 60.0,
+      right: 24.0,
+      child: Row(
+        children: [
+          _buildIconButton('assets/images/icon_me_left.png', () {}),
+          SizedBox(width: 24), // 间隔24px
+          _buildIconButton('assets/images/icon_me_right.png', () {}),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildIconButton(String assetPath, VoidCallback onPressed) {
+    return Container(
+      width: 40,
+      height: 40,
+      child: IconButton(
+        icon: Image.asset(assetPath, width: 40, height: 40),
+        onPressed: onPressed,
+      ),
+    );
+  }
+
+  Positioned _buildProfileSection(UserDataEntity userData) {
+    return Positioned(
+      top: 130.0,
+      left: 0,
+      right: 0,
+      child: Center(
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            CustomPaint(size: Size(95, 95), painter: OuterOvalPainter()),
+            ClipOval(
+              child: Image.network(
+                userData.avatar ?? 'assets/images/placeholder1.png',
+                width: 95,
+                height: 95,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Image.asset(
+                    'assets/images/placeholder1.png',
+                    width: 95,
+                    height: 95,
+                    fit: BoxFit.cover,
+                  );
+                },
+              ),
+            ),
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: Container(
+                width: 34,
+                height: 34,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFFD7FAAD),
+                ),
+                child: IconButton(
+                  icon: Image.asset('assets/images/icon_add_photo.png', width: 24, height: 24),
+                  onPressed: () {
+                    // Add your onPressed logic here
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Positioned _buildMiddleImageSection(BuildContext context) {
+    return Positioned(
+      top: 330,
+      left: MediaQuery.of(context).size.width / 2 - 167.5, // 居中放置
+      child: Stack(
+        children: [
+          Container(
+            width: 335,
+            height: 116,
+            decoration: BoxDecoration(
+              color: Color.fromRGBO(216, 216, 216, 0.01),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.black, width: 2),
+            ),
+          ),
+          Image.asset(
+            'assets/images/buy_cactus.png',
+            width: 335,
+            height: 117,
+            fit: BoxFit.contain,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Positioned _buildOptionsSection(BuildContext context, TokenEntity tokenEntity, UserDataEntity userData) {
+    return Positioned(
+      top: 500,
+      left: MediaQuery.of(context).size.width / 2 - 167.5,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildOptionRow(
+            iconPath: 'assets/images/icon_person.png',
+            text: 'My Profile',
+            onTap: () {
+              Get.toNamed('/my_profile', arguments: {'token': tokenEntity, 'userData': userData});
+            },
+          ),
+          _buildSeparator(),
+          _buildOptionRow(iconPath: 'assets/images/icon_verify.png', text: 'Verify', onTap: () {}),
+          _buildSeparator(),
+          _buildOptionRow(iconPath: 'assets/images/icon_host.png', text: 'I am Host', onTap: () {}),
+          _buildSeparator(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOptionRow({required String iconPath, required String text, required VoidCallback onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Image.asset(iconPath, width: 24, height: 24),
+          SizedBox(width: 16),
+          Text(
+            text,
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 18,
+              color: Colors.black,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSeparator() {
+    return Column(
+      children: [
+        SizedBox(height: 20),
+        Container(
+          width: 303,
+          height: 1,
+          color: Color(0xFFEBEBEB),
+        ),
+        SizedBox(height: 30),
+      ],
     );
   }
 }
