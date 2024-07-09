@@ -10,10 +10,12 @@ class MePage extends StatelessWidget {
   final MeController controller = Get.put(MeController());
 
 
+
+
   @override
   Widget build(BuildContext context) {
     final tokenEntity = Get.arguments['token'] as TokenEntity;
-    final userDataEntity = Get.arguments['userData'] as UserDataEntity;
+    final userData = Get.arguments['userData'] as UserDataEntity;
     return Scaffold(
       body: Stack(
         children: [
@@ -76,11 +78,19 @@ class MePage extends StatelessWidget {
                   ),
                   // 内部的椭圆形图片
                   ClipOval(
-                    child: Image.asset(
-                      'assets/images/08.jpg',
+                    child: Image.network(
+                      userData.avatar ?? 'assets/images/placeholder1.png', // 提供默认头像路径
                       width: 95,
                       height: 95,
                       fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.asset(
+                          'assets/images/placeholder1.png',
+                          width: 95,
+                          height: 95,
+                          fit: BoxFit.cover,
+                        );
+                      },
                     ),
                   ),
                   Positioned(
@@ -109,7 +119,7 @@ class MePage extends StatelessWidget {
               ),
             ),
           ),
-          Obx(() => Positioned(
+          Positioned(
             top: 240.0, // 调整这个值以控制文字相对于图片的垂直位置
             left: 0,
             right: 0,
@@ -117,7 +127,7 @@ class MePage extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    controller.username.value,
+                    userData.username,
                     style: TextStyle(
                       fontFamily: 'Open Sans',
                       fontSize: 20,
@@ -129,7 +139,7 @@ class MePage extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min, // 使 Row 的宽度适应其子组件的宽度
                     children: [
                       Text(
-                        controller.country.value,
+                        userData.location!.country.toString(),
                         style: TextStyle(
                           fontFamily: 'Open Sans',
                           fontSize: 14,
@@ -147,7 +157,7 @@ class MePage extends StatelessWidget {
                       ), // 数字和文字间距
                       SizedBox(width: 2),
                       Text(
-                        controller.age.value.toString(),
+                        userData.age.toString(),
                         style: TextStyle(
                           fontFamily: 'Open Sans',
                           fontSize: 14,
@@ -159,7 +169,7 @@ class MePage extends StatelessWidget {
                 ],
               ),
             ),
-          )),
+          ),
           Positioned(
             top: 330,
             left: MediaQuery.of(context).size.width / 2 - 167.5, // 居中放置
@@ -188,31 +198,36 @@ class MePage extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: 500, // 330 (top of image) + 51.5 (additional space)
+            top: 500, // Adjust according to your layout
             left: MediaQuery.of(context).size.width / 2 - 167.5, // Center horizontally
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Image.asset(
-                      'assets/images/icon_person.png',
-                      width: 24,
-                      height: 24,
-                    ),
-                    SizedBox(width: 16), // Adjust spacing as needed
-                    Text(
-                      'My Profile',
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 18,
-                        color: Colors.black,
+                GestureDetector(
+                  onTap: () {
+                    Get.toNamed('/my_profile');
+                  },
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Image.asset(
+                        'assets/images/icon_person.png',
+                        width: 24,
+                        height: 24,
                       ),
-                    ),
-                  ],
+                      SizedBox(width: 16), // Adjust spacing as needed
+                      const Text(
+                        'My Profile',
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 18,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                SizedBox(height: 20), // Space between "My Profile" and the line
+                SizedBox(height: 20),// Space between "My Profile" and the line
 
                 // Line 1
                 Container(
@@ -279,7 +294,7 @@ class MePage extends StatelessWidget {
               ],
             ),
           ),
-          AllNavigationBar(tokenEntity: tokenEntity),
+          AllNavigationBar(tokenEntity: tokenEntity,userData: userData,),
         ],
       ),
     );

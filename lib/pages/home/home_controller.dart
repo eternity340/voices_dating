@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import '../../../entity/list_user_entity.dart';
 import '../../../entity/token_entity.dart'; // 导入 TokenEntity
+import '../../../entity/user_data_entity.dart'; // 导入 UserDataEntity
 
 class HomeController extends ChangeNotifier {
   String selectedOption = 'Honey';
@@ -11,10 +12,11 @@ class HomeController extends ChangeNotifier {
   bool isLoading = false;
   String? errorMessage;
   TokenEntity? _tokenEntity; // 使用 TokenEntity 类型
+  UserDataEntity? _userData; // 使用 UserDataEntity 类型
   int currentPage = 1;
   bool hasMoreData = true;
 
-  HomeController(this._tokenEntity) {
+  HomeController(this._tokenEntity, this._userData) { // 修改构造函数接收 userData
     pageController = PageController(initialPage: 0);
     scrollController = ScrollController();
     fetchUsers(); // Automatically fetch users when token is initialized
@@ -47,27 +49,25 @@ class HomeController extends ChangeNotifier {
         print(response.data); // Print raw response to debug
         final List<dynamic> jsonList = response.data['data'] as List<dynamic>;
         List<ListUserEntity> newUsers = jsonList.map((json) => ListUserEntity.fromJson(json)).toList();
+
         if (newUsers.isEmpty) {
           hasMoreData = false;
         } else {
           users.addAll(newUsers);
-          for (var user in newUsers) {
-            print(user.photos); // Print photos of each user
-          }
           currentPage++;
         }
       } else {
-        _setErrorMessage("Failed to fetch users: ${response.statusCode}");
+        throw Exception('Failed to load users');
       }
     } catch (e) {
-      _setErrorMessage("Error fetching users: $e");
+      _setErrorMessage(e.toString());
     } finally {
       _setLoading(false);
     }
   }
 
   void _scrollListener() {
-    if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
+    if (scrollController.position.pixels == scrollController.position.maxScrollExtent && !isLoading && hasMoreData) {
       fetchUsers();
     }
   }
@@ -77,8 +77,8 @@ class HomeController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _setErrorMessage(String message) {
-    errorMessage = message;
+  void _setErrorMessage(String value) {
+    errorMessage = value;
     notifyListeners();
   }
 

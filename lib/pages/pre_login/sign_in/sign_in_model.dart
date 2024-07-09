@@ -86,8 +86,23 @@ class SignInModel extends ChangeNotifier {
       );
 
       if (response.data[ConstantData.code] == 200) {
-        // 登录成功，跳转到首页并传递 token
-        getx.Get.toNamed('/home', arguments: {'token': _tokenEntity});
+        final userDataJson = response.data['data'];
+
+        if (userDataJson == null) {
+          print('Error: User data is missing in the response.');
+          throw Exception('User data is missing in the response.');
+        }
+
+        final userData = UserDataEntity.fromJson(userDataJson);
+
+        // 打印 userData 以便调试
+        print('User data: $userData');
+
+        // 登录成功，跳转到首页并传递 token 和 userData
+        getx.Get.toNamed('/home', arguments: {
+          'token': _tokenEntity,
+          'userData': userData,
+        });
       } else if (response.data[ConstantData.code] == ConstantData.errorCodeInvalidEmailOrPassword) {
         _errorMessage = response.data[ConstantData.message];
         _showErrorDialog(_errorMessage);
@@ -97,6 +112,7 @@ class SignInModel extends ChangeNotifier {
       }
     } catch (e) {
       _errorMessage = "exception: $e";
+      print('Exception occurred: $_errorMessage');
       _showErrorDialog(_errorMessage);
     } finally {
       _isLoading = false;

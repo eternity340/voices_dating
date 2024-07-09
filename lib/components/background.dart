@@ -5,12 +5,14 @@ class Background extends StatelessWidget {
   final Widget child;
   final bool showBackButton; // 控制是否显示返回按钮
   final bool showSettingButton; // 控制是否显示设置按钮
+  final bool showBackgroundImage; // 控制是否显示背景图片
 
   const Background({
     Key? key,
     required this.child,
     this.showBackButton = true, // 默认显示返回按钮
     this.showSettingButton = false, // 默认不显示设置按钮
+    this.showBackgroundImage = true, // 默认显示背景图片
   }) : super(key: key);
 
   @override
@@ -19,12 +21,13 @@ class Background extends StatelessWidget {
       resizeToAvoidBottomInset: false, // 防止键盘弹出时调整布局
       body: Stack(
         children: [
-          Positioned.fill(
-            child: SvgPicture.asset(
-              'assets/icons/bg.svg',
-              fit: BoxFit.fill, // 使用fill以填充整个屏幕
+          if (showBackgroundImage)
+            Positioned.fill(
+              child: SvgPicture.asset(
+                'assets/icons/bg.svg',
+                fit: BoxFit.fill, // 使用fill以填充整个屏幕
+              ),
             ),
-          ),
           // 页面内容
           Positioned.fill(
             child: Padding(

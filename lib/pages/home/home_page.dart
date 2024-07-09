@@ -16,8 +16,11 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final Map<String, dynamic> arguments = Get.arguments as Map<String, dynamic>;
     final TokenEntity tokenEntity = arguments['token'] as TokenEntity;
+    final UserDataEntity userData = arguments['userData'] as UserDataEntity;
+
     return HomePageProvider(
       tokenEntity: tokenEntity,
+      userData: userData, // 传递 userData
       child: Consumer<HomeController>(
         builder: (context, model, child) {
           return Scaffold(
@@ -53,7 +56,7 @@ class HomePage extends StatelessWidget {
                     ],
                   ),
                 ),
-                AllNavigationBar(tokenEntity: tokenEntity),
+                AllNavigationBar(tokenEntity: tokenEntity, userData: userData), // 传递 userData
               ],
             ),
           );
@@ -150,7 +153,6 @@ class HomePage extends StatelessWidget {
 
   Widget _buildButtonRow() {
     return Row(
-
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         HomeIconButton(
@@ -176,6 +178,5 @@ class HomePage extends StatelessWidget {
         SizedBox(height: 100),
       ],
     );
-
   }
 }

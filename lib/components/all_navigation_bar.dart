@@ -6,8 +6,9 @@ import '../entity/token_entity.dart';
 
 class AllNavigationBar extends StatelessWidget {
   final TokenEntity tokenEntity; // 添加 tokenEntity 属性
+  final UserDataEntity userData; // 添加 userData 属性
 
-  AllNavigationBar({required this.tokenEntity}); // 构造函数接收 tokenEntity
+  AllNavigationBar({required this.tokenEntity, required this.userData}); // 构造函数接收 tokenEntity 和 userData
 
   @override
   Widget build(BuildContext context) {
@@ -45,15 +46,15 @@ class AllNavigationBar extends StatelessWidget {
                     top: 26,
                     child: Row(
                       children: [
-                        _buildNavItem(ConstantData.imagePathIconHomeActive, ConstantData.imagePathIconHomeInactive, '/home'),
+                        _buildNavItem(ConstantData.imagePathIconHomeActive, ConstantData.imagePathIconHomeInactive, '/home', userData),
                         SizedBox(width: 43),
-                        _buildNavItem(ConstantData.imagePathIconBlogActive, ConstantData.imagePathIconBlogInactive, '/blog'),
+                        _buildNavItem(ConstantData.imagePathIconBlogActive, ConstantData.imagePathIconBlogInactive, '/blog', userData),
                         SizedBox(width: 43),
-                        _buildNavItem(ConstantData.imagePathIconVoiceActive, ConstantData.imagePathIconVoiceInactive, '/voice'),
+                        _buildNavItem(ConstantData.imagePathIconVoiceActive, ConstantData.imagePathIconVoiceInactive, '/voice', userData),
                         SizedBox(width: 43),
-                        _buildNavItem(ConstantData.imagePathIconMessageActive, ConstantData.imagePathIconMessageInactive, '/message'),
+                        _buildNavItem(ConstantData.imagePathIconMessageActive, ConstantData.imagePathIconMessageInactive, '/message', userData),
                         SizedBox(width: 43),
-                        _buildNavItem(ConstantData.imagePathIconMeActive, ConstantData.imagePathIconMeInactive, '/me'),
+                        _buildNavItem(ConstantData.imagePathIconMeActive, ConstantData.imagePathIconMeInactive, '/me', userData),
                       ],
                     ),
                   ),
@@ -66,11 +67,11 @@ class AllNavigationBar extends StatelessWidget {
     );
   }
 
-  Widget _buildNavItem(String activeIcon, String inactiveIcon, String route) {
+  Widget _buildNavItem(String activeIcon, String inactiveIcon, String route, UserDataEntity userData) {
     bool isActive = Get.currentRoute == route;
     return GestureDetector(
       onTap: () {
-        Get.toNamed(route, arguments: {'token': tokenEntity}); // 传递 tokenEntity
+        Get.toNamed(route, arguments: {'token': tokenEntity, 'userData': userData}); // 传递 tokenEntity 和 userData
       },
       child: Image.asset(
         isActive ? activeIcon : inactiveIcon,

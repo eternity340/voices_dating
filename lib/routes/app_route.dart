@@ -7,6 +7,7 @@ import '../pages/email/page/verify_success_page.dart';
 import '../pages/email/provider/get_email_code_provider.dart';
 import '../pages/home/home_page.dart';
 import '../pages/me/me_page.dart';
+import '../pages/me/my_profile/my_profile_page.dart';
 import '../pages/pre_login/forget_pwd/forget_pwd_page.dart';
 import '../pages/pre_login/forget_pwd/forget_pwd_provider.dart';
 import '../pages/pre_login/sign_in/sign_in_provider.dart';
@@ -113,5 +114,9 @@ class AppRoutes {
       name: '/me',
       page: () => MePage(),
     ),
+    getx.GetPage(
+      name: '/my_profile',
+      page: () => MyProfilePage(),
+    )
   ];
 }
