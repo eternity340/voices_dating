@@ -61,47 +61,96 @@ class MePage extends StatelessWidget {
       top: 130.0,
       left: 0,
       right: 0,
-      child: Center(
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            CustomPaint(size: Size(95, 95), painter: OuterOvalPainter()),
-            ClipOval(
-              child: Image.network(
-                userData.avatar ?? 'assets/images/placeholder1.png',
-                width: 95,
-                height: 95,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Image.asset(
-                    'assets/images/placeholder1.png',
+      child: Column(
+        children: [
+          Center(
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                CustomPaint(size: Size(95, 95), painter: OuterOvalPainter()),
+                ClipOval(
+                  child: Image.network(
+                    userData.avatar ?? 'assets/images/placeholder1.png',
                     width: 95,
                     height: 95,
                     fit: BoxFit.cover,
-                  );
-                },
-              ),
-            ),
-            Positioned(
-              bottom: 0,
-              right: 0,
-              child: Container(
-                width: 34,
-                height: 34,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(0xFFD7FAAD),
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.asset(
+                        'assets/images/placeholder1.png',
+                        width: 95,
+                        height: 95,
+                        fit: BoxFit.cover,
+                      );
+                    },
+                  ),
                 ),
-                child: IconButton(
-                  icon: Image.asset('assets/images/icon_add_photo.png', width: 24, height: 24),
-                  onPressed: () {
-                    // Add your onPressed logic here
-                  },
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: Container(
+                    width: 34,
+                    height: 34,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color(0xFFD7FAAD),
+                    ),
+                    child: IconButton(
+                      icon: Image.asset('assets/images/icon_add_photo.png', width: 24, height: 24),
+                      onPressed: () {
+                        // Add your onPressed logic here
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 20), // Avatar 下方 20px 间距
+          Text(
+            userData.username,
+            style: TextStyle(
+              fontFamily: 'Open Sans',
+              fontWeight: FontWeight.w600,
+              fontSize: 20,
+              color: Colors.black,
+            ),
+          ),
+          SizedBox(height: 10), // Username 下方 10px 间距
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (userData.location != null && userData.location!.country != null)
+                Text(
+                  userData.location!.country!,
+                  style: TextStyle(
+                    fontFamily: 'Open Sans',
+                    fontWeight: FontWeight.w600,
+                    fontSize: 12,
+                    color: Color(0xFF8E8E93),
+                  ),
+                ),
+              if (userData.location != null && userData.location!.country != null)
+                Text(
+                  ' | ',
+                  style: TextStyle(
+                    fontFamily: 'Open Sans',
+                    fontWeight: FontWeight.w600,
+                    fontSize: 12,
+                    color: Color(0xFF8E8E93),
+                  ),
+                ),
+              Text(
+                '${userData.age}',
+                style: TextStyle(
+                  fontFamily: 'Open Sans',
+                  fontWeight: FontWeight.w600,
+                  fontSize: 12,
+                  color: Color(0xFF8E8E93),
                 ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -143,7 +192,7 @@ class MePage extends StatelessWidget {
             iconPath: 'assets/images/icon_person.png',
             text: 'My Profile',
             onTap: () {
-              Get.toNamed('/my_profile', arguments: {'token': tokenEntity, 'userData': userData});
+              Get.toNamed('/me/my_profile', arguments: {'token': tokenEntity, 'userData': userData});
             },
           ),
           _buildSeparator(),

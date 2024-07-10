@@ -26,10 +26,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
     return Scaffold(
       body: Stack(
         children: [
-          // 背景和返回按钮
-          // Background 和 Positioned 部分不变，保持原有的布局结构
           Positioned(
-            top: 50.0,
+            top: 60.0,
             left: 16.0,
             right: 16.0,
             child: Row(
@@ -83,7 +81,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
           ),
           // 根据选中的选项显示内容
           if (selectedOption == "Profile")
-    Positioned(
+            Positioned(
       top: 200.0,
       left: 36.0,
       child: SingleChildScrollView(
@@ -97,7 +95,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 title: 'Username',
                 value: userData.username,
                 onTap: () {
-                  // 处理跳转到用户图片按钮相关路由
+                  Get.toNamed('/me/my_profile/change_username', arguments: {'token': tokenEntity, 'userData': userData});
                 },
               ),
               _buildInfoSection(
@@ -105,7 +103,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 title: 'Age',
                 value: userData.age.toString(),
                 onTap: () {
-                  // 处理跳转到用户图片按钮相关路由
+                  Get.toNamed('/me/my_profile/change_age', arguments: {'token': tokenEntity, 'userData': userData});
+
                 },
               ),
               _buildInfoSection(
@@ -113,7 +112,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 title: 'Height',
                 value: userData.height != null ? '${userData.height} cm' : '',
                 onTap: () {
-                  // 处理跳转到用户图片按钮相关路由
+                  Get.toNamed('/me/my_profile/change_height', arguments: {'token': tokenEntity, 'userData': userData});// 处理跳转到用户图片按钮相关路由
+// 处理跳转到用户图片按钮相关路由
                 },
               ),
               _buildInfoSection(
@@ -121,7 +121,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 title: 'Headline',
                 value: userData.headline.toString(),
                 onTap: () {
-                  // 处理跳转到用户图片按钮相关路由
+                  Get.toNamed('/me/my_profile/change_headline', arguments: {'token': tokenEntity, 'userData': userData});// 处理跳转到用户图片按钮相关路由
                 },
               ),
               _buildInfoSection(
@@ -142,7 +142,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
       ),
     ),
           if (selectedOption == "Moments")
-            Positioned(
+            const Positioned(
               top: 200.0, // 调整位置，使得在选项下方
               left: 36.0, // 左侧距离
               child: Column(
@@ -226,9 +226,11 @@ class _MyProfilePageState extends State<MyProfilePage> {
     );
   }
 }
-
-Widget _buildInfoSection(BuildContext context,
-    {required String title, required String value, required VoidCallback onTap}) {
+Widget _buildInfoSection(BuildContext context, {
+  required String title,
+  required String value,
+  required VoidCallback onTap
+}) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -255,7 +257,8 @@ Widget _buildInfoSection(BuildContext context,
       ),
       Row(
         children: [
-          Expanded(
+          ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 250),
             child: Text(
               value,
               style: const TextStyle(
@@ -264,6 +267,8 @@ Widget _buildInfoSection(BuildContext context,
                 fontFamily: 'Poppins',
                 color: Colors.black,
               ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
             ),
           ),
         ],
