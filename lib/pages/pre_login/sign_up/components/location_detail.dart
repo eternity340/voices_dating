@@ -78,6 +78,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Background(
+      showBackgroundImage: false,
       showBackButton: false,
       child: Column(
         children: [

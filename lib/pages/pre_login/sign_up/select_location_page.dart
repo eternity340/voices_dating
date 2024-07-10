@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../entity/User.dart';
-import '../../../../constants.dart';
 import '../../../components/background.dart';
 import '../../../components/gradient_btn.dart';
-import 'components/location_box.dart';
+import 'components/widget/location_selector.dart';
 
 class SelectLocationPage extends StatefulWidget {
   final User user;
@@ -20,11 +19,11 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
   String? selectedState;
   String? selectedCity;
 
-  void updateLocation({String? country, String? state, String? city}) {
+  void onLocationSelected(String? country, String? state, String? city) {
     setState(() {
-      if (country != null) selectedCountry = country;
-      if (state != null) selectedState = state;
-      if (city != null) selectedCity = city;
+      selectedCountry = country;
+      selectedState = state;
+      selectedCity = city;
     });
   }
 
@@ -52,18 +51,9 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 20),
-                LocationBox(
-                  text: 'State: ${selectedState ?? "Select State"}, Country: ${selectedCountry ?? "Select Country"}',
-                  onTap: () async {
-                    final result = await Get.toNamed('/location_detail', arguments: widget.user);
-                    if (result != null) {
-                      updateLocation(
-                        country: result['country'],
-                        state: result['state'],
-                        city: result['city'],
-                      );
-                    }
-                  },
+                LocationSelector(
+                  user: widget.user,
+                  onLocationSelected: onLocationSelected,
                 ),
                 SizedBox(height: 400),
                 GradientButton(

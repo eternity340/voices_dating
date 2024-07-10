@@ -1,4 +1,5 @@
 import 'package:first_app/pages/blog/blog_page.dart';
+import 'package:first_app/pages/me/my_profile/update_profile/change_username.dart';
 import 'package:first_app/pages/voice/voice_page.dart';
 import 'package:get/get.dart' as getx;
 import '../pages/email/page/get_email_code_page.dart';
@@ -7,6 +8,9 @@ import '../pages/email/page/verify_success_page.dart';
 import '../pages/email/provider/get_email_code_provider.dart';
 import '../pages/home/home_page.dart';
 import '../pages/me/me_page.dart';
+import '../pages/me/my_profile/update_profile/change_age.dart';
+import '../pages/me/my_profile/update_profile/change_headline.dart';
+import '../pages/me/my_profile/update_profile/change_height.dart';
 import '../pages/me/my_profile/my_profile_page.dart';
 import '../pages/pre_login/forget_pwd/forget_pwd_page.dart';
 import '../pages/pre_login/forget_pwd/forget_pwd_provider.dart';
@@ -113,10 +117,35 @@ class AppRoutes {
     getx.GetPage(
       name: '/me',
       page: () => MePage(),
+      children: [
+        getx.GetPage(
+          name: '/my_profile',
+          page: () => MyProfilePage(),
+          children: [
+            getx.GetPage(
+              name: '/change_username',
+              page: () => ChangeUsername(),
+            ),
+            getx.GetPage(
+              name: '/change_age',
+              page: () => ChangeAge(),
+            ),
+            getx.GetPage(
+              name: '/change_headline',
+              page: () => ChangeHeadline(),
+            ),
+            getx.GetPage(
+              name: '/change_height',
+              page: () => ChangeHeight(),
+            ),
+            // getx.GetPage(
+            //   name: '/change_location',
+            //   page: () => ChangeLocation(),
+            // ),
+          ],
+        ),
+      ],
     ),
-    getx.GetPage(
-      name: '/my_profile',
-      page: () => MyProfilePage(),
-    )
+
   ];
 }
