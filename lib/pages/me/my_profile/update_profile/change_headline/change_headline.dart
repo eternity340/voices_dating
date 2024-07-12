@@ -1,19 +1,13 @@
-import 'package:dio/dio.dart' as dio;
-import 'package:dio/dio.dart';
+// pages/change_headline_page.dart
 import 'package:first_app/components/background.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../entity/token_entity.dart';
 import '../../../../../entity/user_data_entity.dart';
+import 'change_headline_controller.dart';
 
-class ChangeHeadline extends StatefulWidget {
-  @override
-  _ChangeHeadlineState createState() => _ChangeHeadlineState();
-}
-
-class _ChangeHeadlineState extends State<ChangeHeadline> {
-  final TextEditingController _controller = TextEditingController();
-  int _charCount = 0;
+class ChangeHeadline extends StatelessWidget {
+  final ChangeHeadlineController controller = Get.put(ChangeHeadlineController());
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +33,7 @@ class _ChangeHeadlineState extends State<ChangeHeadline> {
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 child: TextField(
-                  controller: _controller,
+                  controller: controller.headlineController,
                   style: const TextStyle(
                     fontFamily: 'Poppins', // 使用 Poppins 字体
                     fontSize: 18.0, // 设置字号为 18
@@ -52,9 +46,7 @@ class _ChangeHeadlineState extends State<ChangeHeadline> {
                     contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0), // 增加垂直间距
                   ),
                   onChanged: (text) {
-                    setState(() {
-                      _charCount = text.length;
-                    });
+                    controller.updateCharCount(text);
                   },
                 ),
               ),
@@ -75,12 +67,14 @@ class _ChangeHeadlineState extends State<ChangeHeadline> {
                     ),
                   ),
                   const SizedBox(width: 180), // 调整宽度以匹配更长的提示文本
-                  Text(
-                    '$_charCount/50',
-                    style: const TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 10.0,
-                      color: Color(0xFF8E8E93),
+                  Obx(
+                        () => Text(
+                      '${controller.charCount}/50',
+                      style: const TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 10.0,
+                        color: Color(0xFF8E8E93),
+                      ),
                     ),
                   ),
                 ],
@@ -104,7 +98,7 @@ class _ChangeHeadlineState extends State<ChangeHeadline> {
                 width: 88, // 调整按钮宽度适应文本
                 height: 36,
                 child: TextButton(
-                  onPressed: () => _updateHeadline(tokenEntity, userData), // 调用更新头像方法
+                  onPressed: () => controller.updateHeadline(tokenEntity, userData), // 调用更新头像方法
                   child: const Text(
                     'Update Headline',
                     style: TextStyle(
@@ -120,35 +114,5 @@ class _ChangeHeadlineState extends State<ChangeHeadline> {
         ),
       ),
     );
-  }
-
-  void _updateHeadline(TokenEntity tokenEntity, UserDataEntity userData) async {
-    try {
-      // Send API request
-      dio.Response response = await Dio().post(
-        'https://api.masonvips.com/v1/update_profile',
-        options: Options(
-          headers: {
-            'token': tokenEntity.accessToken,
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        ),
-        data: {
-          'user[headline]': _controller.text,
-        },
-      );
-      // Check response status
-      if (response.data['code'] == 200) {
-        userData.headline = _controller.text;
-        Get.snackbar('Success', 'Headline updated successfully');
-        await Future.delayed(Duration(seconds: 2)); // 等待2秒以显示弹框
-        Get.toNamed('/me/my_profile', arguments: {'token': tokenEntity, 'userData': userData});
-      } else {
-        // Show error message
-        Get.snackbar('Error', 'Failed to update headline');
-      }
-    } catch (e) {
-      Get.snackbar('Error', 'Failed to update headline');
-    }
   }
 }

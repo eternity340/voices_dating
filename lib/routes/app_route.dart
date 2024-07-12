@@ -12,6 +12,7 @@ import '../pages/me/my_profile/update_profile/change_age/change_age.dart';
 import '../pages/me/my_profile/update_profile/change_headline/change_headline.dart';
 import '../pages/me/my_profile/update_profile/change_height/change_height.dart';
 import '../pages/me/my_profile/my_profile_page.dart';
+import '../pages/me/my_profile/update_profile/change_location/change_location.dart';
 import '../pages/pre_login/forget_pwd/forget_pwd_page.dart';
 import '../pages/pre_login/forget_pwd/forget_pwd_provider.dart';
 import '../pages/pre_login/sign_in/sign_in_provider.dart';
@@ -138,10 +139,16 @@ class AppRoutes {
               name: '/change_height',
               page: () => ChangeHeight(),
             ),
-            // getx.GetPage(
-            //   name: '/change_location',
-            //   page: () => ChangeLocation(),
-            // ),
+            getx.GetPage(
+              name: '/change_location',
+              page: () => ChangeLocation(),
+              children: [
+                getx.GetPage(
+                  name: '/change_location_detail',
+                  page: () => ChangeLocation(),
+                ),
+              ]
+            ),
           ],
         ),
       ],

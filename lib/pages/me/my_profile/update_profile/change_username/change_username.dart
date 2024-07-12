@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import '../../../../../components/background.dart';
 import '../../../../../entity/token_entity.dart';
 import '../../../../../entity/user_data_entity.dart';
-import 'change_username_logic.dart';
+import 'change_username_controller.dart';
 
 
 class ChangeUsername extends StatefulWidget {

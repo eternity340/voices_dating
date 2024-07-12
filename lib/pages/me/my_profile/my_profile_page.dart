@@ -220,7 +220,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
                   ? '${userData.location!.city}, ${userData.location!.country}'
                   : '',
               onTap: () {
-                // 处理跳转到用户图片按钮相关路由
+                Get.toNamed('/me/my_profile/change_location', arguments: {'token': tokenEntity, 'userData': userData});
+// 处理跳转到用户图片按钮相关路由
               },
             ),
           ],

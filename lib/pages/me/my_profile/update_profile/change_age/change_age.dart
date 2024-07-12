@@ -1,47 +1,14 @@
-import 'package:dio/dio.dart';
 import 'package:first_app/components/background.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:dio/dio.dart' as dio;
-import '../../../../../entity/token_entity.dart';
-import '../../../../../entity/user_data_entity.dart';
-import '../../../../../components/gradient_btn.dart';
+import 'package:first_app/entity/token_entity.dart';
+import 'package:first_app/entity/user_data_entity.dart';
+
 import '../../../../pre_login/sign_up/components/widget/picker_components.dart';
+import 'change_age_controller.dart';
 
-class ChangeAge extends StatefulWidget {
-  @override
-  _ChangeAgeState createState() => _ChangeAgeState();
-}
-
-class _ChangeAgeState extends State<ChangeAge> {
-  // Scroll controllers for day, month, and year pickers
-  FixedExtentScrollController _dayController = FixedExtentScrollController();
-  FixedExtentScrollController _monthController = FixedExtentScrollController();
-  FixedExtentScrollController _yearController = FixedExtentScrollController();
-
-  // Current selected values
-  int selectedDay = 1;
-  int selectedMonth = 1;
-  int selectedYear = DateTime.now().year;
-
-  @override
-  void initState() {
-    super.initState();
-    // Set initial scroll positions
-    _dayController = FixedExtentScrollController(initialItem: selectedDay - 1);
-    _monthController = FixedExtentScrollController(initialItem: selectedMonth - 1);
-    _yearController = FixedExtentScrollController(initialItem: DateTime.now().year - selectedYear);
-  }
-
-  @override
-  void dispose() {
-    // Dispose controllers
-    _dayController.dispose();
-    _monthController.dispose();
-    _yearController.dispose();
-    super.dispose();
-  }
+class ChangeAge extends StatelessWidget {
+  final ChangeAgeController controller = Get.put(ChangeAgeController());
 
   @override
   Widget build(BuildContext context) {
@@ -69,26 +36,20 @@ class _ChangeAgeState extends State<ChangeAge> {
                 pickerWidth: pickerWidth,
                 pickerHeight: pickerHeight,
                 itemExtent: itemExtent,
-                dayController: _dayController,
-                monthController: _monthController,
-                yearController: _yearController,
-                selectedDay: selectedDay,
-                selectedMonth: selectedMonth,
-                selectedYear: selectedYear,
+                dayController: controller.dayController,
+                monthController: controller.monthController,
+                yearController: controller.yearController,
+                selectedDay: controller.selectedDay.value,
+                selectedMonth: controller.selectedMonth.value,
+                selectedYear: controller.selectedYear.value,
                 onDayChanged: (index) {
-                  setState(() {
-                    selectedDay = index + 1;
-                  });
+                  controller.selectedDay.value = index + 1;
                 },
                 onMonthChanged: (index) {
-                  setState(() {
-                    selectedMonth = index + 1;
-                  });
+                  controller.selectedMonth.value = index + 1;
                 },
                 onYearChanged: (index) {
-                  setState(() {
-                    selectedYear = DateTime.now().year - index;
-                  });
+                  controller.selectedYear.value = DateTime.now().year - index;
                 },
               ),
             ),
@@ -110,7 +71,7 @@ class _ChangeAgeState extends State<ChangeAge> {
                 width: 88, // 调整按钮宽度适应文本
                 height: 36,
                 child: TextButton(
-                  onPressed: () => _updateProfile(tokenEntity, userData), // 调用更新生日方法
+                  onPressed: () => controller.updateProfile(tokenEntity, userData), // 调用更新生日方法
                   child: const Text(
                     'save',
                     style: TextStyle(
@@ -122,52 +83,9 @@ class _ChangeAgeState extends State<ChangeAge> {
                 ),
               ),
             ),
-
           ],
         ),
       ),
     );
   }
-
-
-  void _updateProfile(TokenEntity tokenEntity, UserDataEntity userData) async {
-    try {
-      // Calculate age based on selected year
-      int currentYear = DateTime.now().year;
-      int age = currentYear - selectedYear;
-
-      // Format selected date
-      String formattedDate = '$selectedYear-${selectedMonth.toString().padLeft(2, '0')}-${selectedDay.toString().padLeft(2, '0')}';
-
-      // Send API request
-      dio.Response response = await Dio().post(
-        'https://api.masonvips.com/v1/update_profile',
-        options: Options(
-          headers: {
-            'token': tokenEntity.accessToken,
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        ),
-        queryParameters: {
-          'user[birthday]': formattedDate,
-          'user[age]': age.toString(),
-        },
-      );
-      // Check response status
-      if (response.data['code'] == 200) {
-        userData.age = age.toString();
-        Get.snackbar('Success', 'Profile updated successfully');
-        await Future.delayed(Duration(seconds: 2)); // 等待2秒以显示弹框
-        Get.toNamed('/me/my_profile', arguments: {'token': tokenEntity, 'userData': userData});
-      } else {
-        // Show error message
-        Get.snackbar('Error', 'Failed to update profile');
-      }
-    } catch (e) {
-      print('Exception caught: $e');
-      Get.snackbar('Error', 'Failed to update profile');
-    }
-  }
-
-
 }

@@ -1,22 +1,22 @@
-import 'package:dio/dio.dart' as dio;
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../components/background.dart';
 import '../../../../../entity/token_entity.dart';
 import '../../../../../entity/user_data_entity.dart';
 import '../../../../pre_login/sign_up/components/height_picker.dart';
+import 'change_height_controller.dart';
+
 
 class ChangeHeight extends StatefulWidget {
-  final tokenEntity = Get.arguments['token'] as TokenEntity;
-  final userData = Get.arguments['userData'] as UserDataEntity;
+  final TokenEntity tokenEntity = Get.arguments['token'] as TokenEntity;
+  final UserDataEntity userData = Get.arguments['userData'] as UserDataEntity;
 
   @override
   _ChangeHeightState createState() => _ChangeHeightState();
 }
 
 class _ChangeHeightState extends State<ChangeHeight> {
-  int selectedHeight = 170; // Default height
+  final ChangeHeightController _controller = ChangeHeightController();
 
   @override
   Widget build(BuildContext context) {
@@ -46,10 +46,10 @@ class _ChangeHeightState extends State<ChangeHeight> {
                     ),
                     const SizedBox(height: 50),
                     HeightPicker(
-                      initialHeight: selectedHeight,
+                      initialHeight: _controller.selectedHeight,
                       onHeightChanged: (newHeight) {
                         setState(() {
-                          selectedHeight = newHeight;
+                          _controller.selectedHeight = newHeight;
                         });
                       },
                     ),
@@ -75,7 +75,7 @@ class _ChangeHeightState extends State<ChangeHeight> {
                 width: 88, // 调整按钮宽度适应文本
                 height: 36,
                 child: TextButton(
-                  onPressed: () => _updateHeight(widget.tokenEntity, widget.userData), // 调用更新高度方法
+                  onPressed: () => _controller.updateHeight(), // 调用更新高度方法
                   child: const Text(
                     'save',
                     style: TextStyle(
@@ -91,35 +91,5 @@ class _ChangeHeightState extends State<ChangeHeight> {
         ),
       ),
     );
-  }
-
-  void _updateHeight(TokenEntity tokenEntity, UserDataEntity userData) async {
-    try {
-      // Send API request
-      dio.Response response = await Dio().post(
-        'https://api.masonvips.com/v1/update_profile',
-        options: Options(
-          headers: {
-            'token': tokenEntity.accessToken,
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        ),
-        queryParameters: {
-          'user[height]': selectedHeight.toString(),
-        },
-      );
-      // Check response status
-      if (response.data['code'] == 200) {
-        userData.height = selectedHeight.toString();
-        Get.snackbar('Success', 'Height updated successfully');
-        await Future.delayed(Duration(seconds: 2)); // 等待2秒以显示弹框
-        Get.toNamed('/me/my_profile', arguments: {'token': tokenEntity, 'userData': userData});
-      } else {
-        // Show error message
-        Get.snackbar('Error', 'Failed to update height');
-      }
-    } catch (e) {
-      Get.snackbar('Error', 'Failed to update height');
-    }
   }
 }
