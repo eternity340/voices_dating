@@ -93,7 +93,33 @@ class PhotoController extends GetxController {
     }
   }
 
+  Future<void> deletePhoto(String accessToken, String attachId) async {
+    final dio.Dio dioInstance = dio.Dio();
+    try {
+      final response = await dioInstance.post(
+        'https://api.masonvips.com/v1/delete_photo',
+        queryParameters: {'attachId': attachId},
+        options: dio.Options(
+          headers: {
+            'token': accessToken,
+          },
+        ),
+      );
 
+      if (response.statusCode == 200) {
+        final responseData = response.data;
+        print(responseData);
+        // 处理删除成功的情况
+        fetchUserData();
+      } else {
+        // 处理删除失败的情况
+        print('删除失败');
+      }
+    } catch (e) {
+      // 处理请求错误的情况
+      print('请求错误: $e');
+    }
+  }
 
 
 }
