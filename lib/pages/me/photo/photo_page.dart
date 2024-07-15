@@ -1,143 +1,193 @@
-import 'package:first_app/components/background.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:first_app/pages/me/photo/photo_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../../entity/token_entity.dart';
-import '../../../entity/user_data_entity.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:permission_handler/permission_handler.dart';
+import '../../../components/background.dart';
+import 'components/BottomOptions.dart';
 
 class PhotoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final tokenEntity = Get.arguments['token'] as TokenEntity;
-    final userData = Get.arguments['userData'] as UserDataEntity;
+    final PhotoController controller = Get.put(PhotoController());
 
     return Scaffold(
-      body: Background(
-        showBackgroundImage: false,
-        showMiddleText: true,
-        middleText: '    Photo',
-        child: Stack(
-          children: [
-            // 主照片容器
-            Positioned(
-              top: 95,
-              left: 38,
-              child: Container(
-                width: 137.09,
-                height: 174,
-                decoration: BoxDecoration(
-                  color: Color(0xFFF8F8F9),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Center(
-                  child: GestureDetector(
-                    onTap: () {
-                      // Handle button tap
-                    },
-                    child: Container(
-                      width: 38.4,
-                      height: 38.4,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/images/icon_add_photo.png'),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              top: 95,
-              left: 38 + 137.09 + 24,
-              child: Container(
-                width: 137.09,
-                height: 174,
-                decoration: BoxDecoration(
-                  color: Color(0xFFF8F8F9),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: userData.avatar != null && userData.avatar!.isNotEmpty
-                    ? Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: Image.network(
-                        userData.avatar!,
-                        fit: BoxFit.cover,
-                        width: 137.09,
-                        height: 174,
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      child: Container(
-                        width: 137.09,
-                        height: 34,
-                        decoration: BoxDecoration(
-                          color: Color(0xFFABFFCF),
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(20),
-                            bottomRight: Radius.circular(20),
+      body: GetBuilder<PhotoController>(
+        builder: (controller) {
+          return RefreshIndicator(
+            onRefresh: controller.fetchUserData,
+            child: Background(
+              showBackgroundImage: false,
+              showMiddleText: true,
+              middleText: '    Photo',
+              child: Stack(
+                children: [
+                  SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(top: 100.0.h, left: 38.0.w, right: 38.0.w),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  if (controller.tokenEntity.accessToken != null) {
+                                    _showOptions(context, controller.tokenEntity.accessToken!, controller);
+                                  } else {
+                                    print('AccessToken is null');
+                                  }
+                                },
+                                child: Container(
+                                  width: 137.09.w,
+                                  height: 174.h,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFFF8F8F9),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Center(
+                                    child: Container(
+                                      width: 38.4.w,
+                                      height: 38.4.h,
+                                      decoration: const BoxDecoration(
+                                        image: DecorationImage(
+                                          image: AssetImage('assets/images/icon_add_photo.png'),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                width: 137.09.w,
+                                height: 174.h,
+                                decoration: BoxDecoration(
+                                  color: Color(0xFFF8F8F9),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: controller.userData.avatar != null && controller.userData.avatar!.isNotEmpty
+                                    ? Stack(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: Image.network(
+                                        controller.userData.avatar!,
+                                        fit: BoxFit.cover,
+                                        width: 137.09.w,
+                                        height: 174.h,
+                                      ),
+                                    ),
+                                    Positioned(
+                                      bottom: 0,
+                                      child: Container(
+                                        width: 137.09.w,
+                                        height: 34.h,
+                                        decoration: const BoxDecoration(
+                                          color: Color(0xFFABFFCF),
+                                          borderRadius: BorderRadius.only(
+                                            bottomLeft: Radius.circular(20),
+                                            bottomRight: Radius.circular(20),
+                                          ),
+                                        ),
+                                        child: const Center(
+                                          child: Text(
+                                            'main photo',
+                                            style: TextStyle(
+                                              fontFamily: 'Poppins',
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 14,
+                                              height: 24 / 14,
+                                              letterSpacing: -0.00875,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                                    : Container(),
+                              ),
+                            ],
                           ),
                         ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      child: Container(
-                        width: 137.09,
-                        height: 34,
-                        child: Center(
-                          child: Text(
-                            'main photo',
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14,
-                              height: 24 / 14,
-                              letterSpacing: -0.00875,
+                        if (controller.userData.photos != null)
+                          Padding(
+                            padding: EdgeInsets.only(top: 24.0.h, left: 38.0.w, right: 38.0.w),
+                            child: Wrap(
+                              spacing: 24.w,
+                              runSpacing: 24.h,
+                              children: List.generate(controller.userData.photos!.length - 1, (i) {
+                                return Container(
+                                  width: 137.09.w,
+                                  height: 174.h,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFFF8F8F9),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: controller.userData.photos![i + 1].url != null
+                                      ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(20),
+                                    child: Image.network(
+                                      controller.userData.photos![i + 1].url!,
+                                      fit: BoxFit.cover,
+                                      width: 137.09.w,
+                                      height: 174.h,
+                                    ),
+                                  )
+                                      : Container(),
+                                );
+                              }),
                             ),
                           ),
-                        ),
-                      ),
+                      ],
                     ),
-                  ],
-                )
-                    : Container(),
+                  ),
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: 50.h,
+                    child: Container(
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
               ),
             ),
-            // 照片蒙版部分
-            if (userData.photos != null)
-              for (int i = 1; i < userData.photos!.length; i++)
-                Positioned(
-                  top: 95 + 174 + 24 + (i > 2 ? (174 + 24) * ((i - 3) ~/ 2 + 1) : 0),
-                  left: 38 + ((i - 1) % 2) * (137.09 + 24),
-                  child: Container(
-                    width: 137.09,
-                    height: 174,
-                    decoration: BoxDecoration(
-                      color: Color(0xFFF8F8F9),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: userData.photos![i].url != null
-                        ? ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: Image.network(
-                        userData.photos![i].url!,
-                        fit: BoxFit.cover,
-                        width: 137.09,
-                        height: 174,
-                      ),
-                    )
-                        : Container(),
-                  ),
-                ),
-          ],
-        ),
+          );
+        },
       ),
+    );
+  }
+
+  void _showOptions(BuildContext context, String accessToken, PhotoController controller) {
+    showCupertinoModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return BottomOptions(
+          onFirstPressed: () async {
+            if (await controller.requestPermission(Permission.camera)) {
+              await controller.pickAndUploadPhoto(accessToken, ImageSource.camera);
+            }
+            Navigator.pop(context);
+          },
+          onSecondPressed: () async {
+            if (await controller.requestPermission(Permission.photos)) {
+              await controller.pickAndUploadPhoto(accessToken, ImageSource.gallery);
+            }
+            Navigator.pop(context);
+          },
+          onCancelPressed: () {
+            Navigator.pop(context);
+          },
+          firstText: 'Take a Photo', // Text passed from PhotoPage
+          secondText: 'From Album', // Text passed from PhotoPage
+        );
+      },
     );
   }
 }
