@@ -1,5 +1,6 @@
 import 'package:first_app/pages/blog/blog_page.dart';
 import 'package:first_app/pages/me/my_profile/update_profile/change_username/change_username.dart';
+import 'package:first_app/pages/me/photo/photo_page.dart';
 import 'package:first_app/pages/voice/voice_page.dart';
 import 'package:get/get.dart' as getx;
 import '../pages/email/page/get_email_code_page.dart';
@@ -119,6 +120,10 @@ class AppRoutes {
       name: '/me',
       page: () => MePage(),
       children: [
+        getx.GetPage(
+          name: '/photo',
+          page: () => PhotoPage(),
+        ),
         getx.GetPage(
           name: '/my_profile',
           page: () => MyProfilePage(),

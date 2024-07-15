@@ -274,7 +274,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
         GestureDetector(
           onTap: onTap,
           child: Padding(
-            padding: const EdgeInsets.only(left: 300.0),
+            padding: const EdgeInsets.only(left: 270.0),
             child: Image.asset(
               'assets/images/Path.png',
               width: 18,
