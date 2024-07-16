@@ -15,6 +15,7 @@ class PhotoController extends GetxController {
     super.onInit();
     tokenEntity = Get.arguments['token'] as TokenEntity;
     userData = Get.arguments['userData'] as UserDataEntity;
+    fetchUserData(); // 初始化时获取用户数据
   }
 
   Future<void> fetchUserData() async {
@@ -33,6 +34,7 @@ class PhotoController extends GetxController {
       if (response.data[ConstantData.code] == 200) {
         final data = response.data;
         userData = UserDataEntity.fromJson(data['data']);
+        update(); // 更新 UI
       } else {
         print('Failed to obtain user data');
       }
@@ -46,7 +48,7 @@ class PhotoController extends GetxController {
     final XFile? image = await _picker.pickImage(source: source);
     if (image != null) {
       await uploadPhoto(accessToken, image);
-      await fetchUserData();
+      await fetchUserData(); // 上传后刷新用户数据
     }
   }
 
@@ -106,8 +108,8 @@ class PhotoController extends GetxController {
           'Photo deleted successfully!',
           snackPosition: SnackPosition.BOTTOM,
         );
-      }
-      else {
+        await fetchUserData(); // 删除后刷新用户数据
+      } else {
         print('delete failed');
       }
     } catch (e) {
@@ -115,6 +117,36 @@ class PhotoController extends GetxController {
     }
   }
 
+  Future<void> setAvatar(String accessToken,String attachId, ) async {
+    final dio.Dio dioInstance = dio.Dio();
+    try {
+      final response = await dioInstance.post(
+        'https://api.masonvips.com/v1/set_avatar',
+        queryParameters: {
+          'attachId': attachId,
+        },
+        options: dio.Options(
+          headers: {
+            'token': tokenEntity.accessToken,
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        ),
+      );
+
+      if (response.data[ConstantData.code] == 200) {
+        Get.snackbar(
+          'Success',
+          'Avatar set successfully!',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        await fetchUserData(); // 刷新用户数据
+      } else {
+        print('Set avatar failed');
+      }
+    } catch (e) {
+      print('request error: $e');
+    }
+  }
   Future<bool> requestPermission(Permission permission) async {
     if (await permission.isGranted) {
       return true;
@@ -123,4 +155,6 @@ class PhotoController extends GetxController {
       return result.isGranted;
     }
   }
+
+
 }

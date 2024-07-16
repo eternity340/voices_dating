@@ -6,12 +6,40 @@ class PhotoDialog extends StatelessWidget {
   final String photoUrl;
   final String attachId;
   final VoidCallback onDelete;
+  final VoidCallback onSetting;
 
   PhotoDialog({
     required this.photoUrl,
     required this.attachId,
     required this.onDelete,
+    required this.onSetting
   });
+
+  void onSettings(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('confirm'),
+          content: Text('是否更换为mainPhoto？'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('no'),
+            ),
+            TextButton(
+              onPressed: () {
+
+              },
+              child: Text('是'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,12 +107,14 @@ class PhotoDialog extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: 600,
-            left: 340,
+            top: 670, // 调整顶部位置
+            left: 295, // 调整为右侧位置
             child: Container(
+              width: 100,
+              height: 40,
               decoration: BoxDecoration(
                 color: Colors.white,
-                shape: BoxShape.circle,
+                borderRadius: BorderRadius.circular(20.0),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.2),
@@ -93,12 +123,24 @@ class PhotoDialog extends StatelessWidget {
                   ),
                 ],
               ),
-              child: IconButton(
-                onPressed: onDelete,
-                icon: Icon(
-                  Icons.delete,
-                  color: Colors.black,
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  IconButton(
+                    onPressed: onSetting,
+                    icon: Icon(
+                      Icons.settings,
+                      color: Colors.black,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: onDelete,
+                    icon: Icon(
+                      Icons.delete,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

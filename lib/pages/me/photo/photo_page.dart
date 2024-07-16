@@ -198,6 +198,10 @@ class PhotoPage extends StatelessWidget {
             await controller.deletePhoto(controller.tokenEntity.accessToken!, attachId);
             Navigator.of(context).pop();
           },
+          onSetting: () async {
+            await controller.setAvatar(controller.tokenEntity.accessToken!, attachId);
+            Navigator.of(context).pop();
+          },
         );
       },
     );
