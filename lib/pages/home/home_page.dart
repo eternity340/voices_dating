@@ -2,6 +2,7 @@ import 'package:first_app/entity/user_data_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // 引入 ScreenUtil
 import '../../components/background.dart';
 import 'components/home_icon_button.dart';
 import 'home_controller.dart';
@@ -31,13 +32,13 @@ class HomePage extends StatelessWidget {
                   child: SingleChildScrollView(
                     child: Center(
                       child: Padding(
-                        padding: const EdgeInsets.all(16.0),
+                        padding: EdgeInsets.all(16.0.sp),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SizedBox(height: 200),
+                            SizedBox(height: 200.h),
                             _buildPageView(model),
-                            SizedBox(height: 150),
+                            SizedBox(height: 150.h),
                           ],
                         ),
                       ),
@@ -45,13 +46,13 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  top: 70,
+                  top: 70.h,
                   left: 0,
                   right: 0,
                   child: Column(
                     children: [
                       _buildOptionsRow(model),
-                      SizedBox(height: 20), // Space between options and buttons
+                      SizedBox(height: 20.h),
                       _buildButtonRow(),
                     ],
                   ),
@@ -68,15 +69,15 @@ class HomePage extends StatelessWidget {
   Widget _buildOptionsRow(HomeController model) {
     return Container(
       width: double.infinity,
-      height: 40,
-      color: Colors.transparent, // Adjust color as needed
+      height: 40.h,
+      color: Colors.transparent,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(
             child: _buildOption(model, ConstantData.honeyOption),
           ),
-          SizedBox(width: 20), // Space between options
+          SizedBox(width: 20.w),
           Expanded(
             child: _buildOption(model, ConstantData.nearbyOption),
           ),
@@ -94,18 +95,18 @@ class HomePage extends StatelessWidget {
         children: [
           if (isSelected)
             Positioned(
-              top: 3, // Adjust as needed to move the image closer to the text
-              right: 45, // Adjust as needed to position it to the right
+              top: 3,
+              right: 45.w,
               child: Image.asset(
                 ConstantData.imagePathDecorate,
-                width: 17,
-                height: 17,
+                width: 17.w,
+                height: 17.h,
               ),
             ),
           Text(
             option,
             style: TextStyle(
-              fontSize: 26,
+              fontSize: 26.sp,
               height: 22 / 18,
               letterSpacing: -0.011249999515712261,
               fontFamily: 'Open Sans',
@@ -119,7 +120,7 @@ class HomePage extends StatelessWidget {
 
   Widget _buildPageView(HomeController model) {
     return Container(
-      height: 700, // Adjust the height as needed
+      height: 700.h,
       child: PageView(
         controller: model.pageController,
         onPageChanged: model.onPageChanged,
@@ -143,7 +144,7 @@ class HomePage extends StatelessWidget {
             Text('Error: ${model.errorMessage}')
           else
             ...model.users.map((user) => Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              padding: EdgeInsets.symmetric(vertical: 10.h),
               child: UserCard(userEntity: user),
             )),
         ],
@@ -175,7 +176,7 @@ class HomePage extends StatelessWidget {
           shadowColor: Color(0xFFFFEA31).withOpacity(0.3495),
           // labelText: 'Gossip',
         ),
-        SizedBox(height: 100),
+        SizedBox(height: 100.h),
       ],
     );
   }

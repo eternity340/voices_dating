@@ -75,7 +75,7 @@ class BottomOptions extends StatelessWidget {
                 fontSize: 18,
                 height: 22 / 18,
                 letterSpacing: -0.01125,
-                color: Colors.black,
+                color: Colors.red,
               ),
             ),
           ),

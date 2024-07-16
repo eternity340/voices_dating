@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:first_app/pages/me/photo/photo_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,7 +8,8 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../../components/background.dart';
-import 'components/BottomOptions.dart';
+import 'components/bottom_options.dart';
+import 'components/photo_dialog.dart';
 
 class PhotoPage extends StatelessWidget {
   @override
@@ -33,84 +36,8 @@ class PhotoPage extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              GestureDetector(
-                                onTap: () {
-                                  if (controller.tokenEntity.accessToken != null) {
-                                    _showOptions(context, controller.tokenEntity.accessToken!, controller);
-                                  } else {
-                                    print('AccessToken is null');
-                                  }
-                                },
-                                child: Container(
-                                  width: 137.09.w,
-                                  height: 174.h,
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFFF8F8F9),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Center(
-                                    child: Container(
-                                      width: 38.4.w,
-                                      height: 38.4.h,
-                                      decoration: const BoxDecoration(
-                                        image: DecorationImage(
-                                          image: AssetImage('assets/images/icon_add_photo.png'),
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                width: 137.09.w,
-                                height: 174.h,
-                                decoration: BoxDecoration(
-                                  color: Color(0xFFF8F8F9),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: controller.userData.avatar != null && controller.userData.avatar!.isNotEmpty
-                                    ? Stack(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(20),
-                                      child: Image.network(
-                                        controller.userData.avatar!,
-                                        fit: BoxFit.cover,
-                                        width: 137.09.w,
-                                        height: 174.h,
-                                      ),
-                                    ),
-                                    Positioned(
-                                      bottom: 0,
-                                      child: Container(
-                                        width: 137.09.w,
-                                        height: 34.h,
-                                        decoration: const BoxDecoration(
-                                          color: Color(0xFFABFFCF),
-                                          borderRadius: BorderRadius.only(
-                                            bottomLeft: Radius.circular(20),
-                                            bottomRight: Radius.circular(20),
-                                          ),
-                                        ),
-                                        child: const Center(
-                                          child: Text(
-                                            'main photo',
-                                            style: TextStyle(
-                                              fontFamily: 'Poppins',
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 14,
-                                              height: 24 / 14,
-                                              letterSpacing: -0.00875,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )
-                                    : Container(),
-                              ),
+                              _buildAddPhotoContainer(context, controller),
+                              _buildMainPhotoContainer(controller),
                             ],
                           ),
                         ),
@@ -120,27 +47,7 @@ class PhotoPage extends StatelessWidget {
                             child: Wrap(
                               spacing: 24.w,
                               runSpacing: 24.h,
-                              children: List.generate(controller.userData.photos!.length - 1, (i) {
-                                return Container(
-                                  width: 137.09.w,
-                                  height: 174.h,
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFFF8F8F9),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: controller.userData.photos![i + 1].url != null
-                                      ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(20),
-                                    child: Image.network(
-                                      controller.userData.photos![i + 1].url!,
-                                      fit: BoxFit.cover,
-                                      width: 137.09.w,
-                                      height: 174.h,
-                                    ),
-                                  )
-                                      : Container(),
-                                );
-                              }),
+                              children: _buildPhotoContainers(controller),
                             ),
                           ),
                       ],
@@ -164,6 +71,138 @@ class PhotoPage extends StatelessWidget {
     );
   }
 
+  Widget _buildAddPhotoContainer(BuildContext context, PhotoController controller) {
+    return GestureDetector(
+      onTap: () {
+        if (controller.tokenEntity.accessToken != null) {
+          _showOptions(context, controller.tokenEntity.accessToken!, controller);
+        } else {
+          print('AccessToken is null');
+        }
+      },
+      child: Container(
+        width: 137.09.w,
+        height: 174.h,
+        decoration: BoxDecoration(
+          color: Color(0xFFF8F8F9),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Center(
+          child: Container(
+            width: 38.4.w,
+            height: 38.4.h,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/icon_add_photo.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMainPhotoContainer(PhotoController controller) {
+    return Container(
+      width: 137.09.w,
+      height: 174.h,
+      decoration: BoxDecoration(
+        color: Color(0xFFF8F8F9),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: controller.userData.avatar != null && controller.userData.avatar!.isNotEmpty
+          ? Stack(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Image.network(
+              controller.userData.avatar!,
+              fit: BoxFit.cover,
+              width: 137.09.w,
+              height: 174.h,
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            child: Container(
+              width: 137.09.w,
+              height: 34.h,
+              decoration: const BoxDecoration(
+                color: Color(0xFFABFFCF),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(20),
+                  bottomRight: Radius.circular(20),
+                ),
+              ),
+              child: const Center(
+                child: Text(
+                  'main photo',
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14,
+                    height: 24 / 14,
+                    letterSpacing: -0.00875,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      )
+          : Container(),
+    );
+  }
+
+  List<Widget> _buildPhotoContainers(PhotoController controller) {
+    return List.generate(controller.userData.photos!.length - 1, (i) {
+      return GestureDetector(
+        onTap: () {
+          _showPhotoDialog(controller.userData.photos![i + 1].url!,controller.userData.photos![i+1].attachId!);
+        },
+        child: Container(
+          width: 137.09.w,
+          height: 174.h,
+          decoration: BoxDecoration(
+            color: Color(0xFFF8F8F9),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: controller.userData.photos![i + 1].url != null
+              ? ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Image.network(
+              controller.userData.photos![i + 1].url!,
+              fit: BoxFit.cover,
+              width: 137.09.w,
+              height: 174.h,
+            ),
+          )
+              : Container(),
+        ),
+      );
+    });
+  }
+
+  void _showPhotoDialog(String photoUrl, String attachId) {
+    final PhotoController controller = Get.find<PhotoController>();
+
+    showDialog(
+      context: Get.context!,
+      barrierDismissible: true,
+      builder: (context) {
+        return PhotoDialog(
+          photoUrl: photoUrl,
+          attachId: attachId,
+          onDelete: () async {
+            await controller.deletePhoto(controller.tokenEntity.accessToken!, attachId);
+            Navigator.of(context).pop();
+          },
+        );
+      },
+    );
+  }
+
   void _showOptions(BuildContext context, String accessToken, PhotoController controller) {
     showCupertinoModalBottomSheet(
       context: context,
@@ -184,8 +223,8 @@ class PhotoPage extends StatelessWidget {
           onCancelPressed: () {
             Navigator.pop(context);
           },
-          firstText: 'Take a Photo', // Text passed from PhotoPage
-          secondText: 'From Album', // Text passed from PhotoPage
+          firstText: 'Take a Photo',
+          secondText: 'From Album',
         );
       },
     );

@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../../constants/constant_data.dart';
 import '../../../entity/token_entity.dart';
 import '../../../entity/user_data_entity.dart';
 
@@ -29,15 +30,14 @@ class PhotoController extends GetxController {
         ),
       );
 
-      if (response.statusCode == 200) {
+      if (response.data[ConstantData.code] == 200) {
         final data = response.data;
         userData = UserDataEntity.fromJson(data['data']);
-        update();
       } else {
-        print('获取用户数据失败');
+        print('Failed to obtain user data');
       }
     } catch (e) {
-      print('请求错误: $e');
+      print('request error: $e');
     }
   }
 
@@ -70,17 +70,48 @@ class PhotoController extends GetxController {
         ),
       );
 
-      if (response.statusCode == 200) {
-        final responseData = response.data;
-        print(responseData);
-        // 处理上传成功的情况
+      if (response.data[ConstantData.code] == 200) {
+        Get.snackbar(
+          'Success',
+          'Upload successful!',
+          snackPosition: SnackPosition.BOTTOM,
+        );
       } else {
-        // 处理上传失败的情况
-        print('上传失败');
+        print('upload failed');
       }
     } catch (e) {
-      // 处理请求错误的情况
-      print('请求错误: $e');
+      print('request error: $e');
+    }
+  }
+
+  Future<void> deletePhoto(String accessToken, String attachId) async {
+    final dio.Dio dioInstance = dio.Dio();
+
+    try {
+      final response = await dioInstance.post(
+        'https://api.masonvips.com/v1/delete_photo',
+        queryParameters: {
+          'attachId': attachId,
+        },
+        options: dio.Options(
+          headers: {
+            'token': accessToken,
+          },
+        ),
+      );
+
+      if (response.data[ConstantData.code] == 200) {
+        Get.snackbar(
+          'Success',
+          'Photo deleted successfully!',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
+      else {
+        print('delete failed');
+      }
+    } catch (e) {
+      print('request error: $e');
     }
   }
 
@@ -92,34 +123,4 @@ class PhotoController extends GetxController {
       return result.isGranted;
     }
   }
-
-  Future<void> deletePhoto(String accessToken, String attachId) async {
-    final dio.Dio dioInstance = dio.Dio();
-    try {
-      final response = await dioInstance.post(
-        'https://api.masonvips.com/v1/delete_photo',
-        queryParameters: {'attachId': attachId},
-        options: dio.Options(
-          headers: {
-            'token': accessToken,
-          },
-        ),
-      );
-
-      if (response.statusCode == 200) {
-        final responseData = response.data;
-        print(responseData);
-        // 处理删除成功的情况
-        fetchUserData();
-      } else {
-        // 处理删除失败的情况
-        print('删除失败');
-      }
-    } catch (e) {
-      // 处理请求错误的情况
-      print('请求错误: $e');
-    }
-  }
-
-
 }
