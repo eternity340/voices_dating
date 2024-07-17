@@ -1,6 +1,7 @@
 import 'package:first_app/pages/blog/blog_page.dart';
 import 'package:first_app/pages/me/my_profile/update_profile/change_username/change_username.dart';
 import 'package:first_app/pages/me/photo/photo_page.dart';
+import 'package:first_app/pages/me/verify/verify_page.dart';
 import 'package:first_app/pages/voice/voice_page.dart';
 import 'package:get/get.dart' as getx;
 import '../pages/email/page/get_email_code_page.dart';
@@ -14,6 +15,8 @@ import '../pages/me/my_profile/update_profile/change_headline/change_headline.da
 import '../pages/me/my_profile/update_profile/change_height/change_height.dart';
 import '../pages/me/my_profile/my_profile_page.dart';
 import '../pages/me/my_profile/update_profile/change_location/change_location.dart';
+import '../pages/me/verify/verify_ID/verify_ID_page.dart';
+import '../pages/me/verify/verify_photo/verify_photo_page.dart';
 import '../pages/pre_login/forget_pwd/forget_pwd_page.dart';
 import '../pages/pre_login/forget_pwd/forget_pwd_provider.dart';
 import '../pages/pre_login/sign_in/sign_in_provider.dart';
@@ -156,6 +159,20 @@ class AppRoutes {
             ),
           ],
         ),
+        getx.GetPage(
+          name: '/verify',
+          page: ()=> VerifyPage(),
+          children: [
+            getx.GetPage(
+                name: '/verify_photo',
+                page: ()=>VerifyPhotoPage(),
+            ),
+            getx.GetPage(
+              name: '/verify_ID',
+              page: ()=>VerifyIDPage(),
+            ),
+          ],
+        )
       ],
     ),
 
