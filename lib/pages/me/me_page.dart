@@ -52,12 +52,17 @@ class MePage extends StatelessWidget {
   Widget _buildTopIcons() {
     return Row(
       children: [
-        _buildIconButton('assets/images/icon_me_left.png', () {}),
+        _buildIconButton('assets/images/icon_me_notification.png', () {
+          Get.toNamed('/me/notification', arguments: {'token': tokenEntity, 'userData': userData}); // 跳转到通知界面
+        }),
         SizedBox(width: 24), // 间隔24px
-        _buildIconButton('assets/images/icon_me_right.png', () {}),
+        _buildIconButton('assets/images/icon_me_settings.png', () {
+          Get.toNamed('/me/settings', arguments: {'token': tokenEntity, 'userData': userData}); // 跳转到设置界面
+        }),
       ],
     );
   }
+
 
   Widget _buildIconButton(String assetPath, VoidCallback onPressed) {
     return Container(

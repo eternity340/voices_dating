@@ -15,6 +15,8 @@ import '../pages/me/my_profile/update_profile/change_headline/change_headline.da
 import '../pages/me/my_profile/update_profile/change_height/change_height.dart';
 import '../pages/me/my_profile/my_profile_page.dart';
 import '../pages/me/my_profile/update_profile/change_location/change_location.dart';
+import '../pages/me/notification/notification_page.dart';
+import '../pages/me/settings/settings_page.dart';
 import '../pages/me/verify/verify_ID/verify_ID_page.dart';
 import '../pages/me/verify/verify_photo/verify_photo_page.dart';
 import '../pages/pre_login/forget_pwd/forget_pwd_page.dart';
@@ -172,7 +174,15 @@ class AppRoutes {
               page: ()=>VerifyIDPage(),
             ),
           ],
-        )
+        ),
+        getx.GetPage(
+          name: '/settings',
+          page: () => SettingsPage(),
+        ),
+        getx.GetPage(
+          name: '/notification',
+          page: () => NotificationPage(),
+        ),
       ],
     ),
 
