@@ -30,39 +30,39 @@ class SettingsPage extends StatelessWidget {
             top: 124.h,
             text: 'Block members',
             onPressed: () {
-              Get.toNamed('/me/settings/', arguments: {'token': tokenEntity});
+              Get.toNamed('/me/settings/block_member', arguments: {'token': tokenEntity,'userData':userData});
             },
           ),
           PathBox(
             top: 219.h,
             text: 'Feedback',
             onPressed: () {
-              Get.toNamed('/me/settings/', arguments: {'token': tokenEntity});
+              Get.toNamed('/me/settings/feedback', arguments: {'token': tokenEntity,'userData':userData});
             },
           ),
           PathBox(
             top: 314.h,
             text: 'Purchase record',
             onPressed: () {
-              Get.toNamed('/me/settings/', arguments: {'token': tokenEntity});
+              Get.toNamed('/me/settings/purchase_record', arguments: {'token': tokenEntity,'userData':userData});
             },
           ),
           PathBox(
             top: 409.h,
             text: 'About me',
             onPressed: () {
-              Get.toNamed('/me/settings/', arguments: {'token': tokenEntity});
+              Get.toNamed('/me/settings/about_me', arguments: {'token': tokenEntity,'userData':userData});
             },
           ),
           PathBox(
-            top: 409.h,
+            top: 504.h,
             text: 'Clean up memory',
             onPressed: () {
-              Get.toNamed('/me/settings/', arguments: {'token': tokenEntity});
+              Get.toNamed('/me/settings/', arguments: {'token': tokenEntity,'userData':userData});
             },
           ),
           Positioned(
-            top: 600.h,
+            top: 650.h,
             left: 0,
             right: 0,
             child: Center(

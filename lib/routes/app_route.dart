@@ -1,6 +1,10 @@
 import 'package:first_app/pages/blog/blog_page.dart';
 import 'package:first_app/pages/me/my_profile/update_profile/change_username/change_username.dart';
 import 'package:first_app/pages/me/photo/photo_page.dart';
+import 'package:first_app/pages/me/settings/about_me/about_me_page.dart';
+import 'package:first_app/pages/me/settings/block_member/block_member_page.dart';
+import 'package:first_app/pages/me/settings/feedback/feedback_page.dart';
+import 'package:first_app/pages/me/settings/purchase_record/purchase_record_page.dart';
 import 'package:first_app/pages/me/verify/verify_page.dart';
 import 'package:first_app/pages/voice/voice_page.dart';
 import 'package:get/get.dart' as getx;
@@ -178,6 +182,24 @@ class AppRoutes {
         getx.GetPage(
           name: '/settings',
           page: () => SettingsPage(),
+          children: [
+            getx.GetPage(
+              name: '/block_member',
+              page: () => BlockMemberPage(),
+            ),
+            getx.GetPage(
+              name: '/feedback',
+              page: () => FeedbackPage(),
+            ),
+            getx.GetPage(
+              name: '/purchase_record',
+              page: () => PurchaseRecordPage(),
+            ),
+            getx.GetPage(
+              name: '/about_me',
+              page: () => AboutMePage(),
+            ),
+          ],
         ),
         getx.GetPage(
           name: '/notification',

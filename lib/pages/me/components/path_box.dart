@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+//settings & verify 选项条
 class PathBox extends StatelessWidget {
   final double top;
   final String text;
