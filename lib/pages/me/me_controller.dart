@@ -25,7 +25,7 @@ class MeController extends GetxController {
         ),
       );
 
-      if (response.statusCode == 200) {
+      if (response.data['code'] == 200) {
         final data = response.data;
         userData = UserDataEntity.fromJson(data['data']);
         update();
