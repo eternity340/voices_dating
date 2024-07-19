@@ -1,6 +1,6 @@
-// 自定义外部椭圆形的线圈Painter
 import 'package:flutter/cupertino.dart';
 
+// 自定义外部椭圆形的线圈Painter
 class OuterOvalPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
