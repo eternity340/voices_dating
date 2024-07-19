@@ -25,6 +25,19 @@ class NotificationPage extends StatelessWidget {
             middleText: '     ',
             child: Container(),
           ),
+          Positioned(
+            top: 139.h,
+            left: (ScreenUtil().screenWidth - 335.w) / 2,
+            child: Container(
+              width: 335.w,
+              height: 680.h,
+              decoration: BoxDecoration(
+                color: const Color(0xFFF8F8F9),
+                borderRadius: BorderRadius.circular(24.r),
+                backgroundBlendMode: BlendMode.srcOver,
+              ),
+            ),
+          ),
         ],
       ),
     );
