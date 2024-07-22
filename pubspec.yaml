@@ -113,8 +113,11 @@ flutter:
         - asset: assets/fonts/Hind/Hind-Regular.ttf
         - asset: assets/fonts/Hind/Hind-Bold.ttf
           weight: 700
-
-
+    - family: Helvetica
+      fonts:
+        - asset: assets/fonts/Helvetica/Helvetica.ttf
+        - asset: assets/fonts/Helvetica/Helvetica-Bold.ttf
+          weight: 400
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
