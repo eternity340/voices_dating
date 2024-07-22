@@ -1,4 +1,4 @@
-import 'package:first_app/pages/blog/blog_page.dart';
+
 import 'package:first_app/pages/me/my_profile/update_profile/change_username/change_username.dart';
 import 'package:first_app/pages/me/photo/photo_page.dart';
 import 'package:first_app/pages/me/settings/about_me/about_me_page.dart';
@@ -23,6 +23,7 @@ import '../pages/me/notification/notification_page.dart';
 import '../pages/me/settings/settings_page.dart';
 import '../pages/me/verify/verify_ID/verify_ID_page.dart';
 import '../pages/me/verify/verify_photo/verify_photo_page.dart';
+import '../pages/moments/moments_page.dart';
 import '../pages/pre_login/forget_pwd/forget_pwd_page.dart';
 import '../pages/pre_login/forget_pwd/forget_pwd_provider.dart';
 import '../pages/pre_login/sign_in/sign_in_provider.dart';
@@ -118,8 +119,8 @@ class AppRoutes {
       page: () => HomePage(),
     ),
     getx.GetPage(
-      name: '/blog',
-      page: () => BlogPage(),
+      name: '/moments',
+      page: () => MomentsPage(),
     ),
     getx.GetPage(
       name: '/voice',

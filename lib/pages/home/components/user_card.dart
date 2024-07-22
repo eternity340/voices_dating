@@ -19,7 +19,7 @@ class UserCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
-          boxShadow: const [
+          boxShadow:  [
             BoxShadow(
               color: Color(0x0A000000),
               blurRadius: 14,

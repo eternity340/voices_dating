@@ -48,7 +48,7 @@ class AllNavigationBar extends StatelessWidget {
                       children: [
                         _buildNavItem(ConstantData.imagePathIconHomeActive, ConstantData.imagePathIconHomeInactive, '/home', userData),
                         SizedBox(width: 43),
-                        _buildNavItem(ConstantData.imagePathIconBlogActive, ConstantData.imagePathIconBlogInactive, '/blog', userData),
+                        _buildNavItem(ConstantData.imagePathIconBlogActive, ConstantData.imagePathIconBlogInactive, '/moments', userData),
                         SizedBox(width: 43),
                         _buildNavItem(ConstantData.imagePathIconVoiceActive, ConstantData.imagePathIconVoiceInactive, '/voice', userData),
                         SizedBox(width: 43),
