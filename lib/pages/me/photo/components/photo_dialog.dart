@@ -21,7 +21,7 @@ class PhotoDialog extends StatelessWidget {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('confirm'),
-          content: Text('是否更换为mainPhoto？'),
+          content: Text('Whether to change to mainPhoto？'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -33,7 +33,7 @@ class PhotoDialog extends StatelessWidget {
               onPressed: () {
 
               },
-              child: Text('是'),
+              child: Text('yes'),
             ),
           ],
         );

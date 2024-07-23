@@ -1,4 +1,5 @@
 import 'package:first_app/entity/user_data_entity.dart';
+import 'package:first_app/image_res/image_res.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../constants/constant_data.dart';
@@ -27,7 +28,7 @@ class AllNavigationBar extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10), // 设置圆角半径
                     child: Image.asset(
-                      ConstantData.imagePathNavigationBar,
+                      ImageRes.imagePathNavigationBar,
                       width: 355,
                       height: 72,
                       fit: BoxFit.cover,
@@ -46,15 +47,15 @@ class AllNavigationBar extends StatelessWidget {
                     top: 26,
                     child: Row(
                       children: [
-                        _buildNavItem(ConstantData.imagePathIconHomeActive, ConstantData.imagePathIconHomeInactive, '/home', userData),
+                        _buildNavItem(ImageRes.imagePathIconHomeActive, ImageRes.imagePathIconHomeInactive, '/home', userData),
                         SizedBox(width: 43),
-                        _buildNavItem(ConstantData.imagePathIconBlogActive, ConstantData.imagePathIconBlogInactive, '/moments', userData),
+                        _buildNavItem(ImageRes.imagePathIconBlogActive, ImageRes.imagePathIconBlogInactive, '/moments', userData),
                         SizedBox(width: 43),
-                        _buildNavItem(ConstantData.imagePathIconVoiceActive, ConstantData.imagePathIconVoiceInactive, '/voice', userData),
+                        _buildNavItem(ImageRes.imagePathIconVoiceActive, ImageRes.imagePathIconVoiceInactive, '/voice', userData),
                         SizedBox(width: 43),
-                        _buildNavItem(ConstantData.imagePathIconMessageActive, ConstantData.imagePathIconMessageInactive, '/message', userData),
+                        _buildNavItem(ImageRes.imagePathIconMessageActive, ImageRes.imagePathIconMessageInactive, '/message', userData),
                         SizedBox(width: 43),
-                        _buildNavItem(ConstantData.imagePathIconMeActive, ConstantData.imagePathIconMeInactive, '/me', userData),
+                        _buildNavItem(ImageRes.imagePathIconMeActive, ImageRes.imagePathIconMeInactive, '/me', userData),
                       ],
                     ),
                   ),
