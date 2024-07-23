@@ -56,6 +56,12 @@ class _MomentsContentState extends State<MomentsContent> {
     }
   }
 
+  void _removeMoment(MomentEntity moment) {
+    setState(() {
+      _moments.remove(moment);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -65,10 +71,13 @@ class _MomentsContentState extends State<MomentsContent> {
         MomentEntity moment = _moments[index];
         return Padding(
           padding: EdgeInsets.only(bottom: 20.h),
-          child: MomentCard(moment: moment),
+          child: MomentCard(
+            moment: moment,
+            tokenEntity: widget.tokenEntity,
+            onDelete: () => _removeMoment(moment),
+          ),
         );
       },
     );
   }
 }
-

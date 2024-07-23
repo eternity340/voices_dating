@@ -123,11 +123,11 @@ class Background extends StatelessWidget {
                     ),
                   if (showSettingButton)
                     Positioned(
-                      top: 8.h,
+                      top: 0.h,
                       right: 16.w,
                       child: GestureDetector(
                         onTap: () {
-                          // 处理设置按钮点击事件
+
                         },
                         child: Image.asset(
                           'assets/images/button_round_setting.png',

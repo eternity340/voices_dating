@@ -5,8 +5,13 @@ import '../../../entity/moment_entity.dart';
 
 class MomentsCard extends StatelessWidget {
   final MomentEntity moment;
+  final bool showButtons; // 添加控制按钮显示的参数
 
-  const MomentsCard({Key? key, required this.moment}) : super(key: key);
+  const MomentsCard({
+    Key? key,
+    required this.moment,
+    this.showButtons = true, // 默认情况下显示按钮
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -73,67 +78,81 @@ class MomentsCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 16.h),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: moment.attachments?.map((attachment) {
-                      return Container(
-                        width: 137.09.w,
-                        height: 174.h,
-                        margin: EdgeInsets.only(right: 10.w),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20.r),
-                          image: DecorationImage(
-                            image: NetworkImage(attachment.url ?? 'assets/images/placeholder1.png'), // 默认占位图像
-                            fit: BoxFit.cover,
+                if (moment.attachments != null && moment.attachments!.length == 1)
+                  Container(
+                    width: 303.w,
+                    height: 400.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20.r),
+                      image: DecorationImage(
+                        image: NetworkImage(moment.attachments!.first.url ?? 'assets/images/placeholder1.png'), // 默认占位图像
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  )
+                else
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: moment.attachments?.map((attachment) {
+                        return Container(
+                          width: 137.09.w,
+                          height: 174.h,
+                          margin: EdgeInsets.only(right: 10.w),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.r),
+                            image: DecorationImage(
+                              image: NetworkImage(attachment.url ?? 'assets/images/placeholder1.png'), // 默认占位图像
+                              fit: BoxFit.cover,
+                            ),
                           ),
+                        );
+                      }).toList() ?? [],
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          if (showButtons) // 只有在 showButtons 为 true 时显示按钮
+            Positioned(
+              right: 16.w, // 右边距
+              top: 12.h, // 顶部边距
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      // 第一个按钮的点击事件处理
+                    },
+                    child: Container(
+                      width: 40.w,
+                      height: 40.h,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('assets/images/button_round_message.png'),
+                          fit: BoxFit.cover,
                         ),
-                      );
-                    }).toList() ?? [],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Positioned(
-            right: 16.w, // 右边距
-            top: 12.h,  // 顶部边距
-            child: Row(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    // 第一个按钮的点击事件处理
-                  },
-                  child: Container(
-                    width: 40.w,
-                    height: 40.h,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('assets/images/button_round_message.png'),
-                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
-                ),
-                SizedBox(width: 8.w),
-                GestureDetector(
-                  onTap: () {
-                    // 第二个按钮的点击事件处理
-                  },
-                  child: Container(
-                    width: 40.w,
-                    height: 40.h,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('assets/images/button_round_like.png'),
-                        fit: BoxFit.cover,
+                  SizedBox(width: 8.w),
+                  GestureDetector(
+                    onTap: () {
+                      // 第二个按钮的点击事件处理
+                    },
+                    child: Container(
+                      width: 40.w,
+                      height: 40.h,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('assets/images/button_round_like.png'),
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
         ],
       ),
     );

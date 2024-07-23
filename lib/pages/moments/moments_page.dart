@@ -1,13 +1,15 @@
-import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart' as getX;
+import 'package:get/get.dart';
+import 'package:dio/dio.dart' as dio;
+
 import '../../components/all_navigation_bar.dart';
 import '../../../entity/token_entity.dart';
 import '../../components/background.dart';
 import '../../entity/moment_entity.dart';
 import '../../entity/user_data_entity.dart';
 import 'components/moments_card.dart';
+import 'moments_detail/moments_detail_page.dart';
 
 class MomentsPage extends StatefulWidget {
   @override
@@ -22,12 +24,11 @@ class _MomentsPageState extends State<MomentsPage> {
   @override
   void initState() {
     super.initState();
-    tokenEntity = getX.Get.arguments['token'] as TokenEntity;
-    userData = getX.Get.arguments['userData'] as UserDataEntity;
+    // Replace with your actual tokenEntity and userData initialization logic
+    tokenEntity = Get.arguments['token'] as TokenEntity;
+    userData = Get.arguments['userData'] as UserDataEntity;
     _fetchMoments();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +57,7 @@ class _MomentsPageState extends State<MomentsPage> {
             top: 59.5.h,
             child: GestureDetector(
               onTap: () {
-                // 添加点击事件处理
+                // Add your search button onTap logic here
               },
               child: Container(
                 width: 40.w,
@@ -75,11 +76,17 @@ class _MomentsPageState extends State<MomentsPage> {
             top: 109.h,
             child: Container(
               width: 335.w,
-              height: 650.h, // 修改高度以适应更多内容
+              height: 650.h, // Adjust height to fit more content
               child: ListView.builder(
                 itemCount: _moments.length,
                 itemBuilder: (context, index) {
-                  return MomentsCard(moment: _moments[index]);
+                  return GestureDetector(
+                    onTap: () {
+                      Get.toNamed('/moments/moments_detail',arguments: {'moment': _moments[index]});
+                    },
+                    child: MomentsCard(
+                        moment: _moments[index]),
+                  );
                 },
               ),
             ),
@@ -96,7 +103,7 @@ class _MomentsPageState extends State<MomentsPage> {
       dio.Response response = await dioInstance.get(
         'https://api.masonvips.com/v1/timelines',
         queryParameters: {
-          //'profId': userData.userId,
+          // Add parameters as needed
         },
         options: dio.Options(
           headers: {

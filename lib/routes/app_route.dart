@@ -6,6 +6,7 @@ import 'package:first_app/pages/me/settings/block_member/block_member_page.dart'
 import 'package:first_app/pages/me/settings/feedback/feedback_page.dart';
 import 'package:first_app/pages/me/settings/purchase_record/purchase_record_page.dart';
 import 'package:first_app/pages/me/verify/verify_page.dart';
+import 'package:first_app/pages/moments/moments_detail/moments_detail_page.dart';
 import 'package:first_app/pages/voice/voice_page.dart';
 import 'package:get/get.dart' as getx;
 import '../pages/email/page/get_email_code_page.dart';
@@ -121,6 +122,12 @@ class AppRoutes {
     getx.GetPage(
       name: '/moments',
       page: () => MomentsPage(),
+      children: [
+        getx.GetPage(
+          name: '/moments_detail',
+          page: () => MomentsDetailPage(),
+        ),
+      ],
     ),
     getx.GetPage(
       name: '/voice',

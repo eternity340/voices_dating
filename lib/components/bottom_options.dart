@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -43,24 +43,26 @@ class BottomOptions extends StatelessWidget {
               ),
             ),
           ),
-          const Divider(
-            color: Color(0xFFE0E0E0),
-            thickness: 1,
-            height: 24,
-          ),
-          TextButton(
-            onPressed: onSecondPressed,
-            child: Text(
-              secondText,
-              style: const TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 18,
-                height: 22 / 18,
-                letterSpacing: -0.01125,
-                color: Colors.black,
+          if (secondText.isNotEmpty) ...[
+            const Divider(
+              color: Color(0xFFE0E0E0),
+              thickness: 1,
+              height: 24,
+            ),
+            TextButton(
+              onPressed: onSecondPressed,
+              child: Text(
+                secondText,
+                style: const TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 18,
+                  height: 22 / 18,
+                  letterSpacing: -0.01125,
+                  color: Colors.black,
+                ),
               ),
             ),
-          ),
+          ],
           const Divider(
             color: Color(0xFFE0E0E0),
             thickness: 1,
