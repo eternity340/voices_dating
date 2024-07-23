@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:dio/dio.dart';
 import '../../../entity/token_entity.dart';
 import '../../../entity/user_data_entity.dart';
-import '../components/custom_message_dialog.dart';
+import '../../../components/custom_message_dialog.dart';
 
 class SettingsController extends GetxController {
   final TokenEntity tokenEntity = Get.arguments['token'];

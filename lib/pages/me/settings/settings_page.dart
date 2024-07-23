@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../components/background.dart';
 import '../../../components/gradient_btn.dart';
-import '../components/custom_message_dialog.dart';
+import '../../../components/custom_message_dialog.dart';
 import '../components/path_box.dart';
 import 'settings_controller.dart';
 
