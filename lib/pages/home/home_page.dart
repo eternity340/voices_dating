@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../components/background.dart';
+import '../../image_res/image_res.dart';
 import 'components/home_icon_button.dart';
 import 'home_controller.dart';
 import 'home_provider.dart';
@@ -130,7 +131,7 @@ class _HomePageState extends State<HomePage> {
               top: 3,
               right: 45.w,
               child: Image.asset(
-                ConstantData.imagePathDecorate,
+                ImageRes.imagePathDecorate,
                 width: 17.w,
                 height: 17.h,
               ),
@@ -204,22 +205,22 @@ class _HomePageState extends State<HomePage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         _buildButtonWithLabel(
-          imagePath: ConstantData.imagePathLike,
+          imagePath: ImageRes.imagePathLike,
           shadowColor: Color(0xFFFFD1D1).withOpacity(0.3736),
           label: 'Feel',
         ),
         _buildButtonWithLabel(
-          imagePath: ConstantData.imagePathClock,
+          imagePath: ImageRes.imagePathClock,
           shadowColor: Color(0xFFF6D3FF).withOpacity(0.369),
           label: 'Get up',
         ),
         _buildButtonWithLabel(
-          imagePath: ConstantData.imagePathGame,
+          imagePath: ImageRes.imagePathGame,
           shadowColor: Color(0xFFFCA6C5).withOpacity(0.2741),
           label: 'Game',
         ),
         _buildButtonWithLabel(
-          imagePath: ConstantData.imagePathFeel,
+          imagePath: ImageRes.imagePathFeel,
           shadowColor: Color(0xFFFFEA31).withOpacity(0.3495),
           label: 'Gossip',
         ),
