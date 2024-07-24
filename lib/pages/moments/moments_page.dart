@@ -82,7 +82,7 @@ class _MomentsPageState extends State<MomentsPage> {
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {
-                      Get.toNamed('/moments/moments_detail',arguments: {'moment': _moments[index]});
+                      Get.toNamed('/moments/moments_detail',arguments: {'moment': _moments[index],'token': tokenEntity,'userData':userData});
                     },
                     child: MomentsCard(
                         moment: _moments[index]),
@@ -103,7 +103,9 @@ class _MomentsPageState extends State<MomentsPage> {
       dio.Response response = await dioInstance.get(
         'https://api.masonvips.com/v1/timelines',
         queryParameters: {
-          // Add parameters as needed
+          'filter[likes]' : 1,
+          'filter[day]': 30,
+          'filter[photo]': 1,
         },
         options: dio.Options(
           headers: {

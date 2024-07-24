@@ -1,17 +1,17 @@
-import 'package:first_app/entity/user_data_entity.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../components/all_navigation_bar.dart';
 import '../../components/background.dart';
+import '../../constants/constant_data.dart';
+import '../../entity/token_entity.dart';
+import '../../entity/user_data_entity.dart';
 import '../../image_res/image_res.dart';
 import 'components/home_icon_button.dart';
+import 'components/user_card.dart';
 import 'home_controller.dart';
 import 'home_provider.dart';
-import '../../constants/constant_data.dart';
-import 'components/user_card.dart';
-import '../../components/all_navigation_bar.dart';
-import '../../../entity/token_entity.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -177,6 +177,9 @@ class _HomePageState extends State<HomePage> {
       onPageChanged: model.onPageChanged,
       children: [
         _buildUserListView(model),
+        Container(
+          child: Center(child: Text('Nearby Page')),
+        ), // Add your Nearby page widget here
       ],
     );
   }
