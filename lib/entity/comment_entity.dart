@@ -16,6 +16,8 @@ class CommentEntity {
     this.commentContent,
     this.commentCreated,
     this.commentId,
+    this.commentLiked,
+    this.commentLikes,
     this.gender,
     this.hidden,
     this.hiddenGender,
@@ -50,6 +52,8 @@ class CommentEntity {
       commentContent: asT<String?>(jsonRes['commentContent']),
       commentCreated: asT<int?>(jsonRes['commentCreated']),
       commentId: asT<String?>(jsonRes['commentId']),
+      commentLiked: asT<int?>(jsonRes['commentLiked']),
+      commentLikes: asT<int?>(jsonRes['commentLikes']),
       gender: asT<String?>(jsonRes['gender']),
       hidden: asT<String?>(jsonRes['hidden']),
       hiddenGender: asT<String?>(jsonRes['hiddenGender']),
@@ -69,6 +73,8 @@ class CommentEntity {
   String? commentContent;
   int? commentCreated;
   String? commentId;
+  int?commentLiked;
+  int? commentLikes;
   String? gender;
   String? hidden;
   String? hiddenGender;
@@ -92,6 +98,8 @@ class CommentEntity {
     'commentContent': commentContent,
     'commentCreated': commentCreated,
     'commentId': commentId,
+    'commentLiked':commentLiked,
+    'commentLikes':commentLikes,
     'gender': gender,
     'hidden': hidden,
     'hiddenGender': hiddenGender,
