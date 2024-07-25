@@ -43,16 +43,56 @@ class _MomentsPageState extends State<MomentsPage> {
           Positioned(
             left: 16.w,
             top: 67.h,
-            child: Text(
-              'Moments',
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.w500,
-                fontSize: 18.sp,
-                color: Color(0xFF000000),
+            child: GestureDetector(
+              onTap: () {
+                Get.toNamed('/moments/add_moment', arguments: { 'token': tokenEntity, 'userData': userData});
+              },
+              child: Text(
+                'Moments',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w500,
+                  fontSize: 18.sp,
+                  color: Color(0xFF000000),
+                ),
               ),
             ),
           ),
+
+          Positioned(
+            left: 90.w,
+            top: 45.5.h,
+            child: GestureDetector(
+              onTap: () {
+                Get.toNamed('/moments/add_moment', arguments: {'token': tokenEntity, 'userData': userData});
+              },
+              child: Container(
+                width: 40.w,
+                height: 50.h,
+                alignment: Alignment.center,
+                child: ShaderMask(
+                  shaderCallback: (Rect bounds) {
+                    return SweepGradient(
+                      colors: [Color(0xFFFFD840), Color(0xFFF3ACFF), Color(0xFF8AECFF), Color(0xFFFFD840)],
+                      stops: [0.0, 0.5, 1.0, 1.0],
+                      center: Alignment.center,
+                    ).createShader(bounds);
+                  },
+                  child: Text(
+                    '+',
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24.sp,
+                      color: Colors.white, // 白色文本以应用 ShaderMask
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+
           Positioned(
             left: 315.w,
             top: 59.5.h,
@@ -116,6 +156,7 @@ class _MomentsPageState extends State<MomentsPage> {
           'filter[likes]': 1,
           'filter[day]': 30,
           'filter[photo]': 1,
+          'profId':2307754,
         },
         options: dio.Options(
           headers: {
@@ -124,7 +165,7 @@ class _MomentsPageState extends State<MomentsPage> {
         ),
       );
 
-      if (response.statusCode == 200) {
+      if (response.data['code'] == 200) {
         List<dynamic> momentsJson = response.data['data'];
         List<MomentEntity> moments = momentsJson
             .map((json) => MomentEntity.fromJson(json as Map<String, dynamic>))

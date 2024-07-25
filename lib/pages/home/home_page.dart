@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart'; // 引入 Cupertino 库
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -191,7 +192,7 @@ class _HomePageState extends State<HomePage> {
       physics: AlwaysScrollableScrollPhysics(),
       children: [
         if (model.isLoading)
-          Center(child: CircularProgressIndicator())
+          Center(child: CupertinoActivityIndicator()) // iOS样式的加载指示器
         else if (model.errorMessage != null)
           Center(child: Text('Error: ${model.errorMessage}'))
         else

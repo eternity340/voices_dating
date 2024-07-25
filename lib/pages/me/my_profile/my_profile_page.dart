@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../../constants/constant_data.dart';
@@ -137,6 +138,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
     );
   }
 
+  //按钮样式
   Widget _buildOption(String option) {
     bool isSelected = selectedOption == option;
     return GestureDetector(

@@ -3,6 +3,7 @@ import 'package:first_app/entity/moment_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:dio/dio.dart';  // 添加 Dio 依赖
 import '../../../components/detail_bottom_bar.dart';
 import '../../../entity/token_entity.dart';
 import '../../../entity/user_data_entity.dart';
@@ -19,6 +20,8 @@ class _MomentsDetailPageState extends State<MomentsDetailPage> {
   final tokenEntity = Get.arguments['token'] as TokenEntity;
   final userData = Get.arguments['userData'] as UserDataEntity;
   bool _isCommentInputVisible = false;
+  final TextEditingController _commentController = TextEditingController();
+  String? _commentContent;
 
   @override
   Widget build(BuildContext context) {
@@ -142,11 +145,15 @@ class _MomentsDetailPageState extends State<MomentsDetailPage> {
               showLikeButton: true,
               showCallButton: false,
               showMessageButton: false,
-              gradientButtonText: 'comment',
+              gradientButtonText: _isCommentInputVisible ? 'Send' : 'Comment',
               onGradientButtonPressed: () {
-                setState(() {
-                  _isCommentInputVisible = !_isCommentInputVisible;
-                });
+                if (_isCommentInputVisible) {
+                  _submitComment();
+                } else {
+                  setState(() {
+                    _isCommentInputVisible = true;
+                  });
+                }
               },
             ),
           ),
@@ -156,7 +163,6 @@ class _MomentsDetailPageState extends State<MomentsDetailPage> {
   }
 
   Widget _buildCommentInput() {
-    final TextEditingController _commentController = TextEditingController();
     return Container(
       width: 335.w,
       decoration: BoxDecoration(
@@ -178,6 +184,11 @@ class _MomentsDetailPageState extends State<MomentsDetailPage> {
                 letterSpacing: -0.01,
                 color: Color(0xFF000000),
               ),
+              onChanged: (text) {
+                setState(() {
+                  _commentContent = text;
+                });
+              },
               decoration: InputDecoration(
                 fillColor: Colors.transparent,
                 hintText: 'Write a comment...',
@@ -219,5 +230,40 @@ class _MomentsDetailPageState extends State<MomentsDetailPage> {
       );
     }
     return likeAvatars;
+  }
+
+  Future<void> _submitComment() async {
+    if (_commentContent == null || _commentContent!.isEmpty) {
+      // Do nothing if the comment is empty
+      return;
+    }
+
+    Dio dio = Dio();
+    String? token = tokenEntity.accessToken;
+
+    try {
+      var response = await dio.post(
+        'https://api.masonvips.com/v1/add/timeline/comment',
+        queryParameters: {
+          'timelineId': moment.timelineId,
+          'content': _commentContent,
+        },
+        options: Options(headers: {'token': token}),
+      );
+
+      if (response.data['code'] == 200) {
+        // Handle success
+        Get.snackbar('Success', 'Comment added successfully');
+        setState(() {
+          _isCommentInputVisible = false;
+          _commentController.clear();
+        });
+      } else {
+        Get.snackbar('Error', 'Failed to add comment');
+      }
+    } catch (e) {
+      print('Failed to submit comment: $e');
+      Get.snackbar('Error', 'An error occurred');
+    }
   }
 }

@@ -2,6 +2,7 @@ import 'package:first_app/entity/comment_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import '../../../entity/moment_entity.dart';
 import '../../../entity/token_entity.dart';
 
@@ -18,6 +19,7 @@ class CommentWidget extends StatefulWidget {
 class _CommentWidgetState extends State<CommentWidget> {
   late List<bool> isLikedList;
   late List<String> likeCountList;
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -29,7 +31,11 @@ class _CommentWidgetState extends State<CommentWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return isLoading
+        ? Center(
+      child: CupertinoActivityIndicator(radius: 15.0),
+    )
+        : Column(
       children: [
         ..._buildCommentWidgets(widget.moment.comments),
       ],
@@ -175,11 +181,14 @@ class _CommentWidgetState extends State<CommentWidget> {
           isLikedList.add(item['commentLiked'] == '1');
         }
         setState(() {
-          // 更新组件状态
+          isLoading = false;
         });
       }
     } catch (e) {
       print('Failed to fetch like count for comment: $e');
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -227,5 +236,4 @@ class _CommentWidgetState extends State<CommentWidget> {
     return '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')} '
         '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
   }
-
 }
