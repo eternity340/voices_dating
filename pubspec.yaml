@@ -51,6 +51,7 @@ dependencies:
   url_launcher: ^6.1.14
   permission_handler: ^11.0.1
   camera:
+  flutter_easyrefresh:
 
 
 

@@ -2,6 +2,7 @@ import 'package:first_app/components/background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart'; // 导入 flutter_easyrefresh 包
 import 'block_member_controller.dart';
 import 'components/blocked_member_item.dart';
 
@@ -39,8 +40,14 @@ class BlockMemberPage extends StatelessWidget {
                 if (controller.blockedMembers.isEmpty) {
                   return Center(child: Text('No blocked members'));
                 }
-
-                return RefreshIndicator(
+                return EasyRefresh(
+                  header: ClassicalHeader(
+                    refreshText: "Pull to refresh",
+                    refreshReadyText: "Release to refresh",
+                    refreshingText: "Refreshing...",
+                    refreshedText: "Refresh completed",
+                    refreshFailedText: "Refresh failed",
+                  ),
                   onRefresh: controller.fetchBlockedMembers,
                   child: ListView.separated(
                     itemCount: controller.blockedMembers.length,
@@ -66,5 +73,3 @@ class BlockMemberPage extends StatelessWidget {
     );
   }
 }
-
-

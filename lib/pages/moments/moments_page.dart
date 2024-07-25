@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
+import 'package:flutter_easyrefresh/easy_refresh.dart'; // 导入 flutter_easyrefresh 包
 
 import '../../components/all_navigation_bar.dart';
 import '../../../entity/token_entity.dart';
@@ -77,17 +78,26 @@ class _MomentsPageState extends State<MomentsPage> {
             child: Container(
               width: 335.w,
               height: 650.h, // Adjust height to fit more content
-              child: ListView.builder(
-                itemCount: _moments.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Get.toNamed('/moments/moments_detail',arguments: {'moment': _moments[index],'token': tokenEntity,'userData':userData});
-                    },
-                    child: MomentsCard(
-                        moment: _moments[index]),
-                  );
-                },
+              child: EasyRefresh(
+                header: ClassicalHeader(
+                  refreshText: "Pull to refresh",
+                  refreshReadyText: "Release to refresh",
+                  refreshingText: "Refreshing...",
+                  refreshedText: "Refresh completed",
+                  refreshFailedText: "Refresh failed",
+                ),
+                onRefresh: _fetchMoments,
+                child: ListView.builder(
+                  itemCount: _moments.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        Get.toNamed('/moments/moments_detail', arguments: {'moment': _moments[index], 'token': tokenEntity, 'userData': userData});
+                      },
+                      child: MomentsCard(moment: _moments[index]),
+                    );
+                  },
+                ),
               ),
             ),
           ),
@@ -103,7 +113,7 @@ class _MomentsPageState extends State<MomentsPage> {
       dio.Response response = await dioInstance.get(
         'https://api.masonvips.com/v1/timelines',
         queryParameters: {
-          'filter[likes]' : 1,
+          'filter[likes]': 1,
           'filter[day]': 30,
           'filter[photo]': 1,
         },

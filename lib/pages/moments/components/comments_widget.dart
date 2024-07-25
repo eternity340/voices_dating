@@ -30,7 +30,9 @@ class _CommentWidgetState extends State<CommentWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: _buildCommentWidgets(widget.moment.comments),
+      children: [
+        ..._buildCommentWidgets(widget.moment.comments),
+      ],
     );
   }
 
@@ -193,7 +195,7 @@ class _CommentWidgetState extends State<CommentWidget> {
         queryParameters: {'commentId': int.tryParse(commentId)},
         options: Options(headers: {'token': token}),
       );
-      if (response.data['code'] == 200 ) {
+      if (response.data['code'] == 200) {
         setState(() {
           isLikedList[index] = isLiked;
           _updateLikeCount(index, isLiked);
@@ -225,4 +227,5 @@ class _CommentWidgetState extends State<CommentWidget> {
     return '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')} '
         '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
   }
+
 }

@@ -3,10 +3,12 @@ import 'package:first_app/entity/moment_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import '../../../components/detail_bottom_bar.dart';
 import '../../../entity/token_entity.dart';
 import '../../../entity/user_data_entity.dart';
 import '../components/comments_widget.dart';
 import '../components/moments_card.dart';
+
 class MomentsDetailPage extends StatefulWidget {
   @override
   _MomentsDetailPageState createState() => _MomentsDetailPageState();
@@ -16,6 +18,7 @@ class _MomentsDetailPageState extends State<MomentsDetailPage> {
   final moment = Get.arguments['moment'] as MomentEntity;
   final tokenEntity = Get.arguments['token'] as TokenEntity;
   final userData = Get.arguments['userData'] as UserDataEntity;
+  bool _isCommentInputVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +35,7 @@ class _MomentsDetailPageState extends State<MomentsDetailPage> {
             left: 20.w,
             top: 109.h,
             right: 20.w,
-            bottom: 0,
+            bottom: 70.h,
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,7 +124,7 @@ class _MomentsDetailPageState extends State<MomentsDetailPage> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 24.h),
+                          if (_isCommentInputVisible) _buildCommentInput(),
                           CommentWidget(moment: moment, tokenEntity: tokenEntity), // 使用 CommentWidget
                         ],
                       ),
@@ -131,7 +134,67 @@ class _MomentsDetailPageState extends State<MomentsDetailPage> {
               ),
             ),
           ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: DetailBottomBar(
+              showLikeButton: true,
+              showCallButton: false,
+              showMessageButton: false,
+              gradientButtonText: 'comment',
+              onGradientButtonPressed: () {
+                setState(() {
+                  _isCommentInputVisible = !_isCommentInputVisible;
+                });
+              },
+            ),
+          ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildCommentInput() {
+    final TextEditingController _commentController = TextEditingController();
+    return Container(
+      width: 335.w,
+      decoration: BoxDecoration(
+        color: Color(0xFFF8F8F9),
+        borderRadius: BorderRadius.circular(10.r),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(16.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextField(
+              controller: _commentController,
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w400,
+                fontSize: 16.sp,
+                height: 24 / 14,
+                letterSpacing: -0.01,
+                color: Color(0xFF000000),
+              ),
+              decoration: InputDecoration(
+                fillColor: Colors.transparent,
+                hintText: 'Write a comment...',
+                hintStyle: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w400,
+                  fontSize: 16.sp,
+                  height: 24 / 14,
+                  letterSpacing: -0.01,
+                  color: Color(0xFF8E8E93),
+                ),
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 15.h),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
