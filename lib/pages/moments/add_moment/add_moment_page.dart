@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:dio/dio.dart' as dio;
 import 'package:first_app/components/background.dart';
 import 'package:first_app/entity/token_entity.dart';
@@ -53,11 +52,17 @@ class _AddMomentPageState extends State<AddMomentPage> {
                   fontSize: 18.0,
                 ),
                 maxLines: null,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.transparent,
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+                  hintText: 'record the moment ...',
+                  hintStyle: TextStyle(
+                    color: Colors.grey, // 可以根据需要更改提示文字的颜色
+                    fontFamily: 'Poppins',
+                    fontSize: 18.0,
+                  ),
                 ),
                 onChanged: (text) {
                   // Handle text changes
@@ -255,7 +260,7 @@ class _AddMomentPageState extends State<AddMomentPage> {
           title: Text('Success'),
           content: Text('Moment uploaded successfully!'),
           onYesPressed: () {
-            Get.offAllNamed('/moments',arguments:{ 'token': tokenEntity, 'userData': userData}); // 跳转到 Moments 界面
+            Get.offAllNamed('/moments', arguments: {'token': tokenEntity, 'userData': userData}); // 跳转到 Moments 界面
           },
         );
       },

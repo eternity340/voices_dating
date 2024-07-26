@@ -198,7 +198,7 @@ class _HomePageState extends State<HomePage> {
         else
           ...model.users.map((user) => Padding(
             padding: EdgeInsets.symmetric(vertical: 10.h),
-            child: UserCard(userEntity: user),
+            child: UserCard(userEntity: user,),
           )),
       ],
     );

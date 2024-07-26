@@ -58,7 +58,6 @@ class _MomentsPageState extends State<MomentsPage> {
               ),
             ),
           ),
-
           Positioned(
             left: 90.w,
             top: 45.5.h,
@@ -91,8 +90,6 @@ class _MomentsPageState extends State<MomentsPage> {
               ),
             ),
           ),
-
-
           Positioned(
             left: 315.w,
             top: 59.5.h,
@@ -134,7 +131,7 @@ class _MomentsPageState extends State<MomentsPage> {
                       onTap: () {
                         Get.toNamed('/moments/moments_detail', arguments: {'moment': _moments[index], 'token': tokenEntity, 'userData': userData});
                       },
-                      child: MomentsCard(moment: _moments[index]),
+                      child: MomentsCard(moment: _moments[index],tokenEntity: tokenEntity,),
                     );
                   },
                 ),

@@ -1,24 +1,34 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter/widgets.dart';
+import '../pages/moments/components/love_button.dart';
 import 'gradient_btn.dart';
+import '../../../entity/token_entity.dart';
 
-class DetailBottomBar extends StatelessWidget {
+class DetailBottomBar extends StatefulWidget {
   final String gradientButtonText;
   final VoidCallback onGradientButtonPressed;
   final bool showCallButton;
   final bool showMessageButton;
-  final bool showLikeButton;
+  final bool showMomentLikeButton;
+  final String? timelineId; // Made optional
+  final TokenEntity? tokenEntity; // Made optional
 
   DetailBottomBar({
     required this.gradientButtonText,
     required this.onGradientButtonPressed,
+    this.timelineId,
+    this.tokenEntity,
     this.showCallButton = true,
     this.showMessageButton = true,
-    this.showLikeButton = true,
+    this.showMomentLikeButton = true,
   });
 
+  @override
+  _DetailBottomBarState createState() => _DetailBottomBarState();
+}
+
+class _DetailBottomBarState extends State<DetailBottomBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -39,7 +49,7 @@ class DetailBottomBar extends StatelessWidget {
           filter: ImageFilter.blur(sigmaX: 89.76, sigmaY: 89.76),
           child: Stack(
             children: [
-              if (showCallButton)
+              if (widget.showCallButton)
                 Positioned(
                   left: 42.w,
                   top: 14.h,
@@ -49,7 +59,7 @@ class DetailBottomBar extends StatelessWidget {
                     height: 43.5.h,
                   ),
                 ),
-              if (showMessageButton)
+              if (widget.showMessageButton)
                 Positioned(
                   left: 100.w,
                   top: 14.h,
@@ -59,22 +69,33 @@ class DetailBottomBar extends StatelessWidget {
                     height: 43.5.h,
                   ),
                 ),
-              if (showLikeButton)
+              if (widget.showMomentLikeButton && widget.timelineId != null && widget.tokenEntity != null)
                 Positioned(
-                  left: 62.w,
-                  top: 14.h,
-                  child: Image.asset(
-                    'assets/images/icon_bottom_like.png',
-                    width: 24.w,
-                    height: 43.5.h,
+                  left: 52.w,
+                  top: 10.h,
+                  child: Column(
+                    children: [
+                      LoveButton(
+                        timelineId: widget.timelineId!,
+                        tokenEntity: widget.tokenEntity!,
+                      ),
+                      Text(
+                        'like',
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               Positioned(
                 left: 150.w,
                 top: 12.h,
                 child: GradientButton(
-                  text: gradientButtonText,
-                  onPressed: onGradientButtonPressed,
+                  text: widget.gradientButtonText,
+                  onPressed: widget.onGradientButtonPressed,
                   width: 177.w,
                   textStyle: TextStyle(
                     fontSize: 16.sp,

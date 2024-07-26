@@ -261,7 +261,7 @@ class ProfileDetailPage extends StatelessWidget {
             right: 0,
             bottom: 0,
             child: DetailBottomBar(
-              showLikeButton: false,
+              showMomentLikeButton: false,
               gradientButtonText: 'Chat',
               onGradientButtonPressed: () {
                 // 处理GradientButton点击事件

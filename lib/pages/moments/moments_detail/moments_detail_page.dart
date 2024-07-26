@@ -45,7 +45,7 @@ class _MomentsDetailPageState extends State<MomentsDetailPage> {
                 children: [
                   MomentsCard(
                     showButtons: false,
-                    moment: moment,
+                    moment: moment, tokenEntity: tokenEntity,
                   ),
                   SizedBox(height: 10.h),
                   Container(
@@ -142,7 +142,7 @@ class _MomentsDetailPageState extends State<MomentsDetailPage> {
             right: 0,
             bottom: 0,
             child: DetailBottomBar(
-              showLikeButton: true,
+              showMomentLikeButton: true,
               showCallButton: false,
               showMessageButton: false,
               gradientButtonText: _isCommentInputVisible ? 'Send' : 'Comment',
@@ -154,7 +154,7 @@ class _MomentsDetailPageState extends State<MomentsDetailPage> {
                     _isCommentInputVisible = true;
                   });
                 }
-              },
+              }, tokenEntity: tokenEntity, timelineId: moment.timelineId.toString(),
             ),
           ),
         ],

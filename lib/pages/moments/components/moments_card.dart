@@ -1,22 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../../../entity/moment_entity.dart';
+import '../../../entity/token_entity.dart';
+import 'love_button.dart';
 
-class MomentsCard extends StatelessWidget {
+class MomentsCard extends StatefulWidget {
   final MomentEntity moment;
-  final bool showButtons; // 添加控制按钮显示的参数
+  final bool showButtons;
+  final TokenEntity tokenEntity;
 
   const MomentsCard({
     Key? key,
     required this.moment,
-    this.showButtons = true, // 默认情况下显示按钮
+    required this.tokenEntity,
+    this.showButtons = true,
   }) : super(key: key);
 
   @override
+  _MomentsCardState createState() => _MomentsCardState();
+}
+
+class _MomentsCardState extends State<MomentsCard> {
+  @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 16.h), // 每个卡片之间的间距
+      margin: EdgeInsets.only(bottom: 16.h),
       width: 335.w,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -44,7 +52,7 @@ class MomentsCard extends StatelessWidget {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                          image: NetworkImage(moment.avatar ?? 'assets/images/placeholder1.png'), // 默认占位图像
+                          image: NetworkImage(widget.moment.avatar ?? 'assets/images/placeholder1.png'),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -52,7 +60,7 @@ class MomentsCard extends StatelessWidget {
                     SizedBox(width: 8.w),
                     Flexible(
                       child: Text(
-                        moment.username ?? 'Unknown',
+                        widget.moment.username ?? 'Unknown',
                         style: TextStyle(
                           fontFamily: 'Open Sans',
                           fontSize: 14.sp,
@@ -67,7 +75,7 @@ class MomentsCard extends StatelessWidget {
                 ),
                 SizedBox(height: 16.h),
                 Text(
-                  moment.timelineDescr ?? 'No description available',
+                  widget.moment.timelineDescr ?? 'No description available',
                   style: TextStyle(
                     fontFamily: 'Open Sans',
                     fontWeight: FontWeight.w600,
@@ -78,14 +86,14 @@ class MomentsCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 16.h),
-                if (moment.attachments != null && moment.attachments!.length == 1)
+                if (widget.moment.attachments != null && widget.moment.attachments!.length == 1)
                   Container(
                     width: 303.w,
                     height: 400.h,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20.r),
                       image: DecorationImage(
-                        image: NetworkImage(moment.attachments!.first.url ?? 'assets/images/placeholder1.png'), // 默认占位图像
+                        image: NetworkImage(widget.moment.attachments!.first.url ?? 'assets/images/placeholder1.png'),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -94,7 +102,7 @@ class MomentsCard extends StatelessWidget {
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
-                      children: moment.attachments?.map((attachment) {
+                      children: widget.moment.attachments?.map((attachment) {
                         return Container(
                           width: 137.09.w,
                           height: 174.h,
@@ -102,7 +110,7 @@ class MomentsCard extends StatelessWidget {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20.r),
                             image: DecorationImage(
-                              image: NetworkImage(attachment.url ?? 'assets/images/placeholder1.png'), // 默认占位图像
+                              image: NetworkImage(attachment.url ?? 'assets/images/placeholder1.png'),
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -113,10 +121,10 @@ class MomentsCard extends StatelessWidget {
               ],
             ),
           ),
-          if (showButtons) // 只有在 showButtons 为 true 时显示按钮
+          if (widget.showButtons)
             Positioned(
-              right: 16.w, // 右边距
-              top: 12.h, // 顶部边距
+              right: 16.w,
+              top: 12.h,
               child: Row(
                 children: [
                   GestureDetector(
@@ -127,28 +135,23 @@ class MomentsCard extends StatelessWidget {
                       width: 40.w,
                       height: 40.h,
                       decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/images/button_round_message.png'),
+                        borderRadius: BorderRadius.circular(14.r),
+                        color: Color(0xFFF8F8F9),
+                      ),
+                      child: Center(
+                        child: Image.asset(
+                          'assets/images/icon_chat_inactive.png',
+                          width: 24.w,
+                          height: 24.h,
                           fit: BoxFit.cover,
                         ),
                       ),
                     ),
                   ),
                   SizedBox(width: 8.w),
-                  GestureDetector(
-                    onTap: () {
-                      // 第二个按钮的点击事件处理
-                    },
-                    child: Container(
-                      width: 40.w,
-                      height: 40.h,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/images/button_round_like.png'),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
+                  LoveButton(
+                    timelineId: widget.moment.timelineId.toString(),
+                    tokenEntity: widget.tokenEntity,
                   ),
                 ],
               ),
