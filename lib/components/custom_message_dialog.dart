@@ -29,7 +29,7 @@ class CustomMessageDialog extends StatelessWidget {
               fontFamily: 'Poppins',
               color: Colors.black, // Text color for 'No'
             ),
-            child: Text('No'),
+            child: Text('cancel'),
           ),
         ),
         CupertinoDialogAction(

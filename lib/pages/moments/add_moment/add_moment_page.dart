@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart' as dio;
 import 'package:first_app/components/background.dart';
 import 'package:first_app/entity/token_entity.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,7 +10,9 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../../components/bottom_options.dart';
+import '../../../components/custom_message_dialog.dart';
 import '../../../components/gradient_btn.dart';
+import '../../../entity/user_data_entity.dart';
 
 class AddMomentPage extends StatefulWidget {
   @override
@@ -18,7 +21,9 @@ class AddMomentPage extends StatefulWidget {
 
 class _AddMomentPageState extends State<AddMomentPage> {
   final TokenEntity tokenEntity = Get.arguments['token'] as TokenEntity;
-  List<XFile?> _imageFiles = [null]; // Initialize with one null image for the first add photo button
+  final userData = Get.arguments['userData'] as UserDataEntity;
+  List<XFile?> _imageFiles = [null]; // 初始化时包含一个null图片的列表
+  TextEditingController _textEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +47,7 @@ class _AddMomentPageState extends State<AddMomentPage> {
                 borderRadius: BorderRadius.circular(10.0),
               ),
               child: TextField(
+                controller: _textEditingController,
                 style: TextStyle(
                   fontFamily: 'Poppins',
                   fontSize: 18.0,
@@ -87,7 +93,7 @@ class _AddMomentPageState extends State<AddMomentPage> {
               child: GridView.builder(
                 padding: EdgeInsets.zero,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, // Two items per row
+                  crossAxisCount: 2, // 每行两个项目
                   crossAxisSpacing: 10.w,
                   mainAxisSpacing: 10.h,
                   childAspectRatio: 1.0,
@@ -126,15 +132,13 @@ class _AddMomentPageState extends State<AddMomentPage> {
             ),
           ),
           Positioned(
-            top: 700.h, // Adjust based on the total content height
+            top: 700.h, // 根据总内容高度调整
             left: 0,
             right: 0,
             child: Center(
               child: GradientButton(
                 text: 'Upload',
-                onPressed: () {
-                  // Handle upload button press
-                },
+                onPressed: _uploadMoment,
                 height: 49.h,
                 width: 248.w,
               ),
@@ -180,7 +184,7 @@ class _AddMomentPageState extends State<AddMomentPage> {
         setState(() {
           if (index == _imageFiles.length - 1) {
             _imageFiles[index] = pickedFile;
-            _imageFiles.add(null); // Add a new null entry for the next add photo button
+            _imageFiles.add(null); // 添加一个新的空条目用于下一个添加照片按钮
           } else {
             _imageFiles[index] = pickedFile;
           }
@@ -200,7 +204,7 @@ class _AddMomentPageState extends State<AddMomentPage> {
         setState(() {
           if (index == _imageFiles.length - 1) {
             _imageFiles[index] = pickedFile;
-            _imageFiles.add(null); // Add a new null entry for the next add photo button
+            _imageFiles.add(null); // 添加一个新的空条目用于下一个添加照片按钮
           } else {
             _imageFiles[index] = pickedFile;
           }
@@ -209,5 +213,52 @@ class _AddMomentPageState extends State<AddMomentPage> {
     } else {
       // Handle permission denied
     }
+  }
+
+  Future<void> _uploadMoment() async {
+    final content = _textEditingController.text;
+    final formData = dio.FormData();
+    formData.fields.add(MapEntry('content', content));
+    for (var imageFile in _imageFiles) {
+      if (imageFile != null) {
+        final file = await dio.MultipartFile.fromFile(imageFile.path, filename: imageFile.name);
+        formData.files.add(MapEntry('file', file));
+      }
+    }
+
+    try {
+      final response = await dio.Dio().post(
+        'https://api.masonvips.com/v1/upload_timeline',
+        data: formData,
+        options: dio.Options(
+          headers: {
+            'token': tokenEntity.accessToken,
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        _showSuccessDialog();
+      } else {
+        Get.snackbar('Error', 'Failed to upload moment');
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'An error occurred while uploading the moment');
+    }
+  }
+
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CustomMessageDialog(
+          title: Text('Success'),
+          content: Text('Moment uploaded successfully!'),
+          onYesPressed: () {
+            Get.offAllNamed('/moments',arguments:{ 'token': tokenEntity, 'userData': userData}); // 跳转到 Moments 界面
+          },
+        );
+      },
+    );
   }
 }
