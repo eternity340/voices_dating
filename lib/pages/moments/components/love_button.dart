@@ -1,16 +1,16 @@
 import 'package:dio/dio.dart';
+import 'package:first_app/entity/moment_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../entity/token_entity.dart';
 
 class LoveButton extends StatefulWidget {
-  final String timelineId;
+  final MomentEntity moment;
   final TokenEntity tokenEntity;
 
   const LoveButton({
     Key? key,
-    required this.timelineId,
-    required this.tokenEntity,
+    required this.tokenEntity, required this.moment,
   }) : super(key: key);
 
   @override
@@ -18,7 +18,13 @@ class LoveButton extends StatefulWidget {
 }
 
 class _LoveButtonState extends State<LoveButton> {
-  bool isLoved = false;
+  late bool isLoved;
+
+  @override
+  void initState() {
+    super.initState();
+    isLoved = widget.moment.liked == 1;
+  }
 
   Future<void> _likeMoment() async {
     final dio = Dio();
@@ -30,7 +36,7 @@ class _LoveButtonState extends State<LoveButton> {
         },
       ),
       queryParameters: {
-        'timelineId': widget.timelineId,
+        'timelineId': widget.moment.timelineId,
       },
     );
 
@@ -50,11 +56,11 @@ class _LoveButtonState extends State<LoveButton> {
       'https://api.masonvips.com/v1/cancel_like_timeline',
       options: Options(
         headers: {
-           'token': widget.tokenEntity.accessToken,
+          'token': widget.tokenEntity.accessToken,
         },
       ),
       queryParameters: {
-        'timelineId': widget.timelineId,
+        'timelineId': widget.moment.timelineId,
       },
     );
 

@@ -150,7 +150,7 @@ class _MomentsCardState extends State<MomentsCard> {
                   ),
                   SizedBox(width: 8.w),
                   LoveButton(
-                    timelineId: widget.moment.timelineId.toString(),
+                    moment: widget.moment,
                     tokenEntity: widget.tokenEntity,
                   ),
                 ],

@@ -1,6 +1,7 @@
   import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../entity/list_user_entity.dart';
+import '../../../entity/token_entity.dart';
 import '../profile_detail/profile_detail_page.dart';
 
 class UserCard extends StatelessWidget {

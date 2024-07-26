@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:first_app/entity/moment_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../pages/moments/components/love_button.dart';
@@ -11,17 +12,17 @@ class DetailBottomBar extends StatefulWidget {
   final bool showCallButton;
   final bool showMessageButton;
   final bool showMomentLikeButton;
-  final String? timelineId; // Made optional
+  final MomentEntity? moment; // Made optional
   final TokenEntity? tokenEntity; // Made optional
 
   DetailBottomBar({
     required this.gradientButtonText,
     required this.onGradientButtonPressed,
-    this.timelineId,
+    this.moment,
     this.tokenEntity,
     this.showCallButton = true,
     this.showMessageButton = true,
-    this.showMomentLikeButton = true,
+    this.showMomentLikeButton = true, 
   });
 
   @override
@@ -69,15 +70,15 @@ class _DetailBottomBarState extends State<DetailBottomBar> {
                     height: 43.5.h,
                   ),
                 ),
-              if (widget.showMomentLikeButton && widget.timelineId != null && widget.tokenEntity != null)
+              if (widget.showMomentLikeButton && widget.moment!= null && widget.tokenEntity != null)
                 Positioned(
                   left: 52.w,
                   top: 10.h,
                   child: Column(
                     children: [
                       LoveButton(
-                        timelineId: widget.timelineId!,
-                        tokenEntity: widget.tokenEntity!,
+
+                        tokenEntity: widget.tokenEntity!, moment: widget.moment!,
                       ),
                       Text(
                         'like',

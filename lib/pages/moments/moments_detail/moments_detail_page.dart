@@ -154,7 +154,7 @@ class _MomentsDetailPageState extends State<MomentsDetailPage> {
                     _isCommentInputVisible = true;
                   });
                 }
-              }, tokenEntity: tokenEntity, timelineId: moment.timelineId.toString(),
+              }, tokenEntity: tokenEntity, moment: moment,
             ),
           ),
         ],
