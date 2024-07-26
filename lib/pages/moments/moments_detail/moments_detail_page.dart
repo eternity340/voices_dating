@@ -3,7 +3,7 @@ import 'package:first_app/entity/moment_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:dio/dio.dart';  // 添加 Dio 依赖
+import 'package:dio/dio.dart';
 import '../../../components/detail_bottom_bar.dart';
 import '../../../entity/token_entity.dart';
 import '../../../entity/user_data_entity.dart';
@@ -94,7 +94,7 @@ class _MomentsDetailPageState extends State<MomentsDetailPage> {
                             ),
                           if (moment.likers == null || moment.likers!.isEmpty)
                             Container(
-                              height: 30.h, // Adjust this height as needed
+                              height: 30.h,
                             ),
                         ],
                       ),
@@ -128,7 +128,7 @@ class _MomentsDetailPageState extends State<MomentsDetailPage> {
                             ],
                           ),
                           if (_isCommentInputVisible) _buildCommentInput(),
-                          CommentWidget(moment: moment, tokenEntity: tokenEntity), // 使用 CommentWidget
+                          CommentWidget(moment: moment, tokenEntity: tokenEntity, key: UniqueKey()),
                         ],
                       ),
                     ),
@@ -234,7 +234,6 @@ class _MomentsDetailPageState extends State<MomentsDetailPage> {
 
   Future<void> _submitComment() async {
     if (_commentContent == null || _commentContent!.isEmpty) {
-      // Do nothing if the comment is empty
       return;
     }
 
@@ -252,18 +251,22 @@ class _MomentsDetailPageState extends State<MomentsDetailPage> {
       );
 
       if (response.data['code'] == 200) {
-        // Handle success
         Get.snackbar('Success', 'Comment added successfully');
         setState(() {
           _isCommentInputVisible = false;
           _commentController.clear();
         });
+        _refreshComments();
       } else {
-        Get.snackbar('Error', 'Failed to add comment');
+        Get.snackbar('error', 'Failed to add comment');
       }
     } catch (e) {
       print('Failed to submit comment: $e');
       Get.snackbar('Error', 'An error occurred');
     }
+  }
+
+  void _refreshComments() {
+    setState(() {});
   }
 }
