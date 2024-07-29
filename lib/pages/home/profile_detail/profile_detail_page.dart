@@ -1,8 +1,6 @@
-import 'dart:ui';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import '../../../components/background.dart';
 import '../components/profile_photo_wall.dart';
 import 'profile_detail_controller.dart';
@@ -189,26 +187,6 @@ class ProfileDetailPage extends StatelessWidget {
                             Row(
                               children: [
                                 Image.asset(
-                                  'assets/images/icon_occupation.png',
-                                  width: 24.w,
-                                  height: 24.h,
-                                ),
-                                SizedBox(width: 16.w),
-                                /*Text(
-                                  controller.userEntity.occupation ?? '',
-                                  style: TextStyle(
-                                    fontSize: 16.sp,
-                                    fontFamily: 'Open Sans',
-                                    height: 1.5,
-                                    letterSpacing: -0.01,
-                                    color: Color(0xFF000000),
-                                  ),
-                                ),*/
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Image.asset(
                                   'assets/images/icon_language.png',
                                   width: 24.w,
                                   height: 24.h,
@@ -224,26 +202,6 @@ class ProfileDetailPage extends StatelessWidget {
                                     color: Color(0xFF000000),
                                   ),
                                 ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Image.asset(
-                                  'assets/images/icon_emotional_state.png',
-                                  width: 24.w,
-                                  height: 24.h,
-                                ),
-                                SizedBox(width: 16.w),
-                                /*Text(
-                                  controller.userEntity.emotionalState ?? '',
-                                  style: TextStyle(
-                                    fontSize: 16.sp,
-                                    fontFamily: 'Open Sans',
-                                    height: 1.5,
-                                    letterSpacing: -0.01,
-                                    color: Color(0xFF000000),
-                                  ),
-                                ),*/
                               ],
                             ),
                           ],

@@ -64,7 +64,6 @@ class HomePage extends StatelessWidget {
               Expanded(
                 child: _buildOption(controller, ConstantData.honeyOption),
               ),
-
               Expanded(
                 child: _buildOption(controller, ConstantData.nearbyOption),
               ),
@@ -76,35 +75,37 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildOption(HomeController controller, String option) {
-    bool isSelected = controller.selectedOption.value == option;
-    return GestureDetector(
-      onTap: () => controller.selectOption(option),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          if (isSelected)
-            Positioned(
-              top: 3,
-              right: 45.w,
-              child: Image.asset(
-                ImageRes.imagePathDecorate,
-                width: 17.w,
-                height: 17.h,
+    return Obx(() {
+      bool isSelected = controller.selectedOption.value == option;
+      return GestureDetector(
+        onTap: () => controller.selectOption(option),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            if (isSelected)
+              Positioned(
+                top: 3,
+                right: 45.w,
+                child: Image.asset(
+                  ImageRes.imagePathDecorate,
+                  width: 17.w,
+                  height: 17.h,
+                ),
+              ),
+            Text(
+              option,
+              style: TextStyle(
+                fontSize: 26.sp,
+                height: 22 / 18,
+                letterSpacing: -0.011249999515712261,
+                fontFamily: 'Open Sans',
+                color: isSelected ? Color(0xFF000000) : Color(0xFF8E8E93),
               ),
             ),
-          Text(
-            option,
-            style: TextStyle(
-              fontSize: 26.sp,
-              height: 22 / 18,
-              letterSpacing: -0.011249999515712261,
-              fontFamily: 'Open Sans',
-              color: isSelected ? Color(0xFF000000) : Color(0xFF8E8E93),
-            ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 
   Widget _buildAnimatedPageView() {
@@ -215,4 +216,5 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+
 
