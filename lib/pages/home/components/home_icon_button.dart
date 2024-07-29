@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 
 class HomeIconButton extends StatelessWidget {
   final String imagePath;
@@ -8,23 +10,21 @@ class HomeIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Flexible(
-      child: Container(
-        width: 120, // Adjust button size if needed
-        height: 120, // Adjust button size if needed
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: shadowColor,
-              offset: Offset(0, 7),
-              blurRadius: 15,
-            ),
-          ],
-        ),
-        child: ClipOval(
-          child: Image.asset(imagePath),
-        ),
+    return Container(
+      width: 120.w, // Adjust button size if needed
+      height: 120.h, // Adjust button size if needed
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: shadowColor,
+            offset: Offset(0, 7),
+            blurRadius: 15,
+          ),
+        ],
+      ),
+      child: ClipOval(
+        child: Image.asset(imagePath),
       ),
     );
   }

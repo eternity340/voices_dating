@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../entity/list_user_entity.dart';
 
 class ProfileCard extends StatelessWidget {
@@ -20,18 +21,18 @@ class ProfileCard extends StatelessWidget {
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(20.r),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 27.2, sigmaY: 27.2),
           child: Container(
-            width: 283,
-            height: 166,
+            width: 283.w,
+            height: 166.h,
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.85),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(20.r),
             ),
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(16.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -39,16 +40,16 @@ class ProfileCard extends StatelessWidget {
                     children: [
                       Text(
                         userEntity.username ?? '',
-                        style: const TextStyle(
-                          fontSize: 20,
+                        style: TextStyle(
+                          fontSize: 20.sp,
                           fontFamily: 'Open Sans',
                           color: Colors.black,
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8.w),
                       Container(
-                        width: 9,
-                        height: 9,
+                        width: 9.w,
+                        height: 9.w,
                         decoration: const BoxDecoration(
                           color: Color(0xFFABFFCF),
                           shape: BoxShape.circle,
@@ -56,19 +57,19 @@ class ProfileCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8.h),
                   Container(
-                    width: 88,
-                    height: 19,
+                    width: 88.w,
+                    height: 19.h,
                     decoration: BoxDecoration(
                       color: Color(0xFFABFFCF),
-                      borderRadius: BorderRadius.circular(6),
+                      borderRadius: BorderRadius.circular(6.r),
                     ),
-                    child: const Center(
+                    child: Center(
                       child: Text(
                         'Photos verified',
                         style: TextStyle(
-                          fontSize: 10,
+                          fontSize: 10.sp,
                           fontFamily: 'Open Sans',
                           letterSpacing: 0.02,
                           color: Color(0xFF262626),
@@ -76,18 +77,18 @@ class ProfileCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8.h),
                   Row(
                     children: [
                       Text(
                         userEntity.location?.country ?? '',
-                        style: const TextStyle(
-                          fontSize: 12,
+                        style: TextStyle(
+                          fontSize: 12.sp,
                           fontFamily: 'Open Sans',
                           color: Color(0xFF8E8E93),
                         ),
                       ),
-                      const SizedBox(width: 4),
+                      SizedBox(width: 4.w),
                       const Text(
                         '|',
                         style: TextStyle(
@@ -96,11 +97,11 @@ class ProfileCard extends StatelessWidget {
                           color: Color(0xFF8E8E93),
                         ),
                       ),
-                      const SizedBox(width: 4),
+                      SizedBox(width: 4.w),
                       Text(
                         '${userEntity.age ?? 0} years old',
-                        style: const TextStyle(
-                          fontSize: 12,
+                        style: TextStyle(
+                          fontSize: 12.sp,
                           fontFamily: 'Open Sans',
                           color: Color(0xFF8E8E93),
                         ),
