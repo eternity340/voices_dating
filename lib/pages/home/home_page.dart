@@ -15,6 +15,7 @@ import 'components/user_card.dart';
 import 'home_controller.dart';
 
 class HomePage extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     final Map<String, dynamic> arguments = Get.arguments as Map<String, dynamic>;
@@ -36,7 +37,7 @@ class HomePage extends StatelessWidget {
                 children: [
                   SizedBox(height: 50.h),
                   _buildOptionsRow(),
-                  _buildButtonRow(),
+                  _buildButtonRow(tokenEntity,userData),
                   SizedBox(height: 20.h),
                   Expanded(
                     child: _buildAnimatedPageView(),
@@ -160,7 +161,7 @@ class HomePage extends StatelessWidget {
     });
   }
 
-  Widget _buildButtonRow() {
+  Widget _buildButtonRow(TokenEntity tokenEntity,UserDataEntity userData) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -168,21 +169,25 @@ class HomePage extends StatelessWidget {
           imagePath: ImageRes.imagePathLike,
           shadowColor: Color(0xFFFFD1D1).withOpacity(0.3736),
           label: 'Feel',
+          onTap: () => Get.toNamed('/home/feel', arguments: {'token': tokenEntity,'userData': userData}),
         ),
         _buildButtonWithLabel(
           imagePath: ImageRes.imagePathClock,
           shadowColor: Color(0xFFF6D3FF).withOpacity(0.369),
           label: 'Get up',
+          onTap: () => Get.toNamed('/home/get_up', arguments: {'token': tokenEntity,'userData': userData}),
         ),
         _buildButtonWithLabel(
           imagePath: ImageRes.imagePathGame,
           shadowColor: Color(0xFFFCA6C5).withOpacity(0.2741),
           label: 'Game',
+          onTap: () => Get.toNamed('/home/game', arguments: {'token': tokenEntity,'userData': userData}),
         ),
         _buildButtonWithLabel(
           imagePath: ImageRes.imagePathFeel,
           shadowColor: Color(0xFFFFEA31).withOpacity(0.3495),
           label: 'Gossip',
+          onTap: () => Get.toNamed('/home/gossip', arguments: {'token': tokenEntity,'userData': userData}),
         ),
       ],
     );
@@ -192,13 +197,17 @@ class HomePage extends StatelessWidget {
     required String imagePath,
     required Color shadowColor,
     required String label,
+    required VoidCallback onTap,
   }) {
     return Expanded(
       child: Column(
         children: [
-          HomeIconButton(
-            imagePath: imagePath,
-            shadowColor: shadowColor,
+          GestureDetector(
+            onTap: onTap,
+            child: HomeIconButton(
+              imagePath: imagePath,
+              shadowColor: shadowColor,
+            ),
           ),
           Text(
             label,
@@ -216,5 +225,3 @@ class HomePage extends StatelessWidget {
     );
   }
 }
-
-
