@@ -1,119 +1,189 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:audioplayers/audioplayers.dart';
 import '../../../entity/list_user_entity.dart';
 
-class ProfileCard extends StatelessWidget {
+class ProfileCard extends StatefulWidget {
   final ListUserEntity userEntity;
 
   const ProfileCard({Key? key, required this.userEntity}) : super(key: key);
 
   @override
+  _ProfileCardState createState() => _ProfileCardState();
+}
+
+class _ProfileCardState extends State<ProfileCard> {
+  final AudioPlayer _audioPlayer = AudioPlayer();
+  bool isPlaying = false;
+
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
+  }
+
+  void _togglePlayPause() async {
+    if (isPlaying) {
+      await _audioPlayer.pause();
+    } else {
+      await _audioPlayer.play(AssetSource('audio/AI_Sunday.mp3')); // 播放本地文件
+    }
+    setState(() {
+      isPlaying = !isPlaying;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Color.fromRGBO(0, 0, 0, 0.0642),
-            offset: Offset(0, 7),
-            blurRadius: 14,
+    return Stack(
+      children: [
+        Container(
+          decoration: const BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Color.fromRGBO(0, 0, 0, 0.0642),
+                offset: Offset(0, 7),
+                blurRadius: 14,
+              ),
+            ],
           ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20.r),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 27.2, sigmaY: 27.2),
-          child: Container(
-            width: 283.w,
-            height: 166.h,
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.85),
-              borderRadius: BorderRadius.circular(20.r),
-            ),
-            child: Padding(
-              padding: EdgeInsets.all(16.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20.r),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 27.2, sigmaY: 27.2),
+              child: Container(
+                width: 283.w,
+                height: 166.h,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.85),
+                  borderRadius: BorderRadius.circular(20.r),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.all(16.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        userEntity.username ?? '',
-                        style: TextStyle(
-                          fontSize: 20.sp,
-                          fontFamily: 'Open Sans',
-                          color: Colors.black,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            widget.userEntity.username ?? '',
+                            style: TextStyle(
+                              fontSize: 20.sp,
+                              fontFamily: 'Open Sans',
+                              color: Colors.black,
+                            ),
+                          ),
+                          SizedBox(width: 8.w),
+                          Container(
+                            width: 9.w,
+                            height: 9.w,
+                            decoration: const BoxDecoration(
+                              color: Color(0xFFABFFCF),
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(width: 8.w),
+                      SizedBox(height: 8.h),
                       Container(
-                        width: 9.w,
-                        height: 9.w,
-                        decoration: const BoxDecoration(
+                        width: 88.w,
+                        height: 19.h,
+                        decoration: BoxDecoration(
                           color: Color(0xFFABFFCF),
-                          shape: BoxShape.circle,
+                          borderRadius: BorderRadius.circular(6.r),
                         ),
+                        child: Center(
+                          child: Text(
+                            'Photos verified',
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              fontFamily: 'Open Sans',
+                              letterSpacing: 0.02,
+                              color: Color(0xFF262626),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 8.h),
+                      Row(
+                        children: [
+                          Text(
+                            widget.userEntity.location?.country ?? '',
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              fontFamily: 'Open Sans',
+                              color: Color(0xFF8E8E93),
+                            ),
+                          ),
+                          SizedBox(width: 4.w),
+                          const Text(
+                            '|',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontFamily: 'Open Sans',
+                              color: Color(0xFF8E8E93),
+                            ),
+                          ),
+                          SizedBox(width: 4.w),
+                          Text(
+                            '${widget.userEntity.age ?? 0} years old',
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              fontFamily: 'Open Sans',
+                              color: Color(0xFF8E8E93),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                  SizedBox(height: 8.h),
-                  Container(
-                    width: 88.w,
-                    height: 19.h,
-                    decoration: BoxDecoration(
-                      color: Color(0xFFABFFCF),
-                      borderRadius: BorderRadius.circular(6.r),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Photos verified',
-                        style: TextStyle(
-                          fontSize: 10.sp,
-                          fontFamily: 'Open Sans',
-                          letterSpacing: 0.02,
-                          color: Color(0xFF262626),
-                        ),
-                      ),
-                    ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          left: 58.w,
+          top: 119.h,
+          child: GestureDetector(
+            onTap: _togglePlayPause,
+            child: Container(
+              width: 128.46.w,
+              height: 28.52.h,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(5.r),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    offset: Offset(0, 2),
+                    blurRadius: 4,
                   ),
-                  SizedBox(height: 8.h),
-                  Row(
-                    children: [
-                      Text(
-                        userEntity.location?.country ?? '',
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          fontFamily: 'Open Sans',
-                          color: Color(0xFF8E8E93),
-                        ),
-                      ),
-                      SizedBox(width: 4.w),
-                      const Text(
-                        '|',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontFamily: 'Open Sans',
-                          color: Color(0xFF8E8E93),
-                        ),
-                      ),
-                      SizedBox(width: 4.w),
-                      Text(
-                        '${userEntity.age ?? 0} years old',
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          fontFamily: 'Open Sans',
-                          color: Color(0xFF8E8E93),
-                        ),
-                      ),
-                    ],
+                ],
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    isPlaying ? Icons.pause_circle_filled : Icons.play_circle_fill,
+                    size: 24.w,
+                    color: Colors.black,
+                  ),
+                  SizedBox(width: 4.w),
+                  Text(
+                    'Voice message',
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontFamily: 'Open Sans',
+                      color: Colors.black,
+                    ),
                   ),
                 ],
               ),
             ),
           ),
         ),
-      ),
+      ],
     );
   }
 }

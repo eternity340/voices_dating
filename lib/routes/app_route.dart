@@ -145,15 +145,14 @@ class AppRoutes {
       return LocationDetailPage(user: user);
     }),
 
-
     getx.GetPage(
       name: '/home',
       page: () => HomePage(),
       children: [
-        /*getx.GetPage(
+        getx.GetPage(
           name: '/profile_detail',
           page: () => ProfileDetailPage(),
-        ),*/
+        ),
         getx.GetPage(
           name: '/feel',
           page: () => FeelPage(),
@@ -172,7 +171,6 @@ class AppRoutes {
         ),
         ],
     ),
-
 
     getx.GetPage(
       name: '/moments',

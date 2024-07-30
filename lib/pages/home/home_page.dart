@@ -1,12 +1,10 @@
-import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../components/all_navigation_bar.dart';
 import '../../components/background.dart';
 import '../../constants/constant_data.dart';
-import '../../entity/list_user_entity.dart';
 import '../../entity/token_entity.dart';
 import '../../entity/user_data_entity.dart';
 import '../../image_res/image_res.dart';
@@ -37,7 +35,7 @@ class HomePage extends StatelessWidget {
                 children: [
                   SizedBox(height: 50.h),
                   _buildOptionsRow(),
-                  _buildButtonRow(tokenEntity,userData),
+                  _buildButtonRow(tokenEntity, userData),
                   SizedBox(height: 20.h),
                   Expanded(
                     child: _buildAnimatedPageView(),
@@ -143,25 +141,32 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildUserListView() {
+    final HomeController controller = Get.find<HomeController>();
     return Obx(() {
-      final controller = Get.find<HomeController>();
-      return ListView.builder(
-        itemCount: controller.users.length + (controller.hasMoreData.value ? 1 : 0),
-        itemBuilder: (context, index) {
-          if (index == controller.users.length) {
-            // 在列表末尾显示加载指示器
-            return Center(child: CupertinoActivityIndicator());
-          }
-          return Padding(
-            padding: EdgeInsets.symmetric(vertical: 10.h),
-            child: UserCard(userEntity: controller.users[index]),
-          );
+      return EasyRefresh(
+        onRefresh: () async {
+          controller.currentPage = 1;
+          controller.hasMoreData.value = true;
+          controller.users.clear();
+          await controller.fetchUsers();
         },
+        onLoad: () async {
+          await controller.fetchUsers();
+        },
+        child: ListView.builder(
+          itemCount: controller.users.length,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.h),
+              child: UserCard(userEntity: controller.users[index],tokenEntity: controller.tokenEntity),
+            );
+          },
+        ),
       );
     });
   }
 
-  Widget _buildButtonRow(TokenEntity tokenEntity,UserDataEntity userData) {
+  Widget _buildButtonRow(TokenEntity tokenEntity, UserDataEntity userData) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -169,25 +174,25 @@ class HomePage extends StatelessWidget {
           imagePath: ImageRes.imagePathLike,
           shadowColor: Color(0xFFFFD1D1).withOpacity(0.3736),
           label: 'Feel',
-          onTap: () => Get.toNamed('/home/feel', arguments: {'token': tokenEntity,'userData': userData}),
+          onTap: () => Get.toNamed('/home/feel', arguments: {'token': tokenEntity, 'userData': userData}),
         ),
         _buildButtonWithLabel(
           imagePath: ImageRes.imagePathClock,
           shadowColor: Color(0xFFF6D3FF).withOpacity(0.369),
           label: 'Get up',
-          onTap: () => Get.toNamed('/home/get_up', arguments: {'token': tokenEntity,'userData': userData}),
+          onTap: () => Get.toNamed('/home/get_up', arguments: {'token': tokenEntity, 'userData': userData}),
         ),
         _buildButtonWithLabel(
           imagePath: ImageRes.imagePathGame,
           shadowColor: Color(0xFFFCA6C5).withOpacity(0.2741),
           label: 'Game',
-          onTap: () => Get.toNamed('/home/game', arguments: {'token': tokenEntity,'userData': userData}),
+          onTap: () => Get.toNamed('/home/game', arguments: {'token': tokenEntity, 'userData': userData}),
         ),
         _buildButtonWithLabel(
           imagePath: ImageRes.imagePathFeel,
           shadowColor: Color(0xFFFFEA31).withOpacity(0.3495),
           label: 'Gossip',
-          onTap: () => Get.toNamed('/home/gossip', arguments: {'token': tokenEntity,'userData': userData}),
+          onTap: () => Get.toNamed('/home/gossip', arguments: {'token': tokenEntity, 'userData': userData}),
         ),
       ],
     );

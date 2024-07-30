@@ -11,12 +11,12 @@ class HomeController extends GetxController {
   var users = <ListUserEntity>[].obs;
   var isLoading = false.obs;
   var errorMessage = RxnString();
-  final TokenEntity? _tokenEntity;
+  final TokenEntity tokenEntity;
   final UserDataEntity? _userData;
   var currentPage = 1;
   var hasMoreData = true.obs;
 
-  HomeController(this._tokenEntity, this._userData) {
+  HomeController(this.tokenEntity, this._userData) {
     pageController = PageController(initialPage: 0);
     fetchUsers();
   }
@@ -45,7 +45,7 @@ class HomeController extends GetxController {
           'offset': 20,
           'find[gender]': 2,
         },
-        options: Options(headers: {'token': _tokenEntity?.accessToken}),
+        options: Options(headers: {'token': tokenEntity.accessToken}),
       );
 
       if (response.statusCode == 200) {

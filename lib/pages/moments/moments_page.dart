@@ -1,15 +1,15 @@
-// moments_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart'; // 导入 flutter_easyrefresh 包
 
 import '../../components/all_navigation_bar.dart';
+import '../../../entity/token_entity.dart';
 import '../../components/background.dart';
-import '../../entity/token_entity.dart';
+import '../../entity/moment_entity.dart';
 import '../../entity/user_data_entity.dart';
 import 'components/moments_card.dart';
-import 'moments_controller.dart';
+import 'moments_controller.dart'; // 导入 MomentsController
 
 class MomentsPage extends StatelessWidget {
   @override
@@ -28,7 +28,7 @@ class MomentsPage extends StatelessWidget {
             top: 67.h,
             child: GestureDetector(
               onTap: () {
-                Get.toNamed('/moments/add_moment', arguments: { 'token': controller.tokenEntity, 'userData': controller.userData});
+                Get.toNamed('/moments/add_moment', arguments: {'token': controller.tokenEntity, 'userData': controller.userData});
               },
               child: Text(
                 'Moments',
@@ -66,7 +66,7 @@ class MomentsPage extends StatelessWidget {
                       fontFamily: 'Poppins',
                       fontWeight: FontWeight.bold,
                       fontSize: 24.sp,
-                      color: Colors.white,
+                      color: Colors.white, // 白色文本以应用 ShaderMask
                     ),
                   ),
                 ),
@@ -97,7 +97,7 @@ class MomentsPage extends StatelessWidget {
             top: 109.h,
             child: Container(
               width: 335.w,
-              height: 650.h,
+              height: 650.h, // Adjust height to fit more content
               child: EasyRefresh(
                 header: ClassicalHeader(
                   refreshText: "Pull to refresh",
@@ -106,23 +106,20 @@ class MomentsPage extends StatelessWidget {
                   refreshedText: "Refresh completed",
                   refreshFailedText: "Refresh failed",
                 ),
-                onRefresh: controller.fetchMoments,
-                child: Obx(() {
-                  return ListView.builder(
-                    itemCount: controller.moments.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          Get.toNamed('/moments/moments_detail', arguments: {'moment': controller.moments[index], 'token': controller.tokenEntity, 'userData': controller.userData});
-                        },
-                        child: MomentsCard(moment: controller.moments[index], tokenEntity: controller.tokenEntity),
-                      );
-                    },
-                  );
-                }),
+                onRefresh: () async => controller.fetchMoments(),
+                child: ListView.builder(
+                  itemCount: controller.moments.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        Get.toNamed('/moments/moments_detail', arguments: {'moment': controller.moments[index], 'token': controller.tokenEntity, 'userData': controller.userData});
+                      },
+                      child: MomentsCard(moment: controller.moments[index], tokenEntity: controller.tokenEntity),
+                    );
+                  },
+                )),
               ),
             ),
-          ),
           AllNavigationBar(tokenEntity: controller.tokenEntity, userData: controller.userData),
         ],
       ),

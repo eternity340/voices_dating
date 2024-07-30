@@ -1,26 +1,29 @@
-  import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../entity/list_user_entity.dart';
 import '../../../entity/token_entity.dart';
-import '../profile_detail/profile_detail_page.dart';
 
 class UserCard extends StatelessWidget {
   final ListUserEntity userEntity;
+  final TokenEntity tokenEntity;
 
-  UserCard({required this.userEntity});
+  UserCard({required this.userEntity, required this.tokenEntity});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.to(() => ProfileDetailPage(userEntity: userEntity));
-      },
+        Get.toNamed('/home/profile_detail', arguments: {
+          'userEntity': userEntity,
+          'tokenEntity': tokenEntity,
+        });
+            },
       child: Container(
         width: 335,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
-          boxShadow:  [
+          boxShadow: [
             BoxShadow(
               color: Color(0x0A000000),
               blurRadius: 14,

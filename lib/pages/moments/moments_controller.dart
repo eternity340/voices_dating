@@ -1,13 +1,13 @@
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
-import '../../entity/moment_entity.dart';
-import '../../entity/token_entity.dart';
-import '../../entity/user_data_entity.dart';
+
+import '../../../entity/token_entity.dart';
+import '../../../entity/moment_entity.dart';
+import '../../../entity/user_data_entity.dart';
 
 class MomentsController extends GetxController {
   late TokenEntity tokenEntity;
   late UserDataEntity userData;
-
   var moments = <MomentEntity>[].obs;
 
   @override
@@ -38,10 +38,10 @@ class MomentsController extends GetxController {
 
       if (response.data['code'] == 200) {
         List<dynamic> momentsJson = response.data['data'];
-        List<MomentEntity> momentsList = momentsJson
+        List<MomentEntity> fetchedMoments = momentsJson
             .map((json) => MomentEntity.fromJson(json as Map<String, dynamic>))
             .toList();
-        moments.value = momentsList;
+        moments.assignAll(fetchedMoments);
       } else {
         print('Failed to load moments');
       }
