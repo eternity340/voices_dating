@@ -1,34 +1,67 @@
-import 'package:first_app/entity/token_entity.dart';
-import 'package:flutter/material.dart';
 import 'dart:ui';
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../entity/list_user_entity.dart';
+import '../../../entity/token_entity.dart';
+import 'audio_player_widget.dart';
 
 class ProfileCard extends StatefulWidget {
   final ListUserEntity? userEntity;
   final TokenEntity tokenEntity;
 
-  const ProfileCard({Key? key, required this.userEntity, required this.tokenEntity}) : super(key: key);
+  ProfileCard({Key? key, required this.userEntity, required this.tokenEntity}) : super(key: key);
 
   @override
   _ProfileCardState createState() => _ProfileCardState();
 }
 
 class _ProfileCardState extends State<ProfileCard> {
-  bool _isPlaying = false;
-  bool _isLiked = false; // 新增变量
+  late bool _isLiked;
+  final Dio _dio = Dio();
 
-  void _togglePlayPause() {
-    setState(() {
-      _isPlaying = !_isPlaying;
-    });
-    print(_isPlaying ? 'Playing' : 'Paused');
+  @override
+  void initState() {
+    super.initState();
+    // Initialize _isLiked based on the liked field from userEntity
+    _isLiked = widget.userEntity?.liked == 1;
   }
 
-  void _toggleLike() { // 新增方法
-    setState(() {
-      _isLiked = !_isLiked;
-    });
+  void _toggleLike() async {
+    final url = _isLiked
+        ? 'https://api.masonvips.com/v1/unlike_user'
+        : 'https://api.masonvips.com/v1/like_user';
+
+    if (widget.userEntity?.userId == null || widget.tokenEntity.accessToken == null) {
+      return;
+    }
+
+    try {
+      final response = await _dio.post(
+        url,
+        options: Options(
+          headers: {
+            'token': '${widget.tokenEntity.accessToken}',
+          },
+        ),
+        queryParameters: {
+          'userId': widget.userEntity!.userId,
+        },
+      );
+
+      if (response.data['code'] == 200) {
+        // Successfully toggled like status
+        setState(() {
+          _isLiked = !_isLiked;
+        });
+      } else {
+        // Handle error
+        print('Failed to toggle like status: ${response.data}');
+      }
+    } catch (e) {
+      // Handle exception
+      print('Exception occurred: $e');
+    }
   }
 
   @override
@@ -126,39 +159,19 @@ class _ProfileCardState extends State<ProfileCard> {
         Positioned(
           left: 16.w,
           top: 116.h,
-          child: GestureDetector(
-            onTap: _togglePlayPause,
-            child: Material(
-              color: Colors.transparent,
-              child: Container(
-                width: 34.w,
-                height: 34.w,
-                decoration: BoxDecoration(
-                  color: Color(0xFF2FE4D4),
-                  shape: BoxShape.circle,
-                ),
-                child: Center(
-                  child: Icon(
-                    _isPlaying ? Icons.pause : Icons.play_arrow,
-                    color: Colors.white,
-                    size: 20.w,
-                  ),
-                ),
-              ),
-            ),
-          ),
+          child: AudioPlayerWidget(audioPath: 'audio/AI_Sunday.mp3'),
         ),
         Positioned(
           left: 230.w,
-          top: 127.h,
+          top: 125.h,
           child: GestureDetector(
             onTap: _toggleLike,
             child: Material(
               color: Colors.transparent,
               child: Image.asset(
                 _isLiked ? 'assets/images/icon_love_select.png' : 'assets/images/icon_love_unselect.png',
-                width: 15.83.w,
-                height: 13.73.h,
+                width: 20.83.w,
+                height: 20.73.h,
               ),
             ),
           ),
