@@ -1,22 +1,36 @@
-import 'package:first_app/entity/token_entity.dart';
 import 'package:flutter/material.dart';
-import 'dart:ui';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:ui';
 import '../../../entity/list_user_entity.dart';
+import '../../../entity/token_entity.dart'; // Ensure this path is correct
 
-class ProfileCard extends StatefulWidget {
+class ProfileCompositeWidget extends StatefulWidget {
   final ListUserEntity? userEntity;
   final TokenEntity tokenEntity;
 
-  const ProfileCard({Key? key, required this.userEntity, required this.tokenEntity}) : super(key: key);
+  ProfileCompositeWidget({Key? key, required this.userEntity, required this.tokenEntity}) : super(key: key);
 
   @override
-  _ProfileCardState createState() => _ProfileCardState();
+  _ProfileCompositeWidgetState createState() => _ProfileCompositeWidgetState();
 }
 
-class _ProfileCardState extends State<ProfileCard> {
+class _ProfileCompositeWidgetState extends State<ProfileCompositeWidget> {
+  late PageController _pageController;
+  int _currentPage = 0;
   bool _isPlaying = false;
-  bool _isLiked = false; // 新增变量
+  bool _isLiked = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   void _togglePlayPause() {
     setState(() {
@@ -25,7 +39,7 @@ class _ProfileCardState extends State<ProfileCard> {
     print(_isPlaying ? 'Playing' : 'Paused');
   }
 
-  void _toggleLike() { // 新增方法
+  void _toggleLike() {
     setState(() {
       _isLiked = !_isLiked;
     });
@@ -33,10 +47,13 @@ class _ProfileCardState extends State<ProfileCard> {
 
   @override
   Widget build(BuildContext context) {
+    int photoCount = (widget.userEntity?.photos?.length ?? 0).clamp(0, 9);
+
     return Stack(
       children: [
+        // Profile Card Widget
         Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
                 color: Color.fromRGBO(0, 0, 0, 0.0642),
@@ -71,7 +88,7 @@ class _ProfileCardState extends State<ProfileCard> {
                           Container(
                             width: 9.w,
                             height: 9.w,
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               color: Color(0xFFABFFCF),
                               shape: BoxShape.circle,
                             ),
@@ -123,47 +140,124 @@ class _ProfileCardState extends State<ProfileCard> {
             ),
           ),
         ),
+
+        // Photo Wall Widget
+        Positioned(
+          bottom: 16.h,
+          left: 0,
+          right: 0,
+          child: Container(
+            width: 337.w,
+            height: 322.h,
+            child: Stack(
+              children: [
+                PageView.builder(
+                  controller: _pageController,
+                  itemCount: photoCount,
+                  onPageChanged: (index) {
+                    setState(() {
+                      _currentPage = index;
+                    });
+                  },
+                  itemBuilder: (context, index) {
+                    String? photoUrl = widget.userEntity?.photos?[index].url;
+                    return Container(
+                      margin: EdgeInsets.symmetric(horizontal: 8.w),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(24.r),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(24.r),
+                        child: photoUrl != null
+                            ? Image.network(
+                          photoUrl,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          height: double.infinity,
+                        )
+                            : Container(
+                          color: Colors.grey,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                Positioned(
+                  top: 10.h,
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(
+                        photoCount,
+                            (index) => _buildPageIndicator(index),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+
+        // Play/Pause Button
         Positioned(
           left: 16.w,
           top: 116.h,
           child: GestureDetector(
             onTap: _togglePlayPause,
-            child: Material(
-              color: Colors.transparent,
-              child: Container(
-                width: 34.w,
-                height: 34.w,
-                decoration: BoxDecoration(
-                  color: Color(0xFF2FE4D4),
-                  shape: BoxShape.circle,
-                ),
-                child: Center(
-                  child: Icon(
-                    _isPlaying ? Icons.pause : Icons.play_arrow,
-                    color: Colors.white,
-                    size: 20.w,
-                  ),
+            child: Container(
+              width: 34.w,
+              height: 34.w,
+              decoration: BoxDecoration(
+                color: Color(0xFF2FE4D4),
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: Icon(
+                  _isPlaying ? Icons.pause : Icons.play_arrow,
+                  color: Colors.white,
+                  size: 20.w,
                 ),
               ),
             ),
           ),
         ),
+
+        // Like Button
         Positioned(
           left: 230.w,
           top: 127.h,
           child: GestureDetector(
             onTap: _toggleLike,
-            child: Material(
-              color: Colors.transparent,
-              child: Image.asset(
-                _isLiked ? 'assets/images/icon_love_select.png' : 'assets/images/icon_love_unselect.png',
-                width: 15.83.w,
-                height: 13.73.h,
-              ),
+            child: Image.asset(
+              _isLiked ? 'assets/images/icon_love_select.png' : 'assets/images/icon_love_unselect.png',
+              width: 15.83.w,
+              height: 13.73.h,
             ),
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildPageIndicator(int index) {
+    Color selectedColor = Color.fromRGBO(59, 59, 59, 1); // #3B3B3B
+    Color unselectedColor = Color.fromRGBO(255, 255, 255, 0.56); // #FFFFFF with 56% opacity
+    double indicatorWidth = 21.w;
+    double indicatorHeight = 5.h;
+    double indicatorSpacing = 8.w;
+
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: indicatorSpacing),
+      width: indicatorWidth,
+      height: indicatorHeight,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(28.r),
+        color: _currentPage == index ? selectedColor : unselectedColor,
+      ),
     );
   }
 

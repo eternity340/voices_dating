@@ -53,7 +53,7 @@ dependencies:
   camera:
   flutter_easyrefresh:
   audioplayers:
-
+  just_audio:
 
 
   # The following adds the Cupertino Icons font to your application.

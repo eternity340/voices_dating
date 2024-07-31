@@ -16,10 +16,13 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Map<String, dynamic> arguments = Get.arguments as Map<String, dynamic>;
-    final TokenEntity tokenEntity = arguments['token'] as TokenEntity;
-    final UserDataEntity userData = arguments['userData'] as UserDataEntity;
-    Get.put(HomeController(tokenEntity, userData));
+    final Map<String, dynamic> arguments = Get.arguments as Map<String, dynamic>? ?? {};
+    final TokenEntity? tokenEntity = arguments['token'] as TokenEntity?;
+    final UserDataEntity? userData = arguments['userData'] as UserDataEntity?;
+
+    if (tokenEntity != null && userData != null) {
+      Get.put(HomeController(tokenEntity, userData));
+    }
 
     return Scaffold(
       body: Stack(
@@ -44,7 +47,8 @@ class HomePage extends StatelessWidget {
               ),
             ),
           ),
-          AllNavigationBar(tokenEntity: tokenEntity, userData: userData),
+          if (tokenEntity != null && userData != null)
+            AllNavigationBar(tokenEntity: tokenEntity, userData: userData),
         ],
       ),
     );
@@ -166,7 +170,7 @@ class HomePage extends StatelessWidget {
     });
   }
 
-  Widget _buildButtonRow(TokenEntity tokenEntity, UserDataEntity userData) {
+  Widget _buildButtonRow(TokenEntity? tokenEntity, UserDataEntity? userData) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -174,25 +178,41 @@ class HomePage extends StatelessWidget {
           imagePath: ImageRes.imagePathLike,
           shadowColor: Color(0xFFFFD1D1).withOpacity(0.3736),
           label: 'Feel',
-          onTap: () => Get.toNamed('/home/feel', arguments: {'token': tokenEntity, 'userData': userData}),
+          onTap: () {
+            if (tokenEntity != null && userData != null) {
+              Get.toNamed('/home/feel', arguments: {'token': tokenEntity, 'userData': userData});
+            }
+          },
         ),
         _buildButtonWithLabel(
           imagePath: ImageRes.imagePathClock,
           shadowColor: Color(0xFFF6D3FF).withOpacity(0.369),
           label: 'Get up',
-          onTap: () => Get.toNamed('/home/get_up', arguments: {'token': tokenEntity, 'userData': userData}),
+          onTap: () {
+            if (tokenEntity != null && userData != null) {
+              Get.toNamed('/home/get_up', arguments: {'token': tokenEntity, 'userData': userData});
+            }
+          },
         ),
         _buildButtonWithLabel(
           imagePath: ImageRes.imagePathGame,
           shadowColor: Color(0xFFFCA6C5).withOpacity(0.2741),
           label: 'Game',
-          onTap: () => Get.toNamed('/home/game', arguments: {'token': tokenEntity, 'userData': userData}),
+          onTap: () {
+            if (tokenEntity != null && userData != null) {
+              Get.toNamed('/home/game', arguments: {'token': tokenEntity, 'userData': userData});
+            }
+          },
         ),
         _buildButtonWithLabel(
           imagePath: ImageRes.imagePathFeel,
           shadowColor: Color(0xFFFFEA31).withOpacity(0.3495),
           label: 'Gossip',
-          onTap: () => Get.toNamed('/home/gossip', arguments: {'token': tokenEntity, 'userData': userData}),
+          onTap: () {
+            if (tokenEntity != null && userData != null) {
+              Get.toNamed('/home/gossip', arguments: {'token': tokenEntity, 'userData': userData});
+            }
+          },
         ),
       ],
     );

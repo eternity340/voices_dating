@@ -33,8 +33,8 @@ class _PhotoWallState extends State<ProfilePhotoWall> {
     int photoCount = (widget.userEntity.photos?.length ?? 0).clamp(0, 9);
 
     return Container(
-      width: 337.w,
-      height: 322.h,
+      width: 400.w, // 调整宽度
+      height: 500.h, // 调整高度
       child: Stack(
         children: [
           PageView.builder(
@@ -47,22 +47,27 @@ class _PhotoWallState extends State<ProfilePhotoWall> {
             },
             itemBuilder: (context, index) {
               String? photoUrl = widget.userEntity.photos?[index].url;
-              return Container(
-                margin: EdgeInsets.symmetric(horizontal: 8.w),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(24.r),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(24.r),
-                  child: photoUrl != null
-                      ? Image.network(
-                    photoUrl,
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    height: double.infinity,
-                  )
-                      : Container(
-                    color: Colors.grey,
+              return Align(
+                alignment: Alignment.topCenter,
+                child: Container(
+                  width: 337.w, // 固定照片容器宽度
+                  height: 322.h, // 固定照片容器高度
+                  margin: EdgeInsets.symmetric(horizontal: 8.w),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(24.r),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(24.r),
+                    child: photoUrl != null
+                        ? Image.network(
+                      photoUrl,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: double.infinity,
+                    )
+                        : Container(
+                      color: Colors.grey,
+                    ),
                   ),
                 ),
               );
