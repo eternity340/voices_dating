@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../../../components/background.dart';
 import '../../../components/gradient_btn.dart';
+import '../../../constants/constant_styles.dart';
+import '../../../constants/constant_data.dart';  // Import the constants file
 import '../model/verify_email_model.dart';
 import '../provider/verify_email_provider.dart';
 import '../components/verify_code_input.dart';  // 更新导入
@@ -59,7 +62,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
       child: Scaffold(
         body: Background(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(16.0.w), // Use responsive padding
             child: Consumer<VerifyEmailModel>(
               builder: (context, model, child) {
                 return SingleChildScrollView(
@@ -67,91 +70,64 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 100),
-                      const Center(
+                      SizedBox(height: 100.h), // Use responsive height
+                      Center(
                         child: Text(
-                          "Verify Code",
+                          ConstantData.verifyCodeTitle,
                           textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 32,
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.bold,
-                            height: 44 / 32,
-                            letterSpacing: -0.02,
-                            color: Color(0xFF000000),
-                          ),
+                          style: ConstantStyles.verifyCodeTitle,
                         ),
                       ),
-                      const SizedBox(height: 20),
-                      const Padding(
-                        padding: EdgeInsets.only(left: 16.0),
+                      SizedBox(height: 20.h),
+                      Padding(
+                        padding: EdgeInsets.only(left: 16.0.w), // Use responsive padding
                         child: Text(
-                          "Enter the verify code sent to your email",
+                          ConstantData.verifyCodeSubtitle,
                           textAlign: TextAlign.start,
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.w500,
-                            color: Color(0xFF8E8E93),
-                            letterSpacing: 2.0,
-                          ),
+                          style: ConstantStyles.verifyCodeSubtitle,
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: 20.h),
                       VerifyCodeInput(
                         length: 6,
                         onCompleted: (String value) {
                           model.codeController.text = value;
                         },
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: 20.h),
                       Align(
                         alignment: Alignment.centerRight,
                         child: _isResendButtonVisible
-                            ? Container()  // 当 _isResendButtonVisible 为 true 时隐藏计时器文本
+                            ? Container()  // Hide timer text when _isResendButtonVisible is true
                             : Text(
-                          '$_start s resend code',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.w400,
-                            color: Color(0xFF8E8E93),
-                            height: 24 / 14,
-                            letterSpacing: -0.01,
-                          ),
+                          '$_start ${ConstantData.timerText}',
+                          style: ConstantStyles.timerText,
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: 20.h),
                       _isResendButtonVisible
                           ? Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
                           onPressed: () {
-                            // 重新发送验证码的逻辑
+                            // Resend verification code logic
                             startTimer();
                           },
-                          child: const Text(
-                            'Resend Code',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w400,
-                              color: Color(0xFF2FE4D4),
-                              height: 24 / 14,
-                              letterSpacing: -0.01,
-                            ),
+                          child: Text(
+                            ConstantData.resendCode,
+                            style: ConstantStyles.resendButtonText,
                           ),
                         ),
                       )
                           : Container(),
-                      const SizedBox(height: 300), // 调整间距
+                      SizedBox(height: 300.h), // Use responsive height
                       model.isLoading
-                          ? const CircularProgressIndicator()
+                          ? CircularProgressIndicator()
                           : Center(
                         child: GradientButton(
-                          text: "Verify",
+                          text: ConstantData.verifyButtonText,
                           onPressed: model.verifyEmail,
-                          width: 200,
+                          width: 200.w, // Use responsive width
                         ),
                       ),
                     ],

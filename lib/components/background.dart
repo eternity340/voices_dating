@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../constants/constant_styles.dart';
+import '../constants/constant_data.dart';
+import '../image_res/image_res.dart';
 
 class Background extends StatelessWidget {
   final Widget child;
@@ -31,7 +34,7 @@ class Background extends StatelessWidget {
           if (showBackgroundImage)
             Positioned.fill(
               child: SvgPicture.asset(
-                'assets/icons/bg.svg',
+                ImageRes.imagePathBackground,
                 fit: BoxFit.fill,
               ),
             ),
@@ -55,19 +58,14 @@ class Background extends StatelessWidget {
                         child: Row(
                           children: [
                             Image.asset(
-                              'assets/images/back.png',
+                              ImageRes.imagePathBackButton,
                               width: 24.w,
                               height: 24.h,
                             ),
                             SizedBox(width: 8.w),
                             Text(
-                              'Back',
-                              style: TextStyle(
-                                fontFamily: 'OpenSans',
-                                fontSize: 14.sp,
-                                color: Colors.black,
-                                letterSpacing: 2.w,
-                              ),
+                              ConstantData.backText,
+                              style: ConstantStyles.backButtonTextStyle,
                             ),
                           ],
                         ),
@@ -79,13 +77,7 @@ class Background extends StatelessWidget {
                       left: MediaQuery.of(context).size.width / 2 - 50.w,
                       child: Text(
                         middleText!,
-                        style: TextStyle(
-                          fontFamily: 'Open Sans',
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.w600,
-                          height: 22 / 18,
-                          color: Colors.black,
-                        ),
+                        style: ConstantStyles.middleTextStyle,
                       ),
                     ),
                   if (showActionButton)
@@ -111,12 +103,8 @@ class Background extends StatelessWidget {
                             Navigator.of(context).pop();
                           },
                           child: Text(
-                            'Save',
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 14.sp,
-                              color: Colors.black,
-                            ),
+                            ConstantData.saveText,
+                            style: ConstantStyles.actionButtonTextStyle,
                           ),
                         ),
                       ),
@@ -127,10 +115,10 @@ class Background extends StatelessWidget {
                       right: 16.w,
                       child: GestureDetector(
                         onTap: () {
-
+                          // 添加您的设置按钮操作
                         },
                         child: Image.asset(
-                          'assets/images/button_round_setting.png',
+                          ImageRes.imagePathSettingButton,
                           width: 40.w,
                           height: 40.h,
                         ),

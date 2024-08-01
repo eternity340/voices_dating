@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import ScreenUtil
 
 class HeightPicker extends StatefulWidget {
   final int initialHeight;
@@ -9,7 +10,6 @@ class HeightPicker extends StatefulWidget {
 
   @override
   _HeightPickerState createState() => _HeightPickerState();
-
 }
 
 class _HeightPickerState extends State<HeightPicker> {
@@ -31,17 +31,19 @@ class _HeightPickerState extends State<HeightPicker> {
 
   @override
   Widget build(BuildContext context) {
-    double pickerWidth = 120.0; // Width of the picker
-    double pickerHeight = 280.0; // Height of the picker
-    double itemExtent = 40.0; // Height of each item
-    double highlightWidth = 335.0; // Width of the highlight container
+
+
+    double pickerWidth = 120.0.w; // Width of the picker
+    double pickerHeight = 280.0.h; // Height of the picker
+    double itemExtent = 40.0.h; // Height of each item
+    double highlightWidth = 335.0.w; // Width of the highlight container
 
     return Stack(
       alignment: Alignment.center,
       children: [
         Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(16.r),
             border: Border.all(color: Colors.transparent, width: 0),
           ),
           child: Container(
@@ -59,7 +61,7 @@ class _HeightPickerState extends State<HeightPicker> {
                   child: Text(
                     '${reversedIndex + 100}cm',
                     style: TextStyle(
-                      fontSize: widget.initialHeight == reversedIndex + 100 ? 24.0 : 20.0,
+                      fontSize: widget.initialHeight == reversedIndex + 100 ? 24.0.sp : 20.0.sp,
                       color: widget.initialHeight == reversedIndex + 100 ? Colors.black : Color(0xFFB0B0B0),
                       fontFamily: 'Poppins',
                     ),
@@ -83,7 +85,7 @@ class _HeightPickerState extends State<HeightPicker> {
             width: highlightWidth,
             decoration: BoxDecoration(
               color: Color(0xFFABFFCF).withOpacity(0.5),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(8.r),
             ),
           ),
         ),

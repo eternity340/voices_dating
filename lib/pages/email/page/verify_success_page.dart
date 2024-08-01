@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../components/background.dart';
 import '../../../components/gradient_btn.dart';
 import '../../../entity/User.dart';
+import '../../../constants/constant_styles.dart';
+import '../../../constants/constant_data.dart';
 
 class VerifySuccessPage extends StatelessWidget {
   final String message;
@@ -12,52 +15,44 @@ class VerifySuccessPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Initialize ScreenUtil (typically done in main.dart)
+    ScreenUtil.init(context, designSize: Size(375, 812), minTextAdapt: true);
+
     return Scaffold(
       body: Background(
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(16.0.w), // Responsive padding
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 100),
-                const Icon(
+                SizedBox(height: 100.h), // Responsive height
+                Icon(
                   Icons.check_circle_outline,
                   color: Colors.green,
-                  size: 100,
+                  size: 100, // Use constant icon size
                 ),
-                const SizedBox(height: 20),
-                const Text(
-                  "Email verification successful！",
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.bold,
-                    height: 44 / 32,
-                    letterSpacing: -0.02,
-                    color: Color(0xFF000000),
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 20),
+                SizedBox(height: 20.h), // Responsive height
                 Text(
-                  message.isEmpty ? "Your email has been successfully verified." : message,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w500,
-                    color: Color(0xFF8E8E93),
-                    letterSpacing: 2.0,
-                  ),
+                  ConstantData.emailVerificationSuccess,
+                  style: ConstantStyles.verifySuccessTitle,
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 300),
+                SizedBox(height: 20.h), // Responsive height
+                Text(
+                  message.isEmpty
+                      ? ConstantData.emailVerificationSuccessMessage
+                      : message,
+                  style: ConstantStyles.verifySuccessSubtitle,
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 200.h), // Responsive height
                 GradientButton(
-                  text: "Next",
+                  text: ConstantData.nextButtonText,
                   onPressed: () {
                     Get.toNamed('/select_gender', arguments: user);
                   },
-                  width: 200,
+                  width: 200.w, // Use constant button width
                 ),
               ],
             ),

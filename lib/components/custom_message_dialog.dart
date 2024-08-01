@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../constants/constant_data.dart';
+import '../constants/constant_styles.dart'; // 导入ConstantStyles
+
 class CustomMessageDialog extends StatelessWidget {
   final Widget title;
   final Widget content;
@@ -24,12 +27,9 @@ class CustomMessageDialog extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).pop(); // Close the dialog
           },
-          child: const DefaultTextStyle(
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              color: Colors.black, // Text color for 'No'
-            ),
-            child: Text('cancel'),
+          child: DefaultTextStyle(
+            style: ConstantStyles.dialogCancelTextStyle,
+            child: Text(ConstantData.cancelText),
           ),
         ),
         CupertinoDialogAction(
@@ -38,12 +38,9 @@ class CustomMessageDialog extends StatelessWidget {
             Navigator.of(context).pop(); // Close the dialog
             onYesPressed(); // Call the provided function
           },
-          child: const DefaultTextStyle(
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              color: Colors.red,
-            ),
-            child: Text('Yes'),
+          child: DefaultTextStyle(
+            style: ConstantStyles.yesTextStyle,
+            child: Text(ConstantData.yesText),
           ),
         ),
       ],

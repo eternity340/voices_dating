@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../components/background.dart';
 import '../../../components/gradient_btn.dart';
+import '../../../constants/constant_styles.dart';
+import '../../../constants/constant_data.dart';
 import '../model/get_email_code_model.dart';
 
 class GetMailCodePage extends StatelessWidget {
@@ -10,77 +13,67 @@ class GetMailCodePage extends StatelessWidget {
     return Scaffold(
       body: Background(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16.w), // 使用ScreenUtil进行适配
           child: Consumer<GetEmailCodeModel>(
             builder: (context, model, child) {
               String selectedDomain = '@gmail.com';
-              List<String> emailDomains = ['@gmail.com', '@yahoo.com', '@outlook.com', '@icloud.com', '@qq.com'];
+              List<String> emailDomains = [
+                '@gmail.com',
+                '@yahoo.com',
+                '@outlook.com',
+                '@icloud.com',
+                '@qq.com'
+              ];
 
               return SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 100),
-                    const Center(
+                    SizedBox(height: 100.h), // 使用ScreenUtil进行适配
+                    Center(
                       child: Text(
-                        "Welcome",
+                        ConstantData.welcomeText,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 32,
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.bold,
-                          height: 44 / 32,
-                          letterSpacing: -0.02,
-                          color: Color(0xFF000000),
-                        ),
+                        style: ConstantStyles.welcomeTextStyle,
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 16.0),
+                    SizedBox(height: 20.h), // 使用ScreenUtil进行适配
+                    Padding(
+                      padding: EdgeInsets.only(left: 16.w), // 使用ScreenUtil进行适配
                       child: Text(
-                        "Please enter your email",
+                        ConstantData.enterEmailText,
                         textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xFF8E8E93),
-                          letterSpacing: 2.0,
-                        ),
+                        style: ConstantStyles.enterEmailTextStyle,
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    SizedBox(height: 20.h), // 使用ScreenUtil进行适配
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.start, // 改变对齐方式为顶部对齐
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
                           flex: 2,
                           child: TextField(
                             controller: model.emailController,
                             decoration: InputDecoration(
-                              labelText: "Email",
+                              labelText: ConstantData.emailLabelText,
                               border: UnderlineInputBorder(),
                               errorText: model.errorMessage,
                               filled: true,
                               fillColor: Colors.transparent,
                             ),
                             keyboardType: TextInputType.emailAddress,
-                            style: const TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 18,
-                            ),
+                            style: ConstantStyles.emailTextStyle,
                           ),
                         ),
-                        SizedBox(width: 10),
+                        SizedBox(width: 10.w), // 使用ScreenUtil进行适配
                         Expanded(
                           flex: 3,
                           child: Container(
-                            margin: EdgeInsets.only(top: 20), // 增加上边距以调整位置
+                            margin: EdgeInsets.only(top: 20.h), // 使用ScreenUtil进行适配
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8), // 圆角边框
-                              color: Colors.white, // 白色背景
+                              borderRadius: BorderRadius.circular(8.r), // 使用ScreenUtil进行适配
+                              color: Colors.white,
                             ),
                             child: DropdownButton<String>(
                               value: selectedDomain,
@@ -88,13 +81,10 @@ class GetMailCodePage extends StatelessWidget {
                                 return DropdownMenuItem<String>(
                                   value: domain,
                                   child: Container(
-                                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12), // 调整内边距
+                                    padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 12.w), // 使用ScreenUtil进行适配
                                     child: Text(
                                       domain,
-                                      style: const TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontSize: 18,
-                                      ),
+                                      style: ConstantStyles.emailTextStyle,
                                     ),
                                   ),
                                 );
@@ -109,20 +99,20 @@ class GetMailCodePage extends StatelessWidget {
                                   model.emailController.text = emailText + selectedDomain;
                                 }
                               },
-                              underline: SizedBox(), // 去掉下划线
+                              underline: SizedBox(),
                             ),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 400), // 调整间距
+                    SizedBox(height: 300.h), // 使用ScreenUtil进行适配
                     model.isLoading
                         ? CircularProgressIndicator()
                         : Center(
                       child: GradientButton(
-                        text: "Next",
-                        onPressed: () => model.sendVerificationCode(context), // 传递 context
-                        width: 200,
+                        text: ConstantData.nextButtonText,
+                        onPressed: () => model.sendVerificationCode(context),
+                        width: 200.w, // 使用ScreenUtil进行适配
                       ),
                     ),
                   ],

@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../components/background.dart';
 import '../../../components/gradient_btn.dart';
 import '../../../entity/User.dart';
 import 'components/widget/picker_components.dart';
+import '../../../constants/constant_data.dart'; // Import constant data
+import '../../../constants/constant_styles.dart'; // Import constant styles
 
 class SelectBirthdayPage extends StatefulWidget {
   final User user;
@@ -46,49 +49,49 @@ class _SelectBirthdayPageState extends State<SelectBirthdayPage> {
 
   @override
   Widget build(BuildContext context) {
-    double pickerWidth = 120.0; // Width of each picker
-    double pickerHeight = 280.0; // Height of each picker
-    double itemExtent = 40.0; // Height of each item
 
     return Scaffold(
       body: Background(
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.symmetric(horizontal: 10.0.w, vertical: 20.0.h), // Adjust padding
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: 100),
+                SizedBox(height: 100.h),
                 _buildTitle(),
-                SizedBox(height: 20),
-                buildPickers(
-                  context: context,
-                  pickerWidth: pickerWidth,
-                  pickerHeight: pickerHeight,
-                  itemExtent: itemExtent,
-                  dayController: _dayController,
-                  monthController: _monthController,
-                  yearController: _yearController,
-                  selectedDay: selectedDay,
-                  selectedMonth: selectedMonth,
-                  selectedYear: selectedYear,
-                  onDayChanged: (index) {
-                    setState(() {
-                      selectedDay = index + 1;
-                    });
-                  },
-                  onMonthChanged: (index) {
-                    setState(() {
-                      selectedMonth = index + 1;
-                    });
-                  },
-                  onYearChanged: (index) {
-                    setState(() {
-                      selectedYear = DateTime.now().year - index;
-                    });
-                  },
+                SizedBox(height: 20.h),
+                SizedBox(
+                  width: double.infinity, // Ensure the pickers take full width
+                  child: buildPickers(
+                    context: context,
+                    pickerWidth: 100.0.w,
+                    pickerHeight: 280.0.h,
+                    itemExtent: 40.0.h,
+                    dayController: _dayController,
+                    monthController: _monthController,
+                    yearController: _yearController,
+                    selectedDay: selectedDay,
+                    selectedMonth: selectedMonth,
+                    selectedYear: selectedYear,
+                    onDayChanged: (index) {
+                      setState(() {
+                        selectedDay = index + 1;
+                      });
+                    },
+                    onMonthChanged: (index) {
+                      setState(() {
+                        selectedMonth = index + 1;
+                      });
+                    },
+                    onYearChanged: (index) {
+                      setState(() {
+                        selectedYear = DateTime.now().year - index;
+                      });
+                    },
+                  ),
                 ),
-                SizedBox(height: 200),
+                SizedBox(height: 150.h),
                 _buildContinueButton(),
               ],
             ),
@@ -99,17 +102,16 @@ class _SelectBirthdayPageState extends State<SelectBirthdayPage> {
   }
 
   Widget _buildTitle() {
-    return const Text(
-      "Birthday",
-      style: TextStyle(
-          fontSize: 32, fontWeight: FontWeight.bold, fontFamily: 'Poppins'),
+    return Text(
+      ConstantData.birthdayTitle,
+      style: ConstantStyles.birthdayTitleStyle,
       textAlign: TextAlign.center,
     );
   }
 
   Widget _buildContinueButton() {
     return GradientButton(
-      text: "Continue",
+      text: ConstantData.continueButtonText, // Use constant data
       onPressed: () {
         DateTime selectedDate = DateTime(selectedYear, selectedMonth, selectedDay);
         widget.user.birthday = selectedDate;

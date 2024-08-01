@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../entity/User.dart';
 import '../../../components/background.dart';
 import '../../../components/gradient_btn.dart';
 import 'components/widget/location_selector.dart';
+import '../../../constants/constant_data.dart'; // Import constant data
+import '../../../constants/constant_styles.dart'; // Import constant styles
 
 class SelectLocationPage extends StatefulWidget {
   final User user;
@@ -29,42 +32,36 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: Background(
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(16.0.w), // Responsive padding
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: 100),
-                const Text(
-                  "Location",
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.bold,
-                    height: 44 / 32,
-                    letterSpacing: -0.02,
-                    color: Color(0xFF000000),
-                  ),
+                SizedBox(height: 100.h), // Responsive height
+                Text(
+                  ConstantData.locationTitle,
+                  style: ConstantStyles.locationTitleStyle,
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 20.h), // Responsive height
                 LocationSelector(
                   user: widget.user,
                   onLocationSelected: onLocationSelected,
                 ),
-                SizedBox(height: 400),
+                SizedBox(height: 350.h), // Responsive height
                 GradientButton(
-                  text: "Continue",
+                  text: ConstantData.continueButtonText,
                   onPressed: () {
                     widget.user.country = selectedCountry;
                     widget.user.state = selectedState;
                     widget.user.city = selectedCity;
                     Get.toNamed('/select_birthday', arguments: widget.user);
                   },
-                  width: 200,
+                  width: 200.w, // Responsive width
                 ),
               ],
             ),

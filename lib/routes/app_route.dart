@@ -30,6 +30,7 @@ import '../pages/me/notification/notification_page.dart';
 import '../pages/me/settings/settings_page.dart';
 import '../pages/me/verify/verify_ID/verify_ID_page.dart';
 import '../pages/me/verify/verify_photo/verify_photo_page.dart';
+import '../pages/message/message_page.dart';
 import '../pages/moments/moments_page.dart';
 import '../pages/pre_login/forget_pwd/forget_pwd_page.dart';
 import '../pages/pre_login/forget_pwd/forget_pwd_provider.dart';
@@ -191,6 +192,11 @@ class AppRoutes {
     getx.GetPage(
       name: '/voice',
       page: () => VoicePage(),
+    ),
+
+    getx.GetPage(
+      name: '/message',
+      page: () => MessagePage(),
     ),
 
 

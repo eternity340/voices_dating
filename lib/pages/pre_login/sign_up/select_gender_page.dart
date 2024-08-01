@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../components/gradient_btn.dart';
 import '../../../components/select_box.dart';
 import '../../../entity/User.dart';
 import '../../../components/background.dart';
-
+import '../../../constants/constant_data.dart'; // Import constant data
+import '../../../constants/constant_styles.dart'; // Import constant styles
 
 class SelectGenderPage extends StatefulWidget {
   final User user;
@@ -20,72 +22,59 @@ class _SelectGenderPageState extends State<SelectGenderPage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: Background(
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(16.0.w), // Responsive padding
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: 100),
-                const Text(
-                  "Gender",
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.bold,
-                    height: 44 / 32,
-                    letterSpacing: -0.02,
-                    color: Color(0xFF000000),
-                  ),
+                SizedBox(height: 100.h), // Responsive height
+                Text(
+                  ConstantData.genderTitle,
+                  style: ConstantStyles.genderTitleStyle,
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 34),
+                SizedBox(height: 34.h), // Responsive height
                 SelectBox(
-                  text: "Male",
-                  isSelected: selectedGender == "Male",
+                  text: ConstantData.maleOption,
+                  isSelected: selectedGender == ConstantData.maleOption,
                   onTap: () {
                     setState(() {
-                      selectedGender = "Male";
+                      selectedGender = ConstantData.maleOption;
                     });
                   },
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 20.h), // Responsive height
                 SelectBox(
-                  text: "Female",
-                  isSelected: selectedGender == "Female",
+                  text: ConstantData.femaleOption,
+                  isSelected: selectedGender == ConstantData.femaleOption,
                   onTap: () {
                     setState(() {
-                      selectedGender = "Female";
+                      selectedGender = ConstantData.femaleOption;
                     });
                   },
                 ),
-                SizedBox(height: 20),
-                const Align(
-                  alignment: Alignment.centerLeft, // 对齐方式设置为左对齐
+                SizedBox(height: 20.h), // Responsive height
+                Align(
+                  alignment: Alignment.centerLeft, // Left alignment
                   child: Text(
-                    "Gender cannot be changed after selection",
-                    style: TextStyle(
-                      fontSize: 14,
-                      height: 24 / 14,
-                      letterSpacing: -0.01,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF000000),
-                    ),
+                    ConstantData.genderWarning,
+                    style: ConstantStyles.genderWarningStyle,
                   ),
                 ),
-                SizedBox(height: 300),
+                SizedBox(height: 180.h), // Responsive height
                 GradientButton(
-                  text: "Continue",
+                  text: ConstantData.continueButtonText,
                   onPressed: () {
                     if (selectedGender != null) {
                       widget.user.gender = selectedGender!;
                       Get.toNamed('/select_location', arguments: widget.user);
                     }
                   },
-                  width: 200,
+                  width: 200.w, // Responsive width
                 ),
               ],
             ),

@@ -103,5 +103,47 @@ class ConstantData {
   static const honeyPageContent = 'Honey Page Content';
   static const nearbyPageContent = 'Nearby Page Content';
 
-
+  //fontStyle
+  static const fontPoppins = 'Poppins';
+  static const fontOpenSans ='Open Sans';
+  //background
+  static const backText = 'Back';
+  static const saveText = 'Save';
+  //bottom_options
+  static const CancelText = 'Cancel';
+  //custom_message_dialog
+  static const cancelText = 'cancel';
+  static const yesText='Yes';
+  //detail_bottom_bar
+  static const likeText='like';
+  //get_email_code
+  static const  welcomeText = "Welcome";
+  static const  enterEmailText = "Please enter your email";
+  static const  emailLabelText = "Email";
+  static const  nextButtonText = "Next";
+  //verify_email
+  static const  verifyCodeTitle = "Verify Code";
+  static const  verifyCodeSubtitle = "Enter the verify code sent to your email";
+  static const  resendCode = "Resend Code";
+  static const  timerText = "s resend code";
+  static const  verifyButtonText = "Verify";
+  //verify_success
+  static const  emailVerificationSuccess = "Email verification successful!";
+  static const  emailVerificationSuccessMessage = "Your email has been successfully verified.";
+  //select_birthday
+  static const  birthdayTitle = "Birthday";
+  static const  continueButtonText = "Continue";
+  //select_gender
+  static const  genderTitle = "Gender";
+  static const  maleOption = "Male";
+  static const  femaleOption = "Female";
+  static const  genderWarning = "Gender cannot be changed after selection";
+  //select_height
+  static const  heightTitle = "Height";
+  //select_location
+  static const  locationTitle = "Location";
+  //sign_up
+  static const String nicknameTitle = "Set a nickname";
+  static const String passwordTitle = "Set a password";
+  static const String submitButtonText = "Submit";
 }

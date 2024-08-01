@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../constants/constant_data.dart';
+
 class GradientButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
@@ -36,13 +38,12 @@ class GradientButton extends StatelessWidget {
         child: Center(
           child: Text(
             text.toUpperCase(),
-            style: textStyle ??
-                TextStyle(
-                  fontSize: 16.sp,
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black,
-                  letterSpacing: 2.0,
+            style: TextStyle(
+                    fontSize: 16.sp,
+                    fontFamily: ConstantData.fontPoppins,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                    letterSpacing: 2.0,
                 ),
           ),
         ),

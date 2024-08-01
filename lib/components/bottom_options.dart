@@ -1,6 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../constants/constant_styles.dart';
+import '../constants/constant_data.dart';
 
 class BottomOptions extends StatelessWidget {
   final VoidCallback onFirstPressed;
@@ -24,7 +25,7 @@ class BottomOptions extends StatelessWidget {
       width: MediaQuery.of(context).size.width,
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
         color: Colors.white,
       ),
       child: Column(
@@ -34,51 +35,33 @@ class BottomOptions extends StatelessWidget {
             onPressed: onFirstPressed,
             child: Text(
               firstText,
-              style: const TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 18,
-                height: 22 / 18,
-                letterSpacing: -0.01125,
-                color: Colors.black,
-              ),
+              style: ConstantStyles.optionTextStyle,
             ),
           ),
           if (secondText.isNotEmpty) ...[
-            const Divider(
+            Divider(
               color: Color(0xFFE0E0E0),
-              thickness: 1,
-              height: 24,
+              thickness: 1.h,
+              height: 24.h,
             ),
             TextButton(
               onPressed: onSecondPressed,
               child: Text(
                 secondText,
-                style: const TextStyle(
-                  fontFamily: 'Poppins',
-                  fontSize: 18,
-                  height: 22 / 18,
-                  letterSpacing: -0.01125,
-                  color: Colors.black,
-                ),
+                style: ConstantStyles.optionTextStyle,
               ),
             ),
           ],
-          const Divider(
+          Divider(
             color: Color(0xFFE0E0E0),
-            thickness: 1,
-            height: 24,
+            thickness: 1.h,
+            height: 24.h,
           ),
           TextButton(
             onPressed: onCancelPressed,
-            child: const Text(
-              'Cancel',
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 18,
-                height: 22 / 18,
-                letterSpacing: -0.01125,
-                color: Colors.red,
-              ),
+            child: Text(
+              ConstantData.CancelText,
+              style: ConstantStyles.cancelTextStyle,
             ),
           ),
         ],
