@@ -81,7 +81,7 @@ class _DetailBottomBarState extends State<DetailBottomBar> {
                     children: [
                       LoveButton(
                         tokenEntity: widget.tokenEntity!,
-                        moment: widget.moment!,
+                        moment: widget.moment!, onLoveButtonPressed: () {},
                       ),
                       Text(
                         ConstantData.likeText,

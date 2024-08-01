@@ -73,7 +73,7 @@ class CommentEntity {
   String? commentContent;
   int? commentCreated;
   String? commentId;
-  int?commentLiked;
+  int? commentLiked;
   int? commentLikes;
   String? gender;
   String? hidden;

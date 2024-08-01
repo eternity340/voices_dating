@@ -8,12 +8,14 @@ class MomentsCard extends StatefulWidget {
   final MomentEntity moment;
   final bool showButtons;
   final TokenEntity tokenEntity;
+  final VoidCallback onLoveButtonPressed;
 
   const MomentsCard({
     Key? key,
     required this.moment,
     required this.tokenEntity,
     this.showButtons = true,
+    required this.onLoveButtonPressed,
   }) : super(key: key);
 
   @override
@@ -152,6 +154,7 @@ class _MomentsCardState extends State<MomentsCard> {
                   LoveButton(
                     moment: widget.moment,
                     tokenEntity: widget.tokenEntity,
+                    onLoveButtonPressed: widget.onLoveButtonPressed, // 传递回调函数
                   ),
                 ],
               ),

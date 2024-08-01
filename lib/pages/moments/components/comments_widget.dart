@@ -174,8 +174,7 @@ class _CommentWidgetState extends State<CommentWidget> {
         List<dynamic> data = response.data['data'];
         comments = data.map((comment) => CommentEntity.fromJson(comment)).toList();
         likeCountList = comments.map((comment) => comment.commentLikes.toString()).toList();
-        isLikedList = comments.map((comment) => comment.commentLiked == '1').toList();
-
+        isLikedList = comments.map((comment) => comment.commentLiked == 1).toList();
         setState(() {
           isLoading = false;
         });

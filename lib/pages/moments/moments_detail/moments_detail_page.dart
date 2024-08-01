@@ -45,7 +45,7 @@ class _MomentsDetailPageState extends State<MomentsDetailPage> {
                 children: [
                   MomentsCard(
                     showButtons: false,
-                    moment: moment, tokenEntity: tokenEntity,
+                    moment: moment, tokenEntity: tokenEntity, onLoveButtonPressed: () {  },
                   ),
                   SizedBox(height: 10.h),
                   Container(
