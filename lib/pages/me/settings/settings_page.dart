@@ -3,9 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../components/background.dart';
 import '../../../components/gradient_btn.dart';
-import '../../../components/custom_message_dialog.dart';
 import '../components/path_box.dart';
 import 'settings_controller.dart';
+import '../../../constants/constant_data.dart';
+import '../../../constants/constant_styles.dart';
 
 class SettingsPage extends StatelessWidget {
   final SettingsController controller = Get.put(SettingsController());
@@ -20,66 +21,55 @@ class SettingsPage extends StatelessWidget {
             showSettingButton: false,
             showBackgroundImage: false,
             showMiddleText: true,
-            middleText: '   Settings',
+            middleText: ConstantData.settings,
             child: Container(),
           ),
           PathBox(
-            top: 124.h,
-            text: 'Block members',
-            onPressed: () {
-              Get.toNamed('/me/settings/block_member',
-                  arguments: {'token': controller.tokenEntity, 'userData': controller.userData});
-            },
+            top: ConstantStyles.pathBoxTopSpacing,
+            text: ConstantData.blockMembersText,
+            onPressed: () => _navigateTo('/me/settings/block_member'),
           ),
           PathBox(
-            top: 219.h,
-            text: 'Feedback',
-            onPressed: () {
-              Get.toNamed('/me/settings/feedback',
-                  arguments: {'token': controller.tokenEntity, 'userData': controller.userData});
-            },
+            top: ConstantStyles.pathBoxTopSpacing + 95.h,
+            text: ConstantData.feedbackTitleText,
+            onPressed: () => _navigateTo('/me/settings/feedback'),
           ),
           PathBox(
-            top: 314.h,
-            text: 'Purchase record',
-            onPressed: () {
-              Get.toNamed('/me/settings/purchase_record',
-                  arguments: {'token': controller.tokenEntity, 'userData': controller.userData});
-            },
+            top: ConstantStyles.pathBoxTopSpacing + 190.h,
+            text: ConstantData.purchaseRecord,
+            onPressed: () => _navigateTo('/me/settings/purchase_record'),
           ),
           PathBox(
-            top: 409.h,
-            text: 'About me',
-            onPressed: () {
-              Get.toNamed('/me/settings/about_me',
-                  arguments: {'token': controller.tokenEntity, 'userData': controller.userData});
-            },
+            top: ConstantStyles.pathBoxTopSpacing + 285.h,
+            text: ConstantData.aboutMe,
+            onPressed: () => _navigateTo('/me/settings/about_me'),
           ),
           PathBox(
-            top: 504.h,
-            text: 'Clean up memory',
-            onPressed: () {
-              Get.toNamed('/me/settings/',
-                  arguments: {'token': controller.tokenEntity, 'userData': controller.userData});
-            },
+            top: ConstantStyles.pathBoxTopSpacing + 380.h,
+            text: ConstantData.cleanUpMemory,
+            onPressed: () => _navigateTo('/me/settings/'),
           ),
           Positioned(
-            top: 650.h,
+            top: ConstantStyles.signOutButtonTop,
             left: 0,
             right: 0,
             child: Center(
               child: GradientButton(
-                text: 'Sign Out',
+                text: ConstantData.signOut,
                 onPressed: () {
                   controller.showCustomMessageDialog(context, controller.signOut);
                 },
-                height: 49.h,
-                width: 248.w,
+                height: ConstantStyles.signOutButtonHeight,
+                width: ConstantStyles.signOutButtonWidth,
               ),
             ),
           ),
         ],
       ),
     );
+  }
+
+  void _navigateTo(String route) {
+    Get.toNamed(route, arguments: {'token': controller.tokenEntity, 'userData': controller.userData});
   }
 }

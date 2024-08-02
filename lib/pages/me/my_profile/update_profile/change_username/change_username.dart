@@ -37,14 +37,11 @@ class _ChangeUsernameState extends State<ChangeUsername> {
                 height: 56.h,
                 decoration: BoxDecoration(
                   color: Color(0xFFF8F8F9),
-                  borderRadius: BorderRadius.circular(10.r), // Use ScreenUtil for radius
+                  borderRadius: BorderRadius.circular(10.r),
                 ),
                 child: TextField(
                   controller: logic.controller,
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 18.sp, // Use ScreenUtil for font size
-                  ),
+                  style: ConstantStyles.inputUsernameTextStyle,
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.transparent,

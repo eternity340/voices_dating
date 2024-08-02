@@ -1,8 +1,9 @@
 import 'package:first_app/components/background.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import '../../../../constants/Constant_styles.dart';
+import '../../../../constants/constant_data.dart';
 import '../../../../entity/token_entity.dart';
 import '../../../../entity/user_data_entity.dart';
 import '../../components/path_box.dart';
@@ -18,7 +19,7 @@ class AboutMePage extends StatelessWidget {
         children: [
           Background(
             showMiddleText: true,
-            middleText: ' About me',
+            middleText: ConstantData.aboutMe,
             showBackgroundImage: false,
             showBackButton: true,
             child: Container(),
@@ -37,7 +38,7 @@ class AboutMePage extends StatelessWidget {
           ),
           PathBox(
             top: 300.h,
-            text: 'Privacy agreement',
+            text: ConstantData.privacyAgreement,
             onPressed: () {
               Get.toNamed('', arguments: {'token': tokenEntity, 'userData': userData});
             },
@@ -46,13 +47,8 @@ class AboutMePage extends StatelessWidget {
             left: 167.5.w,
             top: 712.5.h,
             child: Text(
-              'V1.0',
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.w500,
-                fontSize: 18.sp,
-                color: Colors.black,
-              ),
+              ConstantData.version,
+              style: ConstantStyles.aboutMeVersionTextStyle,
             ),
           ),
         ],

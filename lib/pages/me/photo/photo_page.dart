@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:first_app/constants/constant_styles.dart';
 import 'package:first_app/pages/me/photo/photo_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,6 +10,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../../components/background.dart';
 import '../../../components/bottom_options.dart';
+import '../../../constants/constant_data.dart';
+import '../../../image_res/image_res.dart';
 import 'components/photo_dialog.dart';
 
 class PhotoPage extends StatelessWidget {
@@ -24,7 +27,7 @@ class PhotoPage extends StatelessWidget {
             child: Background(
               showBackgroundImage: false,
               showMiddleText: true,
-              middleText: '    Photo',
+              middleText: ConstantData.photoTitle,
               child: Stack(
                 children: [
                   SingleChildScrollView(
@@ -93,7 +96,7 @@ class PhotoPage extends StatelessWidget {
             height: 38.4.h,
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/icon_add_photo.png'),
+                image: AssetImage(ImageRes.imagePathIconAddPhoto),
                 fit: BoxFit.cover,
               ),
             ),
@@ -135,16 +138,10 @@ class PhotoPage extends StatelessWidget {
                   bottomRight: Radius.circular(20),
                 ),
               ),
-              child: const Center(
+              child:  Center(
                 child: Text(
-                  'main photo',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14,
-                    height: 24 / 14,
-                    letterSpacing: -0.00875,
-                  ),
+                  ConstantData.mainPhotoText,
+                  style: ConstantStyles.mainPhotoTextStyle,
                 ),
               ),
             ),
@@ -227,8 +224,8 @@ class PhotoPage extends StatelessWidget {
           onCancelPressed: () {
             Navigator.pop(context);
           },
-          firstText: 'Take a Photo',
-          secondText: 'From Album',
+          firstText: ConstantData.takePhotoText,
+          secondText: ConstantData.fromAlbumText,
         );
       },
     );

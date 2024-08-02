@@ -47,4 +47,6 @@ class ImageRes{
   static const  pathIcon = 'assets/images/Path.png';
   //change_location
   static const  iconLocationImagePath='assets/images/icon_location.png';
+  //photo
+  static const imagePathIconAddPhoto =  'assets/images/icon_add_photo.png';
 }

@@ -380,5 +380,85 @@ class ConstantStyles {
     color: Colors.black,
     letterSpacing: 0.02,
   );
-
+  static TextStyle inputUsernameTextStyle=TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 18.sp,
+  );
+  //my_profile
+  static TextStyle myProfileTitleTextStyle = TextStyle(
+    fontFamily: 'OpenSans',
+    fontSize: 18.sp,
+    fontWeight: FontWeight.w600,
+    height: 22 / 18,
+    letterSpacing: -0.011249999515712261,
+    color: Colors.black,
+  );
+  static TextStyle myProfileOptionTextStyle = TextStyle(
+    fontSize: 16.sp,
+    fontWeight: FontWeight.w500,
+    fontFamily: 'Poppins',
+    color: Color(0xFF8E8E93),
+  );
+  static TextStyle optionSelectedTextStyle = TextStyle(
+    fontSize: 16.sp,
+    fontWeight: FontWeight.w500,
+    fontFamily: 'Poppins',
+    color: Color(0xFF000000),
+  );
+  //photo
+  static TextStyle mainPhotoTextStyle = TextStyle(
+    fontFamily: 'Poppins',
+    fontWeight: FontWeight.w400,
+    fontSize: 14.sp,
+    height: 24 / 14,
+    letterSpacing: -0.00875,
+  );
+  //about_me
+  static TextStyle aboutMeVersionTextStyle = TextStyle(
+    fontFamily: 'Poppins',
+    fontWeight: FontWeight.w500,
+    fontSize: 18.sp,
+    color: Colors.black,
+  );
+  //block_members
+  static BoxDecoration blockMemberContainerDecoration = BoxDecoration(
+    color: const Color(0xFFF8F8F9),
+    borderRadius: BorderRadius.circular(24.r),
+    backgroundBlendMode: BlendMode.srcOver,
+  );
+  static Divider blockMemberDivider = Divider(
+    color: Color(0xFFEBEBEB),
+    height: 1.h,
+    thickness: 1.h,
+  );
+  //feedback
+  static final BoxDecoration feedbackContainerDecoration = BoxDecoration(
+    color: Color(0xFFF8F8F9),
+    borderRadius: BorderRadius.circular(10.r),
+  );
+  static final TextStyle yourIdTextStyle = TextStyle(
+    fontSize: 16.sp,
+    fontFamily: 'Poppins',
+    fontWeight: FontWeight.w500,
+    height: 22 / 16,
+    letterSpacing: -0.01.sp,
+    color: Colors.black,
+  );
+  static final TextStyle feedbackHintStyle = TextStyle(
+    fontFamily: 'Poppins',
+    fontWeight: FontWeight.w400,
+    fontSize: 14.sp,
+    height: 24 / 14,
+    letterSpacing: -0.01.sp,
+    color: Color(0xFF8E8E93),
+  );
+  static final BoxDecoration imageContainerDecoration = BoxDecoration(
+    color: Color(0xFFF8F8F9),
+    borderRadius: BorderRadius.circular(10.r),
+  );
+  //settings
+  static final double pathBoxTopSpacing = 95.h;
+  static final double signOutButtonTop = 650.h;
+  static final double signOutButtonHeight = 49.h;
+  static final double signOutButtonWidth = 248.w;
 }

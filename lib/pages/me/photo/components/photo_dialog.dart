@@ -1,6 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../../../constants/constant_data.dart';
 
 class PhotoDialog extends StatelessWidget {
   final String photoUrl;
@@ -20,20 +23,20 @@ class PhotoDialog extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('confirm'),
-          content: Text('Whether to change to mainPhoto？'),
+          title: Text(ConstantData.confirmText),
+          content: Text(ConstantData.changeMainPhotoText),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('no'),
+              child: Text(ConstantData.noText),
             ),
             TextButton(
               onPressed: () {
 
               },
-              child: Text('yes'),
+              child: Text(ConstantData.yesText),
             ),
           ],
         );
@@ -58,21 +61,21 @@ class PhotoDialog extends StatelessWidget {
           ),
           Center(
             child: Container(
-              width: 370,
-              height: 470,
+              width: 370.w,
+              height: 470.h,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(32),
+                borderRadius: BorderRadius.circular(32.r),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.white.withOpacity(1),
-                    spreadRadius: 6,
+                    spreadRadius: 6.w,
                     blurRadius: 0,
                   ),
                 ],
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(32),
+                borderRadius: BorderRadius.circular(32.r),
                 child: Image.network(
                   photoUrl,
                   fit: BoxFit.cover,
@@ -81,8 +84,8 @@ class PhotoDialog extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: 100,
-            left: 20,
+            top: 100.h,
+            left: 20.w,
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -90,8 +93,8 @@ class PhotoDialog extends StatelessWidget {
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.2),
-                    blurRadius: 4,
-                    spreadRadius: 1,
+                    blurRadius: 4.r,
+                    spreadRadius: 1.w,
                   ),
                 ],
               ),
@@ -107,19 +110,19 @@ class PhotoDialog extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: 670, // 调整顶部位置
-            left: 295, // 调整为右侧位置
+            top: 670.h, // Adjusted top position
+            left: 295.w, // Adjusted right position
             child: Container(
-              width: 100,
-              height: 40,
+              width: 100.w,
+              height: 40.h,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(20.0),
+                borderRadius: BorderRadius.circular(20.0.r),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.2),
-                    blurRadius: 4,
-                    spreadRadius: 1,
+                    blurRadius: 4.r,
+                    spreadRadius: 1.w,
                   ),
                 ],
               ),

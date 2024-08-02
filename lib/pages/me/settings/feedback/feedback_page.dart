@@ -5,6 +5,9 @@ import 'package:get/get.dart';
 import 'package:first_app/components/gradient_btn.dart';
 import 'package:first_app/components/background.dart';
 import 'package:first_app/pages/me/settings/feedback/feedback_controller.dart';
+import '../../../../constants/constant_data.dart';
+import '../../../../constants/constant_styles.dart';
+import '../../../../image_res/image_res.dart';
 
 class FeedbackPage extends StatelessWidget {
   final FeedbackController controller = Get.put(FeedbackController());
@@ -16,7 +19,7 @@ class FeedbackPage extends StatelessWidget {
         children: [
           Background(
             showMiddleText: true,
-            middleText: '  Feedback',
+            middleText: ConstantData.feedbackTitleText,
             showBackgroundImage: false,
             showBackButton: true,
             child: Container(),
@@ -27,25 +30,15 @@ class FeedbackPage extends StatelessWidget {
             child: Container(
               width: 335.w,
               height: 201.h,
-              decoration: BoxDecoration(
-                color: Color(0xFFF8F8F9),
-                borderRadius: BorderRadius.circular(10.r),
-              ),
+              decoration: ConstantStyles.feedbackContainerDecoration,
               child: Stack(
                 children: [
                   Positioned(
                     left: 16.w,
                     top: 16.h,
                     child: Text(
-                      'Your idea',
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        fontFamily: 'Poppins',
-                        fontWeight: FontWeight.w500,
-                        height: 22 / 16,
-                        letterSpacing: -0.01.sp,
-                        color: Colors.black,
-                      ),
+                      ConstantData.yourIdText,
+                      style: ConstantStyles.yourIdTextStyle,
                     ),
                   ),
                   Positioned(
@@ -60,15 +53,8 @@ class FeedbackPage extends StatelessWidget {
                       child: TextField(
                         controller: controller.feedbackController,
                         decoration: InputDecoration(
-                          hintText: 'Please inform us of our shortcomings and we will improve them as soon as possible.',
-                          hintStyle: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14.sp,
-                            height: 24 / 14,
-                            letterSpacing: -0.01.sp,
-                            color: Color(0xFF8E8E93),
-                          ),
+                          hintText: ConstantData.feedbackHintText,
+                          hintStyle: ConstantStyles.feedbackHintStyle,
                           border: InputBorder.none,
                           filled: true,
                           fillColor: Colors.transparent,
@@ -95,9 +81,7 @@ class FeedbackPage extends StatelessWidget {
                 child: Obx(() => Container(
                   width: 120.w,
                   height: 120.h,
-                  decoration: BoxDecoration(
-                    color: Color(0xFFF8F8F9),
-                    borderRadius: BorderRadius.circular(10.r),
+                  decoration: ConstantStyles.imageContainerDecoration.copyWith(
                     image: controller.selectedImagePath.value.isNotEmpty
                         ? DecorationImage(
                       image: FileImage(
@@ -110,7 +94,7 @@ class FeedbackPage extends StatelessWidget {
                   child: controller.selectedImagePath.value.isEmpty
                       ? Center(
                     child: Image.asset(
-                      'assets/images/icon_add_photo.png',
+                      ImageRes.imagePathIconAddPhoto,
                       width: 24.w,
                       height: 24.h,
                     ),
@@ -126,7 +110,7 @@ class FeedbackPage extends StatelessWidget {
             right: 0,
             child: Center(
               child: GradientButton(
-                text: 'submit',
+                text: ConstantData.submitButtonText,
                 onPressed: () {
                   controller.submitFeedback();
                 },

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-
+import '../../../constants/constant_styles.dart';
 import '../../../constants/constant_data.dart';
 import '../../../entity/token_entity.dart';
 import '../../../entity/user_data_entity.dart';
@@ -25,9 +25,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
       body: Stack(
         children: [
           Positioned(
-            top: 60.0,
-            left: 16.0,
-            right: 16.0,
+            top: 60.h,
+            left: 16.w,
+            right: 16.w,
             child: Row(
               children: [
                 GestureDetector(
@@ -37,47 +37,35 @@ class _MyProfilePageState extends State<MyProfilePage> {
                   child: Row(
                     children: [
                       Image.asset(
-                        'assets/images/back.png',
-                        width: 24,
-                        height: 24,
+                        ImageRes.imagePathBackButton,
+                        width: 24.w,
+                        height: 24.h,
                       ),
-                      SizedBox(width: 8),
-                      const Text(
-                        'Back',
-                        style: TextStyle(
-                          fontFamily: 'OpenSans',
-                          fontSize: 14,
-                          color: Colors.black,
-                          letterSpacing: 2,
-                        ),
+                      SizedBox(width: 8.w),
+                      Text(
+                        ConstantData.backText,
+                        style: ConstantStyles.backButtonTextStyle,
                       ),
                     ],
                   ),
                 ),
                 Spacer(),
-                const Text(
-                  'My Profile',
-                  style: TextStyle(
-                    fontFamily: 'OpenSans',
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    height: 22 / 18,
-                    letterSpacing: -0.011249999515712261,
-                    color: Colors.black,
-                  ),
+                Text(
+                  ConstantData.myProfileTitle,
+                  style: ConstantStyles.myProfileTitleTextStyle,
                 ),
                 Spacer(flex: 2),
               ],
             ),
           ),
           Positioned(
-            top: 120.0,
+            top: 120.h,
             left: 0,
             right: 0,
             child: _buildOptionsRow(),
           ),
           Positioned(
-            top: 190.0,
+            top: 190.h,
             left: 0,
             right: 0,
             bottom: 0,
@@ -99,13 +87,13 @@ class _MyProfilePageState extends State<MyProfilePage> {
     );
   }
 
-  String selectedOption = "Profile";
+  String selectedOption = ConstantData.profileOption;
 
   void _selectOption(String option) {
     setState(() {
       selectedOption = option;
       _pageController.animateToPage(
-        option == "Profile" ? 0 : 1,
+        option == ConstantData.profileOption ? 0 : 1,
         duration: Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
@@ -117,21 +105,21 @@ class _MyProfilePageState extends State<MyProfilePage> {
       children: [
         Container(
           width: double.infinity,
-          height: 40,
+          height: 40.h,
           color: Colors.transparent,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildOption("Profile"),
-              SizedBox(width: 88),
-              _buildOption("Moments"),
+              _buildOption(ConstantData.profileOption),
+              SizedBox(width: 88.w),
+              _buildOption(ConstantData.momentsOption),
             ],
           ),
         ),
-        SizedBox(height: 20),
+        SizedBox(height: 20.h),
         Container(
           width: double.infinity,
-          height: 1,
+          height: 1.h,
           color: Color(0xFFEBEBEB),
         ),
       ],
@@ -154,18 +142,13 @@ class _MyProfilePageState extends State<MyProfilePage> {
               right: 0,
               child: Image.asset(
                 ImageRes.imagePathDecorate,
-                width: 17,
-                height: 17,
+                width: 17.w,
+                height: 17.h,
               ),
             ),
           Text(
             option,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              fontFamily: 'Poppins',
-              color: isSelected ? Color(0xFF000000) : Color(0xFF8E8E93),
-            ),
+            style: isSelected ? ConstantStyles.optionSelectedTextStyle : ConstantStyles.myProfileOptionTextStyle,
           ),
         ],
       ),

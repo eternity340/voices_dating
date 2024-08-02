@@ -114,6 +114,7 @@ class ConstantData {
   //custom_message_dialog
   static const cancelText = 'cancel';
   static const yesText='Yes';
+  static const noText='No';
   //detail_bottom_bar
   static const likeText='like';
   //get_email_code
@@ -182,4 +183,31 @@ class ConstantData {
   static const  locationHeaderTitle='   Location';
   //change_username
   static const  enterUsernameText='Enter up to 16 characters';
+  //my_profile
+  static const  myProfileTitle = 'My Profile';
+  static const  profileOption = 'Profile';
+  static const  momentsOption = 'Moments';
+  //photo
+  static const  mainPhotoText='main photo';
+  static const  photoTitle='    Photo';
+  static const  takePhotoText='Take a Photo';
+  static const  fromAlbumText='From Album';
+  static const  changeMainPhotoText='Whether to change to mainPhoto？';
+  static const  confirmText='confirm';
+  //about_me
+  static const  privacyAgreement = 'Privacy agreement';
+  static const  version = 'V1.0';
+  //block_members
+  static const  blockMembersText = 'Block Members';
+  static const  noBlockedMembersText = 'No blocked members';
+  //feedback
+  static const  feedbackTitleText='  Feedback';
+  static const yourIdText='Your idea';
+  static const  feedbackHintText = 'Please inform us of our shortcomings and we will improve them as soon as possible.';
+  //settings
+  static const  settings = 'Settings';
+  static const  purchaseRecord = 'Purchase record';
+  static const  cleanUpMemory = 'Clean up memory';
+  static const  signOut = 'Sign Out';
 }
+
