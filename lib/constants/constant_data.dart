@@ -140,6 +140,7 @@ class ConstantData {
   static const  genderWarning = "Gender cannot be changed after selection";
   //select_height
   static const  heightTitle = "Height";
+  static const  heightHeadTitle = "   Height";
   //select_location
   static const  locationTitle = "Location";
   //sign_up
@@ -162,8 +163,23 @@ class ConstantData {
   static const  aboutMe = 'About Me';
   static const  chatButton = 'Chat';
   //home_page
-  static const String feelLabel = 'Feel';
-  static const String getUpLabel = 'Get up';
-  static const String gameLabel = 'Game';
-  static const String gossipLabel = 'Gossip';
+  static const  feelLabel = 'Feel';
+  static const  getUpLabel = 'Get up';
+  static const  gameLabel = 'Game';
+  static const  gossipLabel = 'Gossip';
+  //profile_content
+  static const  usernameTitle = 'Username';
+  static const  ageTitle = 'Age';
+  static const  headlineTitle = 'Headline';
+  static const  ageHead='      Age';
+  //change_headline
+  static const  headlineText='Headline';
+  static const  enterCharactersText='Enter up to 50 characters';
+  static const  updateHeadlineText='Update';
+  //change_height
+  static const changeHeightText="Change Height";
+  //change_location
+  static const  locationHeaderTitle='   Location';
+  //change_username
+  static const  enterUsernameText='Enter up to 16 characters';
 }

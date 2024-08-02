@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:first_app/entity/token_entity.dart';
 import 'package:first_app/entity/user_data_entity.dart';
 
+import '../../../../../constants/Constant_styles.dart';
+import '../../../../../constants/constant_data.dart';
 import '../../../../pre_login/sign_up/components/widget/picker_components.dart';
 import 'change_age_controller.dart';
 
@@ -22,7 +24,7 @@ class ChangeAge extends StatelessWidget {
     return Scaffold(
       body: Background(
         showMiddleText: true,
-        middleText: '      Age',
+        middleText: ConstantData.ageHead,
         showActionButton: false,
         showBackgroundImage: false,
         child: Stack(
@@ -72,13 +74,9 @@ class ChangeAge extends StatelessWidget {
                 height: 36,
                 child: TextButton(
                   onPressed: () => controller.updateProfile(tokenEntity, userData), // 调用更新生日方法
-                  child: const Text(
-                    'save',
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 14,
-                      color: Colors.black,
-                    ),
+                  child:  Text(
+                    ConstantData.saveText,
+                    style: ConstantStyles.saveButtonTextStyle
                   ),
                 ),
               ),

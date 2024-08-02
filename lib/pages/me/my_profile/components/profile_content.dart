@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../constants/Constant_styles.dart';
+import '../../../../constants/constant_data.dart';
 import '../../../../entity/token_entity.dart';
 import '../../../../entity/user_data_entity.dart';
+import '../../../../image_res/image_res.dart';
 
 class ProfileContent extends StatelessWidget {
   final TokenEntity tokenEntity;
@@ -13,13 +17,13 @@ class ProfileContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 36.0),
+        padding: EdgeInsets.symmetric(horizontal: 36.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildInfoSection(
               context,
-              title: 'Username',
+              title: ConstantData.usernameTitle,
               value: userData.username,
               onTap: () {
                 Get.toNamed('/me/my_profile/change_username', arguments: {'token': tokenEntity, 'userData': userData});
@@ -27,7 +31,7 @@ class ProfileContent extends StatelessWidget {
             ),
             _buildInfoSection(
               context,
-              title: 'Age',
+              title: ConstantData.ageTitle,
               value: userData.age.toString(),
               onTap: () {
                 Get.toNamed('/me/my_profile/change_age', arguments: {'token': tokenEntity, 'userData': userData});
@@ -35,7 +39,7 @@ class ProfileContent extends StatelessWidget {
             ),
             _buildInfoSection(
               context,
-              title: 'Height',
+              title: ConstantData.heightTitle,
               value: userData.height != null ? '${userData.height} cm' : '',
               onTap: () {
                 Get.toNamed('/me/my_profile/change_height', arguments: {'token': tokenEntity, 'userData': userData});
@@ -43,7 +47,7 @@ class ProfileContent extends StatelessWidget {
             ),
             _buildInfoSection(
               context,
-              title: 'Headline',
+              title: ConstantData.headlineTitle,
               value: userData.headline.toString(),
               onTap: () {
                 Get.toNamed('/me/my_profile/change_headline', arguments: {'token': tokenEntity, 'userData': userData});
@@ -51,7 +55,7 @@ class ProfileContent extends StatelessWidget {
             ),
             _buildInfoSection(
               context,
-              title: 'Location',
+              title: ConstantData.locationTitle,
               value: userData.location != null &&
                   userData.location!.city != null &&
                   userData.location!.country != null
@@ -77,50 +81,40 @@ class ProfileContent extends StatelessWidget {
       children: [
         Text(
           title,
-          style: const TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-            fontFamily: 'Poppins',
-            color: Color(0xFF8E8E93),
-          ),
+          style: ConstantStyles.sectionTitle,
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 10.h),
         GestureDetector(
           onTap: onTap,
           child: Padding(
-            padding: const EdgeInsets.only(left: 270.0),
+            padding: EdgeInsets.only(left: 270.w),
             child: Image.asset(
-              'assets/images/Path.png',
-              width: 18,
-              height: 18,
+              ImageRes.pathIcon,
+              width: 18.w,
+              height: 18.h,
             ),
           ),
         ),
         Row(
           children: [
             ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 250),
+              constraints: BoxConstraints(maxWidth: 250.w),
               child: Text(
                 value,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  fontFamily: 'Poppins',
-                  color: Colors.black,
-                ),
+                style: ConstantStyles.sectionValue,
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
               ),
             ),
           ],
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 10.h),
         Container(
-          width: 330,
-          height: 1,
+          width: 330.w,
+          height: 1.h,
           color: Color(0xFFEBEBEB),
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 10.h),
       ],
     );
   }

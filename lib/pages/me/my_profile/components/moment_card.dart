@@ -1,11 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:dio/dio.dart';
 import '../../../../components/bottom_options.dart';
+import '../../../../constants/Constant_styles.dart';
+import '../../../../constants/constant_data.dart';
 import '../../../../entity/moment_entity.dart';
 import '../../../../entity/token_entity.dart';
 import '../../../../components/custom_message_dialog.dart';
+import '../../../../image_res/image_res.dart';
 
 class MomentCard extends StatelessWidget {
   final MomentEntity moment;
@@ -49,7 +51,7 @@ class MomentCard extends StatelessWidget {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                          image: NetworkImage(moment.avatar ?? ''), // Default placeholder image
+                          image: NetworkImage(moment.avatar ?? ImageRes.placeholderAvatar), // Default placeholder image
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -58,12 +60,7 @@ class MomentCard extends StatelessWidget {
                     Flexible(
                       child: Text(
                         moment.username ?? 'Unknown',
-                        style: TextStyle(
-                          fontFamily: 'Open Sans',
-                          fontSize: 14.sp,
-                          height: 24 / 14,
-                          color: Color(0xFF000000),
-                        ),
+                        style: ConstantStyles.usernameMomentStyle, // 使用常量中的样式
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -73,14 +70,7 @@ class MomentCard extends StatelessWidget {
                 SizedBox(height: 16.h),
                 Text(
                   moment.timelineDescr ?? 'No description available',
-                  style: TextStyle(
-                    fontFamily: 'Open Sans',
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16.sp,
-                    height: 24 / 16,
-                    letterSpacing: -0.01,
-                    color: Color(0xFF000000),
-                  ),
+                  style: ConstantStyles.descriptionStyle, // 使用常量中的样式
                 ),
                 SizedBox(height: 16.h),
                 SingleChildScrollView(
@@ -94,7 +84,7 @@ class MomentCard extends StatelessWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20.r),
                           image: DecorationImage(
-                            image: NetworkImage(attachment.url ?? 'assets/images/placeholder1.png'), // Default placeholder image
+                            image: NetworkImage(attachment.url ?? ImageRes.placeholderAvatar), // Default placeholder image
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -117,7 +107,7 @@ class MomentCard extends StatelessWidget {
                 height: 40.h,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('assets/images/button_round_setting.png'),
+                    image: AssetImage(ImageRes.settingsButtonImage), // 使用常量中的图片路径
                     fit: BoxFit.cover,
                   ),
                 ),

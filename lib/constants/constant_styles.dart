@@ -5,7 +5,7 @@ import 'constant_data.dart';
 
 class ConstantStyles {
   //get_email_code
-  static const TextStyle welcomeTextStyle =  TextStyle(
+  static  TextStyle welcomeTextStyle =  TextStyle(
     fontSize: 32,
     fontFamily: ConstantData.fontPoppins,
     fontWeight: FontWeight.bold,
@@ -13,14 +13,14 @@ class ConstantStyles {
     letterSpacing: -0.02,
     color: Color(0xFF000000),
   );
-  static const TextStyle enterEmailTextStyle =  TextStyle(
+  static  TextStyle enterEmailTextStyle =  TextStyle(
     fontSize: 12,
     fontFamily: ConstantData.fontPoppins,
     fontWeight: FontWeight.w500,
     color: Color(0xFF8E8E93),
     letterSpacing: 2.0,
   );
-  static const TextStyle emailTextStyle =  TextStyle(
+  static  TextStyle emailTextStyle =  TextStyle(
     fontFamily: ConstantData.fontPoppins,
     fontSize: 18,
   );
@@ -303,4 +303,82 @@ class ConstantStyles {
     fontFamily: 'Open Sans',
     color: isSelected ? Color(0xFF000000) : Color(0xFF8E8E93),
   );
+  //path_box
+  static TextStyle pathBoxTextStyle = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 16.sp,
+    height: 22 / 16,
+    letterSpacing: -0.01,
+    color: Colors.black,
+  );
+  //moments_card
+  static TextStyle usernameMomentStyle = TextStyle(
+    fontFamily: 'Open Sans',
+    fontSize: 14.sp,
+    height: 24 / 14,
+    color: Color(0xFF000000),
+  );
+  static TextStyle descriptionStyle = TextStyle(
+    fontFamily: 'Open Sans',
+    fontWeight: FontWeight.w600,
+    fontSize: 16.sp,
+    height: 24 / 16,
+    letterSpacing: -0.01,
+    color: Color(0xFF000000),
+  );
+  //profile_content
+  static TextStyle sectionTitle = TextStyle(
+    fontSize: 12.sp,
+    fontWeight: FontWeight.w500,
+    fontFamily: 'Poppins',
+    color: Color(0xFF8E8E93),
+  );
+  static TextStyle sectionValue = TextStyle(
+    fontSize: 18.sp,
+    fontWeight: FontWeight.w500,
+    fontFamily: 'Poppins',
+    color: Colors.black,
+  );
+  static TextStyle saveButtonTextStyle=TextStyle(
+  fontFamily: 'Poppins',
+  fontSize: 14.sp,
+  color: Colors.black,
+  );
+  //change_headline
+  static TextStyle charactersTextStyle=TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 10.0.sp,
+    color: Colors.black,
+    letterSpacing: 0.02,
+  );
+  static TextStyle charCountTextStyle=TextStyle(
+  fontFamily: 'Poppins',
+  fontSize: 10.0.sp,
+  color: Color(0xFF8E8E93),
+  );
+  static TextStyle updateHeadlineTextStyle=TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 14.sp,
+    color: Colors.black,
+  );
+  //change_height
+  static TextStyle changeHeightTextStyle=TextStyle(
+    fontSize: 32.sp, // Set font size using ScreenUtil
+    fontWeight: FontWeight.bold,
+    fontFamily: 'Poppins',
+  );
+  //change_location
+  static TextStyle changeLocationTextStyle=TextStyle(
+    fontSize: 18.sp,
+    fontFamily: 'Poppins',
+    color: Colors.black,
+  );
+  //change_username
+  static TextStyle enterUsernameTextStyle=TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 10.sp,
+    color: Colors.black,
+    letterSpacing: 0.02,
+  );
+
 }

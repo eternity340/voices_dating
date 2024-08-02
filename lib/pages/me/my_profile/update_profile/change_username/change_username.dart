@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../components/background.dart';
+import '../../../../../constants/Constant_styles.dart';
+import '../../../../../constants/constant_data.dart';
 import '../../../../../entity/token_entity.dart';
 import '../../../../../entity/user_data_entity.dart';
 import 'change_username_controller.dart';
-
 
 class ChangeUsername extends StatefulWidget {
   @override
@@ -23,31 +25,31 @@ class _ChangeUsernameState extends State<ChangeUsername> {
       body: Background(
         showBackgroundImage: false,
         showMiddleText: true,
-        middleText: 'Username',
+        middleText: ConstantData.usernameTitle,
         showActionButton: false,
         child: Stack(
           children: [
             Positioned(
-              top: 80,
-              left: MediaQuery.of(context).size.width / 2 - 167.5, // 居中水平放置，减去一半的输入框宽度
+              top: 80.h,
+              left: MediaQuery.of(context).size.width / 2 - 167.5.w, // Use ScreenUtil for width
               child: Container(
-                width: 335.0,
-                height: 56.0,
+                width: 335.w,
+                height: 56.h,
                 decoration: BoxDecoration(
                   color: Color(0xFFF8F8F9),
-                  borderRadius: BorderRadius.circular(10.0),
+                  borderRadius: BorderRadius.circular(10.r), // Use ScreenUtil for radius
                 ),
                 child: TextField(
                   controller: logic.controller,
-                  style: const TextStyle(
-                    fontFamily: 'Poppins', // 使用 Poppins 字体
-                    fontSize: 18.0, // 设置字号为 18
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 18.sp, // Use ScreenUtil for font size
                   ),
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     filled: true,
-                    fillColor: Colors.transparent, // 输入框背景透明
-                    border: InputBorder.none, // 去掉默认的边框样式
-                    contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0), // 增加垂直间距
+                    fillColor: Colors.transparent,
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h), // Use ScreenUtil for padding
                   ),
                   onChanged: (text) {
                     setState(() {
@@ -58,62 +60,49 @@ class _ChangeUsernameState extends State<ChangeUsername> {
               ),
             ),
             Positioned(
-              top: 141, // 80 + 56 + 5
-              left: MediaQuery.of(context).size.width / 2 - 167.5, // 居中水平放置，减去一半的输入框宽度
+              top: 141.h, // 80 + 56 + 5, converted to ScreenUtil
+              left: MediaQuery.of(context).size.width / 2 - 167.5.w,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Enter up to 16 characters',
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 10.0,
-                      color: Colors.black,
-                      letterSpacing: 0.02,
-                    ),
+                  Text(
+                    ConstantData.enterUsernameText,
+                    style: ConstantStyles.enterUsernameTextStyle,
                   ),
-                  const SizedBox(width: 190),
+                  SizedBox(width: 190.w),
                   Text(
                     '${logic.charCount}/16',
-                    style: const TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 10.0,
-                      color: Color(0xFF8E8E93),
-                    ),
+                    style:ConstantStyles.charCountTextStyle,
                   ),
                 ],
               ),
             ),
             Positioned(
-              top: 4.0, // 留出顶部间距
-              right: 16.0, // 添加右侧间距
+              top: 4.h, // Converted to ScreenUtil
+              right: 16.w, // Converted to ScreenUtil
               child: AnimatedContainer(
                 duration: Duration(milliseconds: 300),
                 curve: Curves.easeOut,
-                transform: Matrix4.translationValues(-8, 0, 0),
+                transform: Matrix4.translationValues(-8.w, 0, 0), // Use ScreenUtil for translation
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
+                  gradient: LinearGradient(
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                     colors: [Color(0xFFD6FAAE), Color(0xFF20E2D7)],
                   ),
-                  borderRadius: BorderRadius.circular(24.5),
+                  borderRadius: BorderRadius.circular(24.5.r), // Use ScreenUtil for radius
                 ),
-                width: 88,
-                height: 36,
+                width: 88.w,
+                height: 36.h,
                 child: TextButton(
-                  onPressed: () => logic.saveUsername(tokenEntity, userData), // 调用保存方法
-                  child: const Text(
-                    'Save',
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 14,
-                      color: Colors.black,
+                  onPressed: () => logic.saveUsername(tokenEntity, userData),
+                  child: Text(
+                    ConstantData.saveText,
+                    style: ConstantStyles.saveButtonTextStyle,
                     ),
                   ),
                 ),
               ),
-            ),
           ],
         ),
       ),

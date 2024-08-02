@@ -32,11 +32,19 @@ class ImageRes{
   static const  iconLoveUnselect = 'assets/images/icon_love_unselect.png';
   static const  audioPath = 'audio/AI_Sunday.mp3';
   //user_detail_card
-  static const String placeholderAvatar = 'assets/images/placeholder1.png';
+  static const  placeholderAvatar = 'assets/images/placeholder1.png';
   //profile_detail
-  static const String iconHeight = 'assets/images/icon_height.png';
-  static const String iconLanguage = 'assets/images/icon_language.png';
-  static const String photoVerified = 'assets/images/photographs_verified.png';
+  static const  iconHeight = 'assets/images/icon_height.png';
+  static const  iconLanguage = 'assets/images/icon_language.png';
+  static const  photoVerified = 'assets/images/photographs_verified.png';
   static List<String> momentImages = List.generate(
       5, (index) => 'assets/images/0${index + 1}.jpg');
+  //path_box
+  static const  pathBoxImage = 'assets/images/Path.png';
+  //moments_card
+  static const  settingsButtonImage = 'assets/images/button_round_setting.png';
+  //moments_content
+  static const  pathIcon = 'assets/images/Path.png';
+  //change_location
+  static const  iconLocationImagePath='assets/images/icon_location.png';
 }

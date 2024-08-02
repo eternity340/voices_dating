@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../constants/Constant_styles.dart';
+import '../../../image_res/image_res.dart';
 
-//settings & verify 选项条
+// settings & verify 选项条
 class PathBox extends StatelessWidget {
   final double top;
   final String text;
@@ -32,19 +34,13 @@ class PathBox extends StatelessWidget {
             children: [
               Text(
                 text,
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontSize: 16.sp,
-                  height: 22.h / 16.sp,
-                  letterSpacing: -0.01,
-                  color: Colors.black,
-                ),
+                style: ConstantStyles.pathBoxTextStyle, // 使用常量中的样式
               ),
               Spacer(), // 使用 Spacer 填充 Text 和 IconButton 之间的空间
               IconButton(
                 onPressed: onPressed,
                 icon: Image.asset(
-                  'assets/images/Path.png',
+                  ImageRes.pathBoxImage, // 使用常量中的图片路径
                   width: 18.w,
                   height: 20.h,
                 ),
