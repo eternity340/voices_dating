@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart' as getx;
+
+import '../../../constants/Constant_styles.dart';
+import '../../../constants/constant_data.dart';
 
 class SignBtn extends StatelessWidget {
   const SignBtn({
@@ -15,44 +19,45 @@ class SignBtn extends StatelessWidget {
             getx.Get.toNamed('/sign_in');
           },
           child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+            padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 24.w), // Responsive padding
             decoration: BoxDecoration(
               gradient: const LinearGradient(
                 colors: [Color(0xFF20E2D7), Color(0xFFD8FAAD)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(20.r), // Responsive border radius
             ),
             child: Center(
               child: Text(
-                "SIGN IN".toUpperCase(),
-                style: const TextStyle(
-                  color: Colors.black,  // 设置字体颜色为黑色
+                ConstantData.signUpText.toUpperCase(),
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16.sp, // Responsive font size
                 ),
               ),
             ),
           ),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16.h), // Responsive spacing
         SizedBox(
-          width: double.infinity, // 扩展以填充可用空间
+          width: double.infinity,
           child: OutlinedButton(
             onPressed: () {
               getx.Get.toNamed('/get_mail_code');
             },
             style: OutlinedButton.styleFrom(
-              side: const BorderSide(color: Colors.black, width: 2.0),  // 设置边框颜色为黑色，并加粗为 2.0
-              backgroundColor: Colors.transparent,  // 设置背景颜色为透明
+              side: BorderSide(color: Colors.black, width: 2.0.w), // Responsive border width
+              backgroundColor: Colors.transparent,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(24),  // 设置圆角半径
+                borderRadius: BorderRadius.circular(24.r), // Responsive border radius
               ),
             ),
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12), // 调整垂直内边距
+              padding: EdgeInsets.symmetric(vertical: 12.h), // Responsive padding
               child: Text(
-                "Sign Up".toUpperCase(),
-                style: const TextStyle(color: Colors.black),
+                ConstantData.signUpText.toUpperCase(),
+                style: ConstantStyles.welcomeButtonStyle,
               ),
             ),
           ),

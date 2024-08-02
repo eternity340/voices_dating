@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../components/background.dart';
 import '../../../responsive.dart';
-
+import 'components/mobile_sign_in_screen.dart';
 import 'components/sign_form.dart';
 import 'components/sign_screen_top_image.dart';
 
@@ -10,7 +11,7 @@ class SignInPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Background(
+    return Background(
       child: SingleChildScrollView(
         child: Responsive(
           mobile: MobileSignInScreen(),
@@ -24,7 +25,7 @@ class SignInPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(
-                      width: 450,
+                      width: 450.w,
                       child: SignForm(),
                     ),
                   ],
@@ -34,30 +35,6 @@ class SignInPage extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class MobileSignInScreen extends StatelessWidget {
-  const MobileSignInScreen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        SignScreenTopImage(),
-        Row(
-          children: [
-            Spacer(),
-            Expanded(
-              flex: 8,
-              child: SignForm(),
-            ),
-            Spacer(),
-          ],
-        ),
-      ],
     );
   }
 }

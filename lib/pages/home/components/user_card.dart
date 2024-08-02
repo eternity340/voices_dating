@@ -100,15 +100,15 @@ class UserCard extends StatelessWidget {
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            SizedBox(height: 0.h, width: 6.w),
-                            Container(
+                            SizedBox(width: 5.w),
+                            /*Container(
                               width: 9.w,
                               height: 9.h,
                               decoration: const BoxDecoration(
                                 color: Color(0xFFABFFCF),
                                 shape: BoxShape.circle,
                               ),
-                            ),
+                            ),*/
                           ],
                         ),
                         SizedBox(height: 4.h),

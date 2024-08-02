@@ -120,7 +120,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
                         ),
                       )
                           : Container(),
-                      SizedBox(height: 300.h), // Use responsive height
+                      SizedBox(height: 250.h), // Use responsive height
                       model.isLoading
                           ? CircularProgressIndicator()
                           : Center(

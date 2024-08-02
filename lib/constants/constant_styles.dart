@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../constants.dart';
 import 'constant_data.dart';
 
 class ConstantStyles {
@@ -192,15 +193,15 @@ class ConstantStyles {
     color: Color(0xFF000000),
   );
   //sign_up
-  static  TextStyle formLabelStyle = TextStyle(
+  static TextStyle formLabelStyle = TextStyle(
     fontSize: 12.sp, // Responsive font size
     color: Color(0xFF8E8E93),
     fontFamily: 'Poppins',
   );
-  static  TextStyle textFieldStyle = TextStyle(
+  static TextStyle textFieldStyle = TextStyle(
     fontFamily: 'Poppins',
   );
-  static  InputDecoration textFieldDecoration = InputDecoration(
+  static InputDecoration textFieldDecoration = InputDecoration(
     hintText: null,
     enabledBorder: UnderlineInputBorder(
       borderSide: BorderSide(color: Color(0xFFEBEBEB), width: 1.w),
@@ -211,5 +212,95 @@ class ConstantStyles {
     border: UnderlineInputBorder(
       borderSide: BorderSide(color: Color(0xFFEBEBEB), width: 1.w),
     ),
+  );
+  //sign_in
+  static TextStyle signEmailTextStyle = TextStyle(
+    fontSize: 12.sp,
+    color: Color(0xFF8E8E93),
+    fontFamily: 'Poppins'
+  );
+  static TextStyle passwordTextStyle = TextStyle(
+    fontSize: 12.sp,
+    color: Color(0xFF8E8E93),
+    fontFamily: 'Poppins');
+  static TextStyle inputTextStyle = TextStyle(
+    fontFamily: 'Poppins');
+  static TextStyle signInTextStyle =TextStyle(
+    fontSize: 32,
+    fontFamily: 'Poppins',
+    fontWeight: FontWeight.bold,
+    height: 44 / 32,
+    letterSpacing: -0.02,
+    color: Color(0xFF000000),
+  );
+  //welcome
+  static TextStyle welcomeButtonStyle = TextStyle(
+    color: Colors.black,
+    fontSize: 16.sp, // Responsive font size
+  );
+  //audio_player
+  static TextStyle audioTextStyle = TextStyle(
+    fontSize: 12.sp, // Responsive font size
+    color: Colors.black,
+  );
+  //profile_card
+  static TextStyle usernameTextStyle = TextStyle(
+    fontSize: 20.sp,
+    fontFamily: 'Open Sans',
+    color: Colors.black,
+  );
+  static TextStyle photoVerifiedTextStyle = TextStyle(
+    fontSize: 10.sp,
+    fontFamily: 'Open Sans',
+    color: Color(0xFF262626),
+    letterSpacing: 0.02,
+  );
+  static TextStyle countryTextStyle = TextStyle(
+    fontSize: 12.sp,
+    fontFamily: 'Open Sans',
+    color: Color(0xFF8E8E93),
+  );
+  //user_detail_card
+  static TextStyle usernameDetailTextStyle = TextStyle(
+    fontSize: 18.sp,
+    fontFamily: 'Open Sans',
+    height: 22 / 18,
+    letterSpacing: -0.01125,
+    color: Color(0xFF000000),
+  );
+  static TextStyle locationTextStyle = TextStyle(
+    fontSize: 12.sp,
+    fontFamily: 'Open Sans',
+    color: Color(0xFF8E8E93),
+  );
+  //profile_detail
+  static TextStyle headlineStyle = TextStyle(
+    fontSize: 18.sp,
+    fontFamily: 'Open Sans',
+    color: Color(0xFF000000),
+    fontWeight: FontWeight.w600,
+  );
+  static TextStyle bodyTextStyle = TextStyle(
+    fontSize: 16.sp,
+    fontFamily: 'Open Sans',
+    height: 1.5,
+    letterSpacing: -0.01,
+    color: Color(0xFF000000),
+  );
+  //home_page
+  static TextStyle buttonLabelStyle = TextStyle(
+    fontFamily: 'Poppins',
+    fontWeight: FontWeight.w400,
+    fontSize: 14.sp,
+    height: 22 / 14,
+    letterSpacing: -0.008750000037252903,
+    color: Colors.black,
+  );
+  static TextStyle homeOptionTextStyle(bool isSelected) => TextStyle(
+    fontSize: 26.sp,
+    height: 22 / 18,
+    letterSpacing: -0.011249999515712261,
+    fontFamily: 'Open Sans',
+    color: isSelected ? Color(0xFF000000) : Color(0xFF8E8E93),
   );
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class VerifyCodeInput extends StatefulWidget {
   final int length;
@@ -37,45 +38,56 @@ class _VerifyCodeInputState extends State<VerifyCodeInput> {
   }
 
   void _onChanged(int index, String value) {
-    if (value.isEmpty && index > 0) {
-      FocusScope.of(context).requestFocus(_focusNodes[index - 1]);
-    } else if (value.isNotEmpty) {
-      if (value.length > 1) {
-        String pastedValue = value;
-        for (int i = index; i < widget.length && pastedValue.isNotEmpty; i++) {
-          _controllers[i].text = pastedValue[0];
-          _code[i] = pastedValue[0];
-          pastedValue = pastedValue.substring(1);
-        }
-        setState(() {});
-      } else {
-        _code[index] = value;
-        setState(() {});
+    if (value.length > 1) {
+      value = value.substring(value.length - 1);
+      _controllers[index].text = value;
+    }
+    _code[index] = value;
+    if (value.isEmpty) {
+      if (index > 0) {
+        Future.delayed(Duration(milliseconds: 100), () {
+          if (mounted && _focusNodes[index - 1].hasFocus) {
+            FocusScope.of(context).requestFocus(_focusNodes[index - 1]);
+          }
+        });
       }
-
+    } else {
       if (index + 1 < widget.length) {
-        FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
-      } else {
+        Future.delayed(Duration(milliseconds: 100), () {
+          if (mounted && !_focusNodes[index + 1].hasFocus) {
+            FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
+          }
+        });
+      }
+    }
+
+    // Join the code list to form the current code
+    String currentCode = _code.join();
+
+    // Check if the code is complete and call the onCompleted callback
+    if (currentCode.length == widget.length) {
+      if (mounted) {
+        widget.onCompleted(currentCode);
         FocusScope.of(context).unfocus();
       }
+      return; // Exit early if code is complete
+    }
 
-      String currentCode = _code.join();
-      if (currentCode.length == widget.length) {
-        widget.onCompleted(currentCode);
-      }
+    // Update state only if necessary
+    if (mounted) {
+      setState(() {});
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 90, // Increased fixed height of each input field container
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: List.generate(widget.length, (index) {
           return SizedBox(
-            width: 54, // Increased width
-            height: 70, // Increased height
+            width: 50.w, // Use ScreenUtil for width
+            height: 70.h, // Use ScreenUtil for height
             child: TextField(
               controller: _controllers[index],
               focusNode: _focusNodes[index],
@@ -102,14 +114,14 @@ class _VerifyCodeInputState extends State<VerifyCodeInput> {
                 filled: true,
                 fillColor: Color(0xFFF4F4F4),
                 counterText: '',
-                contentPadding: EdgeInsets.symmetric(vertical: 20.0), // Adjust vertical padding
+                contentPadding: EdgeInsets.symmetric(vertical: 20.h), // Use ScreenUtil for padding
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
+                  borderRadius: BorderRadius.circular(10.r), // Use ScreenUtil for border radius
                   borderSide: BorderSide.none,
                 ),
               ),
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 24.sp, // Use ScreenUtil for font size
               ),
             ),
           );

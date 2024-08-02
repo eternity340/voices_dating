@@ -3,6 +3,7 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../components/background.dart';
+import '../../../constants/constant_data.dart';
 import '../components/user_detail_card.dart';
 import 'feel_controller.dart';
 
@@ -18,7 +19,7 @@ class FeelPage extends StatelessWidget {
             showBackButton: true,
             showBackgroundImage: true,
             showMiddleText: true,
-            middleText: '       Feel',
+            middleText: ConstantData.feelTitleText,
             child: Container(),
           ),
           Obx(() {

@@ -24,4 +24,19 @@ class ImageRes{
   //detail_bottom_bar
   static const imagePathIconCall='assets/images/icon_call.png';
   static const imagePathIconMessage='assets/images/icon_message.png';
+  //pre_login background
+  static const imagePathLoginBottom="assets/images/login_bottom.png";
+  static const imagePathMainTop="assets/images/main_top.png";
+  //user_card
+  static const  iconLoveSelect = 'assets/images/icon_love_select.png';
+  static const  iconLoveUnselect = 'assets/images/icon_love_unselect.png';
+  static const  audioPath = 'audio/AI_Sunday.mp3';
+  //user_detail_card
+  static const String placeholderAvatar = 'assets/images/placeholder1.png';
+  //profile_detail
+  static const String iconHeight = 'assets/images/icon_height.png';
+  static const String iconLanguage = 'assets/images/icon_language.png';
+  static const String photoVerified = 'assets/images/photographs_verified.png';
+  static List<String> momentImages = List.generate(
+      5, (index) => 'assets/images/0${index + 1}.jpg');
 }

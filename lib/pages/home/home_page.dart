@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../components/all_navigation_bar.dart';
 import '../../components/background.dart';
+import '../../constants/Constant_styles.dart';
 import '../../constants/constant_data.dart';
 import '../../entity/token_entity.dart';
 import '../../entity/user_data_entity.dart';
@@ -97,13 +98,7 @@ class HomePage extends StatelessWidget {
               ),
             Text(
               option,
-              style: TextStyle(
-                fontSize: 26.sp,
-                height: 22 / 18,
-                letterSpacing: -0.011249999515712261,
-                fontFamily: 'Open Sans',
-                color: isSelected ? Color(0xFF000000) : Color(0xFF8E8E93),
-              ),
+              style: ConstantStyles.homeOptionTextStyle(isSelected),
             ),
           ],
         ),
@@ -177,7 +172,7 @@ class HomePage extends StatelessWidget {
         _buildButtonWithLabel(
           imagePath: ImageRes.imagePathLike,
           shadowColor: Color(0xFFFFD1D1).withOpacity(0.3736),
-          label: 'Feel',
+          label: ConstantData.feelLabel,
           onTap: () {
             if (tokenEntity != null && userData != null) {
               Get.toNamed('/home/feel', arguments: {'token': tokenEntity, 'userData': userData});
@@ -187,7 +182,7 @@ class HomePage extends StatelessWidget {
         _buildButtonWithLabel(
           imagePath: ImageRes.imagePathClock,
           shadowColor: Color(0xFFF6D3FF).withOpacity(0.369),
-          label: 'Get up',
+          label: ConstantData.getUpLabel,
           onTap: () {
             if (tokenEntity != null && userData != null) {
               Get.toNamed('/home/get_up', arguments: {'token': tokenEntity, 'userData': userData});
@@ -197,7 +192,7 @@ class HomePage extends StatelessWidget {
         _buildButtonWithLabel(
           imagePath: ImageRes.imagePathGame,
           shadowColor: Color(0xFFFCA6C5).withOpacity(0.2741),
-          label: 'Game',
+          label: ConstantData.gameLabel,
           onTap: () {
             if (tokenEntity != null && userData != null) {
               Get.toNamed('/home/game', arguments: {'token': tokenEntity, 'userData': userData});
@@ -207,7 +202,7 @@ class HomePage extends StatelessWidget {
         _buildButtonWithLabel(
           imagePath: ImageRes.imagePathFeel,
           shadowColor: Color(0xFFFFEA31).withOpacity(0.3495),
-          label: 'Gossip',
+          label: ConstantData.gossipLabel,
           onTap: () {
             if (tokenEntity != null && userData != null) {
               Get.toNamed('/home/gossip', arguments: {'token': tokenEntity, 'userData': userData});
@@ -236,14 +231,7 @@ class HomePage extends StatelessWidget {
           ),
           Text(
             label,
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontWeight: FontWeight.w400,
-              fontSize: 14.sp,
-              height: 22 / 14,
-              letterSpacing: -0.008750000037252903,
-              color: Colors.black,
-            ),
+            style: ConstantStyles.buttonLabelStyle,
           ),
         ],
       ),

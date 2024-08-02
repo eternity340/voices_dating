@@ -2,8 +2,11 @@ import 'dart:ui';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../constants/Constant_styles.dart';
+import '../../../constants/constant_data.dart';
 import '../../../entity/list_user_entity.dart';
 import '../../../entity/token_entity.dart';
+import '../../../image_res/image_res.dart';
 import 'audio_player_widget.dart';
 
 class ProfileCard extends StatefulWidget {
@@ -23,7 +26,6 @@ class _ProfileCardState extends State<ProfileCard> {
   @override
   void initState() {
     super.initState();
-    // Initialize _isLiked based on the liked field from userEntity
     _isLiked = widget.userEntity?.liked == 1;
   }
 
@@ -50,16 +52,13 @@ class _ProfileCardState extends State<ProfileCard> {
       );
 
       if (response.data['code'] == 200) {
-        // Successfully toggled like status
         setState(() {
           _isLiked = !_isLiked;
         });
       } else {
-        // Handle error
         print('Failed to toggle like status: ${response.data}');
       }
     } catch (e) {
-      // Handle exception
       print('Exception occurred: $e');
     }
   }
@@ -98,7 +97,7 @@ class _ProfileCardState extends State<ProfileCard> {
                         children: [
                           Text(
                             widget.userEntity?.username ?? '',
-                            style: _textStyle(20, Colors.black),
+                            style: ConstantStyles.usernameTextStyle,
                           ),
                           SizedBox(width: 8.w),
                           Container(
@@ -121,8 +120,8 @@ class _ProfileCardState extends State<ProfileCard> {
                         ),
                         child: Center(
                           child: Text(
-                            'Photos verified',
-                            style: _textStyle(10, Color(0xFF262626), letterSpacing: 0.02),
+                            ConstantData.photosVerified,
+                            style: ConstantStyles.photoVerifiedTextStyle,
                           ),
                         ),
                       ),
@@ -131,7 +130,7 @@ class _ProfileCardState extends State<ProfileCard> {
                         children: [
                           Text(
                             widget.userEntity?.location?.country ?? '',
-                            style: _textStyle(12, Color(0xFF8E8E93)),
+                            style: ConstantStyles.countryTextStyle,
                           ),
                           SizedBox(width: 4.w),
                           const Text(
@@ -145,7 +144,7 @@ class _ProfileCardState extends State<ProfileCard> {
                           SizedBox(width: 4.w),
                           Text(
                             '${widget.userEntity?.age ?? 0} years old',
-                            style: _textStyle(12, Color(0xFF8E8E93)),
+                            style: ConstantStyles.countryTextStyle,
                           ),
                         ],
                       ),
@@ -159,7 +158,7 @@ class _ProfileCardState extends State<ProfileCard> {
         Positioned(
           left: 16.w,
           top: 116.h,
-          child: AudioPlayerWidget(audioPath: 'audio/AI_Sunday.mp3'),
+          child: AudioPlayerWidget(audioPath: ImageRes.audioPath),
         ),
         Positioned(
           left: 230.w,
@@ -169,7 +168,7 @@ class _ProfileCardState extends State<ProfileCard> {
             child: Material(
               color: Colors.transparent,
               child: Image.asset(
-                _isLiked ? 'assets/images/icon_love_select.png' : 'assets/images/icon_love_unselect.png',
+                _isLiked ? ImageRes.iconLoveSelect : ImageRes.iconLoveUnselect,
                 width: 20.83.w,
                 height: 20.73.h,
               ),
@@ -177,15 +176,6 @@ class _ProfileCardState extends State<ProfileCard> {
           ),
         ),
       ],
-    );
-  }
-
-  TextStyle _textStyle(double fontSize, Color color, {String fontFamily = 'Open Sans', double letterSpacing = 0.0}) {
-    return TextStyle(
-      fontSize: fontSize.sp,
-      fontFamily: fontFamily,
-      color: color,
-      letterSpacing: letterSpacing,
     );
   }
 }

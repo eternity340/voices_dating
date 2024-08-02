@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../../image_res/image_res.dart';
 
 class Background extends StatelessWidget {
   final Widget child;
@@ -7,8 +10,8 @@ class Background extends StatelessWidget {
   const Background({
     super.key,
     required this.child,
-    this.topImage = "assets/images/main_top.png",
-    this.bottomImage = "assets/images/login_bottom.png",
+    this.topImage = ImageRes.imagePathMainTop,
+    this.bottomImage = ImageRes.imagePathLoginBottom,
   });
 
   @override
@@ -26,7 +29,7 @@ class Background extends StatelessWidget {
               left: 0,
               child: Image.asset(
                 topImage,
-                width: 120,
+                width: 120.w, // Use ScreenUtil to set the width
               ),
             ),
             // 如果你希望在底部也显示一个图片，可以取消注释下面的代码
@@ -35,7 +38,7 @@ class Background extends StatelessWidget {
               right: 0,
               child: Image.asset(
                 bottomImage,
-                width: 120,
+                width: 120.w, // Use ScreenUtil to set the width
               ),
             ),
             SafeArea(child: child),

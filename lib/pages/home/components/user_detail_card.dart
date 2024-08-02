@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import '../../../constants/Constant_styles.dart';
+import '../../../constants/constant_data.dart';
 import '../../../entity/list_user_entity.dart';
 import '../../../entity/token_entity.dart';
+import '../../../image_res/image_res.dart';
 import 'audio_player_widget.dart';
 
 class UserDetailCard extends StatelessWidget {
@@ -17,7 +20,7 @@ class UserDetailCard extends StatelessWidget {
       onTap: () {
         Get.toNamed('/home/profile_detail', arguments: {
           'userEntity': userEntity,
-          'tokenEntity':tokenEntity
+          'tokenEntity': tokenEntity,
         });
       },
       child: Padding(
@@ -49,7 +52,7 @@ class UserDetailCard extends StatelessWidget {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(10.r),
                         child: Image.network(
-                          userEntity.avatar ?? 'assets/images/placeholder1.png',
+                          userEntity.avatar ?? ImageRes.placeholderAvatar,
                           width: 100.w,
                           height: 129.h,
                           fit: BoxFit.cover,
@@ -65,13 +68,8 @@ class UserDetailCard extends StatelessWidget {
                         ),
                         child: Center(
                           child: Text(
-                            'Photos verified',
-                            style: TextStyle(
-                              fontSize: 10.sp,
-                              fontFamily: 'Open Sans',
-                              letterSpacing: 0.02,
-                              color: Color(0xFF262626),
-                            ),
+                            ConstantData.photosVerified,
+                            style: ConstantStyles.photoVerifiedTextStyle,
                           ),
                         ),
                       ),
@@ -89,13 +87,7 @@ class UserDetailCard extends StatelessWidget {
                             children: [
                               Text(
                                 userEntity.username ?? 'Unknown',
-                                style: TextStyle(
-                                  fontSize: 18.sp,
-                                  fontFamily: 'Open Sans',
-                                  height: 22 / 18,
-                                  letterSpacing: -0.01125,
-                                  color: Color(0xFF000000),
-                                ),
+                                style: ConstantStyles.usernameDetailTextStyle,
                                 textAlign: TextAlign.left,
                               ),
                               SizedBox(height: 0.h, width: 6.w),
@@ -114,34 +106,22 @@ class UserDetailCard extends StatelessWidget {
                             children: [
                               Text(
                                 userEntity.location?.state ?? 'Unknown',
-                                style: TextStyle(
-                                  fontSize: 12.sp,
-                                  fontFamily: 'Open Sans',
-                                  color: Color(0xFF8E8E93),
-                                ),
+                                style: ConstantStyles.locationTextStyle,
                               ),
                               SizedBox(width: 4.w),
                               Text(
                                 '|',
-                                style: TextStyle(
-                                  fontSize: 12.sp,
-                                  fontFamily: 'Open Sans',
-                                  color: Color(0xFF8E8E93),
-                                ),
+                                style: ConstantStyles.locationTextStyle,
                               ),
                               SizedBox(width: 4.w),
                               Text(
                                 userEntity.age?.toString() ?? 'Unknown',
-                                style: TextStyle(
-                                  fontSize: 12.sp,
-                                  fontFamily: 'Open Sans',
-                                  color: Color(0xFF8E8E93),
-                                ),
+                                style: ConstantStyles.locationTextStyle,
                               ),
                             ],
                           ),
                           SizedBox(height: 40.h),
-                          AudioPlayerWidget(audioPath: 'audio/AI_Sunday.mp3'),
+                          AudioPlayerWidget(audioPath: ImageRes.audioPath),
                         ],
                       ),
                     ),

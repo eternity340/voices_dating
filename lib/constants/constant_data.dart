@@ -143,7 +143,27 @@ class ConstantData {
   //select_location
   static const  locationTitle = "Location";
   //sign_up
-  static const String nicknameTitle = "Set a nickname";
-  static const String passwordTitle = "Set a password";
-  static const String submitButtonText = "Submit";
+  static const  nicknameTitle = "Set a nickname";
+  static const  passwordTitle = "Set a password";
+  static const  submitButtonText = "Submit";
+  static const  signUpText ="Sign Up";
+  //sign_in
+  static const  enterYourEmail = "Enter your email";
+  static const  enterPasswordText = "Enter your password";
+  static const  forgetPassword = "Forget Password?";
+  static const  signInText ="Sign In";
+  //profile_card
+  static const  photosVerified = 'Photos verified';
+  //feel_page
+  static const  feelTitleText ='       Feel';
+  //profile_detail
+  static const  headline = 'Headline';
+  static const  moments = 'Moments';
+  static const  aboutMe = 'About Me';
+  static const  chatButton = 'Chat';
+  //home_page
+  static const String feelLabel = 'Feel';
+  static const String getUpLabel = 'Get up';
+  static const String gameLabel = 'Game';
+  static const String gossipLabel = 'Gossip';
 }

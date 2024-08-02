@@ -7,11 +7,13 @@ import '../../../entity/token_entity.dart';
 class LoveButton extends StatefulWidget {
   final MomentEntity moment;
   final TokenEntity tokenEntity;
+  final VoidCallback onLoveButtonPressed; // 添加回调函数
 
   const LoveButton({
     Key? key,
     required this.tokenEntity,
     required this.moment,
+    required this.onLoveButtonPressed, // 添加回调函数
   }) : super(key: key);
 
   @override
@@ -24,7 +26,6 @@ class _LoveButtonState extends State<LoveButton> {
   @override
   void initState() {
     super.initState();
-    // Initialize isLoved based on the moment's liked property
     isLoved = widget.moment.liked == 1;
   }
 
@@ -47,6 +48,7 @@ class _LoveButtonState extends State<LoveButton> {
         setState(() {
           isLoved = true;
         });
+        widget.onLoveButtonPressed(); // 调用回调函数
       } else {
         print('Error: ${response.data['message']}');
       }
@@ -74,6 +76,7 @@ class _LoveButtonState extends State<LoveButton> {
         setState(() {
           isLoved = false;
         });
+        widget.onLoveButtonPressed(); // 调用回调函数
       } else {
         print('Error: ${response.data['message']}');
       }

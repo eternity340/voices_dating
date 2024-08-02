@@ -1,5 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../constants/Constant_styles.dart';
 
 class AudioPlayerWidget extends StatefulWidget {
   final String audioPath;
@@ -74,8 +76,8 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
         GestureDetector(
           onTap: _togglePlayPause,
           child: Container(
-            width: 34,
-            height: 34,
+            width: 34.w,
+            height: 34.h,
             decoration: BoxDecoration(
               color: Color(0xFF2FE4D4),
               shape: BoxShape.circle,
@@ -88,7 +90,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
             ),
           ),
         ),
-        SizedBox(width: 8),
+        SizedBox(width: 8.w),
         if (_isPlaying)
           StreamBuilder<Duration>(
             stream: _audioPlayer.onPositionChanged,
@@ -96,7 +98,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
               final currentPosition = snapshot.data ?? Duration.zero;
               return Text(
                 '${_formatDuration(currentPosition)} / ${_formatDuration(_totalDuration)}',
-                style: TextStyle(fontSize: 12, color: Colors.black),
+                style: ConstantStyles.audioTextStyle,
               );
             },
           ),
