@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:first_app/net/api_constants.dart';
 import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 import '../../entity/list_user_entity.dart';
 import '../../entity/token_entity.dart';
 import '../../entity/user_data_entity.dart';
+import '../../net/dio.client.dart';
 
 class HomeController extends GetxController {
   var selectedOption = 'Honey'.obs;
@@ -34,33 +36,28 @@ class HomeController extends GetxController {
   Future<void> fetchUsers() async {
     if (isLoading.value || !hasMoreData.value) return;
     _setLoading(true);
-    final Dio dio = Dio();
-    const String url = 'https://api.masonvips.com/v1/search';
-
     try {
-      final response = await dio.get(
-        url,
+        DioClient.instance.requestNetwork<List<ListUserEntity>>(
+        method: Method.get,
+        url: ApiConstants.search,
         queryParameters: {
           'page': currentPage,
           'offset': 20,
           'find[gender]': 2,
         },
         options: Options(headers: {'token': tokenEntity.accessToken}),
+        onSuccess: (data) {
+          if (data != null && data.isNotEmpty) {
+            users.addAll(data);
+            currentPage++;
+          } else {
+            hasMoreData.value = false;
+          }
+        },
+        onError: (code, msg, data) {
+          _setErrorMessage(msg);
+        },
       );
-
-      if (response.statusCode == 200) {
-        final List<dynamic> jsonList = response.data['data'] as List<dynamic>;
-        List<ListUserEntity> newUsers = jsonList.map((json) => ListUserEntity.fromJson(json)).toList();
-
-        if (newUsers.isEmpty) {
-          hasMoreData.value = false;
-        } else {
-          users.addAll(newUsers);
-          currentPage++;
-        }
-      } else {
-        throw Exception('Failed to load users');
-      }
     } catch (e) {
       _setErrorMessage(e.toString());
     } finally {
@@ -76,4 +73,3 @@ class HomeController extends GetxController {
     errorMessage.value = value;
   }
 }
-
