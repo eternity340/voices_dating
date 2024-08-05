@@ -1,9 +1,13 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:first_app/entity/token_entity.dart';
 import 'package:first_app/entity/user_data_entity.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import '../../components/all_navigation_bar.dart';
 import '../../components/background.dart';
+import '../../constants/Constant_styles.dart';
+import '../../constants/constant_data.dart';
+import '../../image_res/image_res.dart';
 import 'components/outer_oval_painter.dart';
 import 'me_controller.dart';
 
@@ -20,27 +24,27 @@ class MePage extends StatelessWidget {
           Background(
             showBackButton: false,
             showSettingButton: false,
-            child: Container(), // 保持child参数的存在
+            child: Container(),
           ),
           Positioned(
-            top: 60.0,
-            right: 24.0,
+            top: 60.h,
+            right: 24.w,
             child: _buildTopIcons(),
           ),
           Positioned(
-            top: 130.0,
+            top: 130.h,
             left: 0,
             right: 0,
             child: _buildProfileSection(userData),
           ),
           Positioned(
-            top: 330,
-            left: MediaQuery.of(context).size.width / 2 - 167.5, // 居中放置
+            top: 330.h,
+            left: MediaQuery.of(context).size.width / 2 - 167.5.w, // Centering using ScreenUtil
             child: _buildMiddleImageSection(context),
           ),
           Positioned(
-            top: 500,
-            left: MediaQuery.of(context).size.width / 2 - 167.5,
+            top: 500.h,
+            left: MediaQuery.of(context).size.width / 2 - 167.5.w,
             child: _buildOptionsSection(context, tokenEntity, userData),
           ),
           AllNavigationBar(tokenEntity: tokenEntity, userData: userData),
@@ -52,24 +56,23 @@ class MePage extends StatelessWidget {
   Widget _buildTopIcons() {
     return Row(
       children: [
-        _buildIconButton('assets/images/icon_me_notification.png', () {
-          Get.toNamed('/me/notification', arguments: {'token': tokenEntity, 'userData': userData}); // 跳转到通知界面
+        _buildIconButton(ImageRes.imagePathIconNotification, () {
+          Get.toNamed('/me/notification', arguments: {'token': tokenEntity, 'userData': userData});
         }),
-        SizedBox(width: 24), // 间隔24px
-        _buildIconButton('assets/images/icon_me_settings.png', () {
-          Get.toNamed('/me/settings', arguments: {'token': tokenEntity, 'userData': userData}); // 跳转到设置界面
+        SizedBox(width: 24.w),
+        _buildIconButton(ImageRes.imagePathIconSetting, () {
+          Get.toNamed('/me/settings', arguments: {'token': tokenEntity, 'userData': userData});
         }),
       ],
     );
   }
 
-
   Widget _buildIconButton(String assetPath, VoidCallback onPressed) {
     return Container(
-      width: 40,
-      height: 40,
+      width: 40.w,
+      height: 40.h,
       child: IconButton(
-        icon: Image.asset(assetPath, width: 40, height: 40),
+        icon: Image.asset(assetPath, width: 40.w, height: 40.h),
         onPressed: onPressed,
       ),
     );
@@ -82,18 +85,18 @@ class MePage extends StatelessWidget {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              CustomPaint(size: Size(95, 95), painter: OuterOvalPainter()),
+              CustomPaint(size: Size(95.w, 95.h), painter: OuterOvalPainter()),
               ClipOval(
                 child: Image.network(
-                  userData.avatar ?? 'assets/images/placeholder1.png',
-                  width: 95,
-                  height: 95,
+                  userData.avatar ?? ImageRes.placeholderAvatar,
+                  width: 95.w,
+                  height: 95.h,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
                     return Image.asset(
-                      'assets/images/placeholder1.png',
-                      width: 95,
-                      height: 95,
+                      ImageRes.placeholderAvatar,
+                      width: 95.w,
+                      height: 95.h,
                       fit: BoxFit.cover,
                     );
                   },
@@ -103,17 +106,16 @@ class MePage extends StatelessWidget {
                 bottom: 0,
                 right: 0,
                 child: Container(
-                  width: 34,
-                  height: 34,
+                  width: 34.w,
+                  height: 34.h,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: Color(0xFFD7FAAD),
                   ),
                   child: IconButton(
-                    icon: Image.asset('assets/images/icon_add_photo.png', width: 24, height: 24),
+                    icon: Image.asset(ImageRes.imagePathIconAddPhoto, width: 24.w, height: 24.h),
                     onPressed: () {
                       Get.toNamed('/me/photo', arguments: {'token': tokenEntity, 'userData': userData});
-// Add your onPressed logic here
                     },
                   ),
                 ),
@@ -121,48 +123,28 @@ class MePage extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: 20), // Avatar 下方 20px 间距
+        SizedBox(height: 20.h),
         Text(
           userData.username,
-          style: TextStyle(
-            fontFamily: 'Open Sans',
-            fontWeight: FontWeight.w600,
-            fontSize: 20,
-            color: Colors.black,
-          ),
+          style: ConstantStyles.mePageUsernameTextStyle,
         ),
-        SizedBox(height: 10), // Username 下方 10px 间距
+        SizedBox(height: 10.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (userData.location != null && userData.location!.country != null)
               Text(
                 userData.location!.country!,
-                style: TextStyle(
-                  fontFamily: 'Open Sans',
-                  fontWeight: FontWeight.w600,
-                  fontSize: 12,
-                  color: Color(0xFF8E8E93),
-                ),
+                style: ConstantStyles.mePageTextStyle,
               ),
             if (userData.location != null && userData.location!.country != null)
               Text(
                 ' | ',
-                style: TextStyle(
-                  fontFamily: 'Open Sans',
-                  fontWeight: FontWeight.w600,
-                  fontSize: 12,
-                  color: Color(0xFF8E8E93),
-                ),
+                style: ConstantStyles.mePageTextStyle,
               ),
             Text(
               '${userData.age}',
-              style: TextStyle(
-                fontFamily: 'Open Sans',
-                fontWeight: FontWeight.w600,
-                fontSize: 12,
-                color: Color(0xFF8E8E93),
-              ),
+              style: ConstantStyles.mePageTextStyle,
             ),
           ],
         ),
@@ -174,18 +156,18 @@ class MePage extends StatelessWidget {
     return Stack(
       children: [
         Container(
-          width: 335,
-          height: 116,
+          width: 335.w,
+          height: 116.h,
           decoration: BoxDecoration(
             color: Color.fromRGBO(216, 216, 216, 0.01),
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: Colors.black, width: 2),
+            borderRadius: BorderRadius.circular(10.r),
+            border: Border.all(color: Colors.black, width: 2.w),
           ),
         ),
         Image.asset(
-          'assets/images/buy_cactus.png',
-          width: 335,
-          height: 117,
+          ImageRes.imagePathBuyCactus,
+          width: 335.w,
+          height: 117.h,
           fit: BoxFit.contain,
         ),
       ],
@@ -197,21 +179,22 @@ class MePage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildOptionRow(
-          iconPath: 'assets/images/icon_person.png',
-          text: 'My Profile',
+          iconPath: ImageRes.imagePathIconPerson,
+          text: ConstantData.myProfileText,
           onTap: () {
             Get.toNamed('/me/my_profile', arguments: {'token': tokenEntity, 'userData': userData});
           },
         ),
         _buildSeparator(),
         _buildOptionRow(
-          iconPath: 'assets/images/icon_verify.png',
+          iconPath: ImageRes.imagePathIconVerify,
           text: 'Verify',
           onTap: () {
             Get.toNamed('/me/verify', arguments: {'token': tokenEntity, 'userData': userData});
-            }),
+          },
+        ),
         _buildSeparator(),
-        _buildOptionRow(iconPath: 'assets/images/icon_host.png', text: 'I am Host', onTap: () {}),
+        _buildOptionRow(iconPath: ImageRes.imagePathIconHost, text: ConstantData.hostText, onTap: () {}),
         _buildSeparator(),
       ],
     );
@@ -223,15 +206,11 @@ class MePage extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.asset(iconPath, width: 24, height: 24),
-          SizedBox(width: 16),
+          Image.asset(iconPath, width: 24.w, height: 24.h),
+          SizedBox(width: 16.w),
           Text(
             text,
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontSize: 18,
-              color: Colors.black,
-            ),
+            style: ConstantStyles.mePageOptionTextStyle,
           ),
         ],
       ),
@@ -241,16 +220,14 @@ class MePage extends StatelessWidget {
   Widget _buildSeparator() {
     return Column(
       children: [
-        SizedBox(height: 20),
+        SizedBox(height: 20.h),
         Container(
-          width: 303,
-          height: 1,
+          width: 303.w,
+          height: 1.h,
           color: Color(0xFFEBEBEB),
         ),
-        SizedBox(height: 30),
+        SizedBox(height: 30.h),
       ],
     );
   }
 }
-
-

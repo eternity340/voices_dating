@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import '../../../constants/Constant_styles.dart';
 import '../../../entity/moment_entity.dart';
 import '../../../entity/token_entity.dart';
+import '../../../image_res/image_res.dart';
 
 class CommentWidget extends StatefulWidget {
   final MomentEntity moment;
@@ -48,7 +50,7 @@ class _CommentWidgetState extends State<CommentWidget> {
       var comment = comments[i];
       commentWidgets.add(
         SizedBox(
-          height: 105.h, // 每个评论的高度
+          height: 105.h,
           child: Stack(
             children: [
               Positioned(
@@ -71,14 +73,7 @@ class _CommentWidgetState extends State<CommentWidget> {
                 top: 15.h,
                 child: Text(
                   comment.username?.toString() ?? '',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14.sp,
-                    height: 24 / 14,
-                    letterSpacing: -0.01,
-                    color: Color(0xFF8E8E93),
-                  ),
+                  style: ConstantStyles.usernameStyle,
                 ),
               ),
               Positioned(
@@ -86,14 +81,7 @@ class _CommentWidgetState extends State<CommentWidget> {
                 top: 40.h,
                 child: Text(
                   _formatTimestamp(comment.commentCreated),
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w400,
-                    fontSize: 10.sp,
-                    height: 24 / 14,
-                    letterSpacing: -0.01,
-                    color: Color(0xFF8E8E93),
-                  ),
+                  style: ConstantStyles.timestampStyle,
                 ),
               ),
               Positioned(
@@ -101,14 +89,7 @@ class _CommentWidgetState extends State<CommentWidget> {
                 top: 65.h,
                 child: Text(
                   comment.commentContent?.toString() ?? '',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16.sp,
-                    height: 24 / 14,
-                    letterSpacing: -0.01,
-                    color: Color(0xFF000000),
-                  ),
+                  style: ConstantStyles.commentContentStyle,
                 ),
               ),
               Positioned(
@@ -119,9 +100,7 @@ class _CommentWidgetState extends State<CommentWidget> {
                     _toggleLikeStatus(i, comment.commentId);
                   },
                   child: Image.asset(
-                    isLikedList[i]
-                        ? 'assets/images/button_like_active.png'
-                        : 'assets/images/button_like_inactive.png',
+                    isLikedList[i] ? ImageRes.buttonLikeActive : ImageRes.buttonLikeInactive,
                     width: 20.w,
                     height: 20.h,
                   ),
@@ -132,11 +111,7 @@ class _CommentWidgetState extends State<CommentWidget> {
                 top: 18.h,
                 child: Text(
                   likeCountList[i],
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 10.sp,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: -0.0071428571827709675,
+                  style: ConstantStyles.likeCountStyle.copyWith(
                     color: isLikedList[i] ? Color(0xFF2EE4D3) : Color(0xFF000000),
                   ),
                 ),

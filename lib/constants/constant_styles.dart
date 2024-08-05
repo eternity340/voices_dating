@@ -224,7 +224,8 @@ class ConstantStyles {
     color: Color(0xFF8E8E93),
     fontFamily: 'Poppins');
   static TextStyle inputTextStyle = TextStyle(
-    fontFamily: 'Poppins');
+    fontFamily: 'Poppins',
+    fontSize: 18.0.sp);
   static TextStyle signInTextStyle =TextStyle(
     fontSize: 32,
     fontFamily: 'Poppins',
@@ -432,11 +433,11 @@ class ConstantStyles {
     thickness: 1.h,
   );
   //feedback
-  static final BoxDecoration feedbackContainerDecoration = BoxDecoration(
+  static BoxDecoration feedbackContainerDecoration = BoxDecoration(
     color: Color(0xFFF8F8F9),
     borderRadius: BorderRadius.circular(10.r),
   );
-  static final TextStyle yourIdTextStyle = TextStyle(
+  static TextStyle yourIdTextStyle = TextStyle(
     fontSize: 16.sp,
     fontFamily: 'Poppins',
     fontWeight: FontWeight.w500,
@@ -444,7 +445,7 @@ class ConstantStyles {
     letterSpacing: -0.01.sp,
     color: Colors.black,
   );
-  static final TextStyle feedbackHintStyle = TextStyle(
+  static TextStyle feedbackHintStyle = TextStyle(
     fontFamily: 'Poppins',
     fontWeight: FontWeight.w400,
     fontSize: 14.sp,
@@ -452,13 +453,143 @@ class ConstantStyles {
     letterSpacing: -0.01.sp,
     color: Color(0xFF8E8E93),
   );
-  static final BoxDecoration imageContainerDecoration = BoxDecoration(
+  static BoxDecoration imageContainerDecoration = BoxDecoration(
     color: Color(0xFFF8F8F9),
     borderRadius: BorderRadius.circular(10.r),
   );
   //settings
-  static final double pathBoxTopSpacing = 95.h;
-  static final double signOutButtonTop = 650.h;
-  static final double signOutButtonHeight = 49.h;
-  static final double signOutButtonWidth = 248.w;
+  static double pathBoxTopSpacing = 95.h;
+  static double signOutButtonTop = 650.h;
+  static double signOutButtonHeight = 49.h;
+  static double signOutButtonWidth = 248.w;
+  //verify_id
+  static TextStyle displayTextStyle = TextStyle(
+    fontFamily: 'Poppins',
+    fontWeight: FontWeight.w700,
+    fontSize: 20.sp,
+    height: 28 / 20, // 行高
+    letterSpacing: -0.02, // 字距
+    color: Colors.black, // 文本颜色
+  );
+  static TextStyle followPromptsTextStyle =TextStyle(
+    fontFamily: 'Poppins',
+    fontWeight: FontWeight.w400,
+    fontSize: 12.sp, // 使用 ScreenUtil
+    color: Color(0xFF000000), // 黑色
+  );
+  static TextStyle verifyPhotoTextStyle = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 12.sp,
+    color: Colors.black,
+  );
+  //me_page
+  static TextStyle mePageUsernameTextStyle = TextStyle(
+    fontFamily: 'Open Sans',
+    fontWeight: FontWeight.w600,
+    fontSize: 20.sp,
+    color: Colors.black,
+  );
+  static TextStyle mePageTextStyle = TextStyle(
+    fontFamily: 'Open Sans',
+    fontWeight: FontWeight.w600,
+    fontSize: 12.sp,
+    color: Color(0xFF8E8E93),
+  );
+  static TextStyle mePageOptionTextStyle = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 18.sp,
+    color: Colors.black,
+  );
+  //moments_page
+  static TextStyle hintTextStyle = TextStyle(
+    color: Colors.grey,
+    fontFamily: 'Poppins',
+    fontSize: 18.0.sp,
+  );
+  static TextStyle smallTextStyle = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 10.0.sp,
+    color: Colors.black,
+    letterSpacing: 0.02,
+  );
+  static TextStyle usernameStyle = TextStyle(
+    fontFamily: 'Poppins',
+    fontWeight: FontWeight.w400,
+    fontSize: 14.sp,
+    height: 24 / 14,
+    letterSpacing: -0.01,
+    color: Color(0xFF8E8E93),
+  );
+  static TextStyle timestampStyle = TextStyle(
+    fontFamily: 'Poppins',
+    fontWeight: FontWeight.w400,
+    fontSize: 10.sp,
+    height: 24 / 14,
+    letterSpacing: -0.01,
+    color: Color(0xFF8E8E93),
+  );
+  static TextStyle commentContentStyle = TextStyle(
+    fontFamily: 'Poppins',
+    fontWeight: FontWeight.w400,
+    fontSize: 16.sp,
+    height: 24 / 14,
+    letterSpacing: -0.01,
+    color: Color(0xFF000000),
+  );
+  static TextStyle likeCountStyle = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 10.sp,
+    fontWeight: FontWeight.w500,
+    letterSpacing: -0.0071428571827709675,
+  );
+  static TextStyle momentUsernameTextStyle =  TextStyle(
+    fontFamily: 'Open Sans',
+    fontSize: 14.sp,
+    height: 24 / 14,
+    color: Color(0xFF000000),
+  );
+  static TextStyle timelineDescTextStyle = TextStyle(
+    fontFamily: 'Open Sans',
+    fontWeight: FontWeight.w600,
+    fontSize: 16.sp,
+    height: 24 / 16,
+    letterSpacing: -0.01,
+    color: Color(0xFF000000),
+  );
+  static TextStyle titleStyle = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 18.sp,
+    fontWeight: FontWeight.w500,
+    height: 22 / 18,
+    letterSpacing: -0.01125,
+  );
+  static TextStyle commentInputStyle = TextStyle(
+    fontFamily: 'Poppins',
+    fontWeight: FontWeight.w400,
+    fontSize: 16.sp,
+    height: 24 / 14,
+    letterSpacing: -0.01,
+    color: Color(0xFF000000),
+  );
+  static TextStyle commentHintStyle = TextStyle(
+    fontFamily: 'Poppins',
+    fontWeight: FontWeight.w400,
+    fontSize: 16.sp,
+    height: 24 / 14,
+    letterSpacing: -0.01,
+    color: Color(0xFF8E8E93),
+  );
+  static TextStyle momentsTitleStyle = TextStyle(
+    fontFamily: 'Poppins',
+    fontWeight: FontWeight.w500,
+    fontSize: 18.sp,
+    color: Color(0xFF000000),
+  );
+  static TextStyle addMomentStyle = TextStyle(
+    fontFamily: 'Poppins',
+    fontWeight: FontWeight.bold,
+    fontSize: 24.sp,
+    color: Colors.white,
+  );
+
 }

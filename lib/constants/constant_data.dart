@@ -209,5 +209,35 @@ class ConstantData {
   static const  purchaseRecord = 'Purchase record';
   static const  cleanUpMemory = 'Clean up memory';
   static const  signOut = 'Sign Out';
+  //verify_id
+  static const  verifyIdText = 'Verify ID';
+  static const  turnLeftText = 'Turn left';
+  static const  turnRightText = 'Turn right';
+  static const  nodText = "Please nod";
+  static const  blinkText = "Please blink";
+  static const  confirmIdText = "Say 'I confirm the video is real'";
+  static const  startText = 'Start';
+  static const  followPromptsText = 'Follow the prompts';
+  //verify_photo
+  static const  verifyPhotoText = 'Verify Photo';
+  static const  verifyContentText = 'Please upload a live photo and we will analyze whether your photo is yourself.';
+  static const  uploadText = 'Upload';
+  static const  verifyMiddleText =  '     Verify';
+  //me_page
+  static const  myProfileText = 'My Profile';
+  static const  hostText = 'I am Host';
+  //moments
+  static const  recordMomentText = 'record the moment ...';
+  static const  colorTopicsHintText = 'You can use #+ content to add color topics.';
+  static const  momentUploadSuccessText = 'Moment uploaded successfully!';
+  static const  noComments = 'No comments';
+  static const  unknownText = 'Unknown';
+  static const  timelineDescrText = 'No description available';
+  static const  likesText = 'likes';
+  static const  commentsText = 'Comments';
+  static const  sendText = 'Send';
+  static const  commentText = 'Comment';
+  static const  commentWriteText = 'Write a comment...';
+  static const String addMomentText = '+';
 }
 

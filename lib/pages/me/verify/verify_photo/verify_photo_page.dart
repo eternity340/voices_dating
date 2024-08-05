@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:first_app/components/background.dart';
 import 'package:first_app/components/gradient_btn.dart';
+import 'package:first_app/constants/Constant_styles.dart';
+import 'package:first_app/constants/constant_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -10,6 +12,7 @@ import 'dart:io';
 import 'package:dio/dio.dart' as dio;
 import '../../../../entity/token_entity.dart';
 import '../../../../entity/user_data_entity.dart';
+import '../../../../image_res/image_res.dart';
 import '../verify_page.dart';
 
 class VerifyPhotoPage extends StatefulWidget {
@@ -104,7 +107,7 @@ class _VerifyPhotoPageState extends State<VerifyPhotoPage> {
             showBackgroundImage: false,
             showMiddleText: true,
             showBackButton: true,
-            middleText: 'Verify Photo',
+            middleText: ConstantData.verifyPhotoText,
             child: Container(),
           ),
           Positioned(
@@ -122,7 +125,7 @@ class _VerifyPhotoPageState extends State<VerifyPhotoPage> {
                 child: _image == null
                     ? Center(
                   child: Image.asset(
-                    'assets/images/icon_pic.png',
+                    ImageRes.imagePathIconPicture,
                     width: 48.w,
                     height: 48.h,
                   ),
@@ -142,13 +145,9 @@ class _VerifyPhotoPageState extends State<VerifyPhotoPage> {
             left: 16.w,
             right: 16.w,
             child: Text(
-              'Please upload a live photo and we will analyze whether your photo is yourself.',
+              ConstantData.verifyContentText,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 12.sp,
-                color: Colors.black,
-              ),
+              style: ConstantStyles.verifyPhotoTextStyle,
             ),
           ),
           Positioned(
@@ -157,7 +156,7 @@ class _VerifyPhotoPageState extends State<VerifyPhotoPage> {
             right: 0,
             child: Center(
               child: GradientButton(
-                text: 'Upload',
+                text: ConstantData.uploadText,
                 onPressed: _uploadImage,
                 height: 49.h,
                 width: 248.w,

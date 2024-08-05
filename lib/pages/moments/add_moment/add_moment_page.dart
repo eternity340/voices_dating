@@ -11,7 +11,10 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../../components/bottom_options.dart';
 import '../../../components/custom_message_dialog.dart';
 import '../../../components/gradient_btn.dart';
+import '../../../constants/Constant_styles.dart';
+import '../../../constants/constant_data.dart';
 import '../../../entity/user_data_entity.dart';
+import '../../../image_res/image_res.dart';
 
 class AddMomentPage extends StatefulWidget {
   @override
@@ -73,17 +76,12 @@ class _AddMomentPageState extends State<AddMomentPage> {
           Positioned(
             top: 302.h,
             left: 20.w,
-            child: const Row(
+            child:  Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'You can use #+ content to add color topics.',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 10.0,
-                    color: Colors.black,
-                    letterSpacing: 0.02,
-                  ),
+                  ConstantData.colorTopicsHintText,
+                  style: ConstantStyles.smallTextStyle,
                 ),
                 SizedBox(width: 180),
               ],
@@ -118,7 +116,7 @@ class _AddMomentPageState extends State<AddMomentPage> {
                       child: _imageFiles[index] == null
                           ? Center(
                         child: Image.asset(
-                          'assets/images/icon_add_photo.png',
+                          ImageRes.imagePathIconAddPhoto,
                           width: 24.w,
                           height: 24.h,
                         ),
@@ -142,7 +140,7 @@ class _AddMomentPageState extends State<AddMomentPage> {
             right: 0,
             child: Center(
               child: GradientButton(
-                text: 'Upload',
+                text: ConstantData.uploadText,
                 onPressed: _uploadMoment,
                 height: 49.h,
                 width: 248.w,
@@ -173,8 +171,8 @@ class _AddMomentPageState extends State<AddMomentPage> {
           onCancelPressed: () {
             Navigator.pop(context);
           },
-          firstText: 'Take a Photo',
-          secondText: 'From Album',
+          firstText: ConstantData.takePhotoText,
+          secondText: ConstantData.fromAlbumText,
         );
       },
     );

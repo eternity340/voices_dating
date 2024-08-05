@@ -5,6 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
 import '../../../components/detail_bottom_bar.dart';
+import '../../../constants/Constant_styles.dart';
+import '../../../constants/constant_data.dart';
 import '../../../entity/token_entity.dart';
 import '../../../entity/user_data_entity.dart';
 import '../components/comments_widget.dart';
@@ -63,25 +65,13 @@ class _MomentsDetailPageState extends State<MomentsDetailPage> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                'likes',
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 18.sp,
-                                  fontWeight: FontWeight.w500,
-                                  height: 22 / 18,
-                                  letterSpacing: -0.01125,
-                                ),
+                                ConstantData.likesText,
+                                style:ConstantStyles.titleStyle
                               ),
                               SizedBox(width: 5.w),
                               Text(
                                 moment.likers?.length.toString() ?? '0',
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 18.sp,
-                                  fontWeight: FontWeight.w500,
-                                  height: 22 / 18,
-                                  letterSpacing: -0.01125,
-                                ),
+                                style: ConstantStyles.titleStyle
                               ),
                             ],
                           ),
@@ -116,14 +106,8 @@ class _MomentsDetailPageState extends State<MomentsDetailPage> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                'Comments',
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 18.sp,
-                                  fontWeight: FontWeight.w500,
-                                  height: 22 / 18,
-                                  letterSpacing: -0.01125,
-                                ),
+                                ConstantData.commentsText,
+                                style:ConstantStyles.titleStyle
                               ),
                             ],
                           ),
@@ -145,7 +129,7 @@ class _MomentsDetailPageState extends State<MomentsDetailPage> {
               showMomentLikeButton: true,
               showCallButton: false,
               showMessageButton: false,
-              gradientButtonText: _isCommentInputVisible ? 'Send' : 'Comment',
+              gradientButtonText: _isCommentInputVisible ? ConstantData.sendText : ConstantData.commentText,
               onGradientButtonPressed: () {
                 if (_isCommentInputVisible) {
                   _submitComment();
@@ -176,14 +160,7 @@ class _MomentsDetailPageState extends State<MomentsDetailPage> {
           children: [
             TextField(
               controller: _commentController,
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.w400,
-                fontSize: 16.sp,
-                height: 24 / 14,
-                letterSpacing: -0.01,
-                color: Color(0xFF000000),
-              ),
+              style: ConstantStyles.commentInputStyle,
               onChanged: (text) {
                 setState(() {
                   _commentContent = text;
@@ -191,15 +168,8 @@ class _MomentsDetailPageState extends State<MomentsDetailPage> {
               },
               decoration: InputDecoration(
                 fillColor: Colors.transparent,
-                hintText: 'Write a comment...',
-                hintStyle: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w400,
-                  fontSize: 16.sp,
-                  height: 24 / 14,
-                  letterSpacing: -0.01,
-                  color: Color(0xFF8E8E93),
-                ),
+                hintText: ConstantData.commentWriteText,
+                hintStyle: ConstantStyles.commentHintStyle,
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 15.h),
               ),

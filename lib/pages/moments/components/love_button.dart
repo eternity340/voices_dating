@@ -3,6 +3,7 @@ import 'package:first_app/entity/moment_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../entity/token_entity.dart';
+import '../../../image_res/image_res.dart';
 
 class LoveButton extends StatefulWidget {
   final MomentEntity moment;
@@ -104,7 +105,7 @@ class _LoveButtonState extends State<LoveButton> {
         ),
         child: Center(
           child: Image.asset(
-            isLoved ? 'assets/images/icon_love_active.png' : 'assets/images/icon_love_inactive.png',
+            isLoved ? ImageRes.iconLoveActive : ImageRes.iconLoveInactive,
             width: 24.w,
             height: 24.h,
             fit: BoxFit.cover,

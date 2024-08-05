@@ -6,6 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../../../components/gradient_btn.dart';
+import '../../../../constants/Constant_styles.dart';
+import '../../../../constants/constant_data.dart';
 import '../../../../entity/token_entity.dart';
 import '../../../../entity/user_data_entity.dart';
 import 'components/Circle_painter.dart';
@@ -22,7 +24,7 @@ class _VerifyIDPageState extends State<VerifyIDPage> with SingleTickerProviderSt
   List<Color> rectColors = List.filled(90, Color(0xFFE0E0E0)); // 90个矩形的初始颜色
   List<double> rectScales = List.filled(90, 1.0); // 90个矩形的初始缩放比例
   bool isAnimating = false;
-  String displayText = "Turn left"; // 初始显示文本
+  String displayText = ConstantData.turnLeftText; // 初始显示文本
   CameraController? cameraController;
   bool isRecording = false;
 
@@ -60,7 +62,7 @@ class _VerifyIDPageState extends State<VerifyIDPage> with SingleTickerProviderSt
             showBackgroundImage: false,
             showMiddleText: true,
             showBackButton: true,
-            middleText: 'Verify ID',
+            middleText: ConstantData.verifyIdText,
             child: Container(),
           ),
           // 包含相机预览和小矩形的堆叠
@@ -94,14 +96,7 @@ class _VerifyIDPageState extends State<VerifyIDPage> with SingleTickerProviderSt
             child: Center(
               child: Text(
                 displayText,
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w700,
-                  fontSize: 20.sp,
-                  height: 28 / 20, // 行高
-                  letterSpacing: -0.02, // 字距
-                  color: Colors.black, // 文本颜色
-                ),
+                style: ConstantStyles.displayTextStyle,
                 textAlign: TextAlign.center,
               ),
             ),
@@ -112,7 +107,7 @@ class _VerifyIDPageState extends State<VerifyIDPage> with SingleTickerProviderSt
             right: 0,
             child: Center(
               child: GradientButton(
-                text: 'Start',
+                text: ConstantData.startText,
                 onPressed: () {
                   startAnimation();
                 },
@@ -127,13 +122,8 @@ class _VerifyIDPageState extends State<VerifyIDPage> with SingleTickerProviderSt
             right: 0,
             child: Center(
               child: Text(
-                'Follow the prompts',
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w400,
-                  fontSize: 12.sp, // 使用 ScreenUtil
-                  color: Color(0xFF000000), // 黑色
-                ),
+                ConstantData.followPromptsText,
+                style: ConstantStyles.followPromptsTextStyle,
                 textAlign: TextAlign.center,
               ),
             ),
@@ -172,22 +162,22 @@ class _VerifyIDPageState extends State<VerifyIDPage> with SingleTickerProviderSt
       // 文本更新
       Future.delayed(Duration(seconds: 3), () {
         setState(() {
-          displayText = "Turn right";
+          displayText = ConstantData.turnRightText;
         });
       });
       Future.delayed(Duration(seconds: 5), () {
         setState(() {
-          displayText = "Please nod";
+          displayText = ConstantData.nodText;
         });
       });
       Future.delayed(Duration(seconds: 8), () {
         setState(() {
-          displayText = "Please blink";
+          displayText = ConstantData.blinkText;
         });
       });
       Future.delayed(Duration(seconds: 10), () {
         setState(() {
-          displayText = "Say 'I confirm the video is real'";
+          displayText = ConstantData.confirmIdText;
         });
       });
 

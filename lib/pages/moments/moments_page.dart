@@ -4,6 +4,9 @@ import 'package:get/get.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import '../../components/all_navigation_bar.dart';
 import '../../components/background.dart';
+import '../../constants/Constant_styles.dart';
+import '../../constants/constant_data.dart';
+import '../../image_res/image_res.dart';
 import 'components/moments_card.dart';
 import 'moments_controller.dart';
 
@@ -31,13 +34,8 @@ class MomentsPage extends StatelessWidget {
                 Get.toNamed('/moments/add_moment', arguments: {'token': controller.tokenEntity, 'userData': controller.userData});
               },
               child: Text(
-                'Moments',
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w500,
-                  fontSize: 18.sp,
-                  color: Color(0xFF000000),
-                ),
+                ConstantData.moments,
+                style:ConstantStyles.momentsTitleStyle
               ),
             ),
           ),
@@ -61,13 +59,8 @@ class MomentsPage extends StatelessWidget {
                     ).createShader(bounds);
                   },
                   child: Text(
-                    '+',
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24.sp,
-                      color: Colors.white,
-                    ),
+                    ConstantData.addMomentText,
+                    style: ConstantStyles.addMomentStyle
                   ),
                 ),
               ),
@@ -85,7 +78,7 @@ class MomentsPage extends StatelessWidget {
                 height: 40.h,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('assets/images/button_round_search.png'),
+                    image: AssetImage(ImageRes.buttonRoundSearch),
                     fit: BoxFit.cover,
                   ),
                 ),

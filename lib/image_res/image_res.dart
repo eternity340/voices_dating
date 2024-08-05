@@ -49,4 +49,20 @@ class ImageRes{
   static const  iconLocationImagePath='assets/images/icon_location.png';
   //photo
   static const imagePathIconAddPhoto =  'assets/images/icon_add_photo.png';
+  //verify_photo
+  static const  imagePathIconPicture = 'assets/images/icon_pic.png';
+  //me_page
+  static const  imagePathIconNotification = 'assets/images/icon_me_notification.png';
+  static const  imagePathIconSetting = 'assets/images/icon_me_settings.png';
+  static const  imagePathBuyCactus ='assets/images/buy_cactus.png';
+  static const  imagePathIconPerson =  'assets/images/icon_person.png';
+  static const  imagePathIconVerify = 'assets/images/icon_verify.png';
+  static const  imagePathIconHost = 'assets/images/icon_host.png';
+  //moments
+  static const  buttonLikeActive = 'assets/images/button_like_active.png';
+  static const  buttonLikeInactive = 'assets/images/button_like_inactive.png';
+  static const  iconLoveActive = 'assets/images/icon_love_active.png';
+  static const  iconLoveInactive = 'assets/images/icon_love_inactive.png';
+  static const  iconChatInactive ='assets/images/icon_chat_inactive.png';
+  static const  buttonRoundSearch = 'assets/images/button_round_search.png';
 }

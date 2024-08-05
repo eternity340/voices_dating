@@ -1,7 +1,10 @@
+import 'package:first_app/constants/Constant_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../constants/constant_data.dart';
 import '../../../entity/moment_entity.dart';
 import '../../../entity/token_entity.dart';
+import '../../../image_res/image_res.dart';
 import 'love_button.dart';
 
 class MomentsCard extends StatefulWidget {
@@ -54,7 +57,7 @@ class _MomentsCardState extends State<MomentsCard> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                          image: NetworkImage(widget.moment.avatar ?? 'assets/images/placeholder1.png'),
+                          image: NetworkImage(widget.moment.avatar ?? ImageRes.placeholderAvatar),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -62,13 +65,8 @@ class _MomentsCardState extends State<MomentsCard> {
                     SizedBox(width: 8.w),
                     Flexible(
                       child: Text(
-                        widget.moment.username ?? 'Unknown',
-                        style: TextStyle(
-                          fontFamily: 'Open Sans',
-                          fontSize: 14.sp,
-                          height: 24 / 14,
-                          color: Color(0xFF000000),
-                        ),
+                        widget.moment.username ?? ConstantData.unknownText,
+                        style:ConstantStyles.momentUsernameTextStyle,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -77,15 +75,8 @@ class _MomentsCardState extends State<MomentsCard> {
                 ),
                 SizedBox(height: 16.h),
                 Text(
-                  widget.moment.timelineDescr ?? 'No description available',
-                  style: TextStyle(
-                    fontFamily: 'Open Sans',
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16.sp,
-                    height: 24 / 16,
-                    letterSpacing: -0.01,
-                    color: Color(0xFF000000),
-                  ),
+                  widget.moment.timelineDescr ?? ConstantData.timelineDescrText,
+                  style:ConstantStyles.timelineDescTextStyle
                 ),
                 SizedBox(height: 16.h),
                 if (widget.moment.attachments != null && widget.moment.attachments!.length == 1)
@@ -95,7 +86,7 @@ class _MomentsCardState extends State<MomentsCard> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20.r),
                       image: DecorationImage(
-                        image: NetworkImage(widget.moment.attachments!.first.url ?? 'assets/images/placeholder1.png'),
+                        image: NetworkImage(widget.moment.attachments!.first.url ?? ImageRes.placeholderAvatar),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -112,7 +103,7 @@ class _MomentsCardState extends State<MomentsCard> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20.r),
                             image: DecorationImage(
-                              image: NetworkImage(attachment.url ?? 'assets/images/placeholder1.png'),
+                              image: NetworkImage(attachment.url ?? ImageRes.placeholderAvatar),
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -142,7 +133,7 @@ class _MomentsCardState extends State<MomentsCard> {
                       ),
                       child: Center(
                         child: Image.asset(
-                          'assets/images/icon_chat_inactive.png',
+                          ImageRes.iconChatInactive,
                           width: 24.w,
                           height: 24.h,
                           fit: BoxFit.cover,
