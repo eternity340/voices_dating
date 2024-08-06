@@ -238,6 +238,9 @@ class ConstantData {
   static const  sendText = 'Send';
   static const  commentText = 'Comment';
   static const  commentWriteText = 'Write a comment...';
-  static const String addMomentText = '+';
+  static const  addMomentText = '+';
+  static const  messageText = "Message";
+  static const  viewedMeText = "Viewed Me";
+  static const  likedMeText = "Liked Me";
 }
 

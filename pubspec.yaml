@@ -54,6 +54,8 @@ dependencies:
   flutter_easyrefresh:
   audioplayers:
   just_audio:
+  web_socket_channel: ^2.4.0
+  intl:
 
 
   # The following adds the Cupertino Icons font to your application.

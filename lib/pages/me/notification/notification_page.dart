@@ -22,7 +22,7 @@ class NotificationPage extends StatelessWidget {
             showSettingButton: false,
             showBackgroundImage: false,
             showMiddleText: true,
-            middleText: '     ',
+            middleText: 'notification',
             child: Container(),
           ),
           Positioned(

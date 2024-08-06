@@ -591,5 +591,20 @@ class ConstantStyles {
     fontSize: 24.sp,
     color: Colors.white,
   );
-
+  //message_page
+  static TextStyle usernameMessageStyle = TextStyle(
+    fontSize: 16.sp,
+    fontWeight: FontWeight.w600,
+    fontFamily: 'Open Sans',
+  );
+  static TextStyle lastMassageStyle = TextStyle(
+    fontFamily: 'Open Sans',
+    fontWeight:  FontWeight.w400,
+    fontSize: 14.sp,
+    color: Colors.black,
+  );
+  static TextStyle lastActiveTimeStyle =TextStyle(
+    fontSize: 12.sp,
+    color: Colors.grey,
+  );
 }
