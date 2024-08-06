@@ -5,7 +5,7 @@ import '../../../entity/User.dart';
 import '../../../entity/token_entity.dart';
 import '../../../net/error_handler.dart';
 import '../../../service/token_service.dart';
-import 'get_email_code_model.dart'; // 导入 VerifyEmailPage 页面
+import 'get_email_code_model.dart';
 
 class VerifyEmailModel extends ChangeNotifier {
   final String email;
@@ -14,8 +14,7 @@ class VerifyEmailModel extends ChangeNotifier {
   final Dio _dio = Dio();
   bool _isLoading = false;
   String? _errorMessage;
-  TokenEntity? _tokenEntity;
-  GetEmailCodeModel _getEmailCodeModel = GetEmailCodeModel(); // 创建 GetEmailCodeModel 实例
+  GetEmailCodeModel _getEmailCodeModel = GetEmailCodeModel();
 
   VerifyEmailModel({required this.email, required this.verificationKey}) {
     _initializeToken();
@@ -25,26 +24,15 @@ class VerifyEmailModel extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
 
   Future<void> _initializeToken() async {
-    await initializeToken(
-      onSuccess: (tokenEntity) {
-        _tokenEntity = tokenEntity;
-        notifyListeners();
-      },
-      onError: (errorMessage) {
-        _errorMessage = errorMessage;
-        notifyListeners();
-      },
-    );
+    try {
+      await TokenService.instance.getTokenEntity();
+    } catch (e) {
+      _errorMessage = "Failed to initialize token: $e";
+      notifyListeners();
+    }
   }
 
   Future<void> verifyEmail() async {
-    if (_tokenEntity == null || _tokenEntity?.accessToken == null) {
-      _errorMessage = "No access token available.";
-      notifyListeners();
-      _showErrorDialog(_errorMessage!);
-      return;
-    }
-
     final String code = codeController.text.trim();
 
     if (verificationKey.isEmpty) {
@@ -59,6 +47,12 @@ class VerifyEmailModel extends ChangeNotifier {
     notifyListeners();
 
     try {
+      final TokenEntity tokenEntity = await TokenService.instance.getTokenEntity();
+
+      if (tokenEntity.accessToken == null) {
+        throw Exception("No access token available");
+      }
+
       final response = await _dio.post(
         'https://api.masonvips.com/v1/verify_email',
         queryParameters: {
@@ -66,7 +60,7 @@ class VerifyEmailModel extends ChangeNotifier {
           'code': code,
           'key': verificationKey,
         },
-        options: Options(headers: {'token': _tokenEntity!.accessToken}),
+        options: Options(headers: {'token': tokenEntity.accessToken}),
       );
 
       if (response.data['code'] == 200 && response.data['data']['ret'] == true) {

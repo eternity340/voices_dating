@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import '../../../net/error_handler.dart';
-import '../../../service/token_service.dart';
 import '../../../entity/token_entity.dart';
+import '../../../service/token_service.dart';
 import '../page/verify_email_page.dart';
 
 class GetEmailCodeModel extends ChangeNotifier {
@@ -11,7 +11,6 @@ class GetEmailCodeModel extends ChangeNotifier {
   final Dio _dio = Dio();
   bool _isLoading = false;
   String? _errorMessage;
-  TokenEntity? _tokenEntity;
 
   GetEmailCodeModel() {
     _initializeToken();
@@ -21,26 +20,15 @@ class GetEmailCodeModel extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
 
   Future<void> _initializeToken() async {
-    await initializeToken(
-      onSuccess: (tokenEntity) {
-        _tokenEntity = tokenEntity;
-        notifyListeners();
-      },
-      onError: (errorMessage) {
-        _errorMessage = errorMessage;
-        notifyListeners();
-      },
-    );
+    try {
+      await TokenService.instance.getTokenEntity();
+    } catch (e) {
+      _errorMessage = "Failed to initialize token: $e";
+      notifyListeners();
+    }
   }
 
   Future<void> sendVerificationCode(BuildContext context) async {
-    if (_tokenEntity == null || _tokenEntity?.accessToken == null) {
-      _errorMessage = "No access token available.";
-      print('No access token available');
-      notifyListeners();
-      return;
-    }
-
     final String email = emailController.text.trim();
 
     _isLoading = true;
@@ -48,15 +36,21 @@ class GetEmailCodeModel extends ChangeNotifier {
     notifyListeners();
 
     try {
+      final TokenEntity tokenEntity = await TokenService.instance.getTokenEntity();
+
+      if (tokenEntity.accessToken == null) {
+        throw Exception("No access token available");
+      }
+
       final response = await _dio.get(
         'https://api.masonvips.com/v1/email_verification_code',
         queryParameters: {'email': email},
-        options: Options(headers: {'token': _tokenEntity!.accessToken}),
+        options: Options(headers: {'token': tokenEntity.accessToken}),
       );
 
       if (response.statusCode == 200) {
-        final verificationKey = response.data['data']['key']; // 重命名 key 为 verificationKey
-        Get.to(() => VerifyEmailPage(email: email, verificationKey: verificationKey)); // 传递 verificationKey
+        final verificationKey = response.data['data']['key'];
+        Get.to(() => VerifyEmailPage(email: email, verificationKey: verificationKey));
       } else {
         _errorMessage = "Error: ${response.statusMessage}";
         print('Error: ${response.statusMessage}');

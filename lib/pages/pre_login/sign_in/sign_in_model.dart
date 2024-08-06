@@ -14,7 +14,6 @@ class SignInModel extends ChangeNotifier {
   String? _emailErrorMessage;
   String? _passwordErrorMessage;
   String? _errorMessage;
-  TokenEntity? _tokenEntity;
 
   SignInModel() {
     _initializeToken();
@@ -26,16 +25,12 @@ class SignInModel extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
 
   Future<void> _initializeToken() async {
-    await initializeToken(
-      onSuccess: (tokenEntity) {
-        _tokenEntity = tokenEntity;
-        notifyListeners();
-      },
-      onError: (errorMessage) {
-        _errorMessage = errorMessage;
-        notifyListeners();
-      },
-    );
+    try {
+      await TokenService.instance.getTokenEntity();
+    } catch (e) {
+      _errorMessage = "Failed to initialize token: $e";
+      notifyListeners();
+    }
   }
 
   Future<void> signIn() async {
@@ -58,17 +53,17 @@ class SignInModel extends ChangeNotifier {
       _passwordErrorMessage = null;
     }
 
-    if (_tokenEntity == null || _tokenEntity?.accessToken == null) {
-      _errorMessage = "No access token available.";
-      notifyListeners();
-      return;
-    }
-
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
 
     try {
+      final TokenEntity tokenEntity = await TokenService.instance.getTokenEntity();
+
+      if (tokenEntity.accessToken == null) {
+        throw Exception("No access token available");
+      }
+
       final formData = FormData.fromMap({
         'email': email,
         'password': password,
@@ -80,7 +75,7 @@ class SignInModel extends ChangeNotifier {
         options: Options(
           headers: {
             'Content-Type': 'multipart/form-data',
-            'token': _tokenEntity?.accessToken,
+            'token': tokenEntity.accessToken,
           },
         ),
       );
@@ -100,7 +95,7 @@ class SignInModel extends ChangeNotifier {
 
         // 登录成功，跳转到首页并传递 token 和 userData
         getx.Get.toNamed('/home', arguments: {
-          'token': _tokenEntity,
+          'token': tokenEntity,
           'userData': userData,
         });
       } else if (response.data[ConstantData.code] == ConstantData.errorCodeInvalidEmailOrPassword) {

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:first_app/service/token_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:first_app/pages/pre_login/forget_pwd/forget_pwd_model.dart';
@@ -10,7 +11,7 @@ import 'net/dio.client.dart';
 import 'net/interceptors/log_interceptor.dart';
 import 'routes/app_route.dart';
 import 'pages/pre_login/welcome/welcome_page.dart';
-import 'utils/log_util.dart'; // 确保路径正确
+import 'utils/log_util.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,6 +28,9 @@ void main() {
     ),
     interceptors: [DioLogInterceptor()],
   );
+
+  // 初始化 TokenService
+  getx.Get.put(TokenService());
 
   runApp(MyApp(dioClient: dioClient));
 }
@@ -48,7 +52,7 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: ScreenUtilInit(
-        designSize: const Size(375, 812), // 使用设计稿尺寸
+        designSize: const Size(375, 812),
         minTextAdapt: true,
         splitScreenMode: true,
         builder: (context, child) {

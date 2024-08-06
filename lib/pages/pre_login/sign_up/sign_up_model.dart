@@ -2,19 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' as getx;
 import '../../../constants/constant_data.dart';
-import '../../../entity/User.dart'; // 确保路径正确
-import '../../../entity/token_entity.dart'; // 确保路径正确
-import '../../../service/token_service.dart'; // 确保路径正确
+import '../../../entity/User.dart';
+import '../../../entity/token_entity.dart';
+import '../../../service/token_service.dart';
 
 class SignUpModel extends ChangeNotifier {
-  User user = User();  // 删除了final修饰符以允许更新用户对象
+  User user = User();
   final Dio _dio = Dio();
   bool _isLoading = false;
   String? _emailErrorMessage;
   String? _usernameErrorMessage;
   String? _passwordErrorMessage;
   String? _errorMessage;
-  TokenEntity? _tokenEntity; // 使用 TokenEntity 替代 _accessToken
 
   SignUpModel() {
     _initializeToken();
@@ -27,16 +26,12 @@ class SignUpModel extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
 
   Future<void> _initializeToken() async {
-    await initializeToken(
-      onSuccess: (tokenEntity) {
-        _tokenEntity = tokenEntity;
-        notifyListeners();
-      },
-      onError: (errorMessage) {
-        _errorMessage = errorMessage;
-        notifyListeners();
-      },
-    );
+    try {
+      await TokenService.instance.getTokenEntity();
+    } catch (e) {
+      _errorMessage = "Failed to initialize token: $e";
+      notifyListeners();
+    }
   }
 
   void setEmail(String email) {
@@ -83,17 +78,18 @@ class SignUpModel extends ChangeNotifier {
       notifyListeners();
       return;
     }
-    if (_tokenEntity == null || _tokenEntity?.accessToken == null) {
-      _errorMessage = "No access token available.";
-      notifyListeners();
-      return;
-    }
 
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
 
     try {
+      final TokenEntity tokenEntity = await TokenService.instance.getTokenEntity();
+
+      if (tokenEntity.accessToken == null) {
+        throw Exception("No access token available");
+      }
+
       final formData = FormData.fromMap(user.toJson());
 
       final response = await _dio.post(
@@ -102,7 +98,7 @@ class SignUpModel extends ChangeNotifier {
         options: Options(
           headers: {
             'Content-Type': 'multipart/form-data',
-            'token': _tokenEntity!.accessToken, // 使用 _tokenEntity 的 accessToken
+            'token': tokenEntity.accessToken,
           },
         ),
       );

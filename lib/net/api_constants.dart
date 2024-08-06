@@ -10,7 +10,7 @@ class ApiConstants{
   static const String wsDebugUrl = "wss://chat.masonvips.com/ws";
   static const String debugUrl = "https://api.masonvips.com";
   static const String debugCheckId = "Fi5cahyee7ta8iemaecee9Oe3eithia2";//"Joh0ziebob5iuvo1koozaebiagaeD2zo";//"Fi5cahyee7ta8iemaecee9Oe3eithia2";
-  static const String urlVersion = "/v1";
+  static const String urlVersion = "https://api.masonvips.com/v1";
 
   static const String releaseUrl ="https://api.sweetpartnerapp.com";
   static const String wsReleaseUrl = "wss://chat.sweetpartnerapp.com/ws";
@@ -151,7 +151,6 @@ class ApiConstants{
   static const String syncAccount = "$urlVersion/sync/account";
   static const String syncSignIn = "$urlVersion/sync/signin";
   static const String universalPopup = "$urlVersion/universal/popup";
-
   static const String getS3UploadUrl = "$urlVersion/s3/uploading/signed/url";
 
   // static String baseUrl = kReleaseMode?debugUrl:debugUrl;
