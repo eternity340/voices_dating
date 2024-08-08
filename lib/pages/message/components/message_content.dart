@@ -26,7 +26,7 @@ class MessageContent extends StatelessWidget {
           return Column(
             children: [
               Container(
-                height: 100.h, // 确保每个项有固定高度
+                height: 100.h,
                 padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
                 child: Stack(
                   children: [
@@ -40,7 +40,7 @@ class MessageContent extends StatelessWidget {
                     ),
                     if (user.newNumber != null && user.newNumber != '0')
                       Positioned(
-                        left: 65.w, // 修改位置，以确保在头像的右下角
+                        left: 65.w,
                         bottom: 8.h,
                         child: Container(
                           width: 15.w,
@@ -85,13 +85,13 @@ class MessageContent extends StatelessWidget {
                         top: 24.h,
                         child: Text(
                           _formatTime(user.lastactivetime!),
-                          style: ConstantStyles.lastActiveTimeStyle
+                          style: ConstantStyles.lastActiveTimeStyle,
                         ),
                       ),
                   ],
                 ),
               ),
-              SizedBox(height: 10.h), // 添加15.5px的空白区域
+              SizedBox(height: 10.h),
               Divider(
                 thickness: 1,
                 color: Color(0xFFEBEBEB),
