@@ -65,4 +65,5 @@ class ImageRes{
   static const  iconLoveInactive = 'assets/images/icon_love_inactive.png';
   static const  iconChatInactive ='assets/images/icon_chat_inactive.png';
   static const  buttonRoundSearch = 'assets/images/button_round_search.png';
+  static const  iconCancel = 'assets/images/ic_cancel.png';
 }

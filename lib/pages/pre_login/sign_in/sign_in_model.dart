@@ -3,8 +3,10 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart' as getx;
 import '../../../constants/constant_data.dart';
 import '../../../entity/user_data_entity.dart';
+import '../../../service/app_service.dart';
 import '../../../service/token_service.dart';
 import '../../../entity/token_entity.dart';
+import '../../../utils/shared_preference_util.dart';
 
 class SignInModel extends ChangeNotifier {
   final TextEditingController emailController = TextEditingController();
@@ -87,13 +89,11 @@ class SignInModel extends ChangeNotifier {
           print('Error: User data is missing in the response.');
           throw Exception('User data is missing in the response.');
         }
-
         final userData = UserDataEntity.fromJson(userDataJson);
-
-        // 打印 userData 以便调试
         print('User data: $userData');
-
-        // 登录成功，跳转到首页并传递 token 和 userData
+        AppService.instance.isLogin = true;
+        print(AppService.instance.isLogin);
+        await SharedPreferenceUtil.instance.setValue(key: SharedPresKeys.isLogin, value: true);
         getx.Get.toNamed('/home', arguments: {
           'token': tokenEntity,
           'userData': userData,

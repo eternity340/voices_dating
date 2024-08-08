@@ -1,33 +1,40 @@
+import 'package:dio/dio.dart';
+import 'package:first_app/net/api_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:dio/dio.dart';
 import '../../../entity/token_entity.dart';
 import '../../../entity/user_data_entity.dart';
 import '../../../components/custom_message_dialog.dart';
+import '../../../net/dio.client.dart';
+import '../../../service/token_service.dart';
 
 class SettingsController extends GetxController {
   final TokenEntity tokenEntity = Get.arguments['token'];
   final UserDataEntity userData = Get.arguments['userData'];
 
   Future<void> signOut() async {
-    final dio = Dio();
     try {
-      final response = await dio.post(
-        'https://api.masonvips.com/v1/signout',
+      await DioClient.instance.requestNetwork(
+        method: Method.post,
+        url: ApiConstants.signOut,
         options: Options(
           headers: {
             'token': tokenEntity.accessToken,
           },
         ),
+        onSuccess: (data) async {
+          // 成功退出登录后，删除 token
+          await TokenService.instance.clearToken();
+
+          Get.snackbar('Success', 'Sign out successful',
+              snackPosition: SnackPosition.BOTTOM);
+          Get.offAllNamed('/welcome');
+        },
+        onError: (code, msg, data) {
+          Get.snackbar('Error', 'Failed to sign out: $msg',
+              snackPosition: SnackPosition.BOTTOM);
+        },
       );
-      if (response.data['code'] == 200) {
-        Get.snackbar('Success', 'Sign out successful',
-            snackPosition: SnackPosition.BOTTOM);
-        Get.offAllNamed('/welcome');
-      } else {
-        Get.snackbar('Error', 'Failed to sign out',
-            snackPosition: SnackPosition.BOTTOM);
-      }
     } catch (e) {
       Get.snackbar('Error', 'An error occurred while signing out',
           snackPosition: SnackPosition.BOTTOM);
@@ -41,7 +48,10 @@ class SettingsController extends GetxController {
         return CustomMessageDialog(
           title: Text('Sign Out'),
           content: Text('Are you sure you want to sign out?'),
-          onYesPressed: onYesPressed,
+          onYesPressed: () {
+            Navigator.of(context).pop(); // 关闭对话框
+            signOut(); // 执行退出登录操作
+          },
         );
       },
     );

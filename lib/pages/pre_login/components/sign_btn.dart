@@ -30,7 +30,7 @@ class SignBtn extends StatelessWidget {
             ),
             child: Center(
               child: Text(
-                ConstantData.signUpText.toUpperCase(),
+                ConstantData.signInText.toUpperCase(),
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 16.sp, // Responsive font size

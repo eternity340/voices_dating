@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:first_app/service/app_service.dart';
 import 'package:first_app/service/token_service.dart';
+import 'package:first_app/service/im_service.dart'; // 添加这行
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:first_app/pages/pre_login/forget_pwd/forget_pwd_model.dart';
@@ -28,10 +30,9 @@ void main() {
     ),
     interceptors: [DioLogInterceptor()],
   );
-
-  // 初始化 TokenService
   getx.Get.put(TokenService());
-
+  getx.Get.put(AppService());
+  getx.Get.put(IMService().init());
   runApp(MyApp(dioClient: dioClient));
 }
 

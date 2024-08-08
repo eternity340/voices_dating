@@ -199,9 +199,9 @@ class WfCommonUtils{
     int gender = int.parse(genderType!);
 
     if (gender == ConstantData.genderTypeWomen) {
-      return WfStringRes.getString(WfStringRes.woman);
+      return StringRes.getString(StringRes.woman);
     } else if (gender == ConstantData.genderTypeMen) {
-      return WfStringRes.getString(WfStringRes.man);
+      return StringRes.getString(StringRes.man);
     }
     return "";
   }
@@ -216,9 +216,9 @@ class WfCommonUtils{
     if (!isEmpty) {
       pwd!.length >= leastPwdLength
           ? result = null
-          : result = WfStringRes.getString(WfStringRes.errorPwdLengthError);
+          : result = StringRes.getString(StringRes.errorPwdLengthError);
     } else {
-      result = WfStringRes.getString(WfStringRes.errorEmptyPwd);
+      result = StringRes.getString(StringRes.errorEmptyPwd);
     }
     return result;
   }
@@ -252,22 +252,22 @@ class WfCommonUtils{
       if (duration / oneMinTime > 1) {
         return '${duration ~/ oneMinTime} Mins ';
       } else {
-        return WfStringRes.getString(WfStringRes.justNow);
+        return StringRes.getString(StringRes.justNow);
       }
     } else if (duration < oneDayTime) {
       if (duration / oneHourTime > 1) {
-        return '${duration ~/ oneHourTime} ${WfStringRes.getString(WfStringRes.hours)}';
+        return '${duration ~/ oneHourTime} ${StringRes.getString(StringRes.hours)}';
       } else {
-        return '${duration ~/ oneHourTime} ${WfStringRes.getString(WfStringRes.hour)}';
+        return '${duration ~/ oneHourTime} ${StringRes.getString(StringRes.hour)}';
       }
     } else if (duration < 30 * oneDayTime) {
       if (duration / oneDayTime > 1) {
-        return '${duration ~/ oneDayTime} ${WfStringRes.getString(WfStringRes.days)}';
+        return '${duration ~/ oneDayTime} ${StringRes.getString(StringRes.days)}';
       } else {
-        return '${duration ~/ oneDayTime} ${WfStringRes.getString(WfStringRes.day)}';
+        return '${duration ~/ oneDayTime} ${StringRes.getString(StringRes.day)}';
       }
     } else {
-      return '30 ${WfStringRes.getString(WfStringRes.days)}';
+      return '30 ${StringRes.getString(StringRes.days)}';
     }
   }
 

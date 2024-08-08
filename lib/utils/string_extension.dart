@@ -2,8 +2,8 @@
 extension StringEx on String?{
 
   bool get isNullOrEmpty{
-      return this==null||this!.isEmpty;
-    }
+    return this==null||this!.isEmpty;
+  }
 
   String? get firstUpperCase{
 
