@@ -1,4 +1,4 @@
-import 'package:first_app/constants/Constant_styles.dart';
+import 'package:first_app/constants/constant_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../constants/constant_data.dart';
@@ -57,7 +57,9 @@ class _MomentsCardState extends State<MomentsCard> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                          image: NetworkImage(widget.moment.avatar ?? ImageRes.placeholderAvatar),
+                          image: widget.moment.avatar != null
+                              ? NetworkImage(widget.moment.avatar!)
+                              : AssetImage(ImageRes.placeholderAvatar) as ImageProvider,
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -66,7 +68,7 @@ class _MomentsCardState extends State<MomentsCard> {
                     Flexible(
                       child: Text(
                         widget.moment.username ?? ConstantData.unknownText,
-                        style:ConstantStyles.momentUsernameTextStyle,
+                        style: ConstantStyles.momentUsernameTextStyle,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -76,7 +78,7 @@ class _MomentsCardState extends State<MomentsCard> {
                 SizedBox(height: 16.h),
                 Text(
                   widget.moment.timelineDescr ?? ConstantData.timelineDescrText,
-                  style:ConstantStyles.timelineDescTextStyle
+                  style: ConstantStyles.timelineDescTextStyle,
                 ),
                 SizedBox(height: 16.h),
                 if (widget.moment.attachments != null && widget.moment.attachments!.length == 1)
@@ -86,7 +88,9 @@ class _MomentsCardState extends State<MomentsCard> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20.r),
                       image: DecorationImage(
-                        image: NetworkImage(widget.moment.attachments!.first.url ?? ImageRes.placeholderAvatar),
+                        image: widget.moment.attachments!.first.url != null
+                            ? NetworkImage(widget.moment.attachments!.first.url!)
+                            : AssetImage(ImageRes.placeholderAvatar) as ImageProvider,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -103,7 +107,9 @@ class _MomentsCardState extends State<MomentsCard> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20.r),
                             image: DecorationImage(
-                              image: NetworkImage(attachment.url ?? ImageRes.placeholderAvatar),
+                              image: attachment.url != null
+                                  ? NetworkImage(attachment.url!)
+                                  : AssetImage(ImageRes.placeholderAvatar) as ImageProvider,
                               fit: BoxFit.cover,
                             ),
                           ),
