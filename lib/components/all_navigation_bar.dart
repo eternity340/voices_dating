@@ -8,9 +8,9 @@ import '../entity/token_entity.dart';
 
 class AllNavigationBar extends StatelessWidget {
   final TokenEntity tokenEntity;
-  final UserDataEntity userData;
+  final UserDataEntity? userData; // Make userData optional
 
-  AllNavigationBar({required this.tokenEntity, required this.userData});
+  AllNavigationBar({required this.tokenEntity, this.userData});
 
   @override
   Widget build(BuildContext context) {
@@ -69,11 +69,11 @@ class AllNavigationBar extends StatelessWidget {
     );
   }
 
-  Widget _buildNavItem(String activeIcon, String inactiveIcon, String route, UserDataEntity userData) {
+  Widget _buildNavItem(String activeIcon, String inactiveIcon, String route, UserDataEntity? userData) {
     bool isActive = Get.currentRoute == route;
     return GestureDetector(
       onTap: () {
-        Get.toNamed(route, arguments: {'token': tokenEntity, 'userData': userData});
+        Get.toNamed(route, arguments: {'token': tokenEntity, if (userData != null) 'userData': userData});
       },
       child: Image.asset(
         isActive ? activeIcon : inactiveIcon,

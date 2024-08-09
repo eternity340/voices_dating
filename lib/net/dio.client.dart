@@ -218,9 +218,9 @@ class DioClient{
       onError(code, msg, data);
     }else{
       if(!msg.isNullOrEmpty){
-        WfCommonUtils.hideLoading();
+        CommonUtils.hideLoading();
         if(code!=ExceptionHandler.unknown_error) {
-          WfCommonUtils.showSnackBar(msg);
+          CommonUtils.showSnackBar(msg);
         }
       }
     }

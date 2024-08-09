@@ -339,7 +339,7 @@ class IMService extends GetxService {
       //{"type":"error","time":1606703469,"code":30003002,"message":"Input parameters error."}
       //{"type":"error","time":1606703469,"code":10001001,"message":"Please login first"}
         if (resultData.containsKey("message")) {
-          WfCommonUtils.showSnackBar(resultData['message']);
+          CommonUtils.showSnackBar(resultData['message']);
         }
         ///根据local id 更改消息的发送状态为失败
         if (resultData.containsKey("error_code") &&

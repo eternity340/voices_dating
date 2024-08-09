@@ -73,14 +73,14 @@ class AppService extends GetxService{
     LogUtil.d(message: "logout:$isLogin");
     if(isLogin){
       SharedPreferenceUtil.instance.setValue(key: SharedPresKeys.isLogin, value: false);
-      WfCommonUtils.showLoading();
+      CommonUtils.showLoading();
       DioClient.instance.cancelAllRequest();
       await IMService.instance.disconnect();
       if(!isDelete) {
         await DioClient.instance.requestNetwork(url: ApiConstants.signOut);
       }
       TokenService.instance.clearToken();
-      WfCommonUtils.hideLoading();
+      CommonUtils.hideLoading();
     }
 
     SharedPreferenceUtil.instance.setValue(key: SharedPresKeys.selfEntity, value: "");
@@ -181,19 +181,19 @@ class AppService extends GetxService{
 
   Future<bool> asyncUserAccount() async{
     bool status = false;
-    WfCommonUtils.showLoading();
+    CommonUtils.showLoading();
     await DioClient.instance.requestNetwork<Map>(url: ApiConstants.syncAccount,onSuccess: (result){
       if(result!=null){
         LogUtil.d(message: "async account:${result}");
         var key = result["key"];
         if(key!=null) {
-          WfCommonUtils.hideLoading();
+          CommonUtils.hideLoading();
           restartApp(key);
         }
       }
     },onError: (code,message,data){
       // SharedPreferenceUtil.instance.setValue(key: SharedPresKeys.isOpenToMain, value: false);
-      WfCommonUtils.hideLoading();
+      CommonUtils.hideLoading();
       // restartApp("abcd");
 
     });

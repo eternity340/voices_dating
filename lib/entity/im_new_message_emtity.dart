@@ -38,7 +38,7 @@ class IMNewMessageEntity {
     this.width,
     this.shouldShowTime = false,
     this.sendState = 0,
-    // this.assetEntity,
+    //this.assetEntity,
     String? localId,
   });
 
@@ -81,9 +81,9 @@ class IMNewMessageEntity {
   // AssetEntity? assetEntity;//本地字段，判断发送的图片
 
   @override
-  String toString() {
-    return jsonEncode(this);
-  }
+    String toString() {
+      return jsonEncode(this);
+    }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
     'created': created,

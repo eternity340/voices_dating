@@ -8,16 +8,16 @@ import '../../../entity/im_message_entity.dart';
 import '../../net/dio.client.dart';
 import '../../../utils/log_util.dart';
 import '../../net/api_constants.dart';
+import '../../service/app_service.dart';
 import '../../service/im_service.dart';
 
 class MessageController extends GetxController {
   final TokenEntity tokenEntity;
-  final UserDataEntity userData;
+  final UserDataEntity userDataEntity;
   int selectedIndex = 0;
   List<ChattedUserEntity> chattedUsers = [];
   PageController pageController = PageController();
-
-  MessageController(this.tokenEntity, this.userData);
+  MessageController(this.tokenEntity, this.userDataEntity);
 
   @override
   void onInit() {
@@ -38,6 +38,9 @@ class MessageController extends GetxController {
   }
 
   void _updateChattedUsers(IMMessageEntity messageEntity) {
+    if (messageEntity.fromUid == userDataEntity.userId ) {
+      return;
+    }
     int index = chattedUsers.indexWhere((user) => user.userId == messageEntity.fromUid);
     if (index != -1) {
       ChattedUserEntity user = chattedUsers.removeAt(index);
@@ -54,8 +57,9 @@ class MessageController extends GetxController {
       );
       chattedUsers.insert(0, newUser);
     }
-    update(); // Call update() to trigger a rebuild
+    update();
   }
+
 
   void changeSelectedIndex(int index) {
     selectedIndex = index;

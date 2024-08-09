@@ -11,6 +11,7 @@ import 'package:first_app/pages/me/settings/block_member/block_member_page.dart'
 import 'package:first_app/pages/me/settings/feedback/feedback_page.dart';
 import 'package:first_app/pages/me/settings/purchase_record/purchase_record_page.dart';
 import 'package:first_app/pages/me/verify/verify_page.dart';
+import 'package:first_app/pages/message/private_chat/private_chat_page.dart';
 import 'package:first_app/pages/moments/add_moment/add_moment_page.dart';
 import 'package:first_app/pages/moments/moments_detail/moments_detail_page.dart';
 import 'package:first_app/pages/voice/voice_page.dart';
@@ -197,6 +198,12 @@ class AppRoutes {
     getx.GetPage(
       name: '/message',
       page: () => MessagePage(),
+      children: [
+        getx.GetPage(
+          name: '/private_chat',
+          page: () => PrivateChatPage(),
+        ),
+      ],
     ),
 
 

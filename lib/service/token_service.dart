@@ -50,8 +50,8 @@ class TokenService extends GetxService{
 
     Map<String,dynamic> refreshData = {};
     int currentTimeStamp = (DateTime.now().millisecondsSinceEpoch) ~/ 1000;
-    String nonce = WfCommonUtils.randomBit(4);
-    signKey = WfCommonUtils.getSignKey(appId: ApiConstants.appId,appSecret: ApiConstants.appSecret,time: currentTimeStamp, nonce:nonce);
+    String nonce = CommonUtils.randomBit(4);
+    signKey = CommonUtils.getSignKey(appId: ApiConstants.appId,appSecret: ApiConstants.appSecret,time: currentTimeStamp, nonce:nonce);
     tokenHeader.putIfAbsent("AppId", () => ApiConstants.appId);
     tokenHeader.putIfAbsent("Signature", () => signKey);
     tokenHeader.putIfAbsent("Nonce", () => nonce);

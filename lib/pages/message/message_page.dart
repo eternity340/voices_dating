@@ -13,10 +13,12 @@ class MessagePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TokenEntity tokenEntity = Get.arguments['token'] as TokenEntity;
-    final UserDataEntity userData = Get.arguments['userData'] as UserDataEntity;
+    final UserDataEntity? userData = Get.arguments['userData'] as UserDataEntity?;
 
     return GetBuilder<MessageController>(
-      init: MessageController(tokenEntity, userData),
+
+      init:
+      MessageController(tokenEntity,userData!),
       builder: (controller) {
         return Scaffold(
           body: Stack(
@@ -58,6 +60,7 @@ class MessagePage extends StatelessWidget {
                       MessageContent(
                         chattedUsers: controller.chattedUsers,
                         onRefresh: controller.fetchChattedUsers,
+                        tokenEntity: tokenEntity
                       ),
                       Center(child: Text('Content for Viewed Me')),
                       Center(child: Text('Content for Liked Me')),
@@ -65,6 +68,7 @@ class MessagePage extends StatelessWidget {
                   ),
                 ),
               ),
+              if (userData != null)
               AllNavigationBar(tokenEntity: tokenEntity, userData: userData),
             ],
           ),

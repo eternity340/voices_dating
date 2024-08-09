@@ -10,6 +10,8 @@ import '../comment_entity.dart';
 import '../comment_reply_entity.dart';
 // import '../im_message_entity.dart';
 // import '../im_new_message_emtity.dart';
+import '../im_message_entity.dart';
+import '../im_new_message_emtity.dart';
 import '../language_match_info_entity.dart';
 import '../list_user_entity.dart';
 import '../match_age_entity.dart';
@@ -145,12 +147,12 @@ M _generateItemOBJ<M>(String typeStr, dynamic jsonObj) {
     case 'ChattedUserEntity':
       obj = ChattedUserEntity.fromJson(jsonObj);
       break;
-    // case 'IMMessageEntity':
-    //   obj = IMMessageEntity.fromJson(jsonObj);
-    //   break;
-    // case 'IMNewMessageEntity':
-    //   obj = IMNewMessageEntity.fromJson(jsonObj);
-    //   break;
+    case 'IMMessageEntity':
+      obj = IMMessageEntity.fromJson(jsonObj);
+      break;
+    case 'IMNewMessageEntity':
+      obj = IMNewMessageEntity.fromJson(jsonObj);
+      break;
     case 'ChatStatusEntity':
       obj = ChatStatusEntity.fromJson(jsonObj);
       break;
@@ -292,18 +294,18 @@ T _generateOBJList<T>(String typeStr, List data) {
               (e) => _generateItemOBJ<ChattedUserEntity>(typeStr, e))
           .toList();
       break;
-    // case 'IMMessageEntity':
-    //   list = data
-    //       .map<IMMessageEntity>(
-    //           (e) => _generateItemOBJ<IMMessageEntity>(typeStr, e))
-    //       .toList();
-    //   break;
-    // case 'IMNewMessageEntity':
-    //   list = data
-    //       .map<IMNewMessageEntity>(
-    //           (e) => _generateItemOBJ<IMNewMessageEntity>(typeStr, e))
-    //       .toList();
-    //   break;
+    case 'IMMessageEntity':
+      list = data
+          .map<IMMessageEntity>(
+              (e) => _generateItemOBJ<IMMessageEntity>(typeStr, e))
+          .toList();
+      break;
+    case 'IMNewMessageEntity':
+      list = data
+          .map<IMNewMessageEntity>(
+              (e) => _generateItemOBJ<IMNewMessageEntity>(typeStr, e))
+          .toList();
+      break;
     case 'ChatStatusEntity':
       list = data
           .map<ChatStatusEntity>(
