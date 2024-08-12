@@ -17,7 +17,7 @@ import 'app_style_utils.dart';
 import 'config_options_utils.dart';
 import 'string_extension.dart';
 
-class WfCommonUtils{
+class CommonUtils{
 
   static const leastPwdLength = 6;
   static const int oneMinTime = 60 * 1000;

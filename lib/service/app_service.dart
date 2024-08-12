@@ -19,12 +19,8 @@ import '../utils/common_utils.dart';
 import '../utils/log_util.dart';
 import '../utils/request_util.dart';
 import '../utils/shared_preference_util.dart';
-import '../utils/string_extension.dart';
 import 'im_service.dart';
 
-
-
-//Edit by Connor - 用于全局处理用户个人的相关业务
 class AppService extends GetxService{
 
   static AppService get instance => Get.find<AppService>();
