@@ -1,22 +1,27 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
-import '../../../constants/Constant_styles.dart';
+import '../../../constants/constant_styles.dart';
 import '../../../entity/chatted_user_entity.dart';
 import '../../../entity/token_entity.dart';
+import '../../../net/dio.client.dart';
+import '../message_controller.dart'; // Import the MessageController
 
 class MessageContent extends StatelessWidget {
   final List<ChattedUserEntity> chattedUsers;
   final Future<void> Function() onRefresh;
   final TokenEntity tokenEntity;
+  final MessageController controller; // Add controller parameter
 
   const MessageContent({
     Key? key,
     required this.chattedUsers,
     required this.onRefresh,
     required this.tokenEntity,
+    required this.controller, // Add controller parameter
   }) : super(key: key);
 
   @override
@@ -29,7 +34,8 @@ class MessageContent extends StatelessWidget {
           final user = chattedUsers[index];
           return GestureDetector(
             onTap: () {
-              Get.toNamed('/message/private_chat', arguments: {'token': tokenEntity,'chattedUser': user});
+              _navigateToPrivateChat(user);
+              _sendReadMessageRequest(user);
             },
             child: Column(
               children: [
@@ -92,7 +98,7 @@ class MessageContent extends StatelessWidget {
                           right: 16.w,
                           top: 24.h,
                           child: Text(
-                            _formatTime(user.lastactivetime!),
+                            _formatTime(user.created!),
                             style: ConstantStyles.lastActiveTimeStyle,
                           ),
                         ),
@@ -112,6 +118,35 @@ class MessageContent extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+
+  void _navigateToPrivateChat(ChattedUserEntity user) {
+    Get.toNamed('/message/private_chat', arguments: {
+      'token': tokenEntity,
+      'chattedUser': user,
+    })?.then((_) {
+      controller.clearNewNumber(user.userId.toString());
+    });
+  }
+
+  void _sendReadMessageRequest(ChattedUserEntity user) {
+    DioClient.instance.requestNetwork(
+      url: 'https://api.masonvips.com/v1/read/message',
+      queryParameters: {
+        'profId': user.userId,
+      },
+      options: Options(
+        headers: {
+          'token': tokenEntity.accessToken,
+        },
+      ),
+      onSuccess: (data) {
+        print('Request successful');
+      },
+      onError: (code, msg, data) {
+        print('Request failed: $msg');
+      },
     );
   }
 

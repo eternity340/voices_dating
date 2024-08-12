@@ -3,26 +3,47 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../entity/token_entity.dart';
 import '../../../entity/user_data_entity.dart';
-import 'package:first_app/components/background.dart';
 import '../../components/all_navigation_bar.dart';
+import '../../components/background.dart';
 import '../../image_res/image_res.dart';
 import 'components/message_content.dart';
 import 'message_controller.dart';
 
-class MessagePage extends StatelessWidget {
+class MessagePage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
+  _MessagePageState createState() => _MessagePageState();
+}
+
+class _MessagePageState extends State<MessagePage> {
+  late MessageController controller;
+  bool _isLoading = true; // Add a variable to manage loading state
+
+  @override
+  void initState() {
+    super.initState();
     final TokenEntity tokenEntity = Get.arguments['token'] as TokenEntity;
     final UserDataEntity? userData = Get.arguments['userData'] as UserDataEntity?;
+    controller = Get.put(MessageController(tokenEntity, userData!));
+    _loadData();
+  }
 
+  Future<void> _loadData() async {
+    // Fetch users and then hide the loading overlay
+    await controller.fetchChattedUsers();
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return GetBuilder<MessageController>(
-
-      init:
-      MessageController(tokenEntity,userData!),
+      init: controller,
       builder: (controller) {
         return Scaffold(
           body: Stack(
             children: [
+              if (_isLoading) LoadingOverlay(), // Show loading overlay when loading
               Background(
                 showBackButton: false,
                 showBackgroundImage: true,
@@ -60,7 +81,8 @@ class MessagePage extends StatelessWidget {
                       MessageContent(
                         chattedUsers: controller.chattedUsers,
                         onRefresh: controller.fetchChattedUsers,
-                        tokenEntity: tokenEntity
+                        tokenEntity: controller.tokenEntity,
+                        controller: controller,
                       ),
                       Center(child: Text('Content for Viewed Me')),
                       Center(child: Text('Content for Liked Me')),
@@ -68,8 +90,11 @@ class MessagePage extends StatelessWidget {
                   ),
                 ),
               ),
-              if (userData != null)
-              AllNavigationBar(tokenEntity: tokenEntity, userData: userData),
+              if (controller.userDataEntity != null)
+                AllNavigationBar(
+                  tokenEntity: controller.tokenEntity,
+                  userData: controller.userDataEntity,
+                ),
             ],
           ),
         );
@@ -108,6 +133,20 @@ class MessagePage extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class LoadingOverlay extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        color: Colors.white.withOpacity(0.8),
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+        ),
       ),
     );
   }
