@@ -16,7 +16,7 @@ class MessagePage extends StatefulWidget {
 
 class _MessagePageState extends State<MessagePage> {
   late MessageController controller;
-  bool _isLoading = true; // Add a variable to manage loading state
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -28,7 +28,6 @@ class _MessagePageState extends State<MessagePage> {
   }
 
   Future<void> _loadData() async {
-    // Fetch users and then hide the loading overlay
     await controller.fetchChattedUsers();
     setState(() {
       _isLoading = false;
@@ -43,7 +42,7 @@ class _MessagePageState extends State<MessagePage> {
         return Scaffold(
           body: Stack(
             children: [
-              if (_isLoading) LoadingOverlay(), // Show loading overlay when loading
+              if (_isLoading) LoadingOverlay(),
               Background(
                 showBackButton: false,
                 showBackgroundImage: true,

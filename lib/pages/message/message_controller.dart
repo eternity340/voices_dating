@@ -15,9 +15,11 @@ class MessageController extends GetxController {
   final UserDataEntity userDataEntity;
   int selectedIndex = 0;
   List<ChattedUserEntity> chattedUsers = [];
-  PageController pageController = PageController();
+  late PageController pageController;
 
-  MessageController(this.tokenEntity, this.userDataEntity);
+  MessageController(this.tokenEntity, this.userDataEntity) {
+    pageController = PageController(initialPage: selectedIndex);
+  }
 
   @override
   void onInit() {
@@ -61,10 +63,14 @@ class MessageController extends GetxController {
     update();
   }
 
-
   void changeSelectedIndex(int index) {
     selectedIndex = index;
-    pageController.animateToPage(index, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+    // Ensure the jumpToPage is called after the frame is rendered
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (pageController.hasClients) {
+        pageController.jumpToPage(index);
+      }
+    });
     update();
   }
 
@@ -103,9 +109,8 @@ class MessageController extends GetxController {
   void clearNewNumber(String userId) {
     int index = chattedUsers.indexWhere((user) => user.userId == userId);
     if (index != -1) {
-      chattedUsers[index].newNumber = '0'; // Set newNumber to '0' or null
+      chattedUsers[index].newNumber = '0';
       update();
     }
   }
-
 }
