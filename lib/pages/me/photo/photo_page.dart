@@ -12,7 +12,7 @@ import '../../../components/background.dart';
 import '../../../components/bottom_options.dart';
 import '../../../constants/constant_data.dart';
 import '../../../image_res/image_res.dart';
-import 'components/photo_dialog.dart';
+import '../../../components/photo_dialog.dart';
 
 class PhotoPage extends StatelessWidget {
   @override

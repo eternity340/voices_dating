@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../entity/im_new_message_emtity.dart';
+import '../../../components/photo_dialog.dart';
 import 'components/chat_input_bar.dart';
 import 'private_chat_controller.dart';
 import 'package:first_app/components/background.dart';
@@ -39,6 +39,9 @@ class _PrivateChatPageState extends State<PrivateChatPage> with WidgetsBindingOb
       }
     });
   }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,7 +103,19 @@ class _PrivateChatPageState extends State<PrivateChatPage> with WidgetsBindingOb
                                       color: isSentByUser ? Colors.blue : Colors.green,
                                       borderRadius: BorderRadius.circular(10.w),
                                     ),
-                                    child: Text(
+                                    child: message.messageType == 2
+                                        ? GestureDetector(
+                                      onTap: () {
+                                        controller.showPhotoDialog(context, message.url.toString());
+                                      },
+                                      child: Image.network(
+                                        message.url.toString(),
+                                        width: message.width!/2.w,
+                                        height: message.height!/2.h,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    )
+                                        : Text(
                                       message.message.toString(),
                                       style: TextStyle(color: Colors.white),
                                     ),

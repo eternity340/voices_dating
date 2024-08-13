@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
 import 'package:first_app/entity/chatted_user_entity.dart';
@@ -12,6 +13,7 @@ import 'package:first_app/net/api_constants.dart';
 
 import '../../../service/im_service.dart';
 import '../../../utils/log_util.dart';
+import '../../../components/photo_dialog.dart';
 
 class PrivateChatController extends GetxController {
   final TokenEntity tokenEntity = Get.arguments['token'] as TokenEntity;
@@ -95,16 +97,6 @@ class PrivateChatController extends GetxController {
       return;
     }
     var localId = const Uuid().v4().toString();
-   /* var now = DateTime.now().millisecondsSinceEpoch ~/ 1000;
-    var newMessage = IMNewMessageEntity(
-      localId: localId,
-      message: text,
-      created: now,
-      profId: currentUserSender?.profile?.userId,
-      sender: currentUserSender,
-    );
-    messages.add(newMessage); // 改为 add 而不是 insert
-    print('New message added: ${newMessage.message}');*/
     var sendSuccess = IMService.instance.sendMessage(
         message: text,
         receiverId: chattedUser.userId!,
@@ -133,5 +125,20 @@ class PrivateChatController extends GetxController {
         );
       }
     });
+  }
+
+  void showPhotoDialog(BuildContext context, String photoUrl) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return PhotoDialog(
+          photoUrl: photoUrl,
+          attachId: '',
+          onDelete: null,
+          onSetting: null,
+          showSettings: false,
+        );
+      },
+    );
   }
 }

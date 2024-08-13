@@ -75,11 +75,11 @@ class MessageController extends GetxController {
   }
 
   @override
-  void onClose() {
+  void dispose() {
+    pageController.dispose();
     IMService.instance.removeMessageCallBack(_handleWebSocketMessage);
     IMService.instance.disconnect();
-    pageController.dispose();
-    super.onClose();
+    super.dispose();
   }
 
   Future<void> fetchChattedUsers() async {

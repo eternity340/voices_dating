@@ -35,6 +35,12 @@ class _MessagePageState extends State<MessagePage> {
   }
 
   @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GetBuilder<MessageController>(
       init: controller,
@@ -71,21 +77,28 @@ class _MessagePageState extends State<MessagePage> {
                     borderRadius: BorderRadius.circular(24.r),
                     backgroundBlendMode: BlendMode.srcOver,
                   ),
-                  child: PageView(
-                    controller: controller.pageController,
+                  child: PageView.builder(
                     onPageChanged: (index) {
                       controller.changeSelectedIndex(index);
                     },
-                    children: [
-                      MessageContent(
-                        chattedUsers: controller.chattedUsers,
-                        onRefresh: controller.fetchChattedUsers,
-                        tokenEntity: controller.tokenEntity,
-                        controller: controller,
-                      ),
-                      Center(child: Text('Content for Viewed Me')),
-                      Center(child: Text('Content for Liked Me')),
-                    ],
+                    itemCount: 3,
+                    itemBuilder: (context, index) {
+                      switch (index) {
+                        case 0:
+                          return MessageContent(
+                            chattedUsers: controller.chattedUsers,
+                            onRefresh: controller.fetchChattedUsers,
+                            tokenEntity: controller.tokenEntity,
+                            controller: controller,
+                          );
+                        case 1:
+                          return Center(child: Text('Content for Viewed Me'));
+                        case 2:
+                          return Center(child: Text('Content for Liked Me'));
+                        default:
+                          return SizedBox.shrink();
+                      }
+                    },
                   ),
                 ),
               ),
@@ -105,6 +118,7 @@ class _MessagePageState extends State<MessagePage> {
     bool isSelected = controller.selectedIndex == index;
     return GestureDetector(
       onTap: () {
+        // Update the selected index and animate to the page
         controller.changeSelectedIndex(index);
       },
       child: Stack(
