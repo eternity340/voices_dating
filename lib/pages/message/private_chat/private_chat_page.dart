@@ -110,8 +110,8 @@ class _PrivateChatPageState extends State<PrivateChatPage> with WidgetsBindingOb
                                       },
                                       child: Image.network(
                                         message.url.toString(),
-                                        width: message.width!/2.w,
-                                        height: message.height!/2.h,
+                                        width: message.width!/4.w,
+                                        height: message.height!/4.h,
                                         fit: BoxFit.cover,
                                       ),
                                     )
@@ -137,8 +137,10 @@ class _PrivateChatPageState extends State<PrivateChatPage> with WidgetsBindingOb
                   ),
                 ),
                 ChatInputBar(
-                  messageController: controller.messageController,
+                  textController: controller.textController,
                   onSend: controller.sendTextMessage,
+                  tokenEntity: controller.tokenEntity,
+                  chattedUserEntity: controller.chattedUser,
                 ),
               ],
             ),

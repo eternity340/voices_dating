@@ -39,8 +39,8 @@ class PhotoPage extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              _buildAddPhotoContainer(context, controller),
-                              _buildMainPhotoContainer(controller),
+                              buildAddPhotoContainer(context, controller),
+                              buildMainPhotoContainer(controller),
                             ],
                           ),
                         ),
@@ -50,7 +50,7 @@ class PhotoPage extends StatelessWidget {
                             child: Wrap(
                               spacing: 24.w,
                               runSpacing: 24.h,
-                              children: _buildPhotoContainers(controller),
+                              children: buildPhotoContainers(controller),
                             ),
                           ),
                       ],
@@ -74,11 +74,11 @@ class PhotoPage extends StatelessWidget {
     );
   }
 
-  Widget _buildAddPhotoContainer(BuildContext context, PhotoController controller) {
+  Widget buildAddPhotoContainer(BuildContext context, PhotoController controller) {
     return GestureDetector(
       onTap: () {
         if (controller.tokenEntity.accessToken != null) {
-          _showOptions(context, controller.tokenEntity.accessToken!, controller);
+          showOptions(context, controller.tokenEntity.accessToken!, controller);
         } else {
           print('AccessToken is null');
         }
@@ -106,7 +106,7 @@ class PhotoPage extends StatelessWidget {
     );
   }
 
-  Widget _buildMainPhotoContainer(PhotoController controller) {
+  Widget buildMainPhotoContainer(PhotoController controller) {
     return Container(
       width: 137.09.w,
       height: 174.h,
@@ -152,11 +152,11 @@ class PhotoPage extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildPhotoContainers(PhotoController controller) {
+  List<Widget> buildPhotoContainers(PhotoController controller) {
     return List.generate(controller.userData.photos!.length - 1, (i) {
       return GestureDetector(
         onTap: () {
-          _showPhotoDialog(controller.userData.photos![i + 1].url!,controller.userData.photos![i+1].attachId!);
+          showPhotoDialog(controller.userData.photos![i + 1].url!,controller.userData.photos![i+1].attachId!);
         },
         child: Container(
           width: 137.09.w,
@@ -181,7 +181,7 @@ class PhotoPage extends StatelessWidget {
     });
   }
 
-  void _showPhotoDialog(String photoUrl, String attachId) {
+  void showPhotoDialog(String photoUrl, String attachId) {
     final PhotoController controller = Get.find<PhotoController>();
 
     showDialog(
@@ -204,7 +204,7 @@ class PhotoPage extends StatelessWidget {
     );
   }
 
-  void _showOptions(BuildContext context, String accessToken, PhotoController controller) {
+  void showOptions(BuildContext context, String accessToken, PhotoController controller) {
     showCupertinoModalBottomSheet(
       context: context,
       builder: (context) {
