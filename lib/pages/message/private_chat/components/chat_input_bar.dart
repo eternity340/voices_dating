@@ -3,13 +3,16 @@ import 'package:first_app/entity/chatted_user_entity.dart';
 import 'package:first_app/entity/token_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_sound/public/flutter_sound_recorder.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../components/bottom_options.dart';
+import '../../../../components/gradient_btn.dart';
+import '../../../../constants/constant_data.dart';
 import '../../../../service/im_service.dart';
 
-class ChatInputBar extends StatelessWidget {
+class ChatInputBar extends StatefulWidget {
   final TextEditingController textController;
   final VoidCallback onSend;
   final TokenEntity tokenEntity;
@@ -23,68 +26,31 @@ class ChatInputBar extends StatelessWidget {
     required this.chattedUserEntity,
   });
 
-  Future<void> _pickAndUploadPhoto(BuildContext context, ImageSource source) async {
-    final scaffoldMessenger = ScaffoldMessenger.of(context);
-    Permission permission = source == ImageSource.camera ? Permission.camera : Permission.photos;
+  @override
+  State<ChatInputBar> createState() => _ChatInputBarState();
+}
 
-    // 检查和请求权限
-    if (await permission.request().isGranted) {
-      final ImagePicker picker = ImagePicker();
-      final XFile? image = await picker.pickImage(source: source);
-      if (image != null) {
-        var localId = const Uuid().v4().toString();
-        var success = await _uploadImage(image, localId);
-        if (success) {
-          scaffoldMessenger.showSnackBar(
-            SnackBar(content: Text('Image sent successfully')),
-          );
-        } else {
-          scaffoldMessenger.showSnackBar(
-            SnackBar(content: Text('Failed to send image')),
-          );
-        }
-      }
-    } else {
-      // 权限被拒绝，显示消息
-      scaffoldMessenger.showSnackBar(
-        SnackBar(content: Text('Permission denied')),
-      );
-    }
+class _ChatInputBarState extends State<ChatInputBar> {
+  bool _isVoiceMode = false;
+  FlutterSoundRecorder? _recorder = FlutterSoundRecorder();
+  String? _recordingPath;
+
+  @override
+  void initState() {
+    super.initState();
+    _initRecorder();
   }
 
-  Future<bool> _uploadImage(XFile image, String localId) async {
-    try {
-      var dio = Dio();
-      var response = await dio.post(
-        'https://api.masonvips.com/v1/upload_file',
-        data: FormData.fromMap({
-          'file': await MultipartFile.fromFile(image.path),
-        }),
-        options: Options(
-          headers: {
-            'token': tokenEntity.accessToken,
-          },
-        ),
-      );
+  Future<void> _initRecorder() async {
+    await _recorder!.openRecorder();
+    await Permission.microphone.request();
+  }
 
-      if ( response.data['code'] == 200) {
-        var attachId = response.data['data'][0]['attachId'].toString();
-        var imageUrl = response.data['data'][0]['url'].toString();
-        var receiverId = chattedUserEntity.userId;
-
-        // 发送图像
-        return await IMService().sendImage(
-          attachId: attachId,
-          imageUrl: imageUrl,
-          receiverId: receiverId.toString(),
-          localId: localId,
-        );
-      }
-      return false;
-    } catch (e) {
-      debugPrint('Upload failed: $e');
-      return false;
-    }
+  @override
+  void dispose() {
+    _recorder!.closeRecorder();
+    _recorder = null;
+    super.dispose();
   }
 
   @override
@@ -109,42 +75,73 @@ class ChatInputBar extends StatelessWidget {
             top: 15.5.h,
             child: IconButton(
               icon: Image.asset(
-                'assets/images/icon_chat_voice.png',
+                _isVoiceMode ? 'assets/images/icon_chat_message.png' : 'assets/images/icon_chat_voice.png',
                 width: 18.w,
                 height: 18.h,
               ),
-              onPressed: () {
-                // 处理语音按钮操作
-              },
+              onPressed: _toggleInputMode,
             ),
           ),
-          Positioned(
-            left: 70.w,
-            top: 12.h,
-            child: Container(
-              width: 185.w,
-              height: 49.h,
-              decoration: BoxDecoration(
-                color: const Color(0xFFF8F8F9),
-                borderRadius: BorderRadius.circular(24.5.w),
-              ),
-              child: TextField(
-                controller: textController,
-                decoration: InputDecoration(
-                  hintText: "Send a message…",
-                  filled: true,
-                  fillColor: Colors.transparent,
-                  hintStyle: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w500,
-                    fontSize: 12.sp,
-                    color: const Color(0xFF8E8E93),
+          if (_isVoiceMode)
+            Positioned(
+              left: 70.w,
+              top: 12.h,
+              child: GestureDetector(
+
+                child: Container(
+                  width: 185.w,
+                  height: 49.h,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF20E2D7), Color(0xFFD8FAAD)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(30.r),
                   ),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 10.w),
+                  child: Center(
+                    child: Text(
+                      "Hold to Talk",
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontFamily: ConstantData.fontPoppins,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                        letterSpacing: 2.0,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            )
+          else
+            Positioned(
+              left: 70.w,
+              top: 12.h,
+              child: Container(
+                width: 185.w,
+                height: 49.h,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF8F8F9),
+                  borderRadius: BorderRadius.circular(24.5.w),
+                ),
+                child: TextField(
+                  controller: widget.textController,
+                  decoration: InputDecoration(
+                    hintText: "Send a message…",
+                    filled: true,
+                    fillColor: Colors.transparent,
+                    hintStyle: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w500,
+                      fontSize: 12.sp,
+                      color: const Color(0xFF8E8E93),
+                    ),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 10.w),
+                  ),
                 ),
               ),
             ),
-          ),
           Positioned(
             left: 270.w,
             top: 15.h,
@@ -183,11 +180,118 @@ class ChatInputBar extends StatelessWidget {
             top: 15.h,
             child: IconButton(
               icon: const Icon(Icons.send, color: Colors.black),
-              onPressed: onSend,
+              onPressed: widget.onSend,
             ),
           ),
         ],
       ),
     );
   }
+
+
+
+  Future<void> _pickAndUploadPhoto(BuildContext context, ImageSource source) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    Permission permission = source == ImageSource.camera ? Permission.camera : Permission.photos;
+
+    if (await permission.request().isGranted) {
+      final ImagePicker picker = ImagePicker();
+      final XFile? image = await picker.pickImage(source: source);
+      if (image != null) {
+        var localId = const Uuid().v4().toString();
+        var success = await uploadImage(image, localId);
+        if (success) {
+          scaffoldMessenger.showSnackBar(
+            SnackBar(content: Text('Image sent successfully')),
+          );
+        } else {
+          scaffoldMessenger.showSnackBar(
+            SnackBar(content: Text('Failed to send image')),
+          );
+        }
+      }
+    } else {
+      scaffoldMessenger.showSnackBar(
+        SnackBar(content: Text('Permission denied')),
+      );
+    }
+  }
+  Future<bool> uploadImage(XFile image, String localId) async {
+    try {
+      var dio = Dio();
+      var response = await dio.post(
+        'https://api.masonvips.com/v1/upload_file',
+        data: FormData.fromMap({
+          'file': await MultipartFile.fromFile(image.path),
+        }),
+        options: Options(
+          headers: {
+            'token': widget.tokenEntity.accessToken,
+          },
+        ),
+      );
+
+      if ( response.data['code'] == 200) {
+        var attachId = response.data['data'][0]['attachId'].toString();
+        var imageUrl = response.data['data'][0]['url'].toString();
+        var receiverId = widget.chattedUserEntity.userId;
+
+        // 发送图像
+        return await IMService().sendImage(
+          attachId: attachId,
+          imageUrl: imageUrl,
+          receiverId: receiverId.toString(),
+          localId: localId,
+        );
+      }
+      return false;
+    } catch (e) {
+      debugPrint('Upload failed: $e');
+      return false;
+    }
+  }
+  Future<bool> uploadVoice(XFile voice) async {
+    try {
+      var dio = Dio();
+      var response = await dio.post(
+        'https://api.masonvips.com/v1/upload_file',
+        data: FormData.fromMap({
+          'file': await MultipartFile.fromFile(voice.path),
+        }),
+        options: Options(
+          headers: {
+            'token': widget.tokenEntity.accessToken,
+          },
+        ),
+      );
+
+      if ( response.data['code'] == 200) {
+        var attachId = response.data['data'][0]['attachId'].toString();
+        var voiceUrl = response.data['data'][0]['url'].toString();
+        var duration = response.data['data'][0]['duration'].toString();
+        var receiverId = widget.chattedUserEntity.userId;
+        var localId = const Uuid().v4().toString();
+
+        // 发送图像
+        return await IMService().sendVoice(
+          attachId: attachId,
+          voiceUrl: voiceUrl,
+          receiverId: receiverId.toString(),
+          localId: localId,
+          duration: duration,
+        );
+      }
+      return false;
+    } catch (e) {
+      debugPrint('Upload failed: $e');
+      return false;
+    }
+  }
+
+  void _toggleInputMode() {
+    setState(() {
+      _isVoiceMode = !_isVoiceMode;
+    });
+  }
+
 }

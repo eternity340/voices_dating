@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sound/public/flutter_sound_recorder.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
 import 'package:first_app/entity/chatted_user_entity.dart';
 import 'package:intl/intl.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 import '../../../entity/im_message_entity.dart';
 import '../../../entity/im_new_message_emtity.dart';
@@ -24,12 +27,84 @@ class PrivateChatController extends GetxController {
   final TextEditingController textController = TextEditingController();
   Sender? currentUserSender;
   Sender? currentChatSender;
+  FlutterSoundRecorder? _audioRecorder;
+  String? _recordingPath;
+  RxBool isRecording = false.obs;
+
 
   @override
   void onInit() {
     super.onInit();
     getHistoryMessages();
     _subscribeToIMMessages();
+    _initAudioRecorder();
+  }
+
+  Future<void> _initAudioRecorder() async {
+    _audioRecorder = FlutterSoundRecorder();
+    await _audioRecorder!.openRecorder();
+  }
+
+  Future<void> startRecording() async {
+    if (_audioRecorder != null) {
+      final directory = await getTemporaryDirectory();
+      _recordingPath = '${directory.path}/audio_${DateTime.now().millisecondsSinceEpoch}.aac';
+      await _audioRecorder!.startRecorder(toFile: _recordingPath);
+      isRecording.value = true;
+    }
+  }
+
+  Future<void> stopRecording() async {
+    if (_audioRecorder != null) {
+      await _audioRecorder!.stopRecorder();
+      isRecording.value = false;
+      if (_recordingPath != null) {
+        final duration = await _getAudioDuration(_recordingPath!);
+        sendVoiceMessage(_recordingPath!, duration as String);
+      }
+    }
+  }
+
+  Future<int> _getAudioDuration(String path) async {
+    final player = AudioPlayer();
+    final duration = await player.setFilePath(path);
+    await player.dispose();
+    return duration?.inSeconds ?? 0;
+  }
+
+  void sendVoiceMessage(String filePath, String duration) async {
+    var localId = const Uuid().v4().toString();
+    // 这里需要实现上传音频文件到服务器的逻辑，并获取URL
+    String audioUrl = await uploadAudioFile(filePath);
+
+    var sendSuccess = IMService.instance.sendVoice(
+      voiceUrl: audioUrl,
+      duration: duration,
+      receiverId: chattedUser.userId!,
+      localId: localId,
+      attachId: '',
+    );
+
+    if (await sendSuccess) {
+      final newMessage = IMNewMessageEntity(
+        localId: localId,
+        message: 'Voice message',
+        url: audioUrl,
+        duration: duration.toString(),
+        messageType: 3, // 语音消息类型
+        created: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+        profId: currentUserSender?.profile?.userId,
+        sender: currentUserSender,
+      );
+      messages.add(newMessage);
+      scrollToBottom();
+    }
+  }
+
+  Future<String> uploadAudioFile(String filePath) async {
+    // 实现文件上传逻辑，返回服务器URL
+    // 这里需要根据您的后端API来实现
+    return 'https://example.com/audio.aac';
   }
 
   void _subscribeToIMMessages() {
@@ -38,17 +113,19 @@ class PrivateChatController extends GetxController {
 
   void _handleNewMessage(IMMessageEntity message) {
     if (message.type != MessageTypeEnum.SAY.value ||
-        (message.fromUid != chattedUser.userId && message.toUid != chattedUser.userId)) {
+        (message.fromUid != chattedUser.userId &&
+         message.toUid != chattedUser.userId)) {
       return;
     }
 
     final bool isImageMessage = message.typeId == 2;
+    final bool isVoiceMessage = message.typeId == 3;
     final IMNewMessageEntity newMessage = IMNewMessageEntity(
       localId: message.localId ?? '',
       message: message.content ?? '',
-      url: isImageMessage ? message.url : null,
+      url: isImageMessage || isVoiceMessage ? message.url : null,
       roomId: isImageMessage ? message.roomId : null,
-      duration: isImageMessage ? message.duration.toString() : null,
+      duration: isVoiceMessage ? message.duration.toString() : null,
       width: isImageMessage ? message.width : null,
       height: isImageMessage ? message.height : null,
       messageType: message.typeId,
@@ -111,7 +188,9 @@ class PrivateChatController extends GetxController {
     }
     var localId = const Uuid().v4().toString();
     var sendSuccess = IMService.instance.sendMessage(
-        message: text, receiverId: chattedUser.userId!, localId: localId);
+        message: text,
+        receiverId: chattedUser.userId!,
+        localId: localId);
     LogUtil.d(message: 'WsManager sendSuccess text:$sendSuccess');
     textController.clear();
     scrollToBottom();
@@ -123,7 +202,7 @@ class PrivateChatController extends GetxController {
   }
 
   bool shouldShowTimeDivider(int currentTimestamp, int previousTimestamp) {
-    return (currentTimestamp - previousTimestamp) > (10 * 60); // 10 minutes in seconds
+    return (currentTimestamp - previousTimestamp) > (600);
   }
 
   void scrollToBottom() {

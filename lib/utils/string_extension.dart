@@ -17,4 +17,5 @@ extension StringEx on String?{
     }
     return this!=null&&this!.isNotEmpty;
   }
+
 }

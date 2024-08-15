@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 import 'dart:math';
 
@@ -449,6 +450,26 @@ class IMService extends GetxService {
     }
   }
 
+  Future<bool> sendVoice(
+      {required String attachId,
+        required String voiceUrl,
+        required String receiverId,
+        required String localId,
+        required String duration,}) async {
+    if (connectionStatus.value != ConnectionStatusEnum.connected) {
+      await connect();
+    }
+    Map voiceData = _createVoiceData(attachId, voiceUrl, receiverId, localId, duration );
+
+    try {
+      channel?.sink.add(json.encode(voiceData).toString());
+      return Future(() => true);
+    } on WebSocketChannelException catch (e) {
+      LogUtil.e(message: 'WsManager-----$e');
+      return Future(() => false);
+    }
+  }
+
   sendSystemMsg({required Map messageMap}) async {
     if (connectionStatus.value != ConnectionStatusEnum.connected) {
       await connect();
@@ -506,6 +527,19 @@ class IMService extends GetxService {
     messageData.putIfAbsent("attach_id", () => attachId);
     messageData.putIfAbsent("url", () => imageUrl);
     messageData.putIfAbsent("local_id", () => localId);
+    return messageData;
+  }
+
+  _createVoiceData(
+      String attachId, String voiceUrl, String receiverId, String localId,String duration) {
+    Map<String, dynamic> messageData = {};
+    messageData.putIfAbsent("type", () => MessageTypeEnum.SAY.value);
+    messageData.putIfAbsent("to", () => receiverId);
+    messageData.putIfAbsent("type_id", () => MessageTypeIdEnum.IMAGE.value);
+    messageData.putIfAbsent("attach_id", () => attachId);
+    messageData.putIfAbsent("url", () => voiceUrl);
+    messageData.putIfAbsent("local_id", () => localId);
+    messageData.putIfAbsent("duration", ()=> duration);
     return messageData;
   }
 
