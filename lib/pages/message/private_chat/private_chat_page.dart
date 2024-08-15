@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:just_audio/just_audio.dart';
 import '../../../components/photo_dialog.dart';
+import 'components/chat/bar/bar.dart';
+import 'components/chat/bar/bar_scale_pulse_out_loading.dart';
 import 'components/chat_input_bar.dart';
 import 'private_chat_controller.dart';
 import 'package:first_app/components/background.dart';
@@ -184,27 +186,55 @@ class _PrivateChatPageState extends State<PrivateChatPage>
 
   Widget _buildAudioMessage(message, int index) {
     double durationSeconds = _getDurationSeconds(message.duration);
+    bool isCurrentlyPlaying = _isPlaying && _currentlyPlayingIndex == index;
 
     return GestureDetector(
       onTap: () => _handleAudioTap(message, index),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          AnimatedIcon(
-            icon: AnimatedIcons.play_pause,
-            progress: _currentlyPlayingIndex == index
-                ? _animationController
-                : AlwaysStoppedAnimation(0),
-            color: Colors.white,
-          ),
-          SizedBox(width: 5.w),
-          Text(
-            _isPlaying && _currentlyPlayingIndex == index
-                ? 'Playing...'
-                : 'Voice message',
-            style: TextStyle(color: Colors.white),
-          ),
-        ],
+      child: Container(
+        width: 100.w,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AnimatedIcon(
+              icon: AnimatedIcons.play_pause,
+              progress: _currentlyPlayingIndex == index
+                  ? _animationController
+                  : AlwaysStoppedAnimation(0),
+              color: Colors.white,
+              size: 24.sp,
+            ),
+            SizedBox(width: 10.w),
+            Expanded(
+              child: SizedBox(
+                height: 30.h,
+                child: isCurrentlyPlaying
+                    ? BarScalePulseOutLoading(
+                  width: 2.w,
+                  height: 15.h,
+                  color: Colors.white,
+                  duration: const Duration(milliseconds: 800),
+                )
+                    : Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: List.generate(
+                    7,
+                        (index) => Bar(
+                      color: Colors.white,
+                      width: 2.w,
+                      height: 15.h,
+                      borderRadius: BorderRadius.circular(1.w),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(width: 8.w),
+            Text(
+              '${durationSeconds.toInt()}"',
+              style: TextStyle(color: Colors.white, fontSize: 12.sp),
+            ),
+          ],
+        ),
       ),
     );
   }

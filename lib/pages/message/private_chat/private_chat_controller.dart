@@ -74,7 +74,6 @@ class PrivateChatController extends GetxController {
 
   void sendVoiceMessage(String filePath, int duration) async {
     var localId = const Uuid().v4().toString();
-    // 这里需要实现上传音频文件到服务器的逻辑，并获取URL
     String audioUrl = await uploadAudioFile(filePath);
 
     var sendSuccess = IMService.instance.sendVoice(

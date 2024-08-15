@@ -1,5 +1,6 @@
 
 import 'package:dio/dio.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_sound/public/flutter_sound_recorder.dart';
@@ -35,17 +36,22 @@ class _ChatInputBarState extends State<ChatInputBar> {
   bool _isVoiceMode = false;
   FlutterSoundRecorder? _recorder = FlutterSoundRecorder();
   bool _isRecording = false;
-  Offset _startPosition = Offset.zero;
   final GlobalKey _recordButtonKey = GlobalKey();
   final GlobalKey _cancelAreaKey = GlobalKey();
   final Uuid _uuid = const Uuid();
+  OverlayEntry? _overlayEntry;
+  bool _isCancelling = false;
+  final double _cancelAreaRatio = 0.7; // 取消区域占屏幕高度的 30%
 
   @override
   void initState() {
     super.initState();
     _recorder = FlutterSoundRecorder();
     _initRecorder();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+    });
   }
+
 
   Future<void> _initRecorder() async {
     final status = await Permission.microphone.request();
@@ -56,13 +62,6 @@ class _ChatInputBarState extends State<ChatInputBar> {
         const SnackBar(content: Text('Microphone permission is required')),
       );
     }
-  }
-
-  @override
-  void dispose() {
-    _recorder!.closeRecorder();
-    _recorder = null;
-    super.dispose();
   }
 
   @override
@@ -100,9 +99,11 @@ class _ChatInputBarState extends State<ChatInputBar> {
               top: 12.h,
               child: GestureDetector(
                 key: _recordButtonKey,
+                onLongPressDown: _onLongPressDown,
+                onLongPressUp: _onLongPressUp,
                 onLongPressStart: _onLongPressStart,
-                onLongPressMoveUpdate: _onLongPressMoveUpdate,
                 onLongPressEnd: _onLongPressEnd,
+                onLongPressMoveUpdate: _onLongPressMoveUpdate,
                 child: Container(
                   width: 185.w,
                   height: 49.h,
@@ -116,7 +117,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
                   ),
                   child: Center(
                     child: Text(
-                      _isRecording ? "Release to Send" : "Hold to Talk",
+                      "Hold to Talk",
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontFamily: ConstantData.fontPoppins,
@@ -222,16 +223,78 @@ class _ChatInputBarState extends State<ChatInputBar> {
     );
   }
 
-  // Gesture Handlers
+  void _createOverlay() {
+    _overlayEntry = OverlayEntry(
+      builder: (context) => Positioned.fill(
+        child: StatefulBuilder(
+          builder: (context, setState) {
+            return Material(
+              color: Colors.black.withOpacity(0.7),
+              child: Stack(
+                children: [
+
+                  Center(
+                    child: Container(
+                      width: 150.w,
+                      height: 150.w,
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.7),
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            _isCancelling ? Icons.close : Icons.mic,
+                            color: Colors.white,
+                            size: 50.sp,
+                          ),
+                          SizedBox(height: 10.h),
+                          Text(
+                            _isCancelling ? "Release to cancel" : "Slide up to cancel",
+                            style: TextStyle(color: Colors.white, fontSize: 16.sp),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+    Overlay.of(context).insert(_overlayEntry!);
+  }
+
+  void _removeOverlay() {
+    if (_overlayEntry != null) {
+      _overlayEntry!.remove();
+      _overlayEntry = null;
+    }
+  }
+
+
+  void _onLongPressDown(LongPressDownDetails details) {
+    setState(() {
+      _isCancelling = false;
+    });
+  }
+
+  void _onLongPressUp() {
+    _removeOverlay();
+  }
+
   void _onLongPressStart(LongPressStartDetails details) async {
     setState(() {
       _isRecording = true;
-      _startPosition = details.localPosition;
     });
+    _createOverlay(); // Create overlay here
     try {
       if (_recorder!.isStopped) {
         await _recorder!.startRecorder(
-            toFile: 'audio_${_uuid.v4()}.aac'
+          toFile: 'audio_${_uuid.v4()}.aac',
         );
       }
     } catch (e) {
@@ -242,40 +305,37 @@ class _ChatInputBarState extends State<ChatInputBar> {
     }
   }
 
-
-
   void _onLongPressMoveUpdate(LongPressMoveUpdateDetails details) {
-    RenderBox? box = _cancelAreaKey.currentContext?.findRenderObject() as RenderBox?;
-    if (box != null) {
-      Offset cancelAreaPosition = box.localToGlobal(Offset.zero);
-      Size cancelAreaSize = box.size;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final offsetY = details.localOffsetFromOrigin.dy;
 
-      // Check if finger is within the cancel area
-      if (details.globalPosition.dx >= cancelAreaPosition.dx &&
-          details.globalPosition.dx <= cancelAreaPosition.dx + cancelAreaSize.width &&
-          details.globalPosition.dy >= cancelAreaPosition.dy &&
-          details.globalPosition.dy <= cancelAreaPosition.dy + cancelAreaSize.height) {
-        setState(() {
-          _isRecording = false;
-        });
-        _recorder!.stopRecorder();
-      }
+    bool newIsCancelling = offsetY < -screenHeight * _cancelAreaRatio;
+    if (newIsCancelling != _isCancelling) {
+      setState(() {
+        _isCancelling = newIsCancelling;
+      });
+      _overlayEntry?.markNeedsBuild();
     }
   }
 
   void _onLongPressEnd(LongPressEndDetails details) async {
+    _removeOverlay();
     if (_isRecording) {
       try {
         final path = await _recorder!.stopRecorder();
-        if (path != null && path.isNotEmpty) {
-          final voiceFile = XFile(path);
-          debugPrint('Recording stopped: $path');
-          await uploadVoice(voiceFile);
+        if (!_isCancelling) {
+          if (path != null && path.isNotEmpty) {
+            final voiceFile = XFile(path);
+            debugPrint('Recording stopped: $path');
+            await uploadVoice(voiceFile);
+          } else {
+            debugPrint('Recording path is null or empty');
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Recording failed, path is empty')),
+            );
+          }
         } else {
-          debugPrint('Recording path is null or empty');
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Recording failed, path is empty')),
-          );
+          debugPrint('Recording cancelled');
         }
       } catch (e) {
         debugPrint('Failed to stop recording: $e');
@@ -284,11 +344,12 @@ class _ChatInputBarState extends State<ChatInputBar> {
         );
       }
     }
+
     setState(() {
       _isRecording = false;
+      _isCancelling = false;
     });
   }
-
 
   Future<void> _pickAndUploadPhoto(BuildContext context, ImageSource source) async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
@@ -337,7 +398,6 @@ class _ChatInputBarState extends State<ChatInputBar> {
         var imageUrl = response.data['data'][0]['url'].toString();
         var receiverId = widget.chattedUserEntity.userId;
 
-        // Send image
         return await IMService().sendImage(
           attachId: attachId,
           imageUrl: imageUrl,
@@ -392,7 +452,6 @@ class _ChatInputBarState extends State<ChatInputBar> {
     }
   }
 
-// 计算音频持续时间的方法保持不变
   Future<int> _getAudioDuration(String path) async {
     try {
       final audioPlayer = AudioPlayer();
@@ -409,5 +468,13 @@ class _ChatInputBarState extends State<ChatInputBar> {
     setState(() {
       _isVoiceMode = !_isVoiceMode;
     });
+  }
+
+  @override
+  void dispose() {
+    _removeOverlay();
+    _recorder!.closeRecorder();
+    _recorder = null;
+    super.dispose();
   }
 }
