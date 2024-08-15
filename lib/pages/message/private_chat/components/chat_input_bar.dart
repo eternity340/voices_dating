@@ -1,15 +1,16 @@
+
 import 'package:dio/dio.dart';
-import 'package:first_app/entity/chatted_user_entity.dart';
-import 'package:first_app/entity/token_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_sound/public/flutter_sound_recorder.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../components/bottom_options.dart';
-import '../../../../components/gradient_btn.dart';
 import '../../../../constants/constant_data.dart';
+import '../../../../entity/chatted_user_entity.dart';
+import '../../../../entity/token_entity.dart';
 import '../../../../service/im_service.dart';
 
 class ChatInputBar extends StatefulWidget {
@@ -33,17 +34,28 @@ class ChatInputBar extends StatefulWidget {
 class _ChatInputBarState extends State<ChatInputBar> {
   bool _isVoiceMode = false;
   FlutterSoundRecorder? _recorder = FlutterSoundRecorder();
-  String? _recordingPath;
+  bool _isRecording = false;
+  Offset _startPosition = Offset.zero;
+  final GlobalKey _recordButtonKey = GlobalKey();
+  final GlobalKey _cancelAreaKey = GlobalKey();
+  final Uuid _uuid = const Uuid();
 
   @override
   void initState() {
     super.initState();
+    _recorder = FlutterSoundRecorder();
     _initRecorder();
   }
 
   Future<void> _initRecorder() async {
-    await _recorder!.openRecorder();
-    await Permission.microphone.request();
+    final status = await Permission.microphone.request();
+    if (status.isGranted) {
+      await _recorder!.openRecorder();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Microphone permission is required')),
+      );
+    }
   }
 
   @override
@@ -87,7 +99,10 @@ class _ChatInputBarState extends State<ChatInputBar> {
               left: 70.w,
               top: 12.h,
               child: GestureDetector(
-
+                key: _recordButtonKey,
+                onLongPressStart: _onLongPressStart,
+                onLongPressMoveUpdate: _onLongPressMoveUpdate,
+                onLongPressEnd: _onLongPressEnd,
                 child: Container(
                   width: 185.w,
                   height: 49.h,
@@ -101,7 +116,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
                   ),
                   child: Center(
                     child: Text(
-                      "Hold to Talk",
+                      _isRecording ? "Release to Send" : "Hold to Talk",
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontFamily: ConstantData.fontPoppins,
@@ -183,11 +198,96 @@ class _ChatInputBarState extends State<ChatInputBar> {
               onPressed: widget.onSend,
             ),
           ),
+          Positioned(
+            left: 20.w,
+            top: 564.h,
+            child: Container(
+              key: _cancelAreaKey,
+              width: 76.w,
+              height: 76.h,
+              decoration: BoxDecoration(
+                color: const Color(0xFF222120),
+                shape: BoxShape.circle,
+              ),
+              child: const Center(
+                child: Text(
+                  "Cancel",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
+  // Gesture Handlers
+  void _onLongPressStart(LongPressStartDetails details) async {
+    setState(() {
+      _isRecording = true;
+      _startPosition = details.localPosition;
+    });
+    try {
+      if (_recorder!.isStopped) {
+        await _recorder!.startRecorder(
+            toFile: 'audio_${_uuid.v4()}.aac'
+        );
+      }
+    } catch (e) {
+      debugPrint('Error starting recorder: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to start recording')),
+      );
+    }
+  }
+
+
+
+  void _onLongPressMoveUpdate(LongPressMoveUpdateDetails details) {
+    RenderBox? box = _cancelAreaKey.currentContext?.findRenderObject() as RenderBox?;
+    if (box != null) {
+      Offset cancelAreaPosition = box.localToGlobal(Offset.zero);
+      Size cancelAreaSize = box.size;
+
+      // Check if finger is within the cancel area
+      if (details.globalPosition.dx >= cancelAreaPosition.dx &&
+          details.globalPosition.dx <= cancelAreaPosition.dx + cancelAreaSize.width &&
+          details.globalPosition.dy >= cancelAreaPosition.dy &&
+          details.globalPosition.dy <= cancelAreaPosition.dy + cancelAreaSize.height) {
+        setState(() {
+          _isRecording = false;
+        });
+        _recorder!.stopRecorder();
+      }
+    }
+  }
+
+  void _onLongPressEnd(LongPressEndDetails details) async {
+    if (_isRecording) {
+      try {
+        final path = await _recorder!.stopRecorder();
+        if (path != null && path.isNotEmpty) {
+          final voiceFile = XFile(path);
+          debugPrint('Recording stopped: $path');
+          await uploadVoice(voiceFile);
+        } else {
+          debugPrint('Recording path is null or empty');
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Recording failed, path is empty')),
+          );
+        }
+      } catch (e) {
+        debugPrint('Failed to stop recording: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to stop recording')),
+        );
+      }
+    }
+    setState(() {
+      _isRecording = false;
+    });
+  }
 
 
   Future<void> _pickAndUploadPhoto(BuildContext context, ImageSource source) async {
@@ -198,24 +298,25 @@ class _ChatInputBarState extends State<ChatInputBar> {
       final ImagePicker picker = ImagePicker();
       final XFile? image = await picker.pickImage(source: source);
       if (image != null) {
-        var localId = const Uuid().v4().toString();
+        var localId = _uuid.v4().toString();
         var success = await uploadImage(image, localId);
         if (success) {
           scaffoldMessenger.showSnackBar(
-            SnackBar(content: Text('Image sent successfully')),
+            const SnackBar(content: Text('Image sent successfully')),
           );
         } else {
           scaffoldMessenger.showSnackBar(
-            SnackBar(content: Text('Failed to send image')),
+            const SnackBar(content: Text('Failed to send image')),
           );
         }
       }
     } else {
       scaffoldMessenger.showSnackBar(
-        SnackBar(content: Text('Permission denied')),
+        const SnackBar(content: Text('Permission denied')),
       );
     }
   }
+
   Future<bool> uploadImage(XFile image, String localId) async {
     try {
       var dio = Dio();
@@ -231,12 +332,12 @@ class _ChatInputBarState extends State<ChatInputBar> {
         ),
       );
 
-      if ( response.data['code'] == 200) {
+      if (response.data['code'] == 200) {
         var attachId = response.data['data'][0]['attachId'].toString();
         var imageUrl = response.data['data'][0]['url'].toString();
         var receiverId = widget.chattedUserEntity.userId;
 
-        // 发送图像
+        // Send image
         return await IMService().sendImage(
           attachId: attachId,
           imageUrl: imageUrl,
@@ -250,8 +351,12 @@ class _ChatInputBarState extends State<ChatInputBar> {
       return false;
     }
   }
+
   Future<bool> uploadVoice(XFile voice) async {
     try {
+      // 计算音频持续时间
+      final duration = await _getAudioDuration(voice.path);
+
       var dio = Dio();
       var response = await dio.post(
         'https://api.masonvips.com/v1/upload_file',
@@ -265,20 +370,19 @@ class _ChatInputBarState extends State<ChatInputBar> {
         ),
       );
 
-      if ( response.data['code'] == 200) {
+      if (response.data['code'] == 200) {
         var attachId = response.data['data'][0]['attachId'].toString();
         var voiceUrl = response.data['data'][0]['url'].toString();
-        var duration = response.data['data'][0]['duration'].toString();
         var receiverId = widget.chattedUserEntity.userId;
-        var localId = const Uuid().v4().toString();
+        var localId = _uuid.v4().toString();
 
-        // 发送图像
+        // Send voice
         return await IMService().sendVoice(
           attachId: attachId,
           voiceUrl: voiceUrl,
           receiverId: receiverId.toString(),
           localId: localId,
-          duration: duration,
+          duration: duration, // 直接传递整数
         );
       }
       return false;
@@ -288,10 +392,22 @@ class _ChatInputBarState extends State<ChatInputBar> {
     }
   }
 
+// 计算音频持续时间的方法保持不变
+  Future<int> _getAudioDuration(String path) async {
+    try {
+      final audioPlayer = AudioPlayer();
+      final duration = await audioPlayer.setFilePath(path);
+      await audioPlayer.dispose();
+      return duration?.inSeconds ?? 0;
+    } catch (e) {
+      debugPrint('Error getting audio duration: $e');
+      return 0;
+    }
+  }
+
   void _toggleInputMode() {
     setState(() {
       _isVoiceMode = !_isVoiceMode;
     });
   }
-
 }

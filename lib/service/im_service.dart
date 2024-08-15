@@ -450,17 +450,17 @@ class IMService extends GetxService {
     }
   }
 
-  Future<bool> sendVoice(
-      {required String attachId,
-        required String voiceUrl,
-        required String receiverId,
-        required String localId,
-        required String duration,}) async {
+  Future<bool> sendVoice({
+    required String attachId,
+    required String voiceUrl,
+    required String receiverId,
+    required String localId,
+    required int duration,
+  }) async {
     if (connectionStatus.value != ConnectionStatusEnum.connected) {
       await connect();
     }
-    Map voiceData = _createVoiceData(attachId, voiceUrl, receiverId, localId, duration );
-
+    Map voiceData = _createVoiceData(attachId, voiceUrl, receiverId, localId, duration);
     try {
       channel?.sink.add(json.encode(voiceData).toString());
       return Future(() => true);
@@ -531,11 +531,11 @@ class IMService extends GetxService {
   }
 
   _createVoiceData(
-      String attachId, String voiceUrl, String receiverId, String localId,String duration) {
+      String attachId, String voiceUrl, String receiverId, String localId,int duration) {
     Map<String, dynamic> messageData = {};
     messageData.putIfAbsent("type", () => MessageTypeEnum.SAY.value);
     messageData.putIfAbsent("to", () => receiverId);
-    messageData.putIfAbsent("type_id", () => MessageTypeIdEnum.IMAGE.value);
+    messageData.putIfAbsent("type_id", () => MessageTypeIdEnum.VOICE.value);
     messageData.putIfAbsent("attach_id", () => attachId);
     messageData.putIfAbsent("url", () => voiceUrl);
     messageData.putIfAbsent("local_id", () => localId);
