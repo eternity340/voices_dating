@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_sound/public/flutter_sound_player.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:just_audio/just_audio.dart';
+import '../../../components/bar/bar.dart';
+import '../../../components/bar/bar_scale_pulse_out_loading.dart';
 import '../../../components/photo_dialog.dart';
-import 'components/bar/bar.dart';
-import 'components/bar/bar_scale_pulse_out_loading.dart';
 import 'components/chat_input_bar.dart';
 import 'private_chat_controller.dart';
 import 'package:first_app/components/background.dart';
@@ -115,18 +116,15 @@ class _PrivateChatPageState extends State<PrivateChatPage>
                               if (isSentByUser) SizedBox(width: 10.w),
                               Flexible(
                                 child: Container(
-                                  margin: EdgeInsets.symmetric(
-                                      vertical: 10.h),
+                                  margin: EdgeInsets.symmetric(vertical: 10.h),
                                   padding: EdgeInsets.all(10.w),
                                   decoration: BoxDecoration(
                                     color: isSentByUser
-                                        ? Colors.blue
-                                        : Colors.green,
-                                    borderRadius:
-                                    BorderRadius.circular(10.w),
+                                        ? Color(0xFFFFAFAB)
+                                        : Color(0xFFABFFCF), // Updated colors
+                                    borderRadius: BorderRadius.circular(10.w),
                                   ),
-                                  child: _buildMessageContent(
-                                      message, index),
+                                  child: _buildMessageContent(message, index),
                                 ),
                               ),
                               if (!isSentByUser) SizedBox(width: 10.w),
@@ -177,20 +175,27 @@ class _PrivateChatPageState extends State<PrivateChatPage>
       case 3: // Audio message
         return _buildAudioMessage(message, index);
       default: // Text message
-        return Text(
-          message.message.toString(),
-          style: const TextStyle(color: Colors.white),
-        );
+        return
+          Text(
+            message.message.toString(),
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w500,
+              fontSize: 16.sp,
+              color: Colors.black
+            ),
+          );
     }
   }
 
   Widget _buildAudioMessage(message, int index) {
     double durationSeconds = _getDurationSeconds(message.duration);
     bool isCurrentlyPlaying = _isPlaying && _currentlyPlayingIndex == index;
+
     return GestureDetector(
       onTap: () => _handleAudioTap(message, index),
       child: Container(
-        width: 80.w,
+        width: 60.w,
         height: 20.h,
         padding: EdgeInsets.symmetric(horizontal: 0.w, vertical: 0.h),
         child: Row(
@@ -205,12 +210,12 @@ class _PrivateChatPageState extends State<PrivateChatPage>
                   progress: _currentlyPlayingIndex == index
                       ? _animationController
                       : AlwaysStoppedAnimation(0),
-                  color: Colors.white,
+                  color: Colors.black,  // Changed to black
                   size: 20.sp,
                 ),
               ),
             ),
-            SizedBox(width: 5.w),
+            SizedBox(width: 2.w),
             Expanded(
               child: SizedBox(
                 height: 30.h,
@@ -218,15 +223,15 @@ class _PrivateChatPageState extends State<PrivateChatPage>
                     ? BarScalePulseOutLoading(
                   width: 2.w,
                   height: 15.h,
-                  color: Colors.white,
+                  color: Colors.black,  // Changed to black
                   duration: const Duration(milliseconds: 800),
                 )
                     : Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: List.generate(
-                      7,
+                    5,
                         (index) => Bar(
-                      color: Colors.white,
+                      color: Colors.black,  // Changed to black
                       width: 2.w,
                       height: 15.h,
                       borderRadius: BorderRadius.circular(1.w),
@@ -239,7 +244,7 @@ class _PrivateChatPageState extends State<PrivateChatPage>
               width: 18.w,
               child: Text(
                 '${durationSeconds.toInt()}"',
-                style: TextStyle(color: Colors.white, fontSize: 12.sp),
+                style: TextStyle(color: Colors.black, fontSize: 12.sp),  // Changed to black
                 textAlign: TextAlign.right,
               ),
             ),
@@ -249,11 +254,11 @@ class _PrivateChatPageState extends State<PrivateChatPage>
     );
   }
 
+
   double _getDurationSeconds(dynamic duration) {
     try {
       return double.parse(duration.toString());
     } catch (e) {
-      print("Error parsing duration: $e");
       return 0.5;
     }
   }
