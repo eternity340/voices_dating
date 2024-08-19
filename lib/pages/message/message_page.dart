@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../entity/token_entity.dart';
@@ -29,9 +30,11 @@ class _MessagePageState extends State<MessagePage> {
 
   Future<void> _loadData() async {
     await controller.fetchChattedUsers();
-    setState(() {
-      _isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -42,75 +45,83 @@ class _MessagePageState extends State<MessagePage> {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<MessageController>(
-      init: controller,
-      builder: (controller) {
-        return Scaffold(
-          body: Stack(
-            children: [
-              if (_isLoading) LoadingOverlay(),
-              Background(
-                showBackButton: false,
-                showBackgroundImage: true,
-                child: Container(),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 16.w, top: 67.h),
-                child: Row(
-                  children: [
-                    _buildOption(controller, 'Messages', 0),
-                    SizedBox(width: 50.w),
-                    _buildOption(controller, 'Viewed Me', 1),
-                    SizedBox(width: 50.w),
-                    _buildOption(controller, 'Liked Me', 2),
-                  ],
-                ),
-              ),
-              Positioned(
-                top: 139.h,
-                left: (ScreenUtil().screenWidth - 335.w) / 2,
-                child: Container(
-                  width: 335.w,
-                  height: 680.h,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF8F8F9),
-                    borderRadius: BorderRadius.circular(24.r),
-                    backgroundBlendMode: BlendMode.srcOver,
-                  ),
-                  child: PageView.builder(
-                    onPageChanged: (index) {
-                      controller.changeSelectedIndex(index);
-                    },
-                    itemCount: 3,
-                    itemBuilder: (context, index) {
-                      switch (index) {
-                        case 0:
-                          return MessageContent(
-                            chattedUsers: controller.chattedUsers,
-                            onRefresh: controller.fetchChattedUsers,
-                            tokenEntity: controller.tokenEntity,
-                            controller: controller,
-                          );
-                        case 1:
-                          return Center(child: Text('Content for Viewed Me'));
-                        case 2:
-                          return Center(child: Text('Content for Liked Me'));
-                        default:
-                          return SizedBox.shrink();
-                      }
-                    },
-                  ),
-                ),
-              ),
-              if (controller.userDataEntity != null)
-                AllNavigationBar(
-                  tokenEntity: controller.tokenEntity,
-                  userData: controller.userDataEntity,
-                ),
-            ],
-          ),
-        );
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) return;
+        // 最小化应用
+        await SystemNavigator.pop();
       },
+      child: GetBuilder<MessageController>(
+        init: controller,
+        builder: (controller) {
+          return Scaffold(
+            body: Stack(
+              children: [
+                if (_isLoading) LoadingOverlay(),
+                Background(
+                  showBackButton: false,
+                  showBackgroundImage: true,
+                  child: Container(),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 16.w, top: 67.h),
+                  child: Row(
+                    children: [
+                      _buildOption(controller, 'Messages', 0),
+                      SizedBox(width: 50.w),
+                      _buildOption(controller, 'Viewed Me', 1),
+                      SizedBox(width: 50.w),
+                      _buildOption(controller, 'Liked Me', 2),
+                    ],
+                  ),
+                ),
+                Positioned(
+                  top: 139.h,
+                  left: (ScreenUtil().screenWidth - 335.w) / 2,
+                  child: Container(
+                    width: 335.w,
+                    height: 680.h,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF8F8F9),
+                      borderRadius: BorderRadius.circular(24.r),
+                      backgroundBlendMode: BlendMode.srcOver,
+                    ),
+                    child: PageView.builder(
+                      onPageChanged: (index) {
+                        controller.changeSelectedIndex(index);
+                      },
+                      itemCount: 3,
+                      itemBuilder: (context, index) {
+                        switch (index) {
+                          case 0:
+                            return MessageContent(
+                              chattedUsers: controller.chattedUsers,
+                              onRefresh: controller.fetchChattedUsers,
+                              tokenEntity: controller.tokenEntity,
+                              controller: controller,
+                            );
+                          case 1:
+                            return Center(child: Text('Content for Viewed Me'));
+                          case 2:
+                            return Center(child: Text('Content for Liked Me'));
+                          default:
+                            return SizedBox.shrink();
+                        }
+                      },
+                    ),
+                  ),
+                ),
+                if (controller.userDataEntity != null)
+                  AllNavigationBar(
+                    tokenEntity: controller.tokenEntity,
+                    userData: controller.userDataEntity,
+                  ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 

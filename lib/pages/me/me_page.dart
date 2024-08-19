@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:first_app/entity/token_entity.dart';
@@ -18,40 +19,49 @@ class MePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          Background(
-            showBackButton: false,
-            showSettingButton: false,
-            child: Container(),
-          ),
-          Positioned(
-            top: 60.h,
-            right: 24.w,
-            child: _buildTopIcons(),
-          ),
-          Positioned(
-            top: 130.h,
-            left: 0,
-            right: 0,
-            child: _buildProfileSection(userData),
-          ),
-          Positioned(
-            top: 330.h,
-            left: MediaQuery.of(context).size.width / 2 - 167.5.w, // Centering using ScreenUtil
-            child: _buildMiddleImageSection(context),
-          ),
-          Positioned(
-            top: 500.h,
-            left: MediaQuery.of(context).size.width / 2 - 167.5.w,
-            child: _buildOptionsSection(context, tokenEntity, userData),
-          ),
-          AllNavigationBar(tokenEntity: tokenEntity, userData: userData),
-        ],
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) return;
+        // 最小化应用
+        await SystemNavigator.pop();
+      },
+      child: Scaffold(
+        body: Stack(
+          children: [
+            Background(
+              showBackButton: false,
+              showSettingButton: false,
+              child: Container(),
+            ),
+            Positioned(
+              top: 60.h,
+              right: 24.w,
+              child: _buildTopIcons(),
+            ),
+            Positioned(
+              top: 130.h,
+              left: 0,
+              right: 0,
+              child: _buildProfileSection(userData),
+            ),
+            Positioned(
+              top: 330.h,
+              left: MediaQuery.of(context).size.width / 2 - 167.5.w,
+              child: _buildMiddleImageSection(context),
+            ),
+            Positioned(
+              top: 500.h,
+              left: MediaQuery.of(context).size.width / 2 - 167.5.w,
+              child: _buildOptionsSection(context, tokenEntity, userData),
+            ),
+            AllNavigationBar(tokenEntity: tokenEntity, userData: userData),
+          ],
+        ),
       ),
     );
   }
+
 
   Widget _buildTopIcons() {
     return Row(

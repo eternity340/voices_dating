@@ -5,8 +5,8 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:just_audio/just_audio.dart';
 import '../../../components/photo_dialog.dart';
-import 'components/chat/bar/bar.dart';
-import 'components/chat/bar/bar_scale_pulse_out_loading.dart';
+import 'components/bar/bar.dart';
+import 'components/bar/bar_scale_pulse_out_loading.dart';
 import 'components/chat_input_bar.dart';
 import 'private_chat_controller.dart';
 import 'package:first_app/components/background.dart';
@@ -187,23 +187,30 @@ class _PrivateChatPageState extends State<PrivateChatPage>
   Widget _buildAudioMessage(message, int index) {
     double durationSeconds = _getDurationSeconds(message.duration);
     bool isCurrentlyPlaying = _isPlaying && _currentlyPlayingIndex == index;
-
     return GestureDetector(
       onTap: () => _handleAudioTap(message, index),
       child: Container(
-        width: 100.w,
+        width: 80.w,
+        height: 20.h,
+        padding: EdgeInsets.symmetric(horizontal: 0.w, vertical: 0.h),
         child: Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            AnimatedIcon(
-              icon: AnimatedIcons.play_pause,
-              progress: _currentlyPlayingIndex == index
-                  ? _animationController
-                  : AlwaysStoppedAnimation(0),
-              color: Colors.white,
-              size: 24.sp,
+            SizedBox(
+              width: 20.w,
+              child: Center(
+                child: AnimatedIcon(
+                  icon: AnimatedIcons.play_pause,
+                  progress: _currentlyPlayingIndex == index
+                      ? _animationController
+                      : AlwaysStoppedAnimation(0),
+                  color: Colors.white,
+                  size: 20.sp,
+                ),
+              ),
             ),
-            SizedBox(width: 10.w),
+            SizedBox(width: 5.w),
             Expanded(
               child: SizedBox(
                 height: 30.h,
@@ -217,7 +224,7 @@ class _PrivateChatPageState extends State<PrivateChatPage>
                     : Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: List.generate(
-                    7,
+                      7,
                         (index) => Bar(
                       color: Colors.white,
                       width: 2.w,
@@ -228,10 +235,13 @@ class _PrivateChatPageState extends State<PrivateChatPage>
                 ),
               ),
             ),
-            SizedBox(width: 8.w),
-            Text(
-              '${durationSeconds.toInt()}"',
-              style: TextStyle(color: Colors.white, fontSize: 12.sp),
+            SizedBox(
+              width: 18.w,
+              child: Text(
+                '${durationSeconds.toInt()}"',
+                style: TextStyle(color: Colors.white, fontSize: 12.sp),
+                textAlign: TextAlign.right,
+              ),
             ),
           ],
         ),

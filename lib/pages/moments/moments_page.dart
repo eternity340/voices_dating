@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -19,7 +20,14 @@ class MomentsPage extends StatelessWidget {
       controller.fetchMoments();
     }
 
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) return;
+        // 最小化应用
+        await SystemNavigator.pop();
+      },
+      child: Scaffold(
       body: Stack(
         children: [
           Background(
@@ -123,6 +131,8 @@ class MomentsPage extends StatelessWidget {
           AllNavigationBar(tokenEntity: controller.tokenEntity, userData: controller.userData),
         ],
       ),
+    ),
     );
   }
+
 }

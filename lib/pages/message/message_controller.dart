@@ -16,6 +16,7 @@ class MessageController extends GetxController {
   int selectedIndex = 0;
   List<ChattedUserEntity> chattedUsers = [];
   late PageController pageController;
+  bool _disposed = false;
 
   MessageController(this.tokenEntity, this.userDataEntity) {
     pageController = PageController(initialPage: selectedIndex);
@@ -60,26 +61,33 @@ class MessageController extends GetxController {
       );
       chattedUsers.insert(0, newUser);
     }
-    update();
+    safeUpdate();
   }
 
   void changeSelectedIndex(int index) {
+    if (_disposed) return;
     selectedIndex = index;
-    // Ensure the jumpToPage is called after the frame is rendered
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (pageController.hasClients) {
+      if (!_disposed && pageController.hasClients) {
         pageController.jumpToPage(index);
       }
     });
-    update();
+    safeUpdate();
   }
 
   @override
-  void dispose() {
+  void onClose() {
+    _disposed = true;
     pageController.dispose();
     IMService.instance.removeMessageCallBack(_handleWebSocketMessage);
     IMService.instance.disconnect();
-    super.dispose();
+    super.onClose();
+  }
+
+  void safeUpdate() {
+    if (!_disposed) {
+      update();
+    }
   }
 
   Future<void> fetchChattedUsers() async {

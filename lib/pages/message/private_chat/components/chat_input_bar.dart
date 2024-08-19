@@ -41,7 +41,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
   final Uuid _uuid = const Uuid();
   OverlayEntry? _overlayEntry;
   bool _isCancelling = false;
-  final double _cancelAreaRatio = 0.7; // 取消区域占屏幕高度的 30%
+  final double _cancelAreaRatio = 0.3;
 
   @override
   void initState() {
@@ -154,6 +154,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
                       color: const Color(0xFF8E8E93),
                     ),
                     contentPadding: EdgeInsets.symmetric(horizontal: 10.w),
+                    border: InputBorder.none,
                   ),
                 ),
               ),

@@ -5,7 +5,6 @@ import 'package:get/get.dart' as getx;
 import '../../../responsive.dart';
 import '../components/background.dart';
 
-
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
 

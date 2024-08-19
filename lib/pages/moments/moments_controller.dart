@@ -27,7 +27,7 @@ class MomentsController extends GetxController {
           'filter[likes]': 1,
           'filter[day]': 30,
           'filter[photo]': 1,
-          'profId': 2307754,
+          // 'profId': 2307754,
         },
         options: dio.Options(
           headers: {
