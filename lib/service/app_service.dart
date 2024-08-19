@@ -21,14 +21,13 @@ import '../utils/request_util.dart';
 import '../utils/shared_preference_util.dart';
 import 'im_service.dart';
 
-class AppService extends GetxService{
-
+class AppService extends GetxService {
   static AppService get instance => Get.find<AppService>();
 
   UserDataEntity? selfUser;
   bool isLogin = false;
   var canShowAsyncTip = false;
-
+  final Rx<UserDataEntity?> rxSelfUser = Rx<UserDataEntity?>(null);
   var badgeEntity = BadgeEntity().obs;
   var languageMatchInfo = LanguageMatchInfoEntity().obs;
 
@@ -36,52 +35,56 @@ class AppService extends GetxService{
   List<ReportReasonEntity> reportReasonList = [];
   final plainNotificationToken = PlainNotificationToken();
 
-
-
-  Future<AppService> init() async{
-    if(selfUser==null){
-      String? userJson = SharedPreferenceUtil.instance.getValue(key: SharedPresKeys.selfEntity);
-      if(userJson.hasData){
-        LogUtil.d(message: "user:$userJson");
-        selfUser = UserDataEntity.fromJson(json.decode(userJson!));
-      }else{
-        LogUtil.d(message: "userJson empty");
-
+  Future<AppService> init() async {
+    isLogin = await SharedPreferenceUtil.instance.getValue(key: SharedPresKeys.isLogin) ?? false;
+    if (isLogin) {
+      String? userJson = await SharedPreferenceUtil.instance.getValue(key: SharedPresKeys.selfEntity);
+      if (userJson != null && userJson.isNotEmpty) {
+        selfUser = UserDataEntity.fromJson(json.decode(userJson));
+        rxSelfUser.value = selfUser;
+      } else {
+        isLogin = false;
+        await SharedPreferenceUtil.instance.setValue(key: SharedPresKeys.isLogin, value: false);
       }
     }
     return this;
   }
 
-  saveUserData({required UserDataEntity userData}){
+  Future<void> saveUserData({required UserDataEntity userData}) async {
     selfUser = userData;
-    SharedPreferenceUtil.instance.setValue(key: SharedPresKeys.selfEntity, value: userData.toString());
+    rxSelfUser.value = userData;
+    isLogin = true;
+    await SharedPreferenceUtil.instance.setValue(key: SharedPresKeys.selfEntity, value: json.encode(userData.toJson()));
+    await SharedPreferenceUtil.instance.setValue(key: SharedPresKeys.isLogin, value: true);
   }
 
-  bool isMember(){
-    int memberStatus = int.parse(selfUser?.member??"0");
-
-    return memberStatus>=1;
-  }
-
-  forceLogout({bool isDelete = false}) async{
-    isLogin = SharedPreferenceUtil.instance.getValue(key: SharedPresKeys.isLogin)??false;
+  Future<void> forceLogout({bool isDelete = false}) async {
+    isLogin = await SharedPreferenceUtil.instance.getValue(key: SharedPresKeys.isLogin) ?? false;
 
     LogUtil.d(message: "logout:$isLogin");
-    if(isLogin){
-      SharedPreferenceUtil.instance.setValue(key: SharedPresKeys.isLogin, value: false);
+    if (isLogin) {
+      await SharedPreferenceUtil.instance.setValue(key: SharedPresKeys.isLogin, value: false);
       CommonUtils.showLoading();
       DioClient.instance.cancelAllRequest();
       await IMService.instance.disconnect();
-      if(!isDelete) {
+      if (!isDelete) {
         await DioClient.instance.requestNetwork(url: ApiConstants.signOut);
       }
       TokenService.instance.clearToken();
       CommonUtils.hideLoading();
     }
 
-    SharedPreferenceUtil.instance.setValue(key: SharedPresKeys.selfEntity, value: "");
+    await SharedPreferenceUtil.instance.setValue(key: SharedPresKeys.selfEntity, value: null);
+    selfUser = null;
+    isLogin = false;
     Get.offAllNamed('/welcome');
   }
+  bool isMember(){
+    int memberStatus = int.parse(selfUser?.member??"0");
+
+    return memberStatus>=1;
+  }
+
 
   syncSelfProfile() async{
     if(selfUser==null){

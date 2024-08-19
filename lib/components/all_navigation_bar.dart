@@ -49,13 +49,13 @@ class AllNavigationBar extends StatelessWidget {
                     child: Row(
                       children: [
                         _buildNavItem(ImageRes.imagePathIconHomeActive, ImageRes.imagePathIconHomeInactive, '/home', userData),
-                        SizedBox(width: 43.w),
+                        SizedBox(width: 63.w),
                         _buildNavItem(ImageRes.imagePathIconBlogActive, ImageRes.imagePathIconBlogInactive, '/moments', userData),
-                        SizedBox(width: 43.w),
-                        _buildNavItem(ImageRes.imagePathIconVoiceActive, ImageRes.imagePathIconVoiceInactive, '/voice', userData),
-                        SizedBox(width: 43.w),
+                        SizedBox(width: 63.w),
+                        // _buildNavItem(ImageRes.imagePathIconVoiceActive, ImageRes.imagePathIconVoiceInactive, '/voice', userData),
+                        // SizedBox(width: 43.w),
                         _buildNavItem(ImageRes.imagePathIconMessageActive, ImageRes.imagePathIconMessageInactive, '/message', userData),
-                        SizedBox(width: 43.w),
+                        SizedBox(width: 63.w),
                         _buildNavItem(ImageRes.imagePathIconMeActive, ImageRes.imagePathIconMeInactive, '/me', userData),
                       ],
                     ),
@@ -73,7 +73,12 @@ class AllNavigationBar extends StatelessWidget {
     bool isActive = Get.currentRoute == route;
     return GestureDetector(
       onTap: () {
-        Get.toNamed(route, arguments: {'token': tokenEntity, if (userData != null) 'userData': userData});
+        if (!isActive) {
+          Get.offAllNamed(route, arguments: {
+            'token': tokenEntity,
+            if (userData != null) 'userData': userData
+          });
+        }
       },
       child: Image.asset(
         isActive ? activeIcon : inactiveIcon,

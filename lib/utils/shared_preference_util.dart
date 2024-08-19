@@ -26,6 +26,8 @@ class SharedPreferenceUtil{
 
    setValue({required String key,required value}) async{
     // SharedPreferences pres = await SharedPreferences.getInstance();
+     print(key);
+     print(value);
      _preferences.write(key, value);
 
     // if(value is int) {
@@ -42,6 +44,7 @@ class SharedPreferenceUtil{
   }
 
   getValue({required String key}){
+   print(key);
     return _preferences.read(key);
   }
 

@@ -5,14 +5,14 @@ import '../constants/constant_data.dart';
 
 class GradientButton extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final double? width;
   final double? height;
   final TextStyle? textStyle;
 
   GradientButton({
     required this.text,
-    required this.onPressed,
+    this.onPressed,
     this.width,
     this.height,
     this.textStyle,
@@ -20,9 +20,8 @@ class GradientButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return GestureDetector(
-      onTap: onPressed,
+      onTap: onPressed ?? () {},
       child: Container(
         width: width?.w ?? 248.w,
         height: height?.h ?? 49.h,
@@ -38,12 +37,13 @@ class GradientButton extends StatelessWidget {
         child: Center(
           child: Text(
             text.toUpperCase(),
-            style: TextStyle(
-                    fontSize: 16.sp,
-                    fontFamily: ConstantData.fontPoppins,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                    letterSpacing: 2.0,
+            style: textStyle ??
+                TextStyle(
+                  fontSize: 16.sp,
+                  fontFamily: ConstantData.fontPoppins,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                  letterSpacing: 2.0,
                 ),
           ),
         ),

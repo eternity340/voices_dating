@@ -18,7 +18,7 @@ class SignInModel extends ChangeNotifier {
   String? _errorMessage;
 
   SignInModel() {
-    _initializeToken();
+    _getToken();
   }
 
   bool get isLoading => _isLoading;
@@ -26,7 +26,7 @@ class SignInModel extends ChangeNotifier {
   String? get passwordErrorMessage => _passwordErrorMessage;
   String? get errorMessage => _errorMessage;
 
-  Future<void> _initializeToken() async {
+  Future<void> _getToken() async {
     try {
       await TokenService.instance.getTokenEntity();
     } catch (e) {
@@ -86,18 +86,11 @@ class SignInModel extends ChangeNotifier {
         final userDataJson = response.data['data'];
 
         if (userDataJson == null) {
-          print('Error: User data is missing in the response.');
           throw Exception('User data is missing in the response.');
         }
         final userData = UserDataEntity.fromJson(userDataJson);
-        print('User data: $userData');
-        AppService.instance.isLogin = true;
-        print(AppService.instance.isLogin);
-        await SharedPreferenceUtil.instance.setValue(key: SharedPresKeys.isLogin, value: true);
-        getx.Get.toNamed('/home', arguments: {
-          'token': tokenEntity,
-          'userData': userData,
-        });
+        await AppService.instance.saveUserData(userData: userData);
+        getx.Get.offAllNamed('/home');
       } else if (response.data[ConstantData.code] == ConstantData.errorCodeInvalidEmailOrPassword) {
         _errorMessage = response.data[ConstantData.message];
         _showErrorDialog(_errorMessage);

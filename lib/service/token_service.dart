@@ -11,7 +11,6 @@ import '../utils/log_util.dart';
 import '../utils/shared_preference_util.dart';
 import 'app_service.dart';
 
-//Edit by Connor - 全局Token业务处理
 class TokenService extends GetxService{
 
   static TokenService get instance => Get.find<TokenService>();

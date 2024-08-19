@@ -14,11 +14,10 @@ class HomeController extends GetxController {
   var isLoading = false.obs;
   var errorMessage = RxnString();
   final TokenEntity tokenEntity;
-  final UserDataEntity? _userData;
   var currentPage = 1;
   var hasMoreData = true.obs;
 
-  HomeController(this.tokenEntity, this._userData) {
+  HomeController(this.tokenEntity) {
     pageController = PageController(initialPage: 0);
     fetchUsers();
   }
