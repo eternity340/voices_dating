@@ -5,18 +5,21 @@ import '../../../components/background.dart';
 import '../../../components/profile_bottom.dart';
 import '../../../constants/Constant_styles.dart';
 import '../../../constants/constant_data.dart';
-import '../../../entity/list_user_entity.dart';
-import '../../../entity/token_entity.dart';
 import '../../../image_res/image_res.dart';
 import '../components/profile_photo_wall.dart';
 import '../components/profile_card.dart';
+import 'profile_detail_controller.dart';
 
 class ProfileDetailPage extends StatelessWidget {
+   ProfileDetailPage({super.key});
+
   @override
   Widget build(BuildContext context) {
-    final arguments = Get.arguments;
-    final ListUserEntity userEntity = arguments?['userEntity'] as ListUserEntity;
-    final TokenEntity tokenEntity = arguments['tokenEntity'] as TokenEntity;
+    final controller =
+    Get.put(ProfileDetailController(
+      userEntity: Get.arguments['userEntity'],
+      tokenEntity: Get.arguments['tokenEntity'],
+    ));
 
     return Scaffold(
       body: Stack(
@@ -34,7 +37,7 @@ class ProfileDetailPage extends StatelessWidget {
                 children: [
                   Stack(
                     children: [
-                      ProfilePhotoWall(userEntity: userEntity),
+                      ProfilePhotoWall(userEntity: controller.userEntity),
                       Positioned(
                         top: 280.h,
                         left: 0,
@@ -45,8 +48,8 @@ class ProfileDetailPage extends StatelessWidget {
                             width: 283.w,
                             height: 166.h,
                             child: ProfileCard(
-                              userEntity: userEntity,
-                              tokenEntity: tokenEntity,
+                              userEntity: controller.userEntity,
+                              tokenEntity: controller.tokenEntity,
                             ),
                           ),
                         ),
@@ -65,7 +68,7 @@ class ProfileDetailPage extends StatelessWidget {
                         ),
                         SizedBox(height: 10.h),
                         Text(
-                          userEntity.headline ?? '',
+                          controller.userEntity.headline ?? '',
                           style: ConstantStyles.bodyTextStyle,
                         ),
                         SizedBox(height: 50.h),
@@ -114,8 +117,8 @@ class ProfileDetailPage extends StatelessWidget {
                                 ),
                                 SizedBox(width: 16.w),
                                 Text(
-                                  (userEntity.height != null
-                                      ? '${userEntity.height}cm'
+                                  (controller.userEntity.height != null
+                                      ? '${controller.userEntity.height}cm'
                                       : ''),
                                   style: ConstantStyles.bodyTextStyle,
                                 ),
@@ -130,7 +133,7 @@ class ProfileDetailPage extends StatelessWidget {
                                 ),
                                 SizedBox(width: 16.w),
                                 Text(
-                                  userEntity.language ?? '',
+                                  controller.userEntity.language ?? '',
                                   style: ConstantStyles.bodyTextStyle,
                                 ),
                               ],
@@ -150,18 +153,12 @@ class ProfileDetailPage extends StatelessWidget {
             right: 0,
             bottom: 0,
             child: ProfileBottom(
-              initialGradientButtonText: "Wink",
-              onInitialGradientButtonPressed: () {
-
-              },
-              onCallButtonPressed: () {
-
-              },
-              onChatButtonPressed: () {
-
-              },
-              tokenEntity: tokenEntity,
-            )
+              initialGradientButtonText:ConstantData.winkButton,
+              onInitialGradientButtonPressed: controller.onWinkButtonPressed,
+              onCallButtonPressed: controller.onCallButtonPressed,
+              onChatButtonPressed: controller.onChatButtonPressed,
+              tokenEntity: controller.tokenEntity,
+            ),
           ),
         ],
       ),

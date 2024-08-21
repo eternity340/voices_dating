@@ -38,63 +38,50 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<HomeController>(
         builder: (controller) {
-          return Obx(() {
-            final UserDataEntity? userData = AppService.instance.rxSelfUser.value;
-            print('User data: $userData');
-
-            return Scaffold(
-              body: Stack(
-                children: [
-                  Background(
-                    showBackButton: false,
-                    child: Container(),
-                  ),
-                  Positioned(
-                    child: Padding(
-                      padding: EdgeInsets.all(16.0.sp),
-                      child: Column(
-                        children: [
-                          SizedBox(height: 50.h),
-                          _buildOptionsRow(),
-                          _buildButtonRow(controller.tokenEntity, userData),
-                          SizedBox(height: 20.h),
-                          Expanded(
-                            child: _buildAnimatedPageView(),
-                          ),
-                        ],
-                      ),
+          return Scaffold(
+            body: Stack(
+              children: [
+                Background(
+                  showBackButton: false,
+                  child: Container(),
+                ),
+                Positioned.fill(
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0.sp),
+                    child: Column(
+                      children: [
+                        SizedBox(height: 50.h),
+                        _buildOptionsRow(controller),
+                        _buildButtonRow(controller),
+                        SizedBox(height: 20.h),
+                        Expanded(
+                          child: _buildAnimatedPageView(controller),
+                        ),
+                      ],
                     ),
                   ),
-                  if (userData != null)
-                    AllNavigationBar(tokenEntity: controller.tokenEntity, userData: userData),
-                ],
-              ),
-            );
-          });
+                ),
+                if (controller.userData != null)
+                  AllNavigationBar(tokenEntity: controller.tokenEntity, userData: controller.userData!),
+              ],
+            ),
+          );
         }
     );
   }
 
-  Widget _buildOptionsRow() {
-    return GetBuilder<HomeController>(
-      builder: (controller) {
-        return Container(
-          width: double.infinity,
-          height: 40.h,
-          color: Colors.transparent,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: _buildOption(controller, ConstantData.honeyOption),
-              ),
-              Expanded(
-                child: _buildOption(controller, ConstantData.nearbyOption),
-              ),
-            ],
-          ),
-        );
-      },
+  Widget _buildOptionsRow(HomeController controller) {
+    return Container(
+      width: double.infinity,
+      height: 40.h,
+      color: Colors.transparent,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(child: _buildOption(controller, ConstantData.honeyOption)),
+          Expanded(child: _buildOption(controller, ConstantData.nearbyOption)),
+        ],
+      ),
     );
   }
 
@@ -126,41 +113,30 @@ class HomePage extends StatelessWidget {
     });
   }
 
-  Widget _buildAnimatedPageView() {
-    return GetBuilder<HomeController>(
-      builder: (controller) {
-        return Stack(
-          children: [
-            AnimatedPositioned(
-              duration: Duration(seconds: 1),
-              curve: Curves.easeInOut,
-              top: 0.h,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: _buildPageView(controller),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _buildPageView(HomeController controller) {
-    return PageView(
-      controller: controller.pageController,
-      onPageChanged: controller.onPageChanged,
+  Widget _buildAnimatedPageView(HomeController controller) {
+    return Stack(
       children: [
-        _buildUserListView(),
-        Container(
-          child: Center(child: Text('Nearby Page')),
+        AnimatedPositioned(
+          duration: Duration(seconds: 1),
+          curve: Curves.easeInOut,
+          top: 0.h,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          child: PageView(
+            controller: controller.pageController,
+            onPageChanged: controller.onPageChanged,
+            children: [
+              _buildUserListView(controller),
+              Center(child: Text('Nearby Page')),
+            ],
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildUserListView() {
-    final HomeController controller = Get.find<HomeController>();
+  Widget _buildUserListView(HomeController controller) {
     return Obx(() {
       return EasyRefresh(
         onRefresh: () async {
@@ -177,7 +153,10 @@ class HomePage extends StatelessWidget {
           itemBuilder: (context, index) {
             return Padding(
               padding: EdgeInsets.symmetric(vertical: 10.h),
-              child: UserCard(userEntity: controller.users[index],tokenEntity: controller.tokenEntity),
+              child: UserCard(
+                userEntity: controller.users[index],
+                tokenEntity: controller.tokenEntity,
+              ),
             );
           },
         ),
@@ -185,7 +164,7 @@ class HomePage extends StatelessWidget {
     });
   }
 
-  Widget _buildButtonRow(TokenEntity? tokenEntity, UserDataEntity? userData) {
+  Widget _buildButtonRow(HomeController controller) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -193,41 +172,25 @@ class HomePage extends StatelessWidget {
           imagePath: ImageRes.imagePathLike,
           shadowColor: Color(0xFFFFD1D1).withOpacity(0.3736),
           label: ConstantData.feelLabel,
-          onTap: () {
-            if (tokenEntity != null && userData != null) {
-              Get.toNamed('/home/feel', arguments: {'token': tokenEntity, 'userData': userData});
-            }
-          },
+          onTap: controller.navigateToFeelPage,
         ),
         _buildButtonWithLabel(
           imagePath: ImageRes.imagePathClock,
           shadowColor: Color(0xFFF6D3FF).withOpacity(0.369),
           label: ConstantData.getUpLabel,
-          onTap: () {
-            if (tokenEntity != null && userData != null) {
-              Get.toNamed('/home/get_up', arguments: {'token': tokenEntity, 'userData': userData});
-            }
-          },
+          onTap: controller.navigateToGetUpPage,
         ),
         _buildButtonWithLabel(
           imagePath: ImageRes.imagePathGame,
           shadowColor: Color(0xFFFCA6C5).withOpacity(0.2741),
           label: ConstantData.gameLabel,
-          onTap: () {
-            if (tokenEntity != null && userData != null) {
-              Get.toNamed('/home/game', arguments: {'token': tokenEntity, 'userData': userData});
-            }
-          },
+          onTap: controller.navigateToGamePage,
         ),
         _buildButtonWithLabel(
           imagePath: ImageRes.imagePathFeel,
           shadowColor: Color(0xFFFFEA31).withOpacity(0.3495),
           label: ConstantData.gossipLabel,
-          onTap: () {
-            if (tokenEntity != null && userData != null) {
-              Get.toNamed('/home/gossip', arguments: {'token': tokenEntity, 'userData': userData});
-            }
-          },
+          onTap: controller.navigateToGossipPage,
         ),
       ],
     );

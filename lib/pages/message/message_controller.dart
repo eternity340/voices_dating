@@ -138,11 +138,11 @@ class MessageController extends GetxController {
           }
         },
         onError: (code, msg, data) {
-          LogUtil.e(message: 'Fetch visited me users error: $msg');
+          LogUtil.e(message: msg);
         },
       );
     } catch (e) {
-      LogUtil.e(message: 'Fetch visited me users error: $e');
+      LogUtil.e(message:e.toString());
     }
   }
 

@@ -1,3 +1,4 @@
+// home_controller.dart
 import 'package:dio/dio.dart';
 import 'package:first_app/net/api_constants.dart';
 import 'package:get/get.dart';
@@ -6,6 +7,7 @@ import '../../entity/list_user_entity.dart';
 import '../../entity/token_entity.dart';
 import '../../entity/user_data_entity.dart';
 import '../../net/dio.client.dart';
+import '../../service/app_service.dart';
 
 class HomeController extends GetxController {
   var selectedOption = 'Honey'.obs;
@@ -36,7 +38,7 @@ class HomeController extends GetxController {
     if (isLoading.value || !hasMoreData.value) return;
     _setLoading(true);
     try {
-        DioClient.instance.requestNetwork<List<ListUserEntity>>(
+      DioClient.instance.requestNetwork<List<ListUserEntity>>(
         method: Method.get,
         url: ApiConstants.search,
         queryParameters: {
@@ -70,5 +72,31 @@ class HomeController extends GetxController {
 
   void _setErrorMessage(String value) {
     errorMessage.value = value;
+  }
+
+  UserDataEntity? get userData => AppService.instance.rxSelfUser.value;
+
+  void navigateToFeelPage() {
+    if (userData != null) {
+      Get.toNamed('/home/feel', arguments: {'token': tokenEntity, 'userData': userData});
+    }
+  }
+
+  void navigateToGetUpPage() {
+    if (userData != null) {
+      Get.toNamed('/home/get_up', arguments: {'token': tokenEntity, 'userData': userData});
+    }
+  }
+
+  void navigateToGamePage() {
+    if (userData != null) {
+      Get.toNamed('/home/game', arguments: {'token': tokenEntity, 'userData': userData});
+    }
+  }
+
+  void navigateToGossipPage() {
+    if (userData != null) {
+      Get.toNamed('/home/gossip', arguments: {'token': tokenEntity, 'userData': userData});
+    }
   }
 }
