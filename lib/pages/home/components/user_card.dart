@@ -1,14 +1,17 @@
+import 'package:first_app/components/verified_tag.dart';
+import 'package:first_app/constants/Constant_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../entity/list_user_entity.dart';
 import '../../../entity/token_entity.dart';
+import '../../../image_res/image_res.dart';
 
 class UserCard extends StatelessWidget {
   final ListUserEntity userEntity;
   final TokenEntity tokenEntity;
 
-  UserCard({required this.userEntity, required this.tokenEntity});
+  UserCard({super.key, required this.userEntity, required this.tokenEntity});
 
   @override
   Widget build(BuildContext context) {
@@ -37,24 +40,21 @@ class UserCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox(height: 10.h),
-            Container(
-              width: 88.w,
-              height: 19.h,
-              decoration: BoxDecoration(
-                color: Color(0xFFABFFCF),
-                borderRadius: BorderRadius.circular(6.r),
-              ),
-              child: const Center(
-                child: Text(
-                  'Photos verified',
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontFamily: 'Open Sans',
-                    letterSpacing: 0.02,
-                    color: Color(0xFF262626),
+            Row(
+              children: [
+                if (userEntity.member == "1")
+                   VerifiedTag(text: 'Superior',
+                    backgroundColor: Colors.black,
+                    textColor: Colors.white
                   ),
-                ),
-              ),
+                SizedBox(width: 8.w),
+                if (userEntity.verified == "1")
+                  VerifiedTag(
+                    text: 'Photos verified',
+                    backgroundColor: Color(0xFFABFFCF),
+                    textColor: Colors.black,
+                  ),
+              ],
             ),
             SizedBox(height: 10.h),
             Row(
@@ -70,7 +70,7 @@ class UserCard extends StatelessWidget {
                     fit: BoxFit.cover,
                   )
                       : Image.asset(
-                    'assets/images/placeholder1.png',
+                    ImageRes.placeholderAvatar,
                     width: 100.w,
                     height: 129.h,
                     fit: BoxFit.cover,
@@ -100,15 +100,7 @@ class UserCard extends StatelessWidget {
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            SizedBox(width: 5.w),
-                            /*Container(
-                              width: 9.w,
-                              height: 9.h,
-                              decoration: const BoxDecoration(
-                                color: Color(0xFFABFFCF),
-                                shape: BoxShape.circle,
-                              ),
-                            ),*/
+                            SizedBox(width: 5.w)
                           ],
                         ),
                         SizedBox(height: 4.h),
@@ -147,11 +139,7 @@ class UserCard extends StatelessWidget {
                           userEntity.headline ?? '',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            fontFamily: 'Open Sans',
-                            color: Color(0xFF8E8E93),
-                          ),
+                          style: ConstantStyles.headlineUserCardStyle,
                         ),
                         SizedBox(height: 8.h),
                         Row(
@@ -172,7 +160,7 @@ class UserCard extends StatelessWidget {
                                     fit: BoxFit.cover,
                                   )
                                       : Image.asset(
-                                    'assets/images/placeholder1.png',
+                                    ImageRes.placeholderAvatar,
                                     width: 37.98.w,
                                     height: 49.h,
                                     fit: BoxFit.cover,
@@ -193,3 +181,4 @@ class UserCard extends StatelessWidget {
     );
   }
 }
+

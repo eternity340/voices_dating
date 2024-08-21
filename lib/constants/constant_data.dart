@@ -141,7 +141,7 @@ class ConstantData {
   static const  genderWarning = "Gender cannot be changed after selection";
   //select_height
   static const  heightTitle = "Height";
-  static const  heightHeadTitle = "   Height";
+  static const  heightHeadTitle = "Height";
   //select_location
   static const  locationTitle = "Location";
   //sign_up
@@ -157,7 +157,7 @@ class ConstantData {
   //profile_card
   static const  photosVerified = 'Photos verified';
   //feel_page
-  static const  feelTitleText ='       Feel';
+  static const  feelTitleText ='Feel';
   //profile_detail
   static const  headline = 'Headline';
   static const  moments = 'Moments';
@@ -168,11 +168,15 @@ class ConstantData {
   static const  getUpLabel = 'Get up';
   static const  gameLabel = 'Game';
   static const  gossipLabel = 'Gossip';
+  //detail_bottom
+  static const  winkButton = 'wink';
+  static const  callButton = 'call';
+
   //profile_content
   static const  usernameTitle = 'Username';
   static const  ageTitle = 'Age';
   static const  headlineTitle = 'Headline';
-  static const  ageHead='      Age';
+  static const  ageHead='Age';
   //change_headline
   static const  headlineText='Headline';
   static const  enterCharactersText='Enter up to 50 characters';
@@ -180,7 +184,7 @@ class ConstantData {
   //change_height
   static const changeHeightText="Change Height";
   //change_location
-  static const  locationHeaderTitle='   Location';
+  static const  locationHeaderTitle='Location';
   //change_username
   static const  enterUsernameText='Enter up to 16 characters';
   //my_profile
@@ -189,7 +193,7 @@ class ConstantData {
   static const  momentsOption = 'Moments';
   //photo
   static const  mainPhotoText='main photo';
-  static const  photoTitle='    Photo';
+  static const  photoTitle='Photo';
   static const  takePhotoText='Take a Photo';
   static const  fromAlbumText='From Album';
   static const  changeMainPhotoText='Whether to change to mainPhoto？';
@@ -201,7 +205,7 @@ class ConstantData {
   static const  blockMembersText = 'Block Members';
   static const  noBlockedMembersText = 'No blocked members';
   //feedback
-  static const  feedbackTitleText='  Feedback';
+  static const  feedbackTitleText='Feedback';
   static const yourIdText='Your idea';
   static const  feedbackHintText = 'Please inform us of our shortcomings and we will improve them as soon as possible.';
   //settings
@@ -222,7 +226,7 @@ class ConstantData {
   static const  verifyPhotoText = 'Verify Photo';
   static const  verifyContentText = 'Please upload a live photo and we will analyze whether your photo is yourself.';
   static const  uploadText = 'Upload';
-  static const  verifyMiddleText =  '     Verify';
+  static const  verifyMiddleText =  'Verify';
   //me_page
   static const  myProfileText = 'My Profile';
   static const  hostText = 'I am Host';

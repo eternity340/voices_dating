@@ -60,7 +60,6 @@ class AppService extends GetxService {
 
   Future<void> forceLogout({bool isDelete = false}) async {
     isLogin = await SharedPreferenceUtil.instance.getValue(key: SharedPresKeys.isLogin) ?? false;
-
     LogUtil.d(message: "logout:$isLogin");
     if (isLogin) {
       await SharedPreferenceUtil.instance.setValue(key: SharedPresKeys.isLogin, value: false);
@@ -73,7 +72,6 @@ class AppService extends GetxService {
       TokenService.instance.clearToken();
       CommonUtils.hideLoading();
     }
-
     await SharedPreferenceUtil.instance.setValue(key: SharedPresKeys.selfEntity, value: null);
     selfUser = null;
     isLogin = false;

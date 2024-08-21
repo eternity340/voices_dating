@@ -2,12 +2,12 @@ import 'dart:ui';
 import 'package:first_app/entity/moment_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../constants/constant_styles.dart';
-import '../constants/constant_data.dart';
-import '../image_res/image_res.dart';
-import '../pages/moments/components/love_button.dart';
-import 'gradient_btn.dart';
-import '../../../entity/token_entity.dart';
+import '../../../constants/constant_styles.dart';
+import '../../../constants/constant_data.dart';
+import '../../../image_res/image_res.dart';
+import 'love_button.dart';
+import '../../../components/gradient_btn.dart';
+import '../../../../../entity/token_entity.dart';
 
 class DetailBottomBar extends StatefulWidget {
   final String gradientButtonText;
@@ -68,7 +68,7 @@ class _DetailBottomBarState extends State<DetailBottomBar> {
                   left: 100.w,
                   top: 14.h,
                   child: Image.asset(
-                    ImageRes.imagePathIconMessage,
+                    ImageRes.imagePathIconChat,
                     width: 24.w,
                     height: 43.5.h,
                   ),

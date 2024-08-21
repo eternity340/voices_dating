@@ -74,10 +74,13 @@ class Background extends StatelessWidget {
                   if (showMiddleText && middleText != null)
                     Positioned(
                       top: 8.h,
-                      left: MediaQuery.of(context).size.width / 2 - 50.w,
-                      child: Text(
-                        middleText!,
-                        style: ConstantStyles.middleTextStyle,
+                      left: 0,
+                      right: 0,
+                      child: Center(
+                        child: Text(
+                          middleText!,
+                          style: ConstantStyles.middleTextStyle,
+                        ),
                       ),
                     ),
                   if (showActionButton)

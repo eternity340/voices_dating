@@ -297,6 +297,17 @@ class ConstantStyles {
     letterSpacing: -0.008750000037252903,
     color: Colors.black,
   );
+  static TextStyle verifiedTagStyle =TextStyle(
+    fontSize: 10.sp,
+    fontFamily: 'Open Sans',
+    letterSpacing: 0.02,
+    color: const Color(0xFF262626),
+  );
+  static TextStyle headlineUserCardStyle = TextStyle(
+    fontSize: 12.sp,
+    fontFamily: 'Open Sans',
+    color: Color(0xFF8E8E93),
+  );
   static TextStyle homeOptionTextStyle(bool isSelected) => TextStyle(
     fontSize: 26.sp,
     height: 22 / 18,
@@ -607,4 +618,5 @@ class ConstantStyles {
     fontSize: 12.sp,
     color: Colors.grey,
   );
+
 }

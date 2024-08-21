@@ -9,6 +9,7 @@ class GradientButton extends StatelessWidget {
   final double? width;
   final double? height;
   final TextStyle? textStyle;
+  final String? iconPath;
 
   GradientButton({
     required this.text,
@@ -16,6 +17,7 @@ class GradientButton extends StatelessWidget {
     this.width,
     this.height,
     this.textStyle,
+    this.iconPath,
   });
 
   @override
@@ -35,16 +37,29 @@ class GradientButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(30.r),
         ),
         child: Center(
-          child: Text(
-            text.toUpperCase(),
-            style: textStyle ??
-                TextStyle(
-                  fontSize: 16.sp,
-                  fontFamily: ConstantData.fontPoppins,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black,
-                  letterSpacing: 2.0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (iconPath != null) ...[
+                Image.asset(
+                  iconPath!,
+                  width: 24.w,
+                  height: 24.h,
                 ),
+                SizedBox(width: 8.w),
+              ],
+              Text(
+                text.toUpperCase(),
+                style: textStyle ??
+                    TextStyle(
+                      fontSize: 16.sp,
+                      fontFamily: ConstantData.fontPoppins,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                      letterSpacing: 2.0,
+                    ),
+              ),
+            ],
           ),
         ),
       ),

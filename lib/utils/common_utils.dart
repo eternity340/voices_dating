@@ -102,10 +102,17 @@ class CommonUtils{
     Fluttertoast.showToast(msg: message,gravity: ToastGravity.CENTER,backgroundColor: Colors.grey,textColor: Colors.white);
   }
 
-  static showLoading({bool dismissible = true}){
-    if(!(Get.isDialogOpen??false)) {
-      Get.dialog(const Center(child: SpinKitCircle( color: Colors.orange,
-        size: 50.0,),),barrierDismissible: dismissible);
+  static showLoading({bool dismissible = true}) {
+    if (!(Get.isDialogOpen ?? false)) {
+      Get.dialog(
+        const Center(
+          child: SpinKitCircle(
+            color: Color(0xFFABFFCF), // 使用 #ABFFCF 颜色
+            size: 50.0,
+          ),
+        ),
+        barrierDismissible: dismissible,
+      );
     }
   }
 

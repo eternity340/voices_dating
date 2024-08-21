@@ -6,6 +6,7 @@ import '../../../entity/token_entity.dart';
 import '../../../entity/user_data_entity.dart';
 import '../../../components/custom_message_dialog.dart';
 import '../../../net/dio.client.dart';
+import '../../../service/app_service.dart';
 import '../../../service/token_service.dart';
 
 class SettingsController extends GetxController {
@@ -23,12 +24,7 @@ class SettingsController extends GetxController {
           },
         ),
         onSuccess: (data) async {
-          // 成功退出登录后，删除 token
-          await TokenService.instance.clearToken();
-
-          Get.snackbar('Success', 'Sign out successful',
-              snackPosition: SnackPosition.BOTTOM);
-          Get.offAllNamed('/welcome');
+          await AppService.instance.forceLogout();
         },
         onError: (code, msg, data) {
           Get.snackbar('Error', 'Failed to sign out: $msg',

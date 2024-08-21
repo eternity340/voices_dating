@@ -23,7 +23,8 @@ class ImageRes{
   static const  imagePathSettingButton = 'assets/images/button_round_setting.png';
   //detail_bottom_bar
   static const imagePathIconCall='assets/images/icon_call.png';
-  static const imagePathIconMessage='assets/images/icon_chat_message.png';
+  static const imagePathIconChat='assets/images/icon_chat.png';
+  static const imagePathIconCallNoText='assets/images/icon_call_no_text.png';
   //pre_login background
   static const imagePathLoginBottom="assets/images/login_bottom.png";
   static const imagePathMainTop="assets/images/main_top.png";

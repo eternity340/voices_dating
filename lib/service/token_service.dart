@@ -15,7 +15,8 @@ class TokenService extends GetxService{
 
   static TokenService get instance => Get.find<TokenService>();
 
-  TokenEntity? _tokenEntity;
+  TokenEntity? tokenEntity;
+
 
   @override
   void onInit(){
@@ -28,20 +29,22 @@ class TokenService extends GetxService{
   }
 
   Future<TokenEntity> getTokenEntity() async{
-    if(_tokenEntity==null){
+    if(tokenEntity==null){
       String? tokenStr = SharedPreferenceUtil().getValue(key: SharedPresKeys.userToken);
       bool containToken = tokenStr!=null;
       if(!containToken) {
-        _tokenEntity =  await refreshToken();
+        tokenEntity =  await refreshToken();
       }else{
-        _tokenEntity = TokenEntity.fromJson(json.decode(tokenStr));
+        tokenEntity = TokenEntity.fromJson(json.decode(tokenStr));
         if(tokenExpired()){
-          _tokenEntity =  await refreshToken(isRefresh:true);
+          tokenEntity =  await refreshToken(isRefresh:true);
         }
       }
     }
-    return _tokenEntity!;
+    return tokenEntity!;
   }
+
+
 
   refreshToken({bool isRefresh = false}) async{
     Map<String,dynamic> tokenHeader = {};
@@ -56,8 +59,8 @@ class TokenService extends GetxService{
     tokenHeader.putIfAbsent("Nonce", () => nonce);
     tokenHeader.putIfAbsent("Timestamp", () => currentTimeStamp);
 
-    if(isRefresh&&_tokenEntity!=null){
-      refreshData = buildRefreshTokenData(_tokenEntity!.refreshToken!);
+    if(isRefresh&&tokenEntity!=null){
+      refreshData = buildRefreshTokenData(tokenEntity!.refreshToken!);
     }
 
 
@@ -81,9 +84,9 @@ class TokenService extends GetxService{
         Map<String,dynamic> jsonData = json.decode(response.data.toString());
         if(jsonData!=null){
           LogUtil.v(message: "token:$jsonData");
-          _tokenEntity = TokenEntity.fromJson(jsonData);
-          _tokenEntity!.requestTime = currentTimeStamp;
-          SharedPreferenceUtil().setValue(key: SharedPresKeys.userToken, value: json.encode(_tokenEntity));
+          tokenEntity = TokenEntity.fromJson(jsonData);
+          tokenEntity!.requestTime = currentTimeStamp;
+          SharedPreferenceUtil().setValue(key: SharedPresKeys.userToken, value: json.encode(tokenEntity));
         }else{
           if(isLogin) {
             Get.find<AppService>().forceLogout();
@@ -99,7 +102,7 @@ class TokenService extends GetxService{
     }on DioError catch (e) {
       Get.find<AppService>().forceLogout();
     }
-    return _tokenEntity;
+    return tokenEntity;
   }
 
   buildRefreshTokenData(String currentToken){
@@ -110,29 +113,29 @@ class TokenService extends GetxService{
   }
 
   updateToken({required String newToken}){
-    _tokenEntity!.accessToken = newToken;
-    SharedPreferenceUtil().setValue(key: SharedPresKeys.userToken, value: json.encode(_tokenEntity));
+    tokenEntity!.accessToken = newToken;
+    SharedPreferenceUtil().setValue(key: SharedPresKeys.userToken, value: json.encode(tokenEntity));
 
   }
 
   bool tokenExpired(){
     int currentTime = DateTime.now().millisecondsSinceEpoch ~/ 1000;
     int endTime =
-        _tokenEntity!.expiredIn! + _tokenEntity!.requestTime! - 3600;
-    LogUtil.d(message: "expire:${_tokenEntity!.expiredIn}--request:${_tokenEntity!.requestTime}--current:$currentTime,end:$endTime");
+        tokenEntity!.expiredIn! + tokenEntity!.requestTime! - 3600;
+    LogUtil.d(message: "expire:${tokenEntity!.expiredIn}--request:${tokenEntity!.requestTime}--current:$currentTime,end:$endTime");
     return currentTime > endTime;
   }
 
   String? getToken(){
-    if(_tokenEntity!=null) {
-      return _tokenEntity!.accessToken;
+    if(tokenEntity!=null) {
+      return tokenEntity!.accessToken;
     } else {
       return null;
     }
   }
 
   clearToken(){
-    _tokenEntity = null;
+    tokenEntity = null;
     SharedPreferenceUtil().setValue(key: SharedPresKeys.userToken, value: null);
   }
 

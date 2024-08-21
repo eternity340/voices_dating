@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../components/background.dart';
-import '../../../components/detail_bottom_bar.dart';
+import '../../../components/profile_bottom.dart';
 import '../../../constants/Constant_styles.dart';
 import '../../../constants/constant_data.dart';
 import '../../../entity/list_user_entity.dart';
@@ -36,7 +36,7 @@ class ProfileDetailPage extends StatelessWidget {
                     children: [
                       ProfilePhotoWall(userEntity: userEntity),
                       Positioned(
-                        top: 280.h, // Adjust this value as needed
+                        top: 280.h,
                         left: 0,
                         right: 0,
                         child: Align(
@@ -149,13 +149,19 @@ class ProfileDetailPage extends StatelessWidget {
             left: 0,
             right: 0,
             bottom: 0,
-            child: DetailBottomBar(
-              showMomentLikeButton: false,
-              gradientButtonText: ConstantData.chatButton,
-              onGradientButtonPressed: () {
-                // Handle GradientButton click event
+            child: ProfileBottom(
+              initialGradientButtonText: "Wink",
+              onInitialGradientButtonPressed: () {
+
               },
-            ),
+              onCallButtonPressed: () {
+
+              },
+              onChatButtonPressed: () {
+
+              },
+              tokenEntity: tokenEntity,
+            )
           ),
         ],
       ),
