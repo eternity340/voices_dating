@@ -1,3 +1,4 @@
+import 'package:first_app/pages/message/components/liked_me_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,7 +8,9 @@ import '../../../entity/user_data_entity.dart';
 import '../../components/all_navigation_bar.dart';
 import '../../components/background.dart';
 import '../../image_res/image_res.dart';
+import 'components/loading_overlay.dart';
 import 'components/message_content.dart';
+import 'components/viewed_me_content.dart';
 import 'message_controller.dart';
 
 class MessagePage extends StatefulWidget {
@@ -37,11 +40,6 @@ class _MessagePageState extends State<MessagePage> {
     }
   }
 
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +47,6 @@ class _MessagePageState extends State<MessagePage> {
       canPop: false,
       onPopInvoked: (didPop) async {
         if (didPop) return;
-        // 最小化应用
         await SystemNavigator.pop();
       },
       child: GetBuilder<MessageController>(
@@ -87,28 +84,20 @@ class _MessagePageState extends State<MessagePage> {
                       borderRadius: BorderRadius.circular(24.r),
                       backgroundBlendMode: BlendMode.srcOver,
                     ),
-                    child: PageView.builder(
+                    child: PageView(
+                      controller: controller.pageController,
                       onPageChanged: (index) {
                         controller.changeSelectedIndex(index);
                       },
-                      itemCount: 3,
-                      itemBuilder: (context, index) {
-                        switch (index) {
-                          case 0:
-                            return MessageContent(
-                              chattedUsers: controller.chattedUsers,
-                              onRefresh: controller.fetchChattedUsers,
-                              tokenEntity: controller.tokenEntity,
-                              controller: controller,
-                            );
-                          case 1:
-                            return Center(child: Text('Content for Viewed Me'));
-                          case 2:
-                            return Center(child: Text('Content for Liked Me'));
-                          default:
-                            return SizedBox.shrink();
-                        }
-                      },
+                      children: [
+                        MessageContent(
+                          chattedUsers: controller.chattedUsers,
+                          onRefresh: controller.fetchChattedUsers,
+                          controller: controller,
+                        ),
+                        ViewedMeContent(controller: controller),
+                        LikedMeContent(controller: controller)
+                      ],
                     ),
                   ),
                 ),
@@ -129,7 +118,6 @@ class _MessagePageState extends State<MessagePage> {
     bool isSelected = controller.selectedIndex == index;
     return GestureDetector(
       onTap: () {
-        // Update the selected index and animate to the page
         controller.changeSelectedIndex(index);
       },
       child: Stack(
@@ -160,18 +148,11 @@ class _MessagePageState extends State<MessagePage> {
       ),
     );
   }
-}
 
-class LoadingOverlay extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        color: Colors.white.withOpacity(0.8),
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-        ),
-      ),
-    );
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 }
+

@@ -14,14 +14,12 @@ import '../message_controller.dart';
 class MessageContent extends StatelessWidget {
   final List<ChattedUserEntity> chattedUsers;
   final Future<void> Function() onRefresh;
-  final TokenEntity tokenEntity;
   final MessageController controller;
 
   const MessageContent({
     super.key,
     required this.chattedUsers,
     required this.onRefresh,
-    required this.tokenEntity,
     required this.controller,
   });
 
@@ -124,8 +122,9 @@ class MessageContent extends StatelessWidget {
 
   void _navigateToPrivateChat(ChattedUserEntity user) {
     Get.toNamed('/message/private_chat', arguments: {
-      'token': tokenEntity,
+      'token': controller.tokenEntity,
       'chattedUser': user,
+      'userData':controller.userDataEntity
     })?.then((_) {
       controller.clearNewNumber(user.userId.toString());
     });
@@ -139,7 +138,7 @@ class MessageContent extends StatelessWidget {
       },
       options: Options(
         headers: {
-          'token': tokenEntity.accessToken,
+          'token': controller.tokenEntity.accessToken,
         },
       ),
       onSuccess: (data) {

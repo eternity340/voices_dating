@@ -22,6 +22,7 @@ class PrivateChatPage extends StatefulWidget {
 class _PrivateChatPageState extends State<PrivateChatPage>
     with WidgetsBindingObserver, TickerProviderStateMixin {
   final PrivateChatController controller = Get.put(PrivateChatController());
+  late EasyRefreshController _easyRefreshController;
   late AnimationController _animationController;
   final AudioPlayer _audioPlayer = AudioPlayer();
   bool _isPlaying = false;
@@ -32,6 +33,7 @@ class _PrivateChatPageState extends State<PrivateChatPage>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _easyRefreshController = EasyRefreshController();
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
@@ -68,78 +70,94 @@ class _PrivateChatPageState extends State<PrivateChatPage>
             children: [
               SizedBox(height: 100.h),
               Expanded(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  child: Obx(() => ListView.builder(
+                child: Obx(() => EasyRefresh(
+                    controller: _easyRefreshController,
+                    header: ClassicalHeader(
+                      refreshText: "Pull to load more",
+                      refreshReadyText: "Release to load more",
+                      refreshingText: "Loading...",
+                      refreshedText: "Loaded successfully",
+                      bgColor: Colors.transparent,
+                      textColor: Colors.grey,
+                      infoColor: Colors.grey,
+                    ),
+                    onRefresh: () async {
+                      await controller.loadMoreMessages();
+                      _easyRefreshController.finishRefresh();
+                    },
+                  child: ListView.builder(
                     controller: controller.scrollController,
                     itemCount: controller.messages.length,
                     itemBuilder: (context, index) {
                       final message = controller.messages[index];
-                      final isSentByUser =
-                          message.profId == controller.chattedUser.userId;
-                      final formattedTime =
-                      controller.formatTimestamp(message.created);
-                      final avatarUrl =
-                          message.sender?.profile?.avatarUrl ?? '';
+                      final isSentByUser = message.profId == controller.chattedUser.userId;
+                      final formattedTime = controller.formatTimestamp(message.created);
+                      final avatarUrl = message.sender?.profile?.avatarUrl ?? '';
                       final bool showTimeDivider = index == 0 ||
                           controller.shouldShowTimeDivider(
                             message.created,
                             controller.messages[index - 1].created,
                           );
 
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (showTimeDivider)
-                            Padding(
-                              padding:
-                              EdgeInsets.symmetric(vertical: 10.h),
-                              child: Center(
-                                child: Text(
-                                  formattedTime,
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 12.sp),
-                                ),
-                              ),
-                            ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: isSentByUser
-                                ? MainAxisAlignment.start
-                                : MainAxisAlignment.end,
-                            children: [
-                              if (isSentByUser)
-                                CircleAvatar(
-                                  radius: 20.w,
-                                  backgroundImage: NetworkImage(avatarUrl),
-                                ),
-                              if (isSentByUser) SizedBox(width: 10.w),
-                              Flexible(
-                                child: Container(
-                                  margin: EdgeInsets.symmetric(vertical: 10.h),
-                                  padding: EdgeInsets.all(10.w),
-                                  decoration: BoxDecoration(
-                                    color: isSentByUser
-                                        ? Color(0xFFFFAFAB)
-                                        : Color(0xFFABFFCF), // Updated colors
-                                    borderRadius: BorderRadius.circular(10.w),
+                      return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.w),  // 添加左右 16px 的边距
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (showTimeDivider)
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 10.h),
+                                child: Center(
+                                  child: Text(
+                                    formattedTime,
+                                    style: TextStyle(color: Colors.grey, fontSize: 12.sp),
                                   ),
-                                  child: _buildMessageContent(message, index),
                                 ),
                               ),
-                              if (!isSentByUser) SizedBox(width: 10.w),
-                              if (!isSentByUser)
-                                CircleAvatar(
-                                  radius: 20.w,
-                                  backgroundImage: NetworkImage(avatarUrl),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: isSentByUser
+                                  ? MainAxisAlignment.start
+                                  : MainAxisAlignment.end,
+                              children: [
+                                if (isSentByUser)
+                                  CircleAvatar(
+                                    radius: 20.w,
+                                    backgroundImage: NetworkImage(avatarUrl),
+                                  ),
+                                if (isSentByUser) SizedBox(width: 10.w),
+                                Flexible(
+                                  child: ConstrainedBox(
+                                    constraints: BoxConstraints(
+                                      maxWidth: MediaQuery.of(context).size.width * 0.73 - 32.w,  // 减去左右边距
+                                    ),
+                                    child: Container(
+                                      margin: EdgeInsets.symmetric(vertical: 10.h),
+                                      padding: EdgeInsets.all(10.w),
+                                      decoration: BoxDecoration(
+                                        color: isSentByUser
+                                            ? Color(0xFFFFAFAB)
+                                            : Color(0xFFABFFCF),
+                                        borderRadius: BorderRadius.circular(10.w),
+                                      ),
+                                      child: _buildMessageContent(message, index),
+                                    ),
+                                  ),
                                 ),
-                            ],
-                          ),
-                        ],
+                                if (!isSentByUser) SizedBox(width: 10.w),
+                                if (!isSentByUser)
+                                  CircleAvatar(
+                                    radius: 20.w,
+                                    backgroundImage: NetworkImage(avatarUrl),
+                                  ),
+                              ],
+                            ),
+                          ],
+                        ),
                       );
                     },
-                  )),
-                ),
+                  ),
+                )),
               ),
               ChatInputBar(
                 textController: controller.textController,
@@ -165,26 +183,32 @@ class _PrivateChatPageState extends State<PrivateChatPage>
               message.url.toString(),
             );
           },
-          child: Image.network(
-            message.url.toString(),
-            width: message.width! / 4.w,
-            height: message.height! / 4.h,
-            fit: BoxFit.cover,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8.w), // 添加圆角
+            child: Container(
+              constraints: BoxConstraints(
+                maxWidth: message.width/4.w,
+                maxHeight: message.height/4.w,
+              ),
+              child: Image.network(
+                message.url.toString(),
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
         );
       case 3: // Audio message
         return _buildAudioMessage(message, index);
       default: // Text message
-        return
-          Text(
-            message.message.toString(),
-            style: TextStyle(
+        return Text(
+          message.message.toString(),
+          style: TextStyle(
               fontFamily: 'Poppins',
               fontWeight: FontWeight.w500,
               fontSize: 16.sp,
               color: Colors.black
-            ),
-          );
+          ),
+        );
     }
   }
 
@@ -316,6 +340,7 @@ class _PrivateChatPageState extends State<PrivateChatPage>
     WidgetsBinding.instance.removeObserver(this);
     _audioPlayer.dispose();
     _animationController.dispose();
+    _easyRefreshController.dispose();
     super.dispose();
   }
 }

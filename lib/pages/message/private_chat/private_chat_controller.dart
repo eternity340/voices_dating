@@ -1,3 +1,4 @@
+import 'package:first_app/entity/user_data_entity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/public/flutter_sound_recorder.dart';
@@ -20,8 +21,8 @@ import '../../../components/photo_dialog.dart';
 
 class PrivateChatController extends GetxController {
   final TokenEntity tokenEntity = Get.arguments['token'] as TokenEntity;
-  final ChattedUserEntity chattedUser =
-  Get.arguments['chattedUser'] as ChattedUserEntity;
+  final UserDataEntity userDataEntity = Get.arguments['userData'] as UserDataEntity;
+  final ChattedUserEntity chattedUser = Get.arguments['chattedUser'] as ChattedUserEntity;
   var messages = <IMNewMessageEntity>[].obs;
   final ScrollController scrollController = ScrollController();
   final TextEditingController textController = TextEditingController();
@@ -30,7 +31,8 @@ class PrivateChatController extends GetxController {
   FlutterSoundRecorder? _audioRecorder;
   String? _recordingPath;
   RxBool isRecording = false.obs;
-
+  int _currentPage = 1;
+  static const int _pageSize = 20;
 
   @override
   void onInit() {
@@ -38,6 +40,13 @@ class PrivateChatController extends GetxController {
     getHistoryMessages();
     _subscribeToIMMessages();
     _initAudioRecorder();
+    currentUserSender = Sender(
+      profile: Profile(
+        userId: userDataEntity.userId,
+        username: userDataEntity.username,
+        avatarUrl: userDataEntity.avatar,
+      ),
+    );
   }
 
   Future<void> _initAudioRecorder() async {
@@ -101,8 +110,6 @@ class PrivateChatController extends GetxController {
   }
 
   Future<String> uploadAudioFile(String filePath) async {
-    // 实现文件上传逻辑，返回服务器URL
-    // 这里需要根据您的后端API来实现
     return 'https://example.com/audio.aac';
   }
 
@@ -143,12 +150,14 @@ class PrivateChatController extends GetxController {
     scrollToBottom();
   }
 
-  void getHistoryMessages() async {
+  Future<void> getHistoryMessages({int page = 1, bool isLoadMore = false}) async {
     DioClient.instance.requestNetwork<List<IMNewMessageEntity>>(
       method: Method.get,
       url: ApiConstants.historyMessages,
       queryParameters: {
         'profId': chattedUser.userId,
+        'page': page,
+        'offset': _pageSize
       },
       options: Options(
         headers: {
@@ -161,19 +170,29 @@ class PrivateChatController extends GetxController {
             message.profId = message.sender?.profile?.userId;
             if (message.profId != chattedUser.userId) {
               currentUserSender = message.sender;
-            }else{
+            } else {
               currentChatSender = message.sender;
             }
             return message;
           }).toList();
-          messages.value = mappedData.reversed.toList();
-          scrollToBottom();
+
+          if (isLoadMore) {
+            messages.insertAll(0, mappedData.reversed);
+          } else {
+            messages.value = mappedData.reversed.toList();
+            scrollToBottom();
+          }
         }
       },
       onError: (int code, String msg, dynamic data) {
         LogUtil.e(message: "get HistoryMessageError${msg.toString()}");
       },
     );
+  }
+
+  Future<void> loadMoreMessages() async {
+    _currentPage++;
+    await getHistoryMessages(page: _currentPage, isLoadMore: true);
   }
 
   void sendTextMessage() {

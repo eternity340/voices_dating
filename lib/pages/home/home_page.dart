@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -12,79 +14,66 @@ import '../../entity/user_data_entity.dart';
 import '../../image_res/image_res.dart';
 import '../../service/app_service.dart';
 import '../../service/token_service.dart';
+import '../../utils/shared_preference_util.dart';
 import 'components/home_icon_button.dart';
 import 'components/user_card.dart';
 import 'home_controller.dart';
 
 class HomePage extends StatelessWidget {
+  HomePage({Key? key}) : super(key: key) {
+    _initializeController();
+  }
+
+  void _initializeController() {
+    final tokenJson = SharedPreferenceUtil.instance.getValue(key: SharedPresKeys.userToken);
+    if (tokenJson != null) {
+      final tokenEntity = TokenEntity.fromJson(json.decode(tokenJson));
+      Get.put(HomeController(tokenEntity));
+    } else {
+      print("Token not found in SharedPreferences");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<TokenEntity>(
-      future: TokenService.instance.getTokenEntity(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Scaffold(body: Center(child: CircularProgressIndicator()));
-        }
+    return GetBuilder<HomeController>(
+        builder: (controller) {
+          return Obx(() {
+            final UserDataEntity? userData = AppService.instance.rxSelfUser.value;
+            print('User data: $userData');
 
-        if (snapshot.hasError) {
-          return Scaffold(body: Center(child: Text('Error: ${snapshot.error}')));
-        }
-
-        final TokenEntity? tokenEntity = snapshot.data;
-        if (tokenEntity == null) {
-          // 处理没有 token 的情况
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            Get.offAllNamed('/login'); // 假设你有一个登录路由
+            return Scaffold(
+              body: Stack(
+                children: [
+                  Background(
+                    showBackButton: false,
+                    child: Container(),
+                  ),
+                  Positioned(
+                    child: Padding(
+                      padding: EdgeInsets.all(16.0.sp),
+                      child: Column(
+                        children: [
+                          SizedBox(height: 50.h),
+                          _buildOptionsRow(),
+                          _buildButtonRow(controller.tokenEntity, userData),
+                          SizedBox(height: 20.h),
+                          Expanded(
+                            child: _buildAnimatedPageView(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  if (userData != null)
+                    AllNavigationBar(tokenEntity: controller.tokenEntity, userData: userData),
+                ],
+              ),
+            );
           });
-          return Scaffold(body: Center(child: Text('No token available')));
         }
-
-        return _buildHomePageContent(tokenEntity);
-      },
     );
   }
-
-  Widget _buildHomePageContent(TokenEntity tokenEntity) {
-    if (!Get.isRegistered<HomeController>()) {
-      Get.put(HomeController(tokenEntity));
-    }
-
-    return Obx(() {
-      final UserDataEntity? userData = AppService.instance.rxSelfUser.value;
-      print('User data: $userData');
-
-      return Scaffold(
-        body: Stack(
-          children: [
-            Background(
-              showBackButton: false,
-              child: Container(),
-            ),
-            Positioned(
-              child: Padding(
-                padding: EdgeInsets.all(16.0.sp),
-                child: Column(
-                  children: [
-                    SizedBox(height: 50.h),
-                    _buildOptionsRow(),
-                    _buildButtonRow(tokenEntity, userData),
-                    SizedBox(height: 20.h),
-                    Expanded(
-                      child: _buildAnimatedPageView(),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            if (userData != null)
-              AllNavigationBar(tokenEntity: tokenEntity, userData: userData),
-          ],
-        ),
-      );
-    });
-  }
-
-
 
   Widget _buildOptionsRow() {
     return GetBuilder<HomeController>(

@@ -5,6 +5,7 @@ import '../../../entity/token_entity.dart';
 import '../../../entity/user_data_entity.dart';
 import '../../../entity/chatted_user_entity.dart';
 import '../../../entity/im_message_entity.dart';
+import '../../entity/list_user_entity.dart';
 import '../../net/dio.client.dart';
 import '../../../utils/log_util.dart';
 import '../../net/api_constants.dart';
@@ -17,6 +18,8 @@ class MessageController extends GetxController {
   List<ChattedUserEntity> chattedUsers = [];
   late PageController pageController;
   bool _disposed = false;
+  final RxList<ListUserEntity> visitedMeUsers = <ListUserEntity>[].obs;
+  final RxList<ListUserEntity> likedMeUsers = <ListUserEntity>[].obs;
 
   MessageController(this.tokenEntity, this.userDataEntity) {
     pageController = PageController(initialPage: selectedIndex);
@@ -26,6 +29,8 @@ class MessageController extends GetxController {
   void onInit() {
     super.onInit();
     fetchChattedUsers();
+    getVisitedMeUsers();
+    getLikedMeUsers();
     connectWebSocket();
   }
 
@@ -113,6 +118,61 @@ class MessageController extends GetxController {
       LogUtil.e(message: 'Fetch error: $e');
     }
   }
+
+  Future<void> getVisitedMeUsers() async {
+    try {
+      DioClient dioClient = DioClient();
+      dioClient.init(options: BaseOptions(
+        headers: {
+          'token': tokenEntity.accessToken,
+        },
+      ));
+
+      dioClient.requestNetwork<List<dynamic>>(
+        method: Method.get,
+        url: ApiConstants.visiteMeUsers,
+        onSuccess: (data) {
+          if (data != null) {
+            visitedMeUsers.value = data.map((json) => ListUserEntity.fromJson(json)).toList();
+            update();
+          }
+        },
+        onError: (code, msg, data) {
+          LogUtil.e(message: 'Fetch visited me users error: $msg');
+        },
+      );
+    } catch (e) {
+      LogUtil.e(message: 'Fetch visited me users error: $e');
+    }
+  }
+
+  Future<void> getLikedMeUsers() async {
+    try {
+      DioClient dioClient = DioClient();
+      dioClient.init(options: BaseOptions(
+        headers: {
+          'token': tokenEntity.accessToken,
+        },
+      ));
+
+      dioClient.requestNetwork<List<dynamic>>(
+        method: Method.get,
+        url: ApiConstants.likeMeUser,
+        onSuccess: (data) {
+          if (data != null) {
+            likedMeUsers.value = data.map((json) => ListUserEntity.fromJson(json)).toList();
+            update();
+          }
+        },
+        onError: (code, msg, data) {
+          LogUtil.e(message: msg);
+        },
+      );
+    } catch (e) {
+      LogUtil.e(message:e.toString());
+    }
+  }
+
 
   void clearNewNumber(String userId) {
     int index = chattedUsers.indexWhere((user) => user.userId == userId);
