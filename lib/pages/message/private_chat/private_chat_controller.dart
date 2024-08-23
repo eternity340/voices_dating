@@ -15,6 +15,7 @@ import '../../../entity/token_entity.dart';
 import '../../../net/dio.client.dart';
 import 'package:first_app/net/api_constants.dart';
 
+import '../../../service/global_service.dart';
 import '../../../service/im_service.dart';
 import '../../../utils/log_util.dart';
 import '../../../components/photo_dialog.dart';
@@ -25,6 +26,7 @@ class PrivateChatController extends GetxController {
   final ChattedUserEntity chattedUser = Get.arguments['chattedUser'] as ChattedUserEntity;
   var messages = <IMNewMessageEntity>[].obs;
   final ScrollController scrollController = ScrollController();
+  final GlobalService globalService = Get.find<GlobalService>();
   final TextEditingController textController = TextEditingController();
   Sender? currentUserSender;
   Sender? currentChatSender;

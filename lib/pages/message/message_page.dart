@@ -8,6 +8,7 @@ import '../../../entity/user_data_entity.dart';
 import '../../components/all_navigation_bar.dart';
 import '../../components/background.dart';
 import '../../image_res/image_res.dart';
+import '../../service/global_service.dart';
 import 'components/loading_overlay.dart';
 import 'components/message_content.dart';
 import 'components/viewed_me_content.dart';
@@ -28,6 +29,14 @@ class _MessagePageState extends State<MessagePage> {
     final TokenEntity tokenEntity = Get.arguments['token'] as TokenEntity;
     final UserDataEntity? userData = Get.arguments['userData'] as UserDataEntity?;
     controller = Get.put(MessageController(tokenEntity, userData!));
+    final GlobalService globalService = Get.find();
+    ever(globalService.needRefresh, (needRefresh) {
+      if (needRefresh) {
+        _loadData();
+        globalService.setNeedRefresh(false);
+      }
+    });
+
     _loadData();
   }
 
@@ -39,7 +48,6 @@ class _MessagePageState extends State<MessagePage> {
       });
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -114,45 +122,32 @@ class _MessagePageState extends State<MessagePage> {
     );
   }
 
-  Widget _buildOption(MessageController controller, String text, int index) {
-    bool isSelected = controller.selectedIndex == index;
+  Widget _buildOption(MessageController controller, String title, int index) {
     return GestureDetector(
       onTap: () {
         controller.changeSelectedIndex(index);
       },
-      child: Stack(
-        clipBehavior: Clip.none,
+      child: Column(
         children: [
-          if (isSelected)
-            Positioned(
-              right: 0.w,
-              top: 0.h,
-              child: Image.asset(
-                ImageRes.imagePathDecorate,
-                width: 17.w,
-                height: 17.h,
-              ),
-            ),
           Text(
-            text,
+            title,
             style: TextStyle(
-              fontFamily: 'Poppins',
-              fontWeight: isSelected ? FontWeight.w500 : FontWeight.w400,
-              fontSize: isSelected ? 18.sp : 16.sp,
-              height: 1.5,
-              letterSpacing: -0.01,
-              color: isSelected ? Colors.black : Color(0xFF8E8E93),
+              color: controller.selectedIndex == index ? Colors.black : const Color(0xFF898A8D),
+              fontWeight: FontWeight.bold,
+              fontSize: 16.sp,
+            ),
+          ),
+          SizedBox(height: 4.h),
+          Container(
+            width: 24.w,
+            height: 3.h,
+            decoration: BoxDecoration(
+              color: controller.selectedIndex == index ? const Color(0xFF222222) : Colors.transparent,
+              borderRadius: BorderRadius.circular(2.r),
             ),
           ),
         ],
       ),
     );
   }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
 }
-

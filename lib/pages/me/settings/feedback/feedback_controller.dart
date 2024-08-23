@@ -1,3 +1,4 @@
+import 'package:first_app/utils/log_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -5,6 +6,7 @@ import 'package:dio/dio.dart' as dio;
 import 'dart:io';
 import '../../../../entity/token_entity.dart';
 import '../../../../entity/user_data_entity.dart';
+import '../../../../net/dio.client.dart';
 
 class FeedbackController extends GetxController {
   final TokenEntity tokenEntity = Get.arguments['token'];
@@ -12,6 +14,8 @@ class FeedbackController extends GetxController {
   final ImagePicker _picker = ImagePicker();
   var selectedImagePath = ''.obs;
   final TextEditingController feedbackController = TextEditingController();
+
+  final DioClient _dioClient = DioClient.instance;
 
   Future<void> pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -30,18 +34,24 @@ class FeedbackController extends GetxController {
       'file': await dio.MultipartFile.fromFile(file.path, filename: file.path.split('/').last),
     });
 
-    final dioClient = dio.Dio();
-    dioClient.options.headers['token'] = tokenEntity.accessToken;
-
     try {
-      final response = await dioClient.post('https://api.masonvips.com/v1/upload_file', data: formData);
-      if (response.data['code'] == 200) {
-        return response.data['data'][0]['attachId'].toString();
-      } else {
-        print('Image upload failed: ${response.data['message']}');
-      }
+      final response = await _dioClient.requestNetwork<Map<String, dynamic>>(
+        method: Method.post,
+        url: 'https://api.masonvips.com/v1/upload_file',
+        params: formData,
+        options: dio.Options(headers: {'token': tokenEntity.accessToken}),
+        onSuccess: (data) {
+          if (data != null && data['code'] == 200) {
+            return data['data'][0]['attachId'].toString();
+          }
+        },
+        onError: (code, msg, data) {
+          LogUtil.e(message: 'Image upload failed: $msg');
+        },
+      );
+      return response;
     } catch (e) {
-      print('Error uploading image: $e');
+      LogUtil.e(message: 'Error uploading image: $e');
     }
     return null;
   }
@@ -49,7 +59,7 @@ class FeedbackController extends GetxController {
   Future<void> submitFeedback() async {
     final attachId = await uploadImage();
     if (attachId == null) {
-      print('Image upload failed');
+      LogUtil.e(message: 'Image upload failed');
       return;
     }
 
@@ -61,21 +71,21 @@ class FeedbackController extends GetxController {
       'attachId': attachId,
     };
 
-    final dioClient = dio.Dio();
-    dioClient.options.headers['token'] = tokenEntity.accessToken;
-
     try {
-      final response = await dioClient.post(
-        'https://api.masonvips.com/v1/feedback',
+      await _dioClient.requestNetwork<void>(
+        method: Method.post,
+        url: 'https://api.masonvips.com/v1/feedback',
         queryParameters: queryParams,
+        options: dio.Options(headers: {'token': tokenEntity.accessToken}),
+        onSuccess: (_) {
+          LogUtil.i(message: 'Feedback submitted successfully');
+        },
+        onError: (code, msg, _) {
+          LogUtil.e(message: 'Failed to submit feedback: $msg');
+        },
       );
-      if (response.data['code'] == 200) {
-        print('Feedback submitted successfully');
-      } else {
-        print('Failed to submit feedback: ${response.data['message']}');
-      }
     } catch (e) {
-      print('Error submitting feedback: $e');
+      LogUtil.e(message: 'Error submitting feedback: $e');
     }
   }
 }

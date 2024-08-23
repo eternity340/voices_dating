@@ -7,6 +7,7 @@ import 'package:first_app/pages/moments/moments_page.dart';
 import 'package:first_app/pages/voice/voice_page.dart';
 import 'package:first_app/routes/app_route.dart';
 import 'package:first_app/service/app_service.dart';
+import 'package:first_app/service/global_service.dart';
 import 'package:first_app/service/im_service.dart';
 import 'package:first_app/service/token_service.dart';
 import 'package:first_app/utils/app_style_utils.dart';
@@ -46,6 +47,7 @@ _initApp() async {
 _initService() async {
   await Get.putAsync(() => TokenService().init());
   await Get.putAsync(() => AppService().init());
+  Get.put(GlobalService());
 }
 
 class MyApp extends StatelessWidget {

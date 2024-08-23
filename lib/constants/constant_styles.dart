@@ -618,5 +618,14 @@ class ConstantStyles {
     fontSize: 12.sp,
     color: Colors.grey,
   );
+  //report_user
+  static TextStyle reportOptionStyle = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 16.sp,
+    fontWeight: FontWeight.w500,
+    height: 22 / 16,
+    letterSpacing: -0.01,
+    color: Colors.black,
+  );
 
 }

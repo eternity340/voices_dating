@@ -163,6 +163,9 @@ class ConstantData {
   static const  moments = 'Moments';
   static const  aboutMe = 'About Me';
   static const  chatButton = 'Chat';
+  //bottom_options
+  static const reportButton = 'report';
+  static const blockButton = 'block';
   //home_page
   static const  feelLabel = 'Feel';
   static const  getUpLabel = 'Get up';
@@ -203,6 +206,7 @@ class ConstantData {
   static const  version = 'V1.0';
   //block_members
   static const  blockMembersText = 'Block Members';
+  static const  blockUserText = 'block user';
   static const  noBlockedMembersText = 'No blocked members';
   //feedback
   static const  feedbackTitleText='Feedback';
@@ -246,5 +250,16 @@ class ConstantData {
   static const  messageText = "Message";
   static const  viewedMeText = "Viewed Me";
   static const  likedMeText = "Liked Me";
+  //block_user
+  static const  blockUserDialogText = 'Are you sure you want to block this user?';
+  //report_user
+  static const  reportTitle = 'Report';
+  static const  pornographicOption  = 'Pornographic';
+  static const  violentOption = 'Violent';
+  static const  maliciousAttackOption = 'Malicious attack';
+  static const  disgustingOption = 'Disgusting';
+  static const  otherOption = 'Other';
+  static const  describeProblem = 'Please describe your problem…';
+
 }
 

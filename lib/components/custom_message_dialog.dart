@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/constant_data.dart';
-import '../constants/constant_styles.dart'; // 导入ConstantStyles
+import '../constants/constant_styles.dart';
 
 class CustomMessageDialog extends StatelessWidget {
   final Widget title;
@@ -18,32 +18,37 @@ class CustomMessageDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoAlertDialog(
-      title: title,
-      content: content,
-      actions: <Widget>[
-        CupertinoDialogAction(
-          isDefaultAction: true,
-          onPressed: () {
-            Navigator.of(context).pop(); // Close the dialog
-          },
-          child: DefaultTextStyle(
-            style: ConstantStyles.dialogCancelTextStyle,
-            child: Text(ConstantData.cancelText),
+    return CupertinoTheme(
+      data: CupertinoThemeData(
+        brightness: Brightness.light,
+      ),
+      child: CupertinoAlertDialog(
+        title: title,
+        content: content,
+        actions: <Widget>[
+          CupertinoDialogAction(
+            isDefaultAction: true,
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: DefaultTextStyle(
+              style: ConstantStyles.dialogCancelTextStyle,
+              child: Text(ConstantData.cancelText),
+            ),
           ),
-        ),
-        CupertinoDialogAction(
-          isDestructiveAction: true,
-          onPressed: () {
-            Navigator.of(context).pop(); // Close the dialog
-            onYesPressed(); // Call the provided function
-          },
-          child: DefaultTextStyle(
-            style: ConstantStyles.yesTextStyle,
-            child: Text(ConstantData.yesText),
+          CupertinoDialogAction(
+            isDestructiveAction: true,
+            onPressed: () {
+              Navigator.of(context).pop();
+              onYesPressed();
+            },
+            child: DefaultTextStyle(
+              style: ConstantStyles.yesTextStyle,
+              child: Text(ConstantData.yesText),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

@@ -173,7 +173,6 @@ class MessageController extends GetxController {
     }
   }
 
-
   void clearNewNumber(String userId) {
     int index = chattedUsers.indexWhere((user) => user.userId == userId);
     if (index != -1) {

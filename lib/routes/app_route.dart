@@ -20,6 +20,8 @@ import '../pages/email/page/verify_email_page.dart';
 import '../pages/email/page/verify_success_page.dart';
 import '../pages/email/provider/get_email_code_provider.dart';
 import '../pages/home/home_page.dart';
+import '../pages/home/profile_detail/profile_moments/profile_moments_page.dart';
+import '../pages/home/profile_detail/report/report_page.dart';
 import '../pages/me/me_page.dart';
 import '../pages/me/my_profile/update_profile/change_age/change_age.dart';
 import '../pages/me/my_profile/update_profile/change_headline/change_headline.dart';
@@ -126,6 +128,21 @@ class AppRoutes {
           page: () => ProfileDetailPage(),
           transition: defaultTransition,
           transitionDuration: defaultDuration,
+          children: [
+            getx.GetPage(
+            name: '/profile_moments',
+            page: () =>  ProfileMomentsPage(),
+            transition: defaultTransition,
+            transitionDuration: defaultDuration,
+          ),
+            getx.GetPage(
+              name: '/report',
+              page: () =>  ReportPage(),
+              transition: defaultTransition,
+              transitionDuration: defaultDuration,
+            ),
+
+          ]
         ),
         getx.GetPage(
           name: '/feel',

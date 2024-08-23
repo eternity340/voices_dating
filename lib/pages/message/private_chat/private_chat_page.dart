@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:first_app/service/global_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_sound/public/flutter_sound_player.dart';
@@ -22,6 +23,7 @@ class PrivateChatPage extends StatefulWidget {
 class _PrivateChatPageState extends State<PrivateChatPage>
     with WidgetsBindingObserver, TickerProviderStateMixin {
   final PrivateChatController controller = Get.put(PrivateChatController());
+  final GlobalService globalService = Get.find();
   late EasyRefreshController _easyRefreshController;
   late AnimationController _animationController;
   final AudioPlayer _audioPlayer = AudioPlayer();
@@ -341,6 +343,8 @@ class _PrivateChatPageState extends State<PrivateChatPage>
     _audioPlayer.dispose();
     _animationController.dispose();
     _easyRefreshController.dispose();
+    globalService.setNeedRefresh(true);
+
     super.dispose();
   }
 }
