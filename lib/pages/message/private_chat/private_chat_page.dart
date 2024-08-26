@@ -100,9 +100,8 @@ class _PrivateChatPageState extends State<PrivateChatPage>
                             message.created,
                             controller.messages[index - 1].created,
                           );
-
                       return Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.w),  // 添加左右 16px 的边距
+                        padding: EdgeInsets.symmetric(horizontal: 16.w),  
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -123,9 +122,12 @@ class _PrivateChatPageState extends State<PrivateChatPage>
                                   : MainAxisAlignment.end,
                               children: [
                                 if (isSentByUser)
-                                  CircleAvatar(
-                                    radius: 20.w,
-                                    backgroundImage: NetworkImage(avatarUrl),
+                                  GestureDetector(
+                                    onTap: () => controller.onAvatarTap(controller.chattedUser.userId ?? ''),
+                                    child: CircleAvatar(
+                                      radius: 20.w,
+                                      backgroundImage: NetworkImage(avatarUrl),
+                                    ),
                                   ),
                                 if (isSentByUser) SizedBox(width: 10.w),
                                 Flexible(
@@ -148,9 +150,12 @@ class _PrivateChatPageState extends State<PrivateChatPage>
                                 ),
                                 if (!isSentByUser) SizedBox(width: 10.w),
                                 if (!isSentByUser)
-                                  CircleAvatar(
-                                    radius: 20.w,
-                                    backgroundImage: NetworkImage(avatarUrl),
+                                  GestureDetector(
+                                    onTap: () => controller.onAvatarTap(controller.chattedUser.userId ?? ''),
+                                    child: CircleAvatar(
+                                      radius: 20.w,
+                                      backgroundImage: NetworkImage(avatarUrl),
+                                    ),
                                   ),
                               ],
                             ),

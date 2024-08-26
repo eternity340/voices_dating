@@ -221,4 +221,12 @@ class AppService extends GetxService {
 
   }
 
+
+  viewProfile({required String userId}){
+    Map<String,String> params = {};
+    params.putIfAbsent(ConstantData.paramsUserId, () => userId);
+    //Get.toNamed(WfRoutes.userProfile,parameters: params);
+  }
+
+
 }

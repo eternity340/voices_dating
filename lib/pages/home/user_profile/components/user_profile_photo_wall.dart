@@ -1,17 +1,17 @@
+import 'package:first_app/entity/user_data_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../entity/list_user_entity.dart';
 
-class ProfilePhotoWall extends StatefulWidget {
-  final ListUserEntity userEntity;
+class UserProfilePhotoWall extends StatefulWidget {
+  final UserDataEntity userDataEntity;
 
-  ProfilePhotoWall({required this.userEntity});
+  UserProfilePhotoWall({required this.userDataEntity});
 
   @override
   _PhotoWallState createState() => _PhotoWallState();
 }
 
-class _PhotoWallState extends State<ProfilePhotoWall> {
+class _PhotoWallState extends State<UserProfilePhotoWall> {
   late PageController _pageController;
   int _currentPage = 0;
 
@@ -30,7 +30,7 @@ class _PhotoWallState extends State<ProfilePhotoWall> {
   @override
   Widget build(BuildContext context) {
     // Ensure no more than 9 photos are displayed
-    int photoCount = (widget.userEntity.photos?.length ?? 0).clamp(0, 9);
+    int photoCount = (widget.userDataEntity.photos?.length ?? 0).clamp(0, 9);
 
     return Container(
       width: 400.w, // 调整宽度
@@ -46,7 +46,7 @@ class _PhotoWallState extends State<ProfilePhotoWall> {
               });
             },
             itemBuilder: (context, index) {
-              String? photoUrl = widget.userEntity.photos?[index].url;
+              String? photoUrl = widget.userDataEntity.photos?[index].url;
               return Align(
                 alignment: Alignment.topCenter,
                 child: Container(

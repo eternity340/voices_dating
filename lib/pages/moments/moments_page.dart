@@ -39,7 +39,10 @@ class MomentsPage extends StatelessWidget {
             top: 67.h,
             child: GestureDetector(
               onTap: () {
-                Get.toNamed('/moments/add_moment', arguments: {'token': controller.tokenEntity, 'userData': controller.userData});
+                Get.toNamed('/moments/add_moment',
+                    arguments: {
+                  'token': controller.tokenEntity,
+                  'userData': controller.userDataEntity});
               },
               child: Text(
                 ConstantData.moments,
@@ -52,7 +55,11 @@ class MomentsPage extends StatelessWidget {
             top: 45.5.h,
             child: GestureDetector(
               onTap: () {
-                Get.toNamed('/moments/add_moment', arguments: {'token': controller.tokenEntity, 'userData': controller.userData});
+                Get.toNamed(
+                    '/moments/add_moment',
+                    arguments: {
+                      'token': controller.tokenEntity,
+                      'userData': controller.userDataEntity});
               },
               child: Container(
                 width: 40.w,
@@ -101,20 +108,17 @@ class MomentsPage extends StatelessWidget {
               height: 650.h,
               child: Obx(() {
                 return EasyRefresh(
-                  header: ClassicalHeader(
-                    refreshText: "Pull to refresh",
-                    refreshReadyText: "Release to refresh",
-                    refreshingText: "Refreshing...",
-                    refreshedText: "Refresh completed",
-                    refreshFailedText: "Refresh failed",
-                  ),
                   onRefresh: () async => controller.fetchMoments(),
                   child: ListView.builder(
                     itemCount: controller.moments.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
-                          Get.toNamed('/moments/moments_detail', arguments: {'moment': controller.moments[index], 'token': controller.tokenEntity, 'userData': controller.userData});
+                          Get.toNamed('/moments/moments_detail',
+                              arguments: {
+                            'moment': controller.moments[index],
+                            'tokenEntity': controller.tokenEntity,
+                            'userDataEntity': controller.userDataEntity});
                         },
                         child: MomentsCard(
                           moment: controller.moments[index],
@@ -128,7 +132,7 @@ class MomentsPage extends StatelessWidget {
               }),
             ),
           ),
-          AllNavigationBar(tokenEntity: controller.tokenEntity, userData: controller.userData),
+          AllNavigationBar(tokenEntity: controller.tokenEntity, userData: controller.userDataEntity),
         ],
       ),
     ),

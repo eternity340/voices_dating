@@ -1,3 +1,4 @@
+import 'package:first_app/entity/moment_entity.dart';
 import 'package:first_app/entity/user_data_entity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,11 +15,11 @@ import '../../../entity/im_new_message_emtity.dart';
 import '../../../entity/token_entity.dart';
 import '../../../net/dio.client.dart';
 import 'package:first_app/net/api_constants.dart';
-
 import '../../../service/global_service.dart';
 import '../../../service/im_service.dart';
 import '../../../utils/log_util.dart';
 import '../../../components/photo_dialog.dart';
+import '../../home/user_profile/user_profile_page.dart';
 
 class PrivateChatController extends GetxController {
   final TokenEntity tokenEntity = Get.arguments['token'] as TokenEntity;
@@ -250,5 +251,22 @@ class PrivateChatController extends GetxController {
         );
       },
     );
+  }
+
+  void onAvatarTap(String userId) async {
+    final GlobalService globalService = Get.find<GlobalService>();
+    final UserDataEntity? userDataEntity = await globalService.getUserProfile(
+      userId: userId,
+      accessToken: tokenEntity.accessToken.toString(),
+    );
+    if (userDataEntity != null) {
+      Get.to(() => UserProfilePage(), arguments: {
+        'userDataEntity': userDataEntity,
+        'tokenEntity': tokenEntity,
+      });
+    } else {
+      LogUtil.e(message: 'Failed to get user profile');
+      Get.snackbar('Error', 'Failed to load user profile');
+    }
   }
 }

@@ -3,6 +3,9 @@ import 'package:first_app/pages/home/game/game_page.dart';
 import 'package:first_app/pages/home/get_up/get_up_page.dart';
 import 'package:first_app/pages/home/gossip/gossip_page.dart';
 import 'package:first_app/pages/home/profile_detail/profile_detail_page.dart';
+import 'package:first_app/pages/home/user_profile/user_moments/user_moments_page.dart';
+import 'package:first_app/pages/home/user_profile/user_profile_page.dart';
+import 'package:first_app/pages/home/user_profile/user_report/user_report_page.dart';
 import 'package:first_app/pages/me/my_profile/update_profile/change_username/change_username.dart';
 import 'package:first_app/pages/me/photo/photo_page.dart';
 import 'package:first_app/pages/me/settings/about_me/about_me_page.dart';
@@ -58,54 +61,76 @@ class AppRoutes {
       transition: defaultTransition,
       transitionDuration: defaultDuration,
     ),
+
     getx.GetPage(
       name: '/sign_in',
       page: () => const SignInProvider(child: SignInPage()),
       transition: defaultTransition,
       transitionDuration: defaultDuration,
     ),
+
     getx.GetPage(
       name: '/get_mail_code',
       page: () => GetEmailCodeProvider(child: GetMailCodePage()),
       transition: defaultTransition,
       transitionDuration: defaultDuration,
     ),
-    getx.GetPage(name: '/verify_email', page: () {
+
+    getx.GetPage(name: '/verify_email',
+        page: () {
       final args = getx.Get.arguments as Map<String, dynamic>;
       return VerifyEmailPage(
         email: args['email'],
         verificationKey: args['verificationKey'],
       );
-    }, transition: defaultTransition, transitionDuration: defaultDuration),
-    getx.GetPage(name: '/verify_success', page: () {
+    }, transition: defaultTransition,
+        transitionDuration: defaultDuration),
+
+    getx.GetPage(name: '/verify_success',
+        page: () {
       final args = getx.Get.arguments as Map<String, dynamic>;
       return VerifySuccessPage(
         message: args['message'],
         user: args['user'],
       );
-    }, transition: defaultTransition, transitionDuration: defaultDuration),
+    }, transition: defaultTransition,
+        transitionDuration: defaultDuration),
+
     getx.GetPage(
       name: '/forget_pwd',
       page: () => const ForgetPwdProvider(child: ForgetPwdPage()),
       transition: defaultTransition,
       transitionDuration: defaultDuration,
     ),
+
     getx.GetPage(name: '/select_gender', page: () {
       final user = getx.Get.arguments as User;
       return SelectGenderPage(user: user);
-    }, transition: defaultTransition, transitionDuration: defaultDuration),
+    },
+        transition: defaultTransition,
+        transitionDuration: defaultDuration),
+
     getx.GetPage(name: '/select_location', page: () {
       final user = getx.Get.arguments as User;
       return SelectLocationPage(user: user);
-    }, transition: defaultTransition, transitionDuration: defaultDuration),
+    },
+        transition: defaultTransition,
+        transitionDuration: defaultDuration),
+
     getx.GetPage(name: '/select_birthday', page: () {
       final user = getx.Get.arguments as User;
       return SelectBirthdayPage(user: user);
-    }, transition: defaultTransition, transitionDuration: defaultDuration),
+    },
+        transition: defaultTransition,
+        transitionDuration: defaultDuration),
+
     getx.GetPage(name: '/select_height', page: () {
       final user = getx.Get.arguments as User;
       return SelectHeightPage(user: user);
-    }, transition: defaultTransition, transitionDuration: defaultDuration),
+    },
+        transition: defaultTransition,
+        transitionDuration: defaultDuration),
+
     getx.GetPage(
       name: '/sign_up',
       page: () {
@@ -118,7 +143,10 @@ class AppRoutes {
     getx.GetPage(name: '/location_detail', page: () {
       final user = getx.Get.arguments as User;
       return LocationDetailPage(user: user);
-    }, transition: defaultTransition, transitionDuration: defaultDuration),
+    },
+        transition: defaultTransition,
+        transitionDuration: defaultDuration),
+
     getx.GetPage(
       name: '/home',
       page: () => HomePage(),
@@ -144,6 +172,7 @@ class AppRoutes {
 
           ]
         ),
+
         getx.GetPage(
           name: '/feel',
           page: () => FeelPage(),
@@ -172,6 +201,7 @@ class AppRoutes {
       transition: defaultTransition,
       transitionDuration: defaultDuration,
     ),
+
     getx.GetPage(
       name: '/moments',
       page: () => MomentsPage(),
@@ -192,12 +222,14 @@ class AppRoutes {
       transition: defaultTransition,
       transitionDuration: defaultDuration,
     ),
+
     getx.GetPage(
       name: '/voice',
       page: () => VoicePage(),
       transition: defaultTransition,
       transitionDuration: defaultDuration,
     ),
+
     getx.GetPage(
       name: '/message',
       page: () => MessagePage(),
@@ -205,6 +237,26 @@ class AppRoutes {
         getx.GetPage(
           name: '/private_chat',
           page: () => PrivateChatPage(),
+          children: [
+            getx.GetPage(
+              name: '/user_profile',
+              page: () => UserProfilePage(),
+              transition: defaultTransition,
+              transitionDuration: defaultDuration,
+            ),
+            getx.GetPage(
+              name: '/user_moments',
+              page: () => UserMomentsPage(),
+              transition: defaultTransition,
+              transitionDuration: defaultDuration,
+            ),
+            getx.GetPage(
+              name: '/user_report',
+              page: () => UserReportPage(),
+              transition: defaultTransition,
+              transitionDuration: defaultDuration,
+            ),
+          ],
           transition: defaultTransition,
           transitionDuration: defaultDuration,
         ),
@@ -212,6 +264,7 @@ class AppRoutes {
       transition: defaultTransition,
       transitionDuration: defaultDuration,
     ),
+
     getx.GetPage(
       name: '/me',
       page: () => MePage(),

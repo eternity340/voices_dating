@@ -19,8 +19,8 @@ class MomentsDetailPage extends StatefulWidget {
 
 class _MomentsDetailPageState extends State<MomentsDetailPage> {
   final moment = Get.arguments['moment'] as MomentEntity;
-  final tokenEntity = Get.arguments['token'] as TokenEntity;
-  final userData = Get.arguments['userData'] as UserDataEntity;
+  final tokenEntity = Get.arguments['tokenEntity'] as TokenEntity;
+  final userData = Get.arguments['userDataEntity'] as UserDataEntity;
   bool _isCommentInputVisible = false;
   final TextEditingController _commentController = TextEditingController();
   String? _commentContent;
@@ -231,7 +231,6 @@ class _MomentsDetailPageState extends State<MomentsDetailPage> {
         Get.snackbar('error', 'Failed to add comment');
       }
     } catch (e) {
-      print('Failed to submit comment: $e');
       Get.snackbar('Error', 'An error occurred');
     }
   }

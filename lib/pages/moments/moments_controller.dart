@@ -7,14 +7,14 @@ import '../../../entity/user_data_entity.dart';
 
 class MomentsController extends GetxController {
   late TokenEntity tokenEntity;
-  late UserDataEntity userData;
+  late UserDataEntity userDataEntity;
   var moments = <MomentEntity>[].obs;
 
   @override
   void onInit() {
     super.onInit();
     tokenEntity = Get.arguments['token'] as TokenEntity;
-    userData = Get.arguments['userData'] as UserDataEntity;
+    userDataEntity = Get.arguments['userData'] as UserDataEntity;
     fetchMoments();
   }
 

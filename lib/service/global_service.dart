@@ -1,9 +1,13 @@
 import 'dart:io';
+import 'package:dio/dio.dart';
+import 'package:first_app/entity/token_entity.dart';
 import 'package:first_app/entity/user_data_entity.dart';
 import 'package:first_app/net/api_constants.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
+import '../entity/base_entity.dart';
 import '../entity/list_user_entity.dart';
+import '../entity/moment_entity.dart';
 import '../net/dio.client.dart';
 import '../utils/log_util.dart';
 import '../utils/request_util.dart';
@@ -48,24 +52,51 @@ class GlobalService extends GetxController {
     }
   }
 
-  Future<UserDataEntity?> getProfile(String userId, String accessToken) async {
-    Map<String, dynamic> params = RequestUtil.getUserProfileMap(userId: userId);
-      final result = await DioClient.instance.requestNetwork<UserDataEntity>(
-        url: ApiConstants.getProfile,
-        method: Method.get,
-        queryParameters: params,
-        options: dio.Options(headers: {'token': accessToken}),
-        onSuccess: (result) {
-          if (result != null) {
-            userDataEntity.value = result;
-            return result;
-          }
-          return null;
-        },
+  Future<UserDataEntity?> getUserProfile({required String userId, required String accessToken}) async {
+    try {
+      final dio = Dio();
+      final response = await dio.get(
+        ApiConstants.getProfile,
+        queryParameters: {'profId': userId},
+        options: Options(headers: {'token': accessToken}),
       );
-      return result;
+
+      if (response.statusCode == 200) {
+        final jsonData = response.data;
+        if (jsonData['code'] == 200 && jsonData['data'] != null) {
+          return UserDataEntity.fromJson(jsonData['data']);
+        } else {
+          LogUtil.e(message: '${jsonData['message']}');
+        }
+      } else {
+        LogUtil.e(message: '${response.statusCode}');
+      }
+    } catch (e) {
+      LogUtil.e(message:'$e');
+    }
+    return null;
   }
 
+  Future<List<MomentEntity>> getMoments({required String userId, required String accessToken}) async {
+    List<MomentEntity> moments = [];
 
+    await DioClient.instance.requestNetwork<List<dynamic>>(
+      method: Method.get,
+      url: ApiConstants.timelines,
+      queryParameters: {
+        'profId': userId
+      },
+      options: Options(headers: {'token': accessToken}),
+      onSuccess: (data) {
+        if (data != null) {
+          moments = data.map((json) => MomentEntity.fromJson(json)).toList();
+        }
+      },
+      onError: (code, message, data) {
+        LogUtil.e(message: 'Failed to get moments: $message');
+      },
+    );
 
+    return moments;
+  }
 }

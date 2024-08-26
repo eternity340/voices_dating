@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'package:first_app/utils/string_extension.dart';
-
 import '../constants/constant_data.dart';
 import '../utils/config_options_utils.dart';
 import 'json_format/json_format.dart';
@@ -16,131 +14,123 @@ import 'user_photo_entity.dart';
 
 
 class UserDataEntity {
-  String? about;
-  String? age;
-  String? agreeGuidelines;
-  int? autoRenew;
-  String? avatar;
-  String? averageScores;
-  int? birthday;
-  String? body;
-  int? canSendVerifyPhoto;
-  int? canWink;
-  String? changedGender;
-  int? created;
-  UserLocationEntity? curLocation;
-  String? defaultWinkTypeId;
-  String? drink;
-  String? education;
-  String? email;
-  String? emailUnsubscribe;
-  String? emailVerified;
-  String? ethnicity;
-  int? expiredDate;
-  String? eyes;
-  String? facebookUid;
-  String? favoriteMusic;
-  String? fraudStatus;
-  String? gender;
-  Object? googlePlayNotifyStatus;
-  String? googleUid;
-  String? hair;
-  bool? hasSubscription;
-  String? haveChildren;
-  String? headline;
-  String? height;
-  String? hidden;
-  String? hiddenCurrentLocation;
-  String? hiddenGender;
-  String? hiddenLogin;
-  String? hiddenOnline;
-  String? hiddenView;
-  String? hobby;
-  String? hometown;
-  String? hp;
-  String? ignoreFraudStatus;
-  String? income;
-  String? language;
-  String? turnOns;
-  String? eroticFun;
-  String? lastPayWay;
-  List<ProfileCommentEntity>? lastProfileComment;
-  List<MomentEntity>? lastTimeline;
-  List<MomentEntity>? allTimeline;
-  int? liked;
-  int? likedCntToday;
-  int? likedMe;
-  UserLocationEntity? location;
-  String? marital;
-  String? matchAbout;
-  MatchAgeEntity? matchAge;
-  PartnerInfoEntity? partnerInfo;
-  String? matchAnywhere;
-  String? matchCityId;
-  String? matchCountryId;
-  String? matchDistance;
-  String? matchGender;
-  String? matchIncome;
-  String? matchRelationship;
-  String? matchStateId;
-  String? member;
-  String? myScores;
-  String? noticeLike;
-  String? noticeMessage;
-  String? noticeView;
-  String? occupation;
-  String? online;
-  int? paymentStartDate;
-  List<Object>? perfectDate;
-  int? perfectLikeCnt;
-  List<Object>? perfectLikeList;
-  String? personality;
-  String? pet;
-  String? phone;
-  String? phoneCountry;
-  String? phoneVerified;
-  List<UserPhotoEntity>? photos;
-  String? politicalBelief;
-  List<UserPhotoEntity>? privateAlbum;
-  String? profileCommentNumber;
-  int? profilePending;
-  List<Object>? profileVideo;
-  PromptNoPhotoEntity? promptIfNoPhoto;
-  String? relation;
-  String? religion;
-  int? remainingDay;
-  String? sign;
-  String? smoke;
-  String? tlsSig;
-  String? totalScorer;
-  String? userId;
-  String username;
-  String? verified;
-  String? wantChildren;
-  int? winked;
-  int? visitedMeCnt;
-  String lastMessage;
-  String? lastMessageSenderId;
-  String? changedBirthday;
-  String? matchLanguage;
-  String? switchedAbbr;
-  bool? appleTag;
+  UserDataEntity({
+    this.about,
+    this.age,
+    this.agreeGuidelines,
+    this.autoRenew,
+    this.avatar,
+    this.averageScores,
+    this.birthday,
+    this.body,
+    this.canSendVerifyPhoto,
+    this.canWink,
+    this.changedGender,
+    this.created,
+    this.curLocation,
+    this.defaultWinkTypeId,
+    this.drink,
+    this.education,
+    this.email,
+    this.emailUnsubscribe,
+    this.emailVerified,
+    this.ethnicity,
+    this.expiredDate,
+    this.eyes,
+    this.facebookUid,
+    this.favoriteMusic,
+    this.fraudStatus,
+    this.gender,
+    this.googlePlayNotifyStatus,
+    this.googleUid,
+    this.hair,
+    this.hasSubscription,
+    this.haveChildren,
+    this.headline,
+    this.height,
+    this.hidden,
+    this.hiddenCurrentLocation,
+    this.hiddenGender,
+    this.hiddenLogin,
+    this.hiddenOnline,
+    this.hiddenView,
+    this.hobby,
+    this.hometown,
+    this.hp,
+    this.ignoreFraudStatus,
+    this.income,
+    this.language,
+    this.turnOns,
+    this.eroticFun,
+    this.lastPayWay,
+    this.lastProfileComment,
+    this.lastTimeline,
+    this.allTimeline,
+    this.liked,
+    this.likedCntToday,
+    this.likedMe,
+    this.location,
+    this.marital,
+    this.matchAbout,
+    this.matchAge,
+    this.partnerInfo,
+    this.matchAnywhere,
+    this.matchCityId,
+    this.matchCountryId,
+    this.matchDistance,
+    this.matchGender,
+    this.matchIncome,
+    this.matchRelationship,
+    this.matchStateId,
+    this.member,
+    this.myScores,
+    this.noticeLike,
+    this.noticeMessage,
+    this.noticeView,
+    this.occupation,
+    this.online,
+    this.paymentStartDate,
+    this.perfectDate,
+    this.perfectLikeCnt,
+    this.perfectLikeList,
+    this.personality,
+    this.pet,
+    this.phone,
+    this.phoneCountry,
+    this.phoneVerified,
+    this.photos,
+    this.politicalBelief,
+    this.privateAlbum,
+    this.profileCommentNumber,
+    this.profilePending,
+    this.profileVideo,
+    this.promptIfNoPhoto,
+    this.relation,
+    this.religion,
+    this.remainingDay,
+    this.sign,
+    this.smoke,
+    this.tlsSig,
+    this.totalScorer,
+    this.userId,
+    this.username = "",
+    this.verified,
+    this.wantChildren,
+    this.winked,
+    this.visitedMeCnt,
+    this.lastMessage = "",
+    this.lastMessageSenderId,
+    this.messageType = 1,
+    this.status = 0,
+    this.sentMessageStatus = -1,
+    this.newNumber = 0,
+    this.lastCacheTime = 0,
+    this.changedBirthday = "",
+    this.matchLanguage,
+    this.switchedAbbr = "",
+    this.appleTag = false,
 
-  // default 1, 1 - text, 2 - image, 3 - radio, 4 - video, 5 - like, 6 - match, 7 - wink,
-  //  8 - private album request, 9 - accept private album request, 10 - first date ideas' 11 recall
-  //  12, 邀请他人上传照片 ，13 support消息：upgrade送boost;
-  int messageType = 1;
-
-  //profile status, 0: pending, 1: approved, 2: refused, 3: blocked, 4: removed, 5: on hold
-  int status = 0;
-
-  //未建立连接定义：A发送消息给B，B还未回复A消息的状态  0 ：接收方未回复过消息的状态
-  int sentMessageStatus = -1;
-
-  // 未读消息
-  int newNumber = -1;
-
-  int lastCacheTime = 0;
+  });
 
   factory UserDataEntity.fromJson(Map<String, dynamic> jsonRes) {
     final List<ProfileCommentEntity>? lastProfileComment =
@@ -374,6 +364,131 @@ class UserDataEntity {
     );
   }
 
+  String? about;
+  String? age;
+  String? agreeGuidelines;
+  int? autoRenew;
+  String? avatar;
+  String? averageScores;
+  int? birthday;
+  String? body;
+  int? canSendVerifyPhoto;
+  int? canWink;
+  String? changedGender;
+  int? created;
+  UserLocationEntity? curLocation;
+  String? defaultWinkTypeId;
+  String? drink;
+  String? education;
+  String? email;
+  String? emailUnsubscribe;
+  String? emailVerified;
+  String? ethnicity;
+  int? expiredDate;
+  String? eyes;
+  String? facebookUid;
+  String? favoriteMusic;
+  String? fraudStatus;
+  String? gender;
+  Object? googlePlayNotifyStatus;
+  String? googleUid;
+  String? hair;
+  bool? hasSubscription;
+  String? haveChildren;
+  String? headline;
+  String? height;
+  String? hidden;
+  String? hiddenCurrentLocation;
+  String? hiddenGender;
+  String? hiddenLogin;
+  String? hiddenOnline;
+  String? hiddenView;
+  String? hobby;
+  String? hometown;
+  String? hp;
+  String? ignoreFraudStatus;
+  String? income;
+  String? language;
+  String? turnOns;
+  String? eroticFun;
+  String? lastPayWay;
+  List<ProfileCommentEntity>? lastProfileComment;
+  List<MomentEntity>? lastTimeline;
+  List<MomentEntity>? allTimeline;
+  int? liked;
+  int? likedCntToday;
+  int? likedMe;
+  UserLocationEntity? location;
+  String? marital;
+  String? matchAbout;
+  MatchAgeEntity? matchAge;
+  PartnerInfoEntity? partnerInfo;
+  String? matchAnywhere;
+  String? matchCityId;
+  String? matchCountryId;
+  String? matchDistance;
+  String? matchGender;
+  String? matchIncome;
+  String? matchRelationship;
+  String? matchStateId;
+  String? member;
+  String? myScores;
+  String? noticeLike;
+  String? noticeMessage;
+  String? noticeView;
+  String? occupation;
+  String? online;
+  int? paymentStartDate;
+  List<Object>? perfectDate;
+  int? perfectLikeCnt;
+  List<Object>? perfectLikeList;
+  String? personality;
+  String? pet;
+  String? phone;
+  String? phoneCountry;
+  String? phoneVerified;
+  List<UserPhotoEntity>? photos;
+  String? politicalBelief;
+  List<UserPhotoEntity>? privateAlbum;
+  String? profileCommentNumber;
+  int? profilePending;
+  List<Object>? profileVideo;
+  PromptNoPhotoEntity? promptIfNoPhoto;
+  String? relation;
+  String? religion;
+  int? remainingDay;
+  String? sign;
+  String? smoke;
+  String? tlsSig;
+  String? totalScorer;
+  String? userId;
+  String username;
+  String? verified;
+  String? wantChildren;
+  int? winked;
+  int? visitedMeCnt;
+  String lastMessage;
+  String? lastMessageSenderId;
+  String? changedBirthday;
+  String? matchLanguage;
+  String? switchedAbbr;
+  bool? appleTag;
+
+  // default 1, 1 - text, 2 - image, 3 - radio, 4 - video, 5 - like, 6 - match, 7 - wink,
+  //  8 - private album request, 9 - accept private album request, 10 - first date ideas' 11 recall
+  //  12, 邀请他人上传照片 ，13 support消息：upgrade送boost;
+  int messageType = 1;
+
+  //profile status, 0: pending, 1: approved, 2: refused, 3: blocked, 4: removed, 5: on hold
+  int status = 0;
+
+  //未建立连接定义：A发送消息给B，B还未回复A消息的状态  0 ：接收方未回复过消息的状态
+  int sentMessageStatus = -1;
+
+  // 未读消息
+  int newNumber = -1;
+
+  int lastCacheTime = 0;
 
   @override
   String toString() {
@@ -501,7 +616,7 @@ class UserDataEntity {
   String getLocationStr() => location?.toAddress() ?? "";
 
   String getGenderStr() => ConfigOptionsUtils.getValueByKey(type:
-      ProfileType.gender, key:int.tryParse(gender??"")??0);
+  ProfileType.gender, key:int.tryParse(gender??"")??0);
 
   bool needVerify() => verified != ConstantData.userStatusVerified && verified != ConstantData.userStatusPending;
 
@@ -523,124 +638,5 @@ class UserDataEntity {
   ProfileType.language, key:int.tryParse(language??"")??0);
   String getMatchLanguageStr() => ConfigOptionsUtils.getValueByCalculatedKey(type:
   ProfileType.language, key:int.tryParse(matchLanguage??"")??0);
-
-
-  UserDataEntity({
-    this.about,
-    this.age,
-    this.agreeGuidelines,
-    this.autoRenew,
-    this.avatar,
-    this.averageScores,
-    this.birthday,
-    this.body,
-    this.canSendVerifyPhoto,
-    this.canWink,
-    this.changedGender,
-    this.created,
-    this.curLocation,
-    this.defaultWinkTypeId,
-    this.drink,
-    this.education,
-    this.email,
-    this.emailUnsubscribe,
-    this.emailVerified,
-    this.ethnicity,
-    this.expiredDate,
-    this.eyes,
-    this.facebookUid,
-    this.favoriteMusic,
-    this.fraudStatus,
-    this.gender,
-    this.googlePlayNotifyStatus,
-    this.googleUid,
-    this.hair,
-    this.hasSubscription,
-    this.haveChildren,
-    this.headline,
-    this.height,
-    this.hidden,
-    this.hiddenCurrentLocation,
-    this.hiddenGender,
-    this.hiddenLogin,
-    this.hiddenOnline,
-    this.hiddenView,
-    this.hobby,
-    this.hometown,
-    this.hp,
-    this.ignoreFraudStatus,
-    this.income,
-    this.language,
-    this.turnOns,
-    this.eroticFun,
-    this.lastPayWay,
-    this.lastProfileComment,
-    this.lastTimeline,
-    this.allTimeline,
-    this.liked,
-    this.likedCntToday,
-    this.likedMe,
-    this.location,
-    this.marital,
-    this.matchAbout,
-    this.matchAge,
-    this.partnerInfo,
-    this.matchAnywhere,
-    this.matchCityId,
-    this.matchCountryId,
-    this.matchDistance,
-    this.matchGender,
-    this.matchIncome,
-    this.matchRelationship,
-    this.matchStateId,
-    this.member,
-    this.myScores,
-    this.noticeLike,
-    this.noticeMessage,
-    this.noticeView,
-    this.occupation,
-    this.online,
-    this.paymentStartDate,
-    this.perfectDate,
-    this.perfectLikeCnt,
-    this.perfectLikeList,
-    this.personality,
-    this.pet,
-    this.phone,
-    this.phoneCountry,
-    this.phoneVerified,
-    this.photos,
-    this.politicalBelief,
-    this.privateAlbum,
-    this.profileCommentNumber,
-    this.profilePending,
-    this.profileVideo,
-    this.promptIfNoPhoto,
-    this.relation,
-    this.religion,
-    this.remainingDay,
-    this.sign,
-    this.smoke,
-    this.tlsSig,
-    this.totalScorer,
-    this.userId,
-    this.username = "",
-    this.verified,
-    this.wantChildren,
-    this.winked,
-    this.visitedMeCnt,
-    this.lastMessage = "",
-    this.lastMessageSenderId,
-    this.messageType = 1,
-    this.status = 0,
-    this.sentMessageStatus = -1,
-    this.newNumber = 0,
-    this.lastCacheTime = 0,
-    this.changedBirthday = "",
-    this.matchLanguage,
-    this.switchedAbbr = "",
-    this.appleTag = false,
-
-  });
 
 }
