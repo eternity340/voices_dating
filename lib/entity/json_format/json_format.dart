@@ -8,8 +8,6 @@ import '../chatted_user_entity.dart';
 import '../city_entity.dart';
 import '../comment_entity.dart';
 import '../comment_reply_entity.dart';
-// import '../im_message_entity.dart';
-// import '../im_new_message_emtity.dart';
 import '../im_message_entity.dart';
 import '../im_new_message_emtity.dart';
 import '../language_match_info_entity.dart';
@@ -29,6 +27,7 @@ import '../user_data_entity.dart';
 import '../user_location_entity.dart';
 import '../user_options_entity.dart';
 import '../user_photo_entity.dart';
+import '../user_voice_entity.dart';
 
 void tryCatch(Function? f) {
   try {
@@ -122,6 +121,9 @@ M _generateItemOBJ<M>(String typeStr, dynamic jsonObj) {
       break;
     case 'UserPhotoEntity':
       obj = UserPhotoEntity.fromJson(jsonObj);
+      break;
+    case 'UserVoiceEntity':
+      obj = UserVoiceEntity.fromJson(jsonObj);
       break;
     case 'MomentEntity':
       obj = MomentEntity.fromJson(jsonObj);
@@ -254,6 +256,12 @@ T _generateOBJList<T>(String typeStr, List data) {
               (e) => _generateItemOBJ<UserPhotoEntity>(typeStr, e))
           .toList();
       break;
+      case 'UserVoiceEntity':
+        list = data
+            .map<UserVoiceEntity>(
+                (e) => _generateItemOBJ<UserVoiceEntity>(typeStr, e))
+            .toList();
+        break;
     case 'ListUserEntity':
       list = data
           .map<ListUserEntity>(

@@ -43,8 +43,6 @@ class FeelController extends GetxController {
           } else {
             userList.assignAll(fetchedData);
           }
-
-          // 如果获取的数据少于请求的数量，假设没有更多数据
           hasMore.value = fetchedData.length >= 20;
           isLoading.value = false;
         },

@@ -7,6 +7,8 @@ import 'package:first_app/pages/home/user_profile/user_moments/user_moments_page
 import 'package:first_app/pages/home/user_profile/user_profile_page.dart';
 import 'package:first_app/pages/home/user_profile/user_report/user_report_page.dart';
 import 'package:first_app/pages/me/my_profile/update_profile/change_username/change_username.dart';
+import 'package:first_app/pages/me/my_profile/update_profile/upload_voice/record/record_page.dart';
+import 'package:first_app/pages/me/my_profile/update_profile/upload_voice/upload_voice_page.dart';
 import 'package:first_app/pages/me/photo/photo_page.dart';
 import 'package:first_app/pages/me/settings/about_me/about_me_page.dart';
 import 'package:first_app/pages/me/settings/block_member/block_member_page.dart';
@@ -17,6 +19,7 @@ import 'package:first_app/pages/message/private_chat/private_chat_page.dart';
 import 'package:first_app/pages/moments/add_moment/add_moment_page.dart';
 import 'package:first_app/pages/moments/moments_detail/moments_detail_page.dart';
 import 'package:first_app/pages/voice/voice_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart' as getx;
 import '../pages/email/page/get_email_code_page.dart';
 import '../pages/email/page/verify_email_page.dart';
@@ -52,7 +55,9 @@ import '../entity/User.dart';
 
 class AppRoutes {
   static const defaultTransition = getx.Transition.cupertino;
+  static const fadeTransition = getx.Transition.fade;
   static final defaultDuration = Duration(milliseconds: 300);
+
 
   static final routes = [
     getx.GetPage(
@@ -169,8 +174,8 @@ class AppRoutes {
               transition: defaultTransition,
               transitionDuration: defaultDuration,
             ),
-
           ]
+
         ),
 
         getx.GetPage(
@@ -198,8 +203,8 @@ class AppRoutes {
           transitionDuration: defaultDuration,
         ),
       ],
-      transition: defaultTransition,
-      transitionDuration: defaultDuration,
+      transition: getx.Transition.noTransition,
+      transitionDuration: Duration.zero,
     ),
 
     getx.GetPage(
@@ -219,8 +224,8 @@ class AppRoutes {
           transitionDuration: defaultDuration,
         ),
       ],
-      transition: defaultTransition,
-      transitionDuration: defaultDuration,
+      transition: getx.Transition.noTransition,
+      transitionDuration: Duration.zero,
     ),
 
     getx.GetPage(
@@ -261,8 +266,8 @@ class AppRoutes {
           transitionDuration: defaultDuration,
         ),
       ],
-      transition: defaultTransition,
-      transitionDuration: defaultDuration,
+      transition: getx.Transition.noTransition,
+      transitionDuration: Duration.zero,
     ),
 
     getx.GetPage(
@@ -316,6 +321,20 @@ class AppRoutes {
                   transitionDuration: defaultDuration,
                 ),
               ],
+            ),
+            getx.GetPage(
+              name: '/upload_voice',
+              page: () => UploadVoicePage(),
+              transition: defaultTransition,
+              transitionDuration: defaultDuration,
+              children: [
+                getx.GetPage(
+                  name: '/record',
+                  page: () => RecordPage(),
+                  transition: defaultTransition,
+                  transitionDuration: defaultDuration,
+                ),
+              ]
             ),
           ],
           transition: defaultTransition,
@@ -380,8 +399,8 @@ class AppRoutes {
           transitionDuration: defaultDuration,
         ),
       ],
-      transition: defaultTransition,
-      transitionDuration: defaultDuration,
+      transition: getx.Transition.noTransition,
+      transitionDuration: Duration.zero,
     ),
   ];
 }

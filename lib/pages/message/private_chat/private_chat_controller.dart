@@ -15,6 +15,7 @@ import '../../../entity/im_new_message_emtity.dart';
 import '../../../entity/token_entity.dart';
 import '../../../net/dio.client.dart';
 import 'package:first_app/net/api_constants.dart';
+import '../../../service/audio_service.dart';
 import '../../../service/global_service.dart';
 import '../../../service/im_service.dart';
 import '../../../utils/log_util.dart';
@@ -36,6 +37,7 @@ class PrivateChatController extends GetxController {
   RxBool isRecording = false.obs;
   int _currentPage = 1;
   static const int _pageSize = 20;
+  final AudioService audioService = AudioService();
 
   @override
   void onInit() {
@@ -53,27 +55,20 @@ class PrivateChatController extends GetxController {
   }
 
   Future<void> _initAudioRecorder() async {
-    _audioRecorder = FlutterSoundRecorder();
-    await _audioRecorder!.openRecorder();
+    await audioService.initRecorder();
   }
 
   Future<void> startRecording() async {
-    if (_audioRecorder != null) {
-      final directory = await getTemporaryDirectory();
-      _recordingPath = '${directory.path}/audio_${DateTime.now().millisecondsSinceEpoch}.aac';
-      await _audioRecorder!.startRecorder(toFile: _recordingPath);
-      isRecording.value = true;
-    }
+    await audioService.startRecording();
+    isRecording.value = true;
   }
 
   Future<void> stopRecording() async {
-    if (_audioRecorder != null) {
-      await _audioRecorder!.stopRecorder();
-      isRecording.value = false;
-      if (_recordingPath != null) {
-        final duration = await _getAudioDuration(_recordingPath!);
-        sendVoiceMessage(_recordingPath!, duration);
-      }
+    final recordingPath = await audioService.stopRecording();
+    isRecording.value = false;
+    if (recordingPath != null) {
+      final duration = await audioService.getAudioDuration(recordingPath);
+      sendVoiceMessage(recordingPath, duration);
     }
   }
 
@@ -102,7 +97,7 @@ class PrivateChatController extends GetxController {
         message: 'Voice message',
         url: audioUrl,
         duration: duration.toString(),
-        messageType: 3, // 语音消息类型
+        messageType: 3,
         created: DateTime.now().millisecondsSinceEpoch ~/ 1000,
         profId: currentUserSender?.profile?.userId,
         sender: currentUserSender,
@@ -268,5 +263,11 @@ class PrivateChatController extends GetxController {
       LogUtil.e(message: 'Failed to get user profile');
       Get.snackbar('Error', 'Failed to load user profile');
     }
+  }
+
+  @override
+  void onClose() {
+    audioService.dispose();
+    super.onClose();
   }
 }

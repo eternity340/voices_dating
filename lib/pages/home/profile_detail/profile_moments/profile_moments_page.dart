@@ -57,7 +57,10 @@ class ProfileMomentsPage extends StatelessWidget {
                       itemBuilder: (context, index) {
                         return GestureDetector(
                           onTap: () {
-                            Get.toNamed('/moments/moments_detail', arguments: {'moment': controller.moments[index], 'token': controller.tokenEntity, 'userData': controller.userData});
+                            Get.toNamed('/moments/moments_detail', arguments: {
+                              'moment': controller.moments[index],
+                              'tokenEntity': controller.tokenEntity,
+                              'userData': controller.userData});
                           },
                           child: MomentsCard(
                             moment: controller.moments[index],

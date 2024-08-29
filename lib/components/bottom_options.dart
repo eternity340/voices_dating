@@ -11,13 +11,13 @@ class BottomOptions extends StatelessWidget {
   final String secondText;
 
   const BottomOptions({
-    Key? key,
+    super.key,
     required this.onFirstPressed,
     required this.onSecondPressed,
     required this.onCancelPressed,
     required this.firstText,
     required this.secondText,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

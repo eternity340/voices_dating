@@ -9,7 +9,7 @@ import '../../../../constants/Constant_styles.dart';
 import '../../../../entity/token_entity.dart';
 import '../../../../image_res/image_res.dart';
 import '../../../../net/dio.client.dart';
-import '../../components/audio_player_widget.dart';
+import '../../../../components/audio_player_widget.dart';
 
 
 class UserProfileCard extends StatefulWidget {

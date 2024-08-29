@@ -627,5 +627,38 @@ class ConstantStyles {
     letterSpacing: -0.01,
     color: Colors.black,
   );
-
+  //user_card
+  static TextStyle userCardTextStyle = TextStyle(
+    fontSize: 12.sp,
+    fontFamily: 'Open Sans',
+    color: Color(0xFF8E8E93),
+  );
+  static TextStyle cardNameTextStyle = TextStyle(
+    fontSize: 18.sp,
+    fontFamily: 'Open Sans',
+    height: 22 / 18,
+    letterSpacing: -0.01125,
+    color: Color(0xFF000000),
+  );
+  //record
+  static TextStyle recordButtonTextStyle = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 16.sp,
+    fontWeight: FontWeight.w500,
+    color: Color(0xFF000000),
+  );
+  static TextStyle starOrEndTextStyle =TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 12.sp,
+    fontWeight: FontWeight.normal,
+    color: Color(0xFF000000),
+  );
+  static TextStyle timeTextStyle = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 18.sp,
+    fontWeight: FontWeight.w500,
+    height: 22 / 18,
+    letterSpacing: -0.01,
+    color: Color(0xFF000000),
+  );
 }

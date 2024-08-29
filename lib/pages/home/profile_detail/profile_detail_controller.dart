@@ -62,9 +62,9 @@ class ProfileDetailController extends GetxController {
     );
 
     Get.toNamed('/message/private_chat', arguments: {
-      'token': tokenEntity,
+      'tokenEntity': tokenEntity,
       'chattedUser': chattedUser,
-      'userData': userDataEntity
+      'userDataEntity': userDataEntity
     });
   }
 

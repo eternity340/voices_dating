@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:first_app/entity/user_voice_entity.dart';
 import 'package:first_app/utils/string_extension.dart';
 import '../constants/constant_data.dart';
 import '../utils/config_options_utils.dart';
@@ -129,7 +130,7 @@ class UserDataEntity {
     this.matchLanguage,
     this.switchedAbbr = "",
     this.appleTag = false,
-
+    this.voice
   });
 
   factory UserDataEntity.fromJson(Map<String, dynamic> jsonRes) {
@@ -293,6 +294,10 @@ class UserDataEntity {
           ? null
           : UserLocationEntity.fromJson(
           asT<Map<String, dynamic>>(jsonRes['location'])!),
+      voice: jsonRes['voice'] == null
+          ? null
+          : UserVoiceEntity.fromJson(
+          asT<Map<String, dynamic>>(jsonRes['voice'])!),
       marital: asT<String?>(jsonRes['marital']),
       matchAbout: asT<String?>(jsonRes['matchAbout']),
       matchAge: jsonRes['matchAge'] == null
@@ -449,6 +454,7 @@ class UserDataEntity {
   String? phoneVerified;
   List<UserPhotoEntity>? photos;
   String? politicalBelief;
+  UserVoiceEntity? voice;
   List<UserPhotoEntity>? privateAlbum;
   String? profileCommentNumber;
   int? profilePending;
@@ -473,6 +479,7 @@ class UserDataEntity {
   String? matchLanguage;
   String? switchedAbbr;
   bool? appleTag;
+
 
   // default 1, 1 - text, 2 - image, 3 - radio, 4 - video, 5 - like, 6 - match, 7 - wink,
   //  8 - private album request, 9 - accept private album request, 10 - first date ideas' 11 recall
@@ -608,6 +615,7 @@ class UserDataEntity {
     'changedBirthday': changedBirthday,
     'matchLanguage': matchLanguage,
     'switchedAbbr': switchedAbbr,
+    'voice': voice
   };
 
   UserDataEntity clone() => UserDataEntity.fromJson(

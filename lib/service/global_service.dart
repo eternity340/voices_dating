@@ -99,4 +99,38 @@ class GlobalService extends GetxController {
 
     return moments;
   }
+
+  Future<UserDataEntity?> getUserData({required String accessToken}) async {
+    try {
+      final dio = Dio();
+      final response = await dio.get(
+        ApiConstants.getProfile,
+        options: Options(headers: {'token': accessToken}),
+      );
+
+      if (response.statusCode == 200) {
+        final jsonData = response.data;
+        if (jsonData['code'] == 200 && jsonData['data'] != null) {
+          return UserDataEntity.fromJson(jsonData['data']);
+        } else {
+          LogUtil.e(message: '${jsonData['message']}');
+        }
+      } else {
+        LogUtil.e(message: '${response.statusCode}');
+      }
+    } catch (e) {
+      LogUtil.e(message:'$e');
+    }
+    return null;
+  }
+
+  Future<void> refreshUserData(String accessToken) async {
+    UserDataEntity? updatedUserData = await getUserData(
+      accessToken: accessToken,
+    );
+    if (updatedUserData != null) {
+      userDataEntity.value = updatedUserData;
+    }
+  }
+
 }

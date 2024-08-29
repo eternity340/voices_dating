@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:first_app/entity/user_photo_entity.dart';
+import 'package:first_app/entity/user_voice_entity.dart';
 import '../utils/config_options_utils.dart';
 import 'json_format/json_format.dart';
 
@@ -56,6 +57,7 @@ class ListUserEntity {
     this.language,
     this.matchLanguage,
     this.photos, // 新增字段用于存储图片信息
+    this.voice,
   });
 
   factory ListUserEntity.fromJson(Map<String, dynamic> json) {
@@ -67,6 +69,7 @@ class ListUserEntity {
           lastTimeline.add(asT<Object>(item)!);
         }
       }
+
     }
 
 
@@ -76,6 +79,17 @@ class ListUserEntity {
       for (final dynamic item in json['videoList']!) {
         if (item != null) {
           videoList.add(asT<Object>(item)!);
+        }
+      }
+    }
+     UserVoiceEntity? voice;
+    if (json['voice'] != null) {
+      if (json['voice'] is Map<String, dynamic>) {
+        voice = UserVoiceEntity.fromJson(json['voice']);
+      } else if (json['voice'] is List) {
+        final voiceList = json['voice'] as List;
+        if (voiceList.isNotEmpty) {
+          voice = UserVoiceEntity.fromJson(voiceList.first);
         }
       }
     }
@@ -116,6 +130,7 @@ class ListUserEntity {
       isNew: asT<String?>(json['isNew']),
       lastActiveTime: asT<int?>(json['lastActiveTime']),
       lastTimeline: lastTimeline,
+      voice: voice,
       likeMeType: asT<int?>(json['likeMeType']),
       likeType: asT<int?>(json['likeType']),
       liked: asT<int?>(json['liked']),
@@ -200,6 +215,7 @@ class ListUserEntity {
   String? visitedMeCnt;
   String? language;
   String? matchLanguage;
+  UserVoiceEntity?voice;
 
 
   @override
@@ -259,6 +275,7 @@ class ListUserEntity {
     'language': language,
     'matchLanguage': matchLanguage,
     'photos': photos,
+    'voice':voice
   };
 
   String getUserBasicInfo() {

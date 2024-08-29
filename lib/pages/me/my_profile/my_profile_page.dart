@@ -148,7 +148,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
             ),
           Text(
             option,
-            style: isSelected ? ConstantStyles.optionSelectedTextStyle : ConstantStyles.myProfileOptionTextStyle,
+            style: isSelected
+                ? ConstantStyles.optionSelectedTextStyle
+                : ConstantStyles.myProfileOptionTextStyle,
           ),
         ],
       ),

@@ -26,7 +26,8 @@ class ProfileContent extends StatelessWidget {
               title: ConstantData.usernameTitle,
               value: userData.username,
               onTap: () {
-                Get.toNamed('/me/my_profile/change_username', arguments: {'token': tokenEntity, 'userData': userData});
+                Get.toNamed('/me/my_profile/change_username',
+                    arguments: {'token': tokenEntity, 'userData': userData});
               },
             ),
             _buildInfoSection(
@@ -34,7 +35,8 @@ class ProfileContent extends StatelessWidget {
               title: ConstantData.ageTitle,
               value: userData.age.toString(),
               onTap: () {
-                Get.toNamed('/me/my_profile/change_age', arguments: {'token': tokenEntity, 'userData': userData});
+                Get.toNamed('/me/my_profile/change_age',
+                    arguments: {'token': tokenEntity, 'userData': userData});
               },
             ),
             _buildInfoSection(
@@ -42,7 +44,8 @@ class ProfileContent extends StatelessWidget {
               title: ConstantData.heightTitle,
               value: userData.height != null ? '${userData.height} cm' : '',
               onTap: () {
-                Get.toNamed('/me/my_profile/change_height', arguments: {'token': tokenEntity, 'userData': userData});
+                Get.toNamed('/me/my_profile/change_height',
+                    arguments: {'token': tokenEntity, 'userData': userData});
               },
             ),
             _buildInfoSection(
@@ -50,7 +53,8 @@ class ProfileContent extends StatelessWidget {
               title: ConstantData.headlineTitle,
               value: userData.headline.toString(),
               onTap: () {
-                Get.toNamed('/me/my_profile/change_headline', arguments: {'token': tokenEntity, 'userData': userData});
+                Get.toNamed('/me/my_profile/change_headline',
+                    arguments: {'token': tokenEntity, 'userData': userData});
               },
             ),
             _buildInfoSection(
@@ -62,8 +66,18 @@ class ProfileContent extends StatelessWidget {
                   ? '${userData.location!.city}, ${userData.location!.country}'
                   : '',
               onTap: () {
-                Get.toNamed('/me/my_profile/change_location', arguments: {'token': tokenEntity, 'userData': userData});
+                Get.toNamed('/me/my_profile/change_location',
+                    arguments: {'token': tokenEntity, 'userData': userData});
               },
+            ),
+            _buildInfoSection(
+                context,
+                title: ConstantData.voiceIntroduction,
+                value: userData.voice?.description ?? 'No voice introduction',
+                onTap: () {
+                  Get.toNamed('/me/my_profile/upload_voice',
+                      arguments: {'token': tokenEntity, 'userData': userData});
+                }
             ),
           ],
         ),

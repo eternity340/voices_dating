@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,7 +25,12 @@ class FeelPage extends StatelessWidget {
           ),
           Obx(() {
             return controller.isLoading.value
-                ? Center(child: CircularProgressIndicator())
+                ? Center(
+              child: CupertinoActivityIndicator(
+                radius: 15.0,
+                color: Colors.grey,
+              ),
+            )
                 : Positioned(
               top: 100.h,
               left: 0,
@@ -37,9 +43,9 @@ class FeelPage extends StatelessWidget {
                   padding: EdgeInsets.zero,
                   itemCount: controller.userList.length,
                   itemBuilder: (context, index) {
-                    final users = controller.userList[index];
+                    final user = controller.userList[index];
                     return UserDetailCard(
-                      userEntity: users,
+                      userEntity: user,
                       tokenEntity: controller.tokenEntity,
                     );
                   },

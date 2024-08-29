@@ -194,6 +194,8 @@ class ConstantData {
   static const  myProfileTitle = 'My Profile';
   static const  profileOption = 'Profile';
   static const  momentsOption = 'Moments';
+  static const  voiceIntroduction = 'Voice introduction';
+  static const  introductionText = 'introduction';
   //photo
   static const  mainPhotoText='main photo';
   static const  photoTitle='Photo';
@@ -260,6 +262,12 @@ class ConstantData {
   static const  disgustingOption = 'Disgusting';
   static const  otherOption = 'Other';
   static const  describeProblem = 'Please describe your problem…';
-
+  //user_card
+  static const  superiorText = 'Superior';
+  //record
+  static const  recordButtonText ='Record a new voice prologue';
+  static const  recordTitle = 'Record';
+  static const  starText = 'Star';
+  static const  endText = 'End';
 }
 

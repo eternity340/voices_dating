@@ -12,6 +12,7 @@ import '../../../../components/bottom_options.dart';
 import '../../../../constants/constant_data.dart';
 import '../../../../entity/chatted_user_entity.dart';
 import '../../../../entity/token_entity.dart';
+import '../../../../service/audio_service.dart';
 import '../../../../service/im_service.dart';
 
 class ChatInputBar extends StatefulWidget {
@@ -42,14 +43,26 @@ class _ChatInputBarState extends State<ChatInputBar> {
   OverlayEntry? _overlayEntry;
   bool _isCancelling = false;
   final double _cancelAreaRatio = 0.3;
+  final AudioService _audioService = AudioService.instance;
 
   @override
   void initState() {
     super.initState();
     _recorder = FlutterSoundRecorder();
     _initRecorder();
+    _initAudioService();
     WidgetsBinding.instance.addPostFrameCallback((_) {
     });
+  }
+
+  Future<void> _initAudioService() async {
+    try {
+      await _audioService.initRecorder();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to initialize audio: $e')),
+      );
+    }
   }
 
 
@@ -291,31 +304,14 @@ class _ChatInputBarState extends State<ChatInputBar> {
     setState(() {
       _isRecording = true;
     });
-    _createOverlay(); // Create overlay here
+    _createOverlay();
     try {
-      if (_recorder!.isStopped) {
-        await _recorder!.startRecorder(
-          toFile: 'audio_${_uuid.v4()}.aac',
-        );
-      }
+      await _audioService.startRecording();
     } catch (e) {
       debugPrint('Error starting recorder: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to start recording')),
+        SnackBar(content: Text('Failed to start recording: $e')),
       );
-    }
-  }
-
-  void _onLongPressMoveUpdate(LongPressMoveUpdateDetails details) {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final offsetY = details.localOffsetFromOrigin.dy;
-
-    bool newIsCancelling = offsetY < -screenHeight * _cancelAreaRatio;
-    if (newIsCancelling != _isCancelling) {
-      setState(() {
-        _isCancelling = newIsCancelling;
-      });
-      _overlayEntry?.markNeedsBuild();
     }
   }
 
@@ -323,7 +319,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
     _removeOverlay();
     if (_isRecording) {
       try {
-        final path = await _recorder!.stopRecorder();
+        final path = await _audioService.stopRecording();
         if (!_isCancelling) {
           if (path != null && path.isNotEmpty) {
             final voiceFile = XFile(path);
@@ -341,7 +337,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
       } catch (e) {
         debugPrint('Failed to stop recording: $e');
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to stop recording')),
+          SnackBar(content: Text('Failed to stop recording: $e')),
         );
       }
     }
@@ -351,6 +347,20 @@ class _ChatInputBarState extends State<ChatInputBar> {
       _isCancelling = false;
     });
   }
+
+  void _onLongPressMoveUpdate(LongPressMoveUpdateDetails details) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final offsetY = details.localOffsetFromOrigin.dy;
+
+    bool newIsCancelling = offsetY < -screenHeight * _cancelAreaRatio;
+    if (newIsCancelling != _isCancelling) {
+      setState(() {
+        _isCancelling = newIsCancelling;
+      });
+      _overlayEntry?.markNeedsBuild();
+    }
+  }
+
 
   Future<void> _pickAndUploadPhoto(BuildContext context, ImageSource source) async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
@@ -436,14 +446,12 @@ class _ChatInputBarState extends State<ChatInputBar> {
         var voiceUrl = response.data['data'][0]['url'].toString();
         var receiverId = widget.chattedUserEntity.userId;
         var localId = _uuid.v4().toString();
-
-        // Send voice
         return await IMService().sendVoice(
           attachId: attachId,
           voiceUrl: voiceUrl,
           receiverId: receiverId.toString(),
           localId: localId,
-          duration: duration, // 直接传递整数
+          duration: duration,
         );
       }
       return false;

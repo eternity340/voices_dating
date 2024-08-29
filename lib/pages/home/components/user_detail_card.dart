@@ -6,7 +6,7 @@ import '../../../constants/constant_data.dart';
 import '../../../entity/list_user_entity.dart';
 import '../../../entity/token_entity.dart';
 import '../../../image_res/image_res.dart';
-import 'audio_player_widget.dart';
+import '../../../components/audio_player_widget.dart';
 
 class UserDetailCard extends StatelessWidget {
   final ListUserEntity userEntity;

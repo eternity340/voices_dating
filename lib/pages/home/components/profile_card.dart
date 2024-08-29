@@ -9,7 +9,7 @@ import '../../../entity/list_user_entity.dart';
 import '../../../entity/token_entity.dart';
 import '../../../image_res/image_res.dart';
 import '../../../net/dio.client.dart';
-import 'audio_player_widget.dart';
+import '../../../components/audio_player_widget.dart';
 
 class ProfileCard extends StatefulWidget {
   final ListUserEntity? userEntity;
@@ -128,7 +128,7 @@ class _ProfileCardState extends State<ProfileCard> {
         Positioned(
           left: 16.w,
           top: 116.h,
-          child: AudioPlayerWidget(audioPath: ImageRes.audioPath),
+          child: AudioPlayerWidget(audioPath: widget.userEntity!.voice!.voiceUrl.toString()),
         ),
         Positioned(
           left: 230.w,

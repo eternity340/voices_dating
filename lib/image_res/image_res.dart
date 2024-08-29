@@ -67,4 +67,7 @@ class ImageRes{
   static const  iconChatInactive ='assets/images/icon_chat_inactive.png';
   static const  buttonRoundSearch = 'assets/images/button_round_search.png';
   static const  iconCancel = 'assets/images/ic_cancel.png';
+  //record
+  static const  microphoneImagePath = 'assets/images/icon_microphone.png';
+  static const  iconDeleteImagePath = 'assets/images/icon_delete.png';
 }
