@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:first_app/entity/user_data_entity.dart';
+import 'package:first_app/net/api_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -74,7 +75,7 @@ class UserReportController extends GetxController {
     try {
       final response = await dioClient.requestNetwork<Map<String, dynamic>>(
         method: Method.post,
-        url: 'https://api.masonvips.com/v1/block_user',
+        url: ApiConstants.blockUser,
         options: dio.Options(headers: {'token': tokenEntity.accessToken}),
         params: {
           'userId': userDataEntity.userId,

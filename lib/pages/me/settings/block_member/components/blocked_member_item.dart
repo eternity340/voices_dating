@@ -1,8 +1,10 @@
-import 'package:flutter/cupertino.dart';
+import 'package:first_app/constants/constant_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../../constants/Constant_styles.dart';
 import '../../../../../entity/block_member_entity.dart';
+import '../../../../../components/verified_tag.dart'; // 确保导入 VerifiedTag 组件
 
 class BlockedMemberItem extends StatelessWidget {
   final BlockMemberEntity member;
@@ -15,65 +17,84 @@ class BlockedMemberItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 32.h),
-      child: Row(
+    return Container(
+      height: 150.h,
+      child: Stack(
         children: [
-          SizedBox(width: 19.w),
-          CircleAvatar(
-            backgroundImage: NetworkImage(member.avatar ?? ''),
-            radius: 31.r,
+          Positioned(
+            left: 19.w,
+            top: 32.h,
+            child: CircleAvatar(
+              backgroundImage: NetworkImage(member.avatar ?? ''),
+              radius: 40.r,
+            ),
           ),
-          SizedBox(width: 10.w),
-          Expanded(
+          Positioned(
+            left: 100.w,
+            top: 30.h,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   member.username ?? '',
-                  style: TextStyle(
-                    fontFamily: 'Open Sans',
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14.sp,
-                    color: Colors.black,
-                  ),
+                  style: ConstantStyles.timelineDescTextStyle,
                   overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(height: 8.h),
+                Row(
+                  children: [
+                    VerifiedTag(
+                      text: 'Superior',
+                      backgroundColor: Color(0xFFFFA6CB),
+                      textColor: Colors.black,
+                    ),
+                    SizedBox(width: 8.w),
+                    VerifiedTag(
+                      text: 'Photos verified',
+                      backgroundColor: Color(0xFFD7FAAD),
+                      textColor: Colors.black,
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
-          Container(
-            width: 93.w,
-            height: 36.h,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xFF20E2D7), Color(0xFFD6FAAE)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(24.5.r),
-            ),
-            child: ElevatedButton(
-              onPressed: onUnblock,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.transparent,
-                shadowColor: Colors.transparent,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(24.5.r),
+          Positioned(
+            right: 19.w,
+            top: 100.h,
+            child: Container(
+              width: 80.w,
+              height: 36.h,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFF20E2D7), Color(0xFFD6FAAE)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
+                borderRadius: BorderRadius.circular(24.5.r),
               ),
-              child: Text(
-                'unlock',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: 'Poppins',
+              child: ElevatedButton(
+                onPressed: onUnblock,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  shadowColor: Colors.transparent,
+                  padding: EdgeInsets.zero,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24.5.r),
+                  ),
+                ),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    ConstantData.unblockButton,
+                    style: ConstantStyles.blockButtonStyle.copyWith(
+                      fontSize: 14.sp,
+                    ),
+                  ),
                 ),
               ),
             ),
           ),
-          SizedBox(width: 19.w),
         ],
       ),
     );

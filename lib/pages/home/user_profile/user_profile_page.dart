@@ -1,6 +1,7 @@
 import 'package:first_app/pages/home/user_profile/components/user_profile_card.dart';
 import 'package:first_app/pages/home/user_profile/components/user_profile_photo_wall.dart';
 import 'package:first_app/pages/home/user_profile/user_profile_controller.dart';
+import 'package:first_app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -10,7 +11,6 @@ import '../../../components/bottom_options.dart';
 import '../../../components/custom_message_dialog.dart';
 import '../../../constants/Constant_styles.dart';
 import '../../../constants/constant_data.dart';
-import '../../../entity/attachment_entity.dart';
 import '../../../entity/moment_entity.dart';
 import '../../../image_res/image_res.dart';
 
@@ -58,7 +58,7 @@ class UserProfilePage extends StatelessWidget {
         return BottomOptions(
           onFirstPressed: () {
             Navigator.pop(context);
-            Get.toNamed('/message/private_chat/user_report', arguments: {
+            Get.toNamed(AppRoutes.messageUserReport, arguments: {
               'userDataEntity': controller.userDataEntity,
               'tokenEntity': controller.tokenEntity,
             });
@@ -158,7 +158,7 @@ class UserProfilePage extends StatelessWidget {
 
   Widget buildMomentsSection(UserProfileController controller) {
     return GestureDetector(
-      onTap: () => Get.toNamed('/message/private_chat/user_moments', arguments: {
+      onTap: () => Get.toNamed(AppRoutes.messageUserMoments, arguments: {
         'userDataEntity': controller.userDataEntity,
         'tokenEntity': controller.tokenEntity,
       }),
@@ -202,7 +202,7 @@ class UserProfilePage extends StatelessWidget {
     final attachments = moment.attachments;
     if (attachments == null || attachments.isEmpty) return SizedBox.shrink();
     return GestureDetector(
-      onTap: () => Get.toNamed('/message/private_chat/user_moments',
+      onTap: () => Get.toNamed(AppRoutes.messageUserMoments,
           arguments: {
         'userDataEntity': controller.userDataEntity,
         'tokenEntity': controller.tokenEntity,

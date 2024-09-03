@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:first_app/routes/app_routes.dart';
 import 'package:get/get.dart';
 import '../../../../../../entity/token_entity.dart';
 import '../../../../../../entity/user_data_entity.dart';
@@ -74,7 +75,7 @@ class RecordController extends GetxController {
   Future<void> saveRecording() async {
     if (recordFilePath != null) {
       Get.delete<UploadVoiceController>();
-      Get.toNamed('/me/my_profile/upload_voice', arguments: {
+      Get.toNamed(AppRoutes.meMyProfileUploadVoice, arguments: {
         'token': tokenEntity,
         'userData': userData,
         'recordFilePath': recordFilePath,

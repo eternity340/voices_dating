@@ -17,86 +17,84 @@ class RecordPage extends StatelessWidget {
     ));
 
     return Scaffold(
-      body: GetBuilder<RecordController>(
-        builder: (_) {
-          return Stack(
-            children: [
-              Background(
-                showMiddleText: true,
-                showBackgroundImage: false,
-                middleText: ConstantData.introductionText,
-                child: Container(),
-              ),
-              Positioned(
-                top: 58.h,
-                right: 10.w,
-                child: AnimatedContainer(
-                  duration: Duration(milliseconds: 300),
-                  curve: Curves.easeOut,
-                  transform: Matrix4.translationValues(-8.w, 0, 0),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                      colors: [Color(0xFF20E2D7), Color(0xFFD6FAAE)],
-                    ),
-                    borderRadius: BorderRadius.circular(24.5.r),
-                  ),
-                  width: 88.w,
-                  height: 36.h,
-                  child: TextButton(
-                    onPressed: controller.saveRecording,
-                    child: Text(
-                      ConstantData.saveText,
-                      style: ConstantStyles.actionButtonTextStyle,
-                    ),
-                  ),
-                ),
-              ),
-              Positioned(
-                left: 162.w,
-                top: 517.h,
-                child: Text(
-                  controller.timerText,
-                  style: ConstantStyles.timeTextStyle,
-                ),
-              ),
-              Positioned(
-                left: 175.w,
-                top: 671.h,
-                child: Text(
-                  controller.isRecording ? ConstantData.endText : ConstantData.starText,
-                  style: ConstantStyles.starOrEndTextStyle,
-                ),
-              ),
-              Positioned(
-                left: 142.5.w,
-                top: 565.h,
-                child: RecordButton(
-                  onLongPressStart: controller.startRecording,
-                  onLongPressEnd: controller.stopRecording,
-                ),
-              ),
-              if (controller.isRecording)
+      body: Background(
+        showMiddleText: true,
+        showBackgroundImage: false,
+        middleText: ConstantData.introductionText,
+        child: GetBuilder<RecordController>(
+          builder: (_) {
+            return Stack(
+              children: [
                 Positioned(
-                  left: 123.w,
-                  top: 392.h,
-                  child: SizedBox(
-                    width: 120.w,
-                    height: 120.h,
-                    child: BarScalePulseOutLoading(
-                      barCount: 20,
-                      color: Color(0xFF2FE4D4),
-                      width: 2.w,
-                      height: 15.h,
+                  top: 0.h,
+                  right: 0.w,
+                  child: AnimatedContainer(
+                    duration: Duration(milliseconds: 300),
+                    curve: Curves.easeOut,
+                    transform: Matrix4.translationValues(-8.w, 0, 0),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                        colors: [Color(0xFF20E2D7), Color(0xFFD6FAAE)],
+                      ),
+                      borderRadius: BorderRadius.circular(24.5.r),
+                    ),
+                    width: 88.w,
+                    height: 36.h,
+                    child: TextButton(
+                      onPressed: controller.saveRecording,
+                      child: Text(
+                        ConstantData.saveText,
+                        style: ConstantStyles.actionButtonTextStyle,
+                      ),
                     ),
                   ),
                 ),
-            ],
-          );
-        },
+                Positioned(
+                  left: 152.w,
+                  top: 517.h,
+                  child: Text(
+                    controller.timerText,
+                    style: ConstantStyles.timeTextStyle,
+                  ),
+                ),
+                Positioned(
+                  left: 165.w,
+                  top: 671.h,
+                  child: Text(
+                    controller.isRecording ? ConstantData.endText : ConstantData.starText,
+                    style: ConstantStyles.starOrEndTextStyle,
+                  ),
+                ),
+                Positioned(
+                  left: 132.5.w,
+                  top: 565.h,
+                  child: RecordButton(
+                    onLongPressStart: controller.startRecording,
+                    onLongPressEnd: controller.stopRecording,
+                  ),
+                ),
+                if (controller.isRecording)
+                  Positioned(
+                    left: 113.w,
+                    top: 392.h,
+                    child: SizedBox(
+                      width: 120.w,
+                      height: 120.h,
+                      child: BarScalePulseOutLoading(
+                        barCount: 20,
+                        color: Color(0xFF2FE4D4),
+                        width: 2.w,
+                        height: 15.h,
+                      ),
+                    ),
+                  ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
 }
-

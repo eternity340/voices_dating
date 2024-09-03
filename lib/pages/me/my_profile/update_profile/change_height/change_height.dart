@@ -43,7 +43,7 @@ class _ChangeHeightState extends State<ChangeHeight> {
                       style: ConstantStyles.changeHeightTextStyle,
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: 50.h), // Adjust height using ScreenUtil
+                    SizedBox(height: 50.h),
                     HeightPicker(
                       initialHeight: _controller.selectedHeight,
                       onHeightChanged: (newHeight) {
@@ -57,8 +57,8 @@ class _ChangeHeightState extends State<ChangeHeight> {
               ),
             ),
             Positioned(
-              top: 4.h, // Adjust top margin using ScreenUtil
-              right: 16.w, // Adjust right margin using ScreenUtil
+              top: 0.h,
+              right: 0.w,
               child: AnimatedContainer(
                 duration: Duration(milliseconds: 300),
                 curve: Curves.easeOut,
@@ -69,12 +69,12 @@ class _ChangeHeightState extends State<ChangeHeight> {
                     end: Alignment.centerRight,
                     colors: [Color(0xFFD6FAAE), Color(0xFF20E2D7)],
                   ),
-                  borderRadius: BorderRadius.circular(24.5.r), // Adjust border radius using ScreenUtil
+                  borderRadius: BorderRadius.circular(24.5.r),
                 ),
-                width: 88.w, // Adjust width using ScreenUtil
-                height: 36.h, // Adjust height using ScreenUtil
+                width: 88.w,
+                height: 36.h,
                 child: TextButton(
-                  onPressed: () => _controller.updateHeight(), // Call update height method
+                  onPressed: () => _controller.updateHeight(),
                   child:  Text(
                     ConstantData.saveText,
                     style: ConstantStyles.saveButtonTextStyle,

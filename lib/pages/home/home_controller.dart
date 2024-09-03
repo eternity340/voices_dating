@@ -1,8 +1,9 @@
-// home_controller.dart
 import 'package:dio/dio.dart';
 import 'package:first_app/net/api_constants.dart';
+import 'package:first_app/routes/app_routes.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import '../../constants/constant_data.dart';
 import '../../entity/list_user_entity.dart';
 import '../../entity/token_entity.dart';
 import '../../entity/user_data_entity.dart';
@@ -27,12 +28,17 @@ class HomeController extends GetxController {
   void selectOption(String option) {
     selectedOption.value = option;
     int pageIndex = (option == 'Honey') ? 0 : 1;
-    pageController.animateToPage(pageIndex, duration: Duration(milliseconds: 300), curve: Curves.ease);
+    pageController.animateToPage(
+        pageIndex,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.ease);
   }
 
   void onPageChanged(int index) {
-    selectedOption.value = index == 0 ? 'Honey' : 'Nearby';
-  }
+    selectedOption.value = index == 0
+        ? ConstantData.honeyOption
+        : ConstantData.nearbyOption
+    ;}
 
   Future<void> fetchUsers() async {
     if (isLoading.value || !hasMoreData.value) return;
@@ -78,25 +84,37 @@ class HomeController extends GetxController {
 
   void navigateToFeelPage() {
     if (userData != null) {
-      Get.toNamed('/home/feel', arguments: {'token': tokenEntity, 'userData': userData});
+      Get.toNamed(AppRoutes.homeFeel,
+          arguments: {
+            'token': tokenEntity,
+            'userData': userData});
     }
   }
 
   void navigateToGetUpPage() {
     if (userData != null) {
-      Get.toNamed('/home/get_up', arguments: {'token': tokenEntity, 'userData': userData});
+      Get.toNamed(AppRoutes.homeGetUp,
+          arguments: {
+            'token': tokenEntity,
+            'userData': userData});
     }
   }
 
   void navigateToGamePage() {
     if (userData != null) {
-      Get.toNamed('/home/game', arguments: {'token': tokenEntity, 'userData': userData});
+      Get.toNamed(AppRoutes.homeGame,
+          arguments: {
+            'token': tokenEntity,
+            'userData': userData});
     }
   }
 
   void navigateToGossipPage() {
     if (userData != null) {
-      Get.toNamed('/home/gossip', arguments: {'token': tokenEntity, 'userData': userData});
+      Get.toNamed(AppRoutes.homeGossip,
+          arguments: {
+            'token': tokenEntity,
+            'userData': userData});
     }
   }
 }

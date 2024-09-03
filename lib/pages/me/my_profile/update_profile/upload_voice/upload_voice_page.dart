@@ -1,3 +1,4 @@
+import 'package:first_app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -25,13 +26,17 @@ class UploadVoicePage extends StatelessWidget {
           navigateToMyProfile(controller);
         },
         child: Scaffold(
-          body: Stack(
-            children: [
-              buildBackground(),
-              buildSaveButton(context, controller),
-              buildAudioList(controller),
-              buildRecordButton(controller),
-            ],
+          body: Background(
+            showMiddleText: true,
+            showBackgroundImage: false,
+            middleText: ConstantData.introductionText,
+            child: Stack(
+              children: [
+                buildSaveButton(context, controller),
+                buildAudioList(controller),
+                buildRecordButton(controller),
+              ],
+            ),
           ),
         ),
       ),
@@ -49,17 +54,16 @@ class UploadVoicePage extends StatelessWidget {
 
   Widget buildSaveButton(BuildContext context, UploadVoiceController controller) {
     return Positioned(
-      top: 58.h,
-      right: 10.w,
+      top: 0.h,
+      right: 0.w,
       child: AnimatedContainer(
         duration: Duration(milliseconds: 300),
         curve: Curves.easeOut,
-        transform: Matrix4.translationValues(-8.w, 0, 0),
         decoration: BoxDecoration(
           gradient: const LinearGradient(
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
-            colors: [Color(0xFF20E2D7), Color(0xFFD6FAAE)],
+            colors: [Color(0xFFD6FAAE), Color(0xFF20E2D7)],
           ),
           borderRadius: BorderRadius.circular(24.5.r),
         ),
@@ -80,7 +84,7 @@ class UploadVoicePage extends StatelessWidget {
     return Obx(() => Column(
       children: List.generate(controller.audioList.length, (index) {
         return Padding(
-          padding: EdgeInsets.only(left: 20.w, top: (index == 0 ? 150 : 20).h),
+          padding: EdgeInsets.only(left: 10.w, top: (index == 0 ? 120 : 20).h),
           child: AudioItem(
             isSelected: controller.selectedIndex.value == index,
             onTap: () => controller.toggleSelection(index),
@@ -94,8 +98,8 @@ class UploadVoicePage extends StatelessWidget {
 
   Widget buildRecordButton(UploadVoiceController controller) {
     return Positioned(
-      left: 20.w,
-      top: 640.h,
+      left: 10.w,
+      top: 540.h,
       child: GestureDetector(
         onTap: () => _navigateToRecordPage(controller),
         child: Container(
@@ -132,7 +136,7 @@ class UploadVoicePage extends StatelessWidget {
   }
 
   void navigateToMyProfile(UploadVoiceController controller) {
-    Get.offAllNamed('/me/my_profile', arguments: {
+    Get.offAllNamed(AppRoutes.meMyProfile, arguments: {
       'token': controller.tokenEntity,
       'userData': controller.userData,
     });

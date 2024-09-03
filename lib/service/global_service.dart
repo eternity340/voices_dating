@@ -1,16 +1,12 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:first_app/entity/token_entity.dart';
 import 'package:first_app/entity/user_data_entity.dart';
 import 'package:first_app/net/api_constants.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
-import '../entity/base_entity.dart';
-import '../entity/list_user_entity.dart';
 import '../entity/moment_entity.dart';
 import '../net/dio.client.dart';
 import '../utils/log_util.dart';
-import '../utils/request_util.dart';
 
 class GlobalService extends GetxController {
   RxBool needRefresh = false.obs;

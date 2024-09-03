@@ -1,4 +1,3 @@
-// pages/change_headline_page.dart
 import 'package:first_app/components/background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -37,10 +36,7 @@ class ChangeHeadline extends StatelessWidget {
                 ),
                 child: TextField(
                   controller: controller.headlineController,
-                  style:  TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 18.0.sp,
-                  ),
+                  style:  ConstantStyles.changeLocationTextStyle,
                   maxLines: null,
                   decoration: const InputDecoration(
                     filled: true,
@@ -55,7 +51,7 @@ class ChangeHeadline extends StatelessWidget {
               ),
             ),
             Positioned(
-              top: 286.h, // Adjusted to 80.h + 200.h + 6.h
+              top: 286.h,
               left: (MediaQuery.of(context).size.width / 2 - 167.5.w).w,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -75,8 +71,8 @@ class ChangeHeadline extends StatelessWidget {
               ),
             ),
             Positioned(
-              top: 4.0.h,
-              right: 16.0.w,
+              top: 0.h,
+              right: 0.w,
               child: AnimatedContainer(
                 duration: Duration(milliseconds: 300),
                 curve: Curves.easeOut,

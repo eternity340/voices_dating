@@ -55,7 +55,7 @@ class AudioItem extends StatelessWidget {
                           ),
                         );
                       } else {
-                        return SizedBox(); // 如果duration还未获取到，显示一个空的SizedBox
+                        return SizedBox();
                       }
                     },
                   ),

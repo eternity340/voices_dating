@@ -1,7 +1,11 @@
+import 'package:first_app/constants/constant_data.dart';
+import 'package:first_app/net/api_constants.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
 import '../../../../entity/block_member_entity.dart';
+import '../../../../entity/ret_entity.dart';
 import '../../../../entity/token_entity.dart';
+import '../../../../net/dio.client.dart';
 
 class BlockMemberController extends GetxController {
   late TokenEntity tokenEntity;
@@ -19,23 +23,27 @@ class BlockMemberController extends GetxController {
   Future<void> fetchBlockedMembers() async {
     isLoading.value = true;
     try {
-      final response = await dio.get(
-        'https://api.masonvips.com/v1/blocked_users',
+      await DioClient.instance.requestNetwork<List<BlockMemberEntity>>(
+        method: Method.get,
+        url: ApiConstants.blockedUsers,
         options: Options(
           headers: {
             'token': tokenEntity.accessToken!,
           },
         ),
+        onSuccess: (data) {
+          if (data != null) {
+            blockedMembers.value = data;
+          } else {
+            blockedMembers.value = [];
+          }
+        },
+        onError: (code, msg, data) {
+          Get.snackbar(ConstantData.errorText, msg);
+        },
       );
-
-      if (response.statusCode == 200) {
-        final List<dynamic> data = response.data['data'];
-        blockedMembers.value = data.map((json) => BlockMemberEntity.fromJson(json)).toList();
-      } else {
-        throw Exception('Failed to load blocked members');
-      }
     } catch (e) {
-      Get.snackbar('Error', 'Failed to load blocked members: $e');
+      Get.snackbar(ConstantData.errorText,e.toString());
     } finally {
       isLoading.value = false;
     }
@@ -43,27 +51,31 @@ class BlockMemberController extends GetxController {
 
   Future<void> unblockUser(String userId) async {
     try {
-      final response = await dio.post(
-        'https://api.masonvips.com/v1/unblock_user',
+      await DioClient.instance.requestNetwork<RetEntity>(
+        method: Method.post,
+        url: ApiConstants.unblockUser,
+        queryParameters: {
+          'userId': userId,
+        },
         options: Options(
           headers: {
             'token': tokenEntity.accessToken!,
           },
         ),
-        queryParameters: {
-          'userId': userId,
+        onSuccess: (data) {
+          if (data != null && data.ret == true) {
+            Get.snackbar(ConstantData.successText, ConstantData.unlockSuccess);
+            fetchBlockedMembers();
+          } else {
+            Get.snackbar(ConstantData.errorText, ConstantData.unlockFailed);
+          }
+        },
+        onError: (code, msg, data) {
+          Get.snackbar(ConstantData.errorText,msg);
         },
       );
-
-      final responseData = response.data;
-      if (responseData['code'] == 200 && responseData['data']['ret'] == true) {
-        Get.snackbar('Success', 'Unlock user success');
-        fetchBlockedMembers();
-      } else {
-        Get.snackbar('Error', 'Failed to unlock user');
-      }
     } catch (e) {
-      Get.snackbar('Error', 'Error: $e');
+      Get.snackbar(ConstantData.errorText, e.toString());
     }
   }
 }

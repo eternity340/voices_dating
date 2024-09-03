@@ -1,3 +1,4 @@
+import 'package:first_app/net/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -8,6 +9,7 @@ import '../../../components/profile_bottom.dart';
 import '../../../constants/Constant_styles.dart';
 import '../../../constants/constant_data.dart';
 import '../../../image_res/image_res.dart';
+import '../../../routes/app_routes.dart';
 import '../components/profile_photo_wall.dart';
 import '../components/profile_card.dart';
 import 'profile_detail_controller.dart';
@@ -31,8 +33,8 @@ class ProfileDetailPage extends StatelessWidget {
             child: Container(),
           ),
           Positioned(
-            left: 318.w,
-            top: 52.h,
+            left: 308.w,
+            top: 40.h,
             child: GestureDetector(
               onTap: () => showOptionsBottomSheet(context, controller),
               child: Image.asset(
@@ -56,7 +58,7 @@ class ProfileDetailPage extends StatelessWidget {
         return BottomOptions(
           onFirstPressed: () {
             Navigator.pop(context);
-            Get.toNamed('/home/profile_detail/report', arguments: {
+            Get.toNamed(AppRoutes.homeReport, arguments: {
               'userEntity': controller.userEntity,
               'tokenEntity': controller.tokenEntity,
             });
@@ -157,7 +159,7 @@ class ProfileDetailPage extends StatelessWidget {
   Widget buildMomentsSection(ProfileDetailController controller) {
     return GestureDetector(
       onTap: () =>
-          Get.toNamed('/home/profile_detail/profile_moments',
+          Get.toNamed(AppRoutes.homeProfileMoments,
               arguments: {
                 'tokenEntity': controller.tokenEntity,
                 'userData': controller.userDataEntity,
@@ -176,7 +178,7 @@ class ProfileDetailPage extends StatelessWidget {
                 ? buildMomentsListView(controller)
                 : Center(
               child: Text(
-                "This user hasn't shared any moments yet.",
+                ConstantData.noMomentsData,
                 style: ConstantStyles.bodyTextStyle,
                 textAlign: TextAlign.center,
               ),

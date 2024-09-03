@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:first_app/net/api_constants.dart';
 import 'package:first_app/utils/log_util.dart';
 import 'package:get/get.dart';
 import '../../../../entity/moment_entity.dart';
@@ -22,7 +23,7 @@ class UserMomentsController extends GetxController {
   Future<void> fetchMoments() async {
     DioClient().requestNetwork<List<MomentEntity>>(
       method: Method.get,
-      url: 'https://api.masonvips.com/v1/timelines',
+      url: ApiConstants.timelines,
       queryParameters: {
         'profId': userDataEntity.userId,
       },

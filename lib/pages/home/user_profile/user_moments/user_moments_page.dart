@@ -1,12 +1,9 @@
-import 'package:first_app/pages/home/profile_detail/profile_moments/profile_moments_controller.dart';
 import 'package:first_app/pages/home/user_profile/user_moments/user_moments_controller.dart';
+import 'package:first_app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-
-import '../../../../components/all_navigation_bar.dart';
 import '../../../../components/background.dart';
 import '../../../../constants/Constant_styles.dart';
 import '../../../../constants/constant_data.dart';
@@ -57,9 +54,9 @@ class UserMomentsPage extends StatelessWidget {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
-                          Get.toNamed('/moments/moments_detail',
+                          Get.toNamed(AppRoutes.momentsMomentsDetail,
                               arguments: {
-                            'moment': controller.moments[index],
+                                'moment': controller.moments[index],
                                 'tokenEntity': controller.tokenEntity,
                                 'userDataEntity': controller.userDataEntity});
                         },

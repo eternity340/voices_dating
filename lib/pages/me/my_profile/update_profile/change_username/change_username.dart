@@ -14,7 +14,7 @@ class ChangeUsername extends StatefulWidget {
 }
 
 class _ChangeUsernameState extends State<ChangeUsername> {
-  final ChangeUsernameLogic logic = Get.put(ChangeUsernameLogic());
+  final ChangeUsernameController controller = Get.put(ChangeUsernameController());
 
   @override
   Widget build(BuildContext context) {
@@ -40,24 +40,24 @@ class _ChangeUsernameState extends State<ChangeUsername> {
                   borderRadius: BorderRadius.circular(10.r),
                 ),
                 child: TextField(
-                  controller: logic.controller,
+                  controller: controller.controller,
                   style: ConstantStyles.inputUsernameTextStyle,
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.transparent,
                     border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h), // Use ScreenUtil for padding
+                    contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
                   ),
                   onChanged: (text) {
                     setState(() {
-                      logic.charCount = text.length;
+                      controller.charCount = text.length;
                     });
                   },
                 ),
               ),
             ),
             Positioned(
-              top: 141.h, // 80 + 56 + 5, converted to ScreenUtil
+              top: 141.h,
               left: MediaQuery.of(context).size.width / 2 - 167.5.w,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -68,31 +68,31 @@ class _ChangeUsernameState extends State<ChangeUsername> {
                   ),
                   SizedBox(width: 190.w),
                   Text(
-                    '${logic.charCount}/16',
+                    '${controller.charCount}/16',
                     style:ConstantStyles.charCountTextStyle,
                   ),
                 ],
               ),
             ),
             Positioned(
-              top: 4.h, // Converted to ScreenUtil
-              right: 16.w, // Converted to ScreenUtil
+              top: 4.h,
+              right: 0.w,
               child: AnimatedContainer(
                 duration: Duration(milliseconds: 300),
                 curve: Curves.easeOut,
-                transform: Matrix4.translationValues(-8.w, 0, 0), // Use ScreenUtil for translation
+                transform: Matrix4.translationValues(-8.w, 0, 0),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                     colors: [Color(0xFFD6FAAE), Color(0xFF20E2D7)],
                   ),
-                  borderRadius: BorderRadius.circular(24.5.r), // Use ScreenUtil for radius
+                  borderRadius: BorderRadius.circular(24.5.r),
                 ),
                 width: 88.w,
                 height: 36.h,
                 child: TextButton(
-                  onPressed: () => logic.saveUsername(tokenEntity, userData),
+                  onPressed: () => controller.saveUsername(tokenEntity, userData),
                   child: Text(
                     ConstantData.saveText,
                     style: ConstantStyles.saveButtonTextStyle,

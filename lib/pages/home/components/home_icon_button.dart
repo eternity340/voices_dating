@@ -11,8 +11,8 @@ class HomeIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 120.w, // Adjust button size if needed
-      height: 120.h, // Adjust button size if needed
+      width: 120.w,
+      height: 120.h,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         boxShadow: [

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:first_app/net/api_constants.dart';
 import 'package:get/get.dart';
 import '../../../entity/list_user_entity.dart';
 import '../../../entity/token_entity.dart';
@@ -26,12 +27,15 @@ class FeelController extends GetxController {
       return;
     }
 
-    const String url = 'https://api.masonvips.com/v1/liked_users';
+    const String url = ApiConstants.likedUser;
     try {
       await DioClient.instance.requestNetwork<List<dynamic>>(
         method: Method.get,
         url: url,
-        queryParameters: {'page': currentPage.value, 'per_page': 20},
+        queryParameters: {
+          'page': currentPage.value,
+          'offset': 20
+        },
         options: Options(headers: {'token': tokenEntity.accessToken}),
         onSuccess: (data) {
           final fetchedData = (data ?? [])
@@ -47,12 +51,10 @@ class FeelController extends GetxController {
           isLoading.value = false;
         },
         onError: (code, msg, data) {
-          print('Error fetching data: $msg');
           isLoading.value = false;
         },
       );
     } catch (e) {
-      print('Error fetching data: $e');
       isLoading.value = false;
     }
   }

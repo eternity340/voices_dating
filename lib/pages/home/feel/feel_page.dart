@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../components/background.dart';
 import '../../../constants/constant_data.dart';
+import '../../../utils/common_utils.dart';
 import '../components/user_detail_card.dart';
 import 'feel_controller.dart';
 
@@ -25,12 +25,7 @@ class FeelPage extends StatelessWidget {
           ),
           Obx(() {
             return controller.isLoading.value
-                ? Center(
-              child: CupertinoActivityIndicator(
-                radius: 15.0,
-                color: Colors.grey,
-              ),
-            )
+                ? CommonUtils.loadingIndicator()
                 : Positioned(
               top: 100.h,
               left: 0,

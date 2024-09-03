@@ -36,7 +36,10 @@ class _ProfileCompositeWidgetState extends State<ProfileCompositeWidget> {
     setState(() {
       _isPlaying = !_isPlaying;
     });
-    print(_isPlaying ? 'Playing' : 'Paused');
+    print(_isPlaying
+        ? 'Playing'
+        : 'Paused'
+    );
   }
 
   void _toggleLike() {

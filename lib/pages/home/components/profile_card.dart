@@ -1,5 +1,7 @@
 import 'dart:ui';
+import 'package:common_utils/common_utils.dart';
 import 'package:dio/dio.dart';
+import 'package:first_app/constants/constant_data.dart';
 import 'package:first_app/net/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -84,7 +86,7 @@ class _ProfileCardState extends State<ProfileCard> {
           child: Row(
             children: [
               if (widget.userEntity?.member == "1")
-                VerifiedTag(text: 'Superior',
+                VerifiedTag(text: ConstantData.superiorText,
                     backgroundColor: Colors.black,
                     textColor: Colors.white
                 ),
@@ -92,7 +94,7 @@ class _ProfileCardState extends State<ProfileCard> {
                 SizedBox(width: 8.w),
               if (widget.userEntity?.verified == "1")
                 VerifiedTag(
-                  text: 'Photos verified',
+                  text: ConstantData.photosVerified,
                   backgroundColor: Color(0xFFABFFCF),
                   textColor: Colors.black,
                 ),
@@ -109,13 +111,9 @@ class _ProfileCardState extends State<ProfileCard> {
                 style: ConstantStyles.countryTextStyle,
               ),
               SizedBox(width: 4.w),
-              const Text(
+               Text(
                 '|',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontFamily: 'Open Sans',
-                  color: Color(0xFF8E8E93),
-                ),
+                style: ConstantStyles.countryTextStyle
               ),
               SizedBox(width: 4.w),
               Text(
@@ -128,7 +126,8 @@ class _ProfileCardState extends State<ProfileCard> {
         Positioned(
           left: 16.w,
           top: 116.h,
-          child: AudioPlayerWidget(audioPath: widget.userEntity!.voice!.voiceUrl.toString()),
+          child: AudioPlayerWidget(
+              audioPath: widget.userEntity!.voice!.voiceUrl.toString()),
         ),
         Positioned(
           left: 230.w,
@@ -136,7 +135,9 @@ class _ProfileCardState extends State<ProfileCard> {
           child: GestureDetector(
             onTap: _toggleLike,
             child: Image.asset(
-              _isLiked ? ImageRes.iconLoveSelect : ImageRes.iconLoveUnselect,
+              _isLiked
+                  ? ImageRes.iconLoveSelect
+                  : ImageRes.iconLoveUnselect,
               width: 20.83.w,
               height: 20.73.h,
             ),
@@ -160,51 +161,43 @@ class _ProfileCardState extends State<ProfileCard> {
   }
 
   void _toggleLike() {
-    final url = _isLiked
-        ? ApiConstants.cancelLikeUser
-        : ApiConstants.likeUser;
+    if (cannotToggleLike()) return;
 
-    if (widget.userEntity?.userId == null || widget.tokenEntity.accessToken == null) {
-      return;
-    }
+    final newLikeStatus = !_isLiked;
+    final url = newLikeStatus ? ApiConstants.likeUser : ApiConstants.cancelLikeUser;
 
+    updateLocalState(newLikeStatus);
+    sendLikeRequest(url, newLikeStatus);
+  }
+
+  bool cannotToggleLike() {
+    return widget.userEntity?.userId == null || widget.tokenEntity.accessToken == null;
+  }
+
+  void updateLocalState(bool isLiked) {
     setState(() {
-      _isLiked = !_isLiked;
+      _isLiked = isLiked;
       if (widget.userEntity != null) {
-        if (_isLiked) {
-          widget.userEntity!.liked = (widget.userEntity!.liked ?? 0) + 1;
-        } else {
-          widget.userEntity!.liked = (widget.userEntity!.liked ?? 1) - 1;
-        }
+        widget.userEntity!.liked = isLiked
+            ? (widget.userEntity!.liked ?? 0) + 1
+            : (widget.userEntity!.liked ?? 1) - 1;
       }
     });
+  }
 
+  void sendLikeRequest(String url, bool isLiked) {
     DioClient.instance.requestNetwork<void>(
       method: Method.post,
       url: url,
       params: {'userId': widget.userEntity!.userId},
-      options: Options(
-        headers: {
-          'token': '${widget.tokenEntity.accessToken}',
-        },
-      ),
+      options: Options(headers: {'token': '${widget.tokenEntity.accessToken}'}),
       onSuccess: (data) {
-        // API call successful, state is already updated
       },
       onError: (code, msg, data) {
-        print('Failed to toggle like status: $msg');
-        // Revert the change if the API call fails
-        setState(() {
-          _isLiked = !_isLiked;
-          if (widget.userEntity != null) {
-            if (_isLiked) {
-              widget.userEntity!.liked = (widget.userEntity!.liked ?? 1) - 1;
-            } else {
-              widget.userEntity!.liked = (widget.userEntity!.liked ?? 0) + 1;
-            }
-          }
-        });
+        LogUtil.e(msg);
+        updateLocalState(!isLiked);
       },
     );
   }
+
 }

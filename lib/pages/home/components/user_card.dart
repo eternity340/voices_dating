@@ -1,5 +1,6 @@
 import 'package:first_app/components/verified_tag.dart';
 import 'package:first_app/constants/Constant_styles.dart';
+import 'package:first_app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,9 +19,10 @@ class UserCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.toNamed('/home/profile_detail', arguments: {
-          'userEntity': userEntity,
-          'tokenEntity': tokenEntity,
+        Get.toNamed(AppRoutes.homeProfileDetail,
+            arguments: {
+              'userEntity': userEntity,
+              'tokenEntity': tokenEntity,
         });
       },
       child: Container(
@@ -139,7 +141,7 @@ class UserCard extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 5.h), // 减少底部预留空间
+            SizedBox(height: 5.h),
           ],
         ),
       ),
@@ -148,7 +150,7 @@ class UserCard extends StatelessWidget {
 
   Widget _buildSmallPhotos() {
     if ((userEntity.photos?.length ?? 0) <= 1) {
-      return SizedBox(height: 49.h); // 保持一致的高度
+      return SizedBox(height: 49.h);
     }
     return Row(
       children: [

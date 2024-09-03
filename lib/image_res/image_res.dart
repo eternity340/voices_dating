@@ -70,4 +70,8 @@ class ImageRes{
   //record
   static const  microphoneImagePath = 'assets/images/icon_microphone.png';
   static const  iconDeleteImagePath = 'assets/images/icon_delete.png';
+  //chat_bar
+  static const  iconChatMessagePath = 'assets/images/icon_chat_message.png';
+  static const  iconChatVoiceImagePath = 'assets/images/icon_chat_voice.png';
+  static const  iconChatPhotoImagePath = 'assets/images/icon_chat_photo.png';
 }

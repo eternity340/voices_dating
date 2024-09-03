@@ -1,17 +1,15 @@
 import 'package:first_app/pages/home/profile_detail/profile_moments/profile_moments_controller.dart';
+import 'package:first_app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-
-import '../../../../components/all_navigation_bar.dart';
 import '../../../../components/background.dart';
 import '../../../../constants/Constant_styles.dart';
 import '../../../../constants/constant_data.dart';
-import '../../../../image_res/image_res.dart';
 import '../../../moments/components/moments_card.dart';
-import '../../../moments/moments_controller.dart';
+
 
 
 class ProfileMomentsPage extends StatelessWidget {
@@ -57,7 +55,7 @@ class ProfileMomentsPage extends StatelessWidget {
                       itemBuilder: (context, index) {
                         return GestureDetector(
                           onTap: () {
-                            Get.toNamed('/moments/moments_detail', arguments: {
+                            Get.toNamed(AppRoutes.momentsMomentsDetail, arguments: {
                               'moment': controller.moments[index],
                               'tokenEntity': controller.tokenEntity,
                               'userData': controller.userData});
@@ -65,7 +63,7 @@ class ProfileMomentsPage extends StatelessWidget {
                           child: MomentsCard(
                             moment: controller.moments[index],
                             tokenEntity: controller.tokenEntity,
-                            onLoveButtonPressed: refreshMoments, // 传递回调函数
+                            onLoveButtonPressed: refreshMoments,
                           ),
                         );
                       },

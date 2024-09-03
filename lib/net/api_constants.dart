@@ -142,6 +142,7 @@ class ApiConstants{
   static const String apiGetStateList = "$urlVersion/state_list";
   static const String apiFaqList = "$urlVersion/faq/list";
   static const String notificationForEach = "$urlVersion/notification/foreach";
+  static const String getNotification = "$urlVersion/get/notification";
   static const String postMoment = "$urlVersion/post_timeline";
   static const String getLanguageMatchInfo = "$urlVersion/language/match/info";
   static const String verifyApplePurchase = "$urlVersion/verify_ios_payment";

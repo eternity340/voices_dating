@@ -1,8 +1,9 @@
 import 'dart:convert';
-
+import 'dart:ui';
 import 'package:dio/dio.dart';
 import 'package:first_app/utils/string_extension.dart';
-
+import 'package:flutter/material.dart';
+import 'package:get/get.dart' as getX;
 import '../constants/constant_data.dart';
 import '../entity/base_entity.dart';
 import '../utils/common_utils.dart';
@@ -119,46 +120,81 @@ class DioClient{
   }
 
 
-  Future requestNetwork<T>(
-      { Method method = Method.post,
-        required String url,
-        NetSuccessCallback<T>? onSuccess,
-        NetErrorCallback<T>? onError,
-        dynamic params,
-        Map<String, dynamic>? queryParameters,
-        CancelToken? cancelToken,
-        Options? options,
-        bool formParams = false,
-      }) {
+  Future requestNetwork<T>({
+    Method method = Method.post,
+    required String url,
+    NetSuccessCallback<T>? onSuccess,
+    NetErrorCallback<T>? onError,
+    dynamic params,
+    Map<String, dynamic>? queryParameters,
+    CancelToken? cancelToken,
+    Options? options,
+    bool formParams = false,
+  }) async {
     var _params = params ?? <String, String>{};
+    FormData formData = formParams ? params : FormData.fromMap(_params);
 
-    FormData formData = formParams?params:FormData.fromMap(_params);
+    try {
+      final BaseEntity<T> result = await _request<T>(
+        method.value,
+        url,
+        data: formData,
+        queryParameters: queryParameters,
+        options: options,
+        cancelToken: cancelToken,
+      );
 
-    return _request<T>(
-      method.value,
-      url,
-      data: formData,
-      queryParameters: queryParameters,
-      options: options,
-      cancelToken: cancelToken,
-    ).then<void>(
-          (BaseEntity<T> result) {
-        if (ConstantData.successResponseCode.contains(result.code) ) {
-          if (onSuccess != null) {
-            onSuccess(result.data);
-          }
-        } else {
-          _onError<T>(result.code, result.msg, onError, result.data,
-              requestUrl: url);
+      if (ConstantData.successResponseCode.contains(result.code)) {
+        if (onSuccess != null) {
+          onSuccess(result.data);
         }
-      },
-      onError: (dynamic e) {
-        _cancelLogPrint(e, url);
-        final NetError? error = ExceptionHandler.handleException(e);
-        if (error != null) {
-          _onError<T>(error.code, error.msg, onError, null);
-        }
-      },
+      } else {
+        _onError<T>(result.code, result.msg, onError, result.data, requestUrl: url);
+      }
+    } catch (e) {
+      _cancelLogPrint(e, url);
+      final NetError error = ExceptionHandler.handleException(e);
+      if (error.code == ExceptionHandler.net_error || error.code == ExceptionHandler.socket_error) {
+        _showNetworkErrorDialog(() {
+          // 重试请求
+          requestNetwork(
+            method: method,
+            url: url,
+            onSuccess: onSuccess,
+            onError: onError,
+            params: params,
+            queryParameters: queryParameters,
+            cancelToken: cancelToken,
+            options: options,
+            formParams: formParams,
+          );
+        });
+      } else {
+        _onError<T>(error.code, error.msg, onError, null, requestUrl: url);
+      }
+    }
+  }
+
+  void _showNetworkErrorDialog(VoidCallback onRetry) {
+    getX.Get.dialog(
+      AlertDialog(
+        title: Text('Network Error'),
+        content: Text('Failed to connect to the server. Please check your internet connection and try again.'),
+        actions: [
+          TextButton(
+            child: Text('Cancel'),
+            onPressed: () => getX.Get.back(),
+          ),
+          TextButton(
+            child: Text('Retry'),
+            onPressed: () {
+              getX.Get.back();
+              onRetry();
+            },
+          ),
+        ],
+      ),
+      barrierDismissible: false,
     );
   }
 

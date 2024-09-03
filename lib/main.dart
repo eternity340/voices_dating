@@ -5,7 +5,7 @@ import 'package:first_app/pages/me/me_page.dart';
 import 'package:first_app/pages/message/message_page.dart';
 import 'package:first_app/pages/moments/moments_page.dart';
 import 'package:first_app/pages/voice/voice_page.dart';
-import 'package:first_app/routes/app_route.dart';
+import 'package:first_app/routes/app_routes.dart';
 import 'package:first_app/service/app_service.dart';
 import 'package:first_app/service/global_service.dart';
 import 'package:first_app/service/im_service.dart';
@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: const Size(375, 850),
+      designSize: const Size(355, 810),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {

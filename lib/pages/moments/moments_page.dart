@@ -8,6 +8,7 @@ import '../../components/background.dart';
 import '../../constants/Constant_styles.dart';
 import '../../constants/constant_data.dart';
 import '../../image_res/image_res.dart';
+import '../../utils/common_utils.dart';
 import 'components/moments_card.dart';
 import 'moments_controller.dart';
 
@@ -16,15 +17,10 @@ class MomentsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final MomentsController controller = Get.put(MomentsController());
 
-    void refreshMoments() {
-      controller.fetchMoments();
-    }
-
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) async {
         if (didPop) return;
-        // 最小化应用
         await SystemNavigator.pop();
       },
       child: Scaffold(
@@ -82,7 +78,7 @@ class MomentsPage extends StatelessWidget {
             ),
           ),
           Positioned(
-            left: 315.w,
+            right: 10.w,
             top: 59.5.h,
             child: GestureDetector(
               onTap: () {
@@ -101,34 +97,41 @@ class MomentsPage extends StatelessWidget {
             ),
           ),
           Positioned(
-            left: 20.w,
+            left: 10.w,
             top: 109.h,
             child: Container(
               width: 335.w,
               height: 650.h,
               child: Obx(() {
-                return EasyRefresh(
-                  onRefresh: () async => controller.fetchMoments(),
-                  child: ListView.builder(
-                    itemCount: controller.moments.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          Get.toNamed('/moments/moments_detail',
-                              arguments: {
-                            'moment': controller.moments[index],
-                            'tokenEntity': controller.tokenEntity,
-                            'userDataEntity': controller.userDataEntity});
-                        },
-                        child: MomentsCard(
-                          moment: controller.moments[index],
-                          tokenEntity: controller.tokenEntity,
-                          onLoveButtonPressed: refreshMoments, // 传递回调函数
-                        ),
-                      );
-                    },
-                  ),
-                );
+                if (controller.isLoading.value && controller.moments.isEmpty) {
+                  return CommonUtils.loadingIndicator();
+                } else {
+                  return EasyRefresh(
+                    controller: controller.easyRefreshController,
+                    onRefresh: () async => controller.refreshMoments(),
+                    onLoad: () async => controller.fetchMoments(),
+                    child: ListView.builder(
+                      itemCount: controller.moments.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Get.toNamed('/moments/moments_detail',
+                                arguments: {
+                                  'moment': controller.moments[index],
+                                  'tokenEntity': controller.tokenEntity,
+                                  'userDataEntity': controller.userDataEntity
+                                });
+                          },
+                          child: MomentsCard(
+                            moment: controller.moments[index],
+                            tokenEntity: controller.tokenEntity,
+                            onLoveButtonPressed: controller.refreshMoments,
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                }
               }),
             ),
           ),

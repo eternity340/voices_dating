@@ -1,3 +1,4 @@
+import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:dio/dio.dart';
@@ -5,9 +6,12 @@ import '../../../../components/bottom_options.dart';
 import '../../../../constants/Constant_styles.dart';
 import '../../../../constants/constant_data.dart';
 import '../../../../entity/moment_entity.dart';
+import '../../../../entity/ret_entity.dart';
 import '../../../../entity/token_entity.dart';
 import '../../../../components/custom_message_dialog.dart';
 import '../../../../image_res/image_res.dart';
+import '../../../../net/api_constants.dart';
+import '../../../../net/dio.client.dart';
 
 class MomentCard extends StatelessWidget {
   final MomentEntity moment;
@@ -59,7 +63,7 @@ class MomentCard extends StatelessWidget {
                     SizedBox(width: 8.w),
                     Flexible(
                       child: Text(
-                        moment.username ?? 'Unknown',
+                        moment.username ?? ConstantData.unknownText,
                         style: ConstantStyles.usernameMomentStyle, // 使用常量中的样式
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -69,8 +73,8 @@ class MomentCard extends StatelessWidget {
                 ),
                 SizedBox(height: 16.h),
                 Text(
-                  moment.timelineDescr ?? 'No description available',
-                  style: ConstantStyles.descriptionStyle, // 使用常量中的样式
+                  moment.timelineDescr ?? ConstantData.noDescription,
+                  style: ConstantStyles.descriptionStyle,
                 ),
                 SizedBox(height: 16.h),
                 SingleChildScrollView(
@@ -84,7 +88,7 @@ class MomentCard extends StatelessWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20.r),
                           image: DecorationImage(
-                            image: NetworkImage(attachment.url ?? ImageRes.placeholderAvatar), // Default placeholder image
+                            image: NetworkImage(attachment.url ?? ImageRes.placeholderAvatar),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -107,7 +111,7 @@ class MomentCard extends StatelessWidget {
                 height: 40.h,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage(ImageRes.settingsButtonImage), // 使用常量中的图片路径
+                    image: AssetImage(ImageRes.settingsButtonImage),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -144,8 +148,8 @@ class MomentCard extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return CustomMessageDialog(
-          title: Text('Confirm Delete'),
-          content: Text('Are you sure you want to delete this moment?'),
+          title: Text(ConstantData.confirmDel),
+          content: Text(ConstantData.deleteMomentContent),
           onYesPressed: () {
             _deleteMoment(context);
           },
@@ -156,26 +160,25 @@ class MomentCard extends StatelessWidget {
 
   Future<void> _deleteMoment(BuildContext context) async {
     try {
-      Dio dio = Dio();
-      Response response = await dio.post(
-        'https://api.masonvips.com/v1/del_timeline',
-        queryParameters: {
-          'timelineId': moment.timelineId,
+      await DioClient.instance.requestNetwork<RetEntity>(
+        method: Method.post,
+        url: ApiConstants.delTimeline,
+        queryParameters: {'timelineId': moment.timelineId},
+        options: Options(headers: {'token': tokenEntity.accessToken}),
+        onSuccess: (data) {
+          if (data != null && data.ret == true) {
+            onDelete();
+          } else {
+            LogUtil.e('delete failed');
+          }
         },
-        options: Options(
-          headers: {
-            'token': tokenEntity.accessToken,
-          },
-        ),
+        onError: (code, msg, data) {
+          LogUtil.e(msg);
+        },
       );
-
-      if (response.data['code'] == 200 && response.data['data']['ret'] == true) {
-        onDelete();
-      } else {
-        print('Failed to delete moment');
-      }
     } catch (e) {
-      print('Error: $e');
+      LogUtil.e(e.toString());
     }
   }
+
 }

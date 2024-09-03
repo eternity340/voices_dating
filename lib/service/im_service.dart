@@ -15,11 +15,14 @@ import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/status.dart' as status;
 import 'package:web_socket_channel/web_socket_channel.dart';
 import '../components/custom_dialog.dart';
+import '../constants/constant_data.dart';
 import '../entity/im_message_entity.dart';
+import '../entity/token_entity.dart';
 import '../net/api_constants.dart';
 import '../resources/string_res.dart';
 import '../utils/common_utils.dart';
 import '../utils/log_util.dart';
+import '../utils/shared_preference_util.dart';
 import 'app_service.dart';
 
 enum ConnectionStatusEnum {
@@ -282,14 +285,21 @@ class IMService extends GetxService {
     }
     connectionStatus.value = ConnectionStatusEnum.connecting;
     if (AppService.instance.isLogin) {
-      String? token =  Get.find<TokenService>().getToken();
-      String url =
-          "${ApiConstants.getWsUrl()}?token=$token";
+      // 从本地存储获取 token
+      final tokenJson = SharedPreferenceUtil.instance.getValue(key: SharedPresKeys.userToken);
+      String? token;
+      if (tokenJson != null) {
+        final tokenEntity = TokenEntity.fromJson(json.decode(tokenJson));
+        token = tokenEntity.accessToken;
+      }
+      if (token == null) {
+        LogUtil.e(message: "Token not found in SharedPreferences");
+        connectionStatus.value = ConnectionStatusEnum.closed;
+        return;
+      }
+      String url = "${ApiConstants.getWsUrl()}?token=$token";
       print("${ApiConstants.getWsUrl()}?token=$token");
       try {
-        ///
-        /// If there's an error connecting, the channel's stream emits a
-        /// [WebSocketChannelException] wrapping that error and then closes.
         channel = IOWebSocketChannel.connect(
           url,
           // pingInterval: const Duration(seconds: 5)
@@ -305,7 +315,7 @@ class IMService extends GetxService {
       }
     } else {
       connectionStatus.value = ConnectionStatusEnum.closed;
-      LogUtil.e(message: "WsManager connect SocketException  closed: ${e.toString()}");
+      LogUtil.e(message: "WsManager connect: User not logged in");
     }
   }
 

@@ -1,6 +1,9 @@
+import 'package:common_utils/common_utils.dart';
+import 'package:first_app/net/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:dio/dio.dart';
+import '../../../../net/dio.client.dart';
 import 'moment_card.dart';
 import '../../../../entity/moment_entity.dart';
 import '../../../../entity/token_entity.dart';
@@ -27,34 +30,23 @@ class _MomentsContentState extends State<MomentsContent> {
 
   Future<void> _fetchMoments() async {
     try {
-      Dio dio = Dio();
-      Response response = await dio.get(
-        'https://api.masonvips.com/v1/timelines',
-        queryParameters: {
-          'profId': widget.userData.userId,
+      await DioClient.instance.requestNetwork<List<MomentEntity>>(
+        method: Method.get,
+        url: ApiConstants.timelines,
+        queryParameters: {'profId': widget.userData.userId},
+        options: Options(headers: {'token': widget.tokenEntity.accessToken}),
+        onSuccess: (data) {
+          _moments = data!;
         },
-        options: Options(
-          headers: {
-            'token': widget.tokenEntity.accessToken,
-          },
-        ),
+        onError: (code, msg, data) {
+          LogUtil.e(msg);
+        },
       );
-
-      if (response.statusCode == 200) {
-        List<dynamic> momentsJson = response.data['data'];
-        List<MomentEntity> moments = momentsJson
-            .map((json) => MomentEntity.fromJson(json as Map<String, dynamic>))
-            .toList();
-        setState(() {
-          _moments = moments;
-        });
-      } else {
-        print('Failed to load moments');
-      }
     } catch (e) {
-      print('Error: $e');
+      LogUtil.e(e.toString());
     }
   }
+
 
   void _removeMoment(MomentEntity moment) {
     setState(() {
@@ -65,7 +57,7 @@ class _MomentsContentState extends State<MomentsContent> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 36.w),
+      padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),
       itemCount: _moments.length,
       itemBuilder: (context, index) {
         MomentEntity moment = _moments[index];

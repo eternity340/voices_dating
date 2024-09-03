@@ -1,3 +1,4 @@
+import 'package:first_app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -27,27 +28,27 @@ class SettingsPage extends StatelessWidget {
           PathBox(
             top: ConstantStyles.pathBoxTopSpacing,
             text: ConstantData.blockMembersText,
-            onPressed: () => _navigateTo('/me/settings/block_member'),
+            onPressed: () => _navigateTo(AppRoutes.meSettingsBlockMember),
           ),
           PathBox(
             top: ConstantStyles.pathBoxTopSpacing + 95.h,
             text: ConstantData.feedbackTitleText,
-            onPressed: () => _navigateTo('/me/settings/feedback'),
+            onPressed: () => _navigateTo(AppRoutes.meSettingsFeedback),
           ),
           PathBox(
             top: ConstantStyles.pathBoxTopSpacing + 190.h,
             text: ConstantData.purchaseRecord,
-            onPressed: () => _navigateTo('/me/settings/purchase_record'),
+            onPressed: () => _navigateTo(AppRoutes.meSettingsPurchaseRecord),
           ),
           PathBox(
             top: ConstantStyles.pathBoxTopSpacing + 285.h,
             text: ConstantData.aboutMe,
-            onPressed: () => _navigateTo('/me/settings/about_me'),
+            onPressed: () => _navigateTo(AppRoutes.meSettingsAboutMe),
           ),
           PathBox(
             top: ConstantStyles.pathBoxTopSpacing + 380.h,
             text: ConstantData.cleanUpMemory,
-            onPressed: () => _navigateTo('/me/settings/'),
+            onPressed: () => _navigateTo(AppRoutes.meSettings),
           ),
           Positioned(
             top: ConstantStyles.signOutButtonTop,
@@ -70,6 +71,9 @@ class SettingsPage extends StatelessWidget {
   }
 
   void _navigateTo(String route) {
-    Get.toNamed(route, arguments: {'token': controller.tokenEntity, 'userData': controller.userData});
+    Get.toNamed(route,
+        arguments: {
+          'token': controller.tokenEntity,
+          'userData': controller.userData});
   }
 }

@@ -1,12 +1,14 @@
-import 'package:dio/dio.dart' as dio;
+import 'package:common_utils/common_utils.dart';
+import 'package:first_app/constants/constant_data.dart';
 import 'package:first_app/entity/token_entity.dart';
 import 'package:first_app/entity/user_data_entity.dart';
 import 'package:get/get.dart';
+import '../../service/global_service.dart';
 
 class MeController extends GetxController {
   late TokenEntity tokenEntity;
   late UserDataEntity userData;
-
+  final GlobalService globalService = Get.find<GlobalService>();
   @override
   void onInit() {
     super.onInit();
@@ -14,26 +16,18 @@ class MeController extends GetxController {
   }
 
   Future<void> fetchUserData() async {
-    final dio.Dio dioInstance = dio.Dio();
     try {
-      final response = await dioInstance.get(
-        'https://api.masonvips.com/v1/get_profile',
-        options: dio.Options(
-          headers: {
-            'token': tokenEntity.accessToken,
-          },
-        ),
+      final data = await globalService.getUserData(
+        accessToken: tokenEntity.accessToken!,
       );
 
-      if (response.data['code'] == 200) {
-        final data = response.data;
-        userData = UserDataEntity.fromJson(data['data']);
-        update();
+      if (data != null) {
+        userData = data;
       } else {
-        print('Failed to obtain user data');
+        LogUtil.e(ConstantData.userDataNotFound);
       }
     } catch (e) {
-      print('request error: $e');
+      LogUtil.e(e.toString());
     }
   }
 }

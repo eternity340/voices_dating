@@ -6,6 +6,7 @@ import '../../../components/gradient_btn.dart';
 import '../../../entity/User.dart';
 import '../../../constants/constant_styles.dart';
 import '../../../constants/constant_data.dart';
+import '../../../routes/app_routes.dart';
 
 class VerifySuccessPage extends StatelessWidget {
   final String message;
@@ -15,30 +16,27 @@ class VerifySuccessPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Initialize ScreenUtil (typically done in main.dart)
-    ScreenUtil.init(context, designSize: Size(375, 812), minTextAdapt: true);
-
     return Scaffold(
       body: Background(
         child: Center(
           child: Padding(
-            padding: EdgeInsets.all(16.0.w), // Responsive padding
+            padding: EdgeInsets.all(16.0.w),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: 100.h), // Responsive height
+                SizedBox(height: 100.h),
                 Icon(
                   Icons.check_circle_outline,
                   color: Colors.green,
-                  size: 100, // Use constant icon size
+                  size: 100,
                 ),
-                SizedBox(height: 20.h), // Responsive height
+                SizedBox(height: 20.h),
                 Text(
                   ConstantData.emailVerificationSuccess,
                   style: ConstantStyles.verifySuccessTitle,
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 20.h), // Responsive height
+                SizedBox(height: 20.h),
                 Text(
                   message.isEmpty
                       ? ConstantData.emailVerificationSuccessMessage
@@ -46,13 +44,13 @@ class VerifySuccessPage extends StatelessWidget {
                   style: ConstantStyles.verifySuccessSubtitle,
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 200.h), // Responsive height
+                SizedBox(height: 200.h),
                 GradientButton(
                   text: ConstantData.nextButtonText,
                   onPressed: () {
-                    Get.toNamed('/select_gender', arguments: user);
+                    Get.toNamed(AppRoutes.selectGender, arguments: user);
                   },
-                  width: 200.w, // Use constant button width
+                  width: 200.w,
                 ),
               ],
             ),

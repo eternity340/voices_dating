@@ -1,18 +1,16 @@
-import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:first_app/constants/constant_data.dart';
 import 'package:first_app/entity/moment_entity.dart';
 import 'package:first_app/net/api_constants.dart';
+import 'package:first_app/routes/app_routes.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import '../../../constants/constant_data.dart';
-import '../../../entity/list_user_entity.dart';
+import '../../../entity/ret_entity.dart';
 import '../../../entity/token_entity.dart';
 import '../../../entity/user_data_entity.dart';
-import '../../../entity/chatted_user_entity.dart';
 import '../../../net/dio.client.dart';
 import '../../../service/global_service.dart';
 import '../../../utils/log_util.dart';
-import '../../../utils/shared_preference_util.dart';
 import '../../../components/custom_message_dialog.dart';
 
 class UserProfileController extends GetxController {
@@ -44,38 +42,34 @@ class UserProfileController extends GetxController {
     }
   }
 
-
-
-  void _showErrorDialog() {
+  void showErrorDialog() {
     Get.dialog(
       CustomMessageDialog(
-        title: Text('Error'),
-        content: Text('User data not found. Please log in again.'),
+        title: Text(ConstantData.failedBlocked),
+        content: Text(ConstantData.userDataNotFound),
         onYesPressed: () {
-          Get.offAllNamed('/welcome');
+          Get.offAllNamed(AppRoutes.welcome);
         },
       ),
     );
   }
 
   void blockUser() {
-    dioClient.requestNetwork<Map<String, dynamic>>(
+    DioClient.instance.requestNetwork<RetEntity>(
       method: Method.post,
       url: ApiConstants.blockUser,
-      queryParameters: {
-        'userId': userDataEntity.userId},
-      options: Options(
-          headers: {'token': tokenEntity.accessToken}),
+      queryParameters: {'userId': userDataEntity.userId},
+      options: Options(headers: {'token': tokenEntity.accessToken}),
       onSuccess: (data) {
-        if (data != null && data['ret'] == true) {
-          Get.back(); // 关闭当前页面
-          Get.snackbar('Success', 'User has been blocked');
+        if (data != null && data.ret) {
+          Get.back();
+          Get.snackbar(ConstantData.successText, ConstantData.userHasBlocked);
         } else {
-          Get.snackbar('Error', 'Failed to block user');
+          Get.snackbar(ConstantData.failedText, ConstantData.failedBlocked);
         }
       },
       onError: (code, msg, data) {
-        Get.snackbar('Error', msg);
+        Get.snackbar(ConstantData.errorText, msg);
       },
     );
   }

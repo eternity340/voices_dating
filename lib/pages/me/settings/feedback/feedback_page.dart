@@ -25,7 +25,7 @@ class FeedbackPage extends StatelessWidget {
             child: Container(),
           ),
           Positioned(
-            left: 20.w,
+            left: 10.w,
             top: 139.h,
             child: Container(
               width: 335.w,
@@ -69,7 +69,7 @@ class FeedbackPage extends StatelessWidget {
             ),
           ),
           Positioned(
-            left: 20.w,
+            left: 10.w,
             top: 356.h,
             child: Material(
               color: Colors.transparent,

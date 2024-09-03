@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:dio/dio.dart';
+import 'package:first_app/constants/constant_data.dart';
 import 'package:first_app/entity/user_data_entity.dart';
 import 'package:first_app/net/api_constants.dart';
 import 'package:flutter/material.dart';
@@ -88,7 +89,7 @@ class _ProfileCardState extends State<UserProfileCard> {
           child: Row(
             children: [
               if (widget.userDataEntity?.member == "1")
-                VerifiedTag(text: 'Superior',
+                VerifiedTag(text: ConstantData.superiorText,
                     backgroundColor: Colors.black,
                     textColor: Colors.white
                 ),
@@ -96,7 +97,7 @@ class _ProfileCardState extends State<UserProfileCard> {
                 SizedBox(width: 8.w),
               if (widget.userDataEntity?.verified == "1")
                 VerifiedTag(
-                  text: 'Photos verified',
+                  text: ConstantData.photosVerified,
                   backgroundColor: Color(0xFFABFFCF),
                   textColor: Colors.black,
                 ),
@@ -113,13 +114,9 @@ class _ProfileCardState extends State<UserProfileCard> {
                 style: ConstantStyles.countryTextStyle,
               ),
               SizedBox(width: 4.w),
-              const Text(
+               Text(
                 '|',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontFamily: 'Open Sans',
-                  color: Color(0xFF8E8E93),
-                ),
+                style: ConstantStyles.countryTextStyle,
               ),
               SizedBox(width: 4.w),
               Text(
@@ -140,7 +137,9 @@ class _ProfileCardState extends State<UserProfileCard> {
           child: GestureDetector(
             onTap: _toggleLike,
             child: Image.asset(
-              _isLiked ? ImageRes.iconLoveSelect : ImageRes.iconLoveUnselect,
+              _isLiked
+                  ? ImageRes.iconLoveSelect
+                  : ImageRes.iconLoveUnselect,
               width: 20.83.w,
               height: 20.73.h,
             ),
@@ -151,49 +150,45 @@ class _ProfileCardState extends State<UserProfileCard> {
   }
 
   void _toggleLike() {
-    final url = _isLiked
-        ? ApiConstants.cancelLikeUser
-        : ApiConstants.likeUser;
+    if (_cannotToggleLike()) return;
 
-    if (widget.userDataEntity?.userId == null || widget.tokenEntity.accessToken == null) {
-      return;
-    }
+    final newLikeStatus = !_isLiked;
+    final url = newLikeStatus
+        ? ApiConstants.likeUser
+        : ApiConstants.cancelLikeUser;
 
+    _updateLocalState(newLikeStatus);
+    _sendLikeRequest(url, newLikeStatus);
+  }
+
+  bool _cannotToggleLike() {
+    return widget.userDataEntity?.userId == null || widget.tokenEntity.accessToken == null;
+  }
+
+  void _updateLocalState(bool isLiked) {
     setState(() {
-      _isLiked = !_isLiked;
+      _isLiked = isLiked;
       if (widget.userDataEntity != null) {
-        if (_isLiked) {
-          widget.userDataEntity!.liked = (widget.userDataEntity!.liked ?? 0) + 1;
-        } else {
-          widget.userDataEntity!.liked = (widget.userDataEntity!.liked ?? 1) - 1;
-        }
+        widget.userDataEntity!.liked = isLiked
+            ? (widget.userDataEntity!.liked ?? 0) + 1
+            : (widget.userDataEntity!.liked ?? 1) - 1;
       }
     });
+  }
 
+  void _sendLikeRequest(String url, bool newLikeStatus) {
     DioClient.instance.requestNetwork<void>(
       method: Method.post,
       url: url,
       params: {'userId': widget.userDataEntity!.userId},
-      options: Options(
-        headers: {
-          'token': '${widget.tokenEntity.accessToken}',
-        },
-      ),
+      options: Options(headers: {'token': '${widget.tokenEntity.accessToken}'}),
       onSuccess: (data) {
+
       },
       onError: (code, msg, data) {
-
-        setState(() {
-          _isLiked = !_isLiked;
-          if (widget.userDataEntity != null) {
-            if (_isLiked) {
-              widget.userDataEntity!.liked = (widget.userDataEntity!.liked ?? 1) - 1;
-            } else {
-              widget.userDataEntity!.liked = (widget.userDataEntity!.liked ?? 0) + 1;
-            }
-          }
-        });
+        _updateLocalState(!newLikeStatus);
       },
     );
   }
+
 }

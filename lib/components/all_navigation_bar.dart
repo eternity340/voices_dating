@@ -8,7 +8,7 @@ import '../entity/token_entity.dart';
 
 class AllNavigationBar extends StatelessWidget {
   final TokenEntity tokenEntity;
-  final UserDataEntity? userData; // Make userData optional
+  final UserDataEntity? userData;
 
   AllNavigationBar({required this.tokenEntity, this.userData});
 
@@ -22,15 +22,15 @@ class AllNavigationBar extends StatelessWidget {
           right: 0,
           child: Center(
             child: Container(
-              width: 355.w,
+              width: 335.w,
               height: 72.h,
               child: Stack(
                 children: [
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(10.r),
+                    borderRadius: BorderRadius.circular(25.r),
                     child: Image.asset(
                       ImageRes.imagePathNavigationBar,
-                      width: 355.w,
+                      width: 335.w,
                       height: 72.h,
                       fit: BoxFit.cover,
                     ),

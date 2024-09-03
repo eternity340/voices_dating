@@ -192,6 +192,19 @@ class ConstantStyles {
     letterSpacing: -0.02.sp, // Responsive letter spacing
     color: Color(0xFF000000),
   );
+  static TextStyle selectLocationStyle = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 20.sp,
+    fontWeight: FontWeight.w600,
+    color: Colors.black,
+  );
+  static TextStyle locationListStyle = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 18.sp,
+    fontWeight: FontWeight.w500,
+    color: Colors.black,
+  );
+
   //sign_up
   static TextStyle formLabelStyle = TextStyle(
     fontSize: 12.sp, // Responsive font size
@@ -660,5 +673,12 @@ class ConstantStyles {
     height: 22 / 18,
     letterSpacing: -0.01,
     color: Color(0xFF000000),
+  );
+  //blockItem
+  static TextStyle blockButtonStyle = TextStyle(
+    color: Colors.black,
+    fontSize: 14.sp,
+    fontWeight: FontWeight.w600,
+    fontFamily: 'Poppins',
   );
 }

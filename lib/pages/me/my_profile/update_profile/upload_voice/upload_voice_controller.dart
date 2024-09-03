@@ -1,5 +1,7 @@
 import 'package:common_utils/common_utils.dart';
 import 'package:dio/dio.dart';
+import 'package:first_app/net/api_constants.dart';
+import 'package:first_app/routes/app_routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
@@ -76,7 +78,7 @@ class UploadVoiceController extends GetxController {
 
     try {
       final response = await Dio().post(
-        'https://api.masonvips.com/v1/voice/upload',
+        ApiConstants.uploadVoice,
         options: Options(headers: {'token': tokenEntity.accessToken}),
         queryParameters: {
           'attachId': attachId,
@@ -120,7 +122,7 @@ class UploadVoiceController extends GetxController {
   }
 
   void navigateToMyProfile() {
-    Get.offAllNamed('/me/my_profile', arguments: {
+    Get.offAllNamed(AppRoutes.meMyProfile, arguments: {
       'token': tokenEntity,
       'userData': globalService.userDataEntity.value,
     });

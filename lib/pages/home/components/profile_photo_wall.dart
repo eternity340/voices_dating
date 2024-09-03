@@ -29,12 +29,11 @@ class _PhotoWallState extends State<ProfilePhotoWall> {
 
   @override
   Widget build(BuildContext context) {
-    // Ensure no more than 9 photos are displayed
     int photoCount = (widget.userEntity.photos?.length ?? 0).clamp(0, 9);
 
     return Container(
-      width: 400.w, // 调整宽度
-      height: 500.h, // 调整高度
+      width: 400.w,
+      height: 500.h,
       child: Stack(
         children: [
           PageView.builder(
@@ -50,8 +49,8 @@ class _PhotoWallState extends State<ProfilePhotoWall> {
               return Align(
                 alignment: Alignment.topCenter,
                 child: Container(
-                  width: 337.w, // 固定照片容器宽度
-                  height: 322.h, // 固定照片容器高度
+                  width: 337.w,
+                  height: 322.h,
                   margin: EdgeInsets.symmetric(horizontal: 8.w),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(24.r),
@@ -94,8 +93,8 @@ class _PhotoWallState extends State<ProfilePhotoWall> {
   }
 
   Widget _buildPageIndicator(int index) {
-    Color selectedColor = Color.fromRGBO(59, 59, 59, 1); // #3B3B3B
-    Color unselectedColor = Color.fromRGBO(255, 255, 255, 0.56); // #FFFFFF with 56% opacity
+    Color selectedColor = Color.fromRGBO(59, 59, 59, 1);
+    Color unselectedColor = Color.fromRGBO(255, 255, 255, 0.56);
     double indicatorWidth = 21.w;
     double indicatorHeight = 5.h;
     double indicatorSpacing = 8.w;
@@ -106,7 +105,9 @@ class _PhotoWallState extends State<ProfilePhotoWall> {
       height: indicatorHeight,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(28.r),
-        color: _currentPage == index ? selectedColor : unselectedColor,
+        color: _currentPage == index
+            ? selectedColor
+            : unselectedColor,
       ),
     );
   }

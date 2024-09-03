@@ -1,3 +1,4 @@
+import 'package:first_app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -32,7 +33,10 @@ class _MyProfilePageState extends State<MyProfilePage> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Get.toNamed('/me', arguments: {'token': tokenEntity, 'userData': userData});
+                    Get.toNamed(AppRoutes.me,
+                        arguments: {
+                          'token': tokenEntity,
+                          'userData': userData});
                   },
                   child: Row(
                     children: [
@@ -60,7 +64,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
           ),
           Positioned(
             top: 120.h,
-            left: 0,
+            left: 10.w,
             right: 0,
             child: _buildOptionsRow(),
           ),
@@ -73,7 +77,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
               controller: _pageController,
               onPageChanged: (index) {
                 setState(() {
-                  selectedOption = index == 0 ? "Profile" : "Moments";
+                  selectedOption = index == 0
+                      ? ConstantData.profileOption
+                      : ConstantData.momentsOption;
                 });
               },
               children: [
@@ -111,7 +117,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _buildOption(ConstantData.profileOption),
-              SizedBox(width: 88.w),
+              SizedBox(width: 100.w),
               _buildOption(ConstantData.momentsOption),
             ],
           ),

@@ -1,3 +1,5 @@
+import 'package:first_app/constants/constant_data.dart';
+import 'package:first_app/net/api_constants.dart';
 import 'package:first_app/utils/log_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -14,8 +16,7 @@ class FeedbackController extends GetxController {
   final ImagePicker _picker = ImagePicker();
   var selectedImagePath = ''.obs;
   final TextEditingController feedbackController = TextEditingController();
-
-  final DioClient _dioClient = DioClient.instance;
+  final DioClient dioClient = DioClient.instance;
 
   Future<void> pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -35,9 +36,9 @@ class FeedbackController extends GetxController {
     });
 
     try {
-      final response = await _dioClient.requestNetwork<Map<String, dynamic>>(
+      final response = await dioClient.requestNetwork<Map<String, dynamic>>(
         method: Method.post,
-        url: 'https://api.masonvips.com/v1/upload_file',
+        url: ApiConstants.uploadFile,
         params: formData,
         options: dio.Options(headers: {'token': tokenEntity.accessToken}),
         onSuccess: (data) {
@@ -46,12 +47,12 @@ class FeedbackController extends GetxController {
           }
         },
         onError: (code, msg, data) {
-          LogUtil.e(message: 'Image upload failed: $msg');
+          LogUtil.e(message:msg);
         },
       );
       return response;
     } catch (e) {
-      LogUtil.e(message: 'Error uploading image: $e');
+      LogUtil.e(message:e.toString());
     }
     return null;
   }
@@ -72,20 +73,21 @@ class FeedbackController extends GetxController {
     };
 
     try {
-      await _dioClient.requestNetwork<void>(
+      await dioClient.requestNetwork<void>(
         method: Method.post,
-        url: 'https://api.masonvips.com/v1/feedback',
+        url: ApiConstants.feedback,
         queryParameters: queryParams,
         options: dio.Options(headers: {'token': tokenEntity.accessToken}),
         onSuccess: (_) {
-          LogUtil.i(message: 'Feedback submitted successfully');
+          Get.snackbar(ConstantData.successText, ConstantData.feedBackSuccess);
         },
-        onError: (code, msg, _) {
-          LogUtil.e(message: 'Failed to submit feedback: $msg');
+        onError: (code, msg , _) {
+          Get.snackbar(ConstantData.errorText,msg);
         },
       );
     } catch (e) {
-      LogUtil.e(message: 'Error submitting feedback: $e');
+      LogUtil.e(message:e.toString());
+      Get.snackbar(ConstantData.errorText, e.toString());
     }
   }
 }

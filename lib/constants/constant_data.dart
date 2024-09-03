@@ -73,6 +73,7 @@ class ConstantData {
   static double defaultAvatarSize = 48.w;
 
   static const googleHelpCenter = "https://support.google.com/googleplay/answer/2476088?hl=en&ref_topic=1689236";
+  static const googleRecaptcha = "assets/html/recaptcha.html";
 
   static const String serviceAgreementUrl = "";
   static const String privacyPolicyUrl = "";
@@ -115,6 +116,31 @@ class ConstantData {
   static const cancelText = 'cancel';
   static const yesText='Yes';
   static const noText='No';
+  static const successText = 'success';
+  static const sendSuccess ="sent successfully";
+  static const failedText = 'failed';
+  static const sendFailed = "Failed to send ";
+  static const confirmDel = 'Confirm Delete';
+  static const userDataNotFound = 'User data not found. Please log in again.';
+  static const deleteMomentContent = 'Are you sure you want to delete this moment?';
+  static const signOutText = 'Are you sure you want to sign out?';
+  //snack
+  static const userHasBlocked = 'User has been blocked';
+  static const failedBlocked ='Failed to block user';
+  static const failedUpdateProfile = 'Failed to update profile';
+  static const successUpdateProfile = 'Profile updated successfully';
+  static const invalidLocation =  'Invalid location selection';
+  static const usernameCharacters = 'Username must be 16 characters or fewer';
+  static const uploadSuccess = 'Upload successful!';
+  static const deletePhotoSuccess = 'Photo deleted successfully!';
+  static const failedDeletePhoto =  'Failed to delete photo';
+  static const avatarSetSuccess = 'Avatar set successfully!';
+  static const avatarSetFailed = 'Failed to set avatar';
+  static const loadFailed = 'Failed to load';
+  static const unlockSuccess = 'User unblocked successfully';
+  static const unlockFailed ='Failed to unblock user';
+  static const feedBackSuccess = 'Feedback submitted successfully';
+  static const errorText = 'Error';
   //detail_bottom_bar
   static const likeText='like';
   //get_email_code
@@ -144,6 +170,12 @@ class ConstantData {
   static const  heightHeadTitle = "Height";
   //select_location
   static const  locationTitle = "Location";
+  static const  selectedCountry = "Select Country";
+  static const  selectedState = "Select State";
+  static const  selectedCity = "Select City";
+  static const  countryText = 'country';
+  static const  stateText = 'state';
+  static const  cityText = 'city';
   //sign_up
   static const  nicknameTitle = "Set a nickname";
   static const  passwordTitle = "Set a password";
@@ -153,6 +185,7 @@ class ConstantData {
   static const  enterYourEmail = "Enter your email";
   static const  enterPasswordText = "Enter your password";
   static const  forgetPassword = "Forget Password?";
+  static const  emailEmpty = "Email cannot be empty";
   static const  signInText ="Sign In";
   //profile_card
   static const  photosVerified = 'Photos verified';
@@ -163,9 +196,11 @@ class ConstantData {
   static const  moments = 'Moments';
   static const  aboutMe = 'About Me';
   static const  chatButton = 'Chat';
+  static const noMomentsData = "This user hasn't shared any moments yet.";
   //bottom_options
   static const reportButton = 'report';
   static const blockButton = 'block';
+  static const unblockButton = 'unblock';
   //home_page
   static const  feelLabel = 'Feel';
   static const  getUpLabel = 'Get up';
@@ -196,6 +231,8 @@ class ConstantData {
   static const  momentsOption = 'Moments';
   static const  voiceIntroduction = 'Voice introduction';
   static const  introductionText = 'introduction';
+  static const  noVoiceText = 'No voice introduction';
+  static const  noDescription = 'No description available';
   //photo
   static const  mainPhotoText='main photo';
   static const  photoTitle='Photo';
@@ -264,10 +301,22 @@ class ConstantData {
   static const  describeProblem = 'Please describe your problem…';
   //user_card
   static const  superiorText = 'Superior';
+  //user_detail_card
+  static const unKnowText ='Unknown';
   //record
   static const  recordButtonText ='Record a new voice prologue';
   static const  recordTitle = 'Record';
   static const  starText = 'Star';
   static const  endText = 'End';
+  //likedMe
+  static const  noOneLikedMeText = 'No one has liked you yet.';
+  static const  noTokenInLocal = 'Token not found in SharedPreferences';
+  //notification
+  static const notificationTitle = 'notification';
+  //private_chat
+  static const holdToTalkText = "Hold to Talk";
+  static const sendMessageText = "Send a message…";
+  static const releaseCancelText = "Release to cancel";
+  static const slideUpText =  "Slide up to cancel";
 }
 

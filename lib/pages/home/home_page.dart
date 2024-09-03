@@ -1,7 +1,6 @@
 import 'dart:convert';
-
+import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -10,10 +9,7 @@ import '../../components/background.dart';
 import '../../constants/Constant_styles.dart';
 import '../../constants/constant_data.dart';
 import '../../entity/token_entity.dart';
-import '../../entity/user_data_entity.dart';
 import '../../image_res/image_res.dart';
-import '../../service/app_service.dart';
-import '../../service/token_service.dart';
 import '../../utils/shared_preference_util.dart';
 import 'components/home_icon_button.dart';
 import 'components/user_card.dart';
@@ -30,7 +26,7 @@ class HomePage extends StatelessWidget {
       final tokenEntity = TokenEntity.fromJson(json.decode(tokenJson));
       Get.put(HomeController(tokenEntity));
     } else {
-      print("Token not found in SharedPreferences");
+      LogUtil.e(ConstantData.noTokenInLocal);
     }
   }
 
@@ -127,7 +123,7 @@ class HomePage extends StatelessWidget {
             controller: controller.pageController,
             onPageChanged: controller.onPageChanged,
             children: [
-              _buildUserListView(controller),
+              honeyOption(controller),
               Center(child: Text('Nearby Page')),
             ],
           ),
@@ -136,7 +132,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildUserListView(HomeController controller) {
+  Widget honeyOption(HomeController controller) {
     return Obx(() {
       return EasyRefresh(
         onRefresh: () async {

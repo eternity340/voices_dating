@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:first_app/entity/user_data_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,7 +6,6 @@ import 'package:intl/intl.dart';
 import 'package:get/get.dart';
 import '../../../constants/constant_styles.dart';
 import '../../../entity/chatted_user_entity.dart';
-import '../../../entity/token_entity.dart';
 import '../../../net/dio.client.dart';
 import '../message_controller.dart';
 

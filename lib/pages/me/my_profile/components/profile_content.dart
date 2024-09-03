@@ -1,3 +1,4 @@
+import 'package:first_app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,7 +18,7 @@ class ProfileContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 36.w),
+        padding: EdgeInsets.symmetric(horizontal: 26.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -26,7 +27,7 @@ class ProfileContent extends StatelessWidget {
               title: ConstantData.usernameTitle,
               value: userData.username,
               onTap: () {
-                Get.toNamed('/me/my_profile/change_username',
+                Get.toNamed(AppRoutes.meMyProfileChangeUsername,
                     arguments: {'token': tokenEntity, 'userData': userData});
               },
             ),
@@ -35,7 +36,7 @@ class ProfileContent extends StatelessWidget {
               title: ConstantData.ageTitle,
               value: userData.age.toString(),
               onTap: () {
-                Get.toNamed('/me/my_profile/change_age',
+                Get.toNamed(AppRoutes.meMyProfileChangeAge,
                     arguments: {'token': tokenEntity, 'userData': userData});
               },
             ),
@@ -44,7 +45,7 @@ class ProfileContent extends StatelessWidget {
               title: ConstantData.heightTitle,
               value: userData.height != null ? '${userData.height} cm' : '',
               onTap: () {
-                Get.toNamed('/me/my_profile/change_height',
+                Get.toNamed(AppRoutes.meMyProfileChangeHeight,
                     arguments: {'token': tokenEntity, 'userData': userData});
               },
             ),
@@ -53,7 +54,7 @@ class ProfileContent extends StatelessWidget {
               title: ConstantData.headlineTitle,
               value: userData.headline.toString(),
               onTap: () {
-                Get.toNamed('/me/my_profile/change_headline',
+                Get.toNamed(AppRoutes.meMyProfileChangeHeadline,
                     arguments: {'token': tokenEntity, 'userData': userData});
               },
             ),
@@ -66,16 +67,16 @@ class ProfileContent extends StatelessWidget {
                   ? '${userData.location!.city}, ${userData.location!.country}'
                   : '',
               onTap: () {
-                Get.toNamed('/me/my_profile/change_location',
+                Get.toNamed(AppRoutes.meMyProfileChangeLocation,
                     arguments: {'token': tokenEntity, 'userData': userData});
               },
             ),
             _buildInfoSection(
                 context,
                 title: ConstantData.voiceIntroduction,
-                value: userData.voice?.description ?? 'No voice introduction',
+                value: userData.voice?.description ?? ConstantData.noVoiceText,
                 onTap: () {
-                  Get.toNamed('/me/my_profile/upload_voice',
+                  Get.toNamed(AppRoutes.meMyProfileUploadVoice,
                       arguments: {'token': tokenEntity, 'userData': userData});
                 }
             ),

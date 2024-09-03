@@ -19,46 +19,53 @@ class ExceptionHandler {
   static const int unknown_error = 9999;
 
   static final Map<int, NetError> _errorMap = <int, NetError>{
-    net_error:
-    NetError(net_error, 'Network anomaly, please check your network'),
+    net_error: NetError(net_error, 'Network anomaly, please check your network'),
     parse_error: NetError(parse_error, 'Data parsing error'),
-    socket_error:
-    NetError(socket_error, 'Network anomaly, please check your network'),
-    http_error:
-    NetError(http_error, 'Server exception, please try again later！'),
-    connect_timeout_error:
-    NetError(connect_timeout_error, 'Connection timeout'),
+    socket_error: NetError(socket_error, 'Network anomaly, please check your network'),
+    http_error: NetError(http_error, 'Server exception, please try again later！'),
+    connect_timeout_error: NetError(connect_timeout_error, 'Connection timeout'),
     send_timeout_error: NetError(send_timeout_error, 'Request Timeout'),
     receive_timeout_error: NetError(receive_timeout_error, 'Response timeout'),
     cancel_error: NetError(cancel_error, 'Cancel Request'),
     unknown_error: NetError(unknown_error, 'Unknown anomalies'),
   };
 
-  static NetError? handleException(dynamic error) {
+  static NetError handleException(dynamic error) {
     print(error);
-    if (error is DioError) {
-      if (error.type.errorCode == 0) {
-        return _handleException(error.error);
-      } else {
-        return _errorMap[error.type.errorCode];
+    if (error is DioException) {
+      switch (error.type) {
+        case DioExceptionType.connectionTimeout:
+          return _errorMap[connect_timeout_error]!;
+        case DioExceptionType.sendTimeout:
+          return _errorMap[send_timeout_error]!;
+        case DioExceptionType.receiveTimeout:
+          return _errorMap[receive_timeout_error]!;
+        case DioExceptionType.badResponse:
+          return _errorMap[http_error]!;
+        case DioExceptionType.cancel:
+          return _errorMap[cancel_error]!;
+        case DioExceptionType.connectionError:
+          return _errorMap[net_error]!;
+        case DioExceptionType.unknown:
+        default:
+          return _handleException(error.error);
       }
     } else {
       return _handleException(error);
     }
   }
 
-  static NetError? _handleException(dynamic error) {
-    int errorCode = unknown_error;
+  static NetError _handleException(dynamic error) {
     if (error is SocketException) {
-      errorCode = socket_error;
+      return _errorMap[socket_error]!;
     }
     if (error is HttpException) {
-      errorCode = http_error;
+      return _errorMap[http_error]!;
     }
     if (error is FormatException) {
-      errorCode = parse_error;
+      return _errorMap[parse_error]!;
     }
-    return _errorMap[errorCode];
+    return _errorMap[unknown_error]!;
   }
 }
 
@@ -67,15 +74,4 @@ class NetError {
 
   int code;
   String msg;
-}
-
-extension DioErrorTypeExtension on DioErrorType {
-  int get errorCode => [
-    ExceptionHandler.connect_timeout_error,
-    ExceptionHandler.send_timeout_error,
-    ExceptionHandler.receive_timeout_error,
-    0,
-    ExceptionHandler.cancel_error,
-    0,
-  ][index];
 }

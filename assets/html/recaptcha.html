@@ -1,0 +1,43 @@
+<html>
+<head>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>reCAPTCHA</title>
+    <script>
+        var onSubmit = function(token) {
+          console.log('success!');
+           try {
+                RecaptchaFlutterChannel.postMessage(token);
+              } catch (e) {
+                console.log("Something wrong...");
+              }
+        };
+
+        var onloadCallback = function() {
+        console.log("render!!!");
+          grecaptcha.render('submit', {
+            'sitekey' : 'apiKey',
+            'callback' : onSubmit,
+            size: "invisible"
+          });
+        };
+
+        function execute(){
+            console.log("submit!!!");
+<!--            post({action:"submit"});-->
+            grecaptcha.execute();
+        }
+
+    </script>
+</head>
+<body>
+<span id="submit"></span>
+<!--<form action="?" method="POST">-->
+<!--    <input id='submit' type="submit" value="Submit">-->
+<!--</form>-->
+<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
+        async defer>
+</script>
+</body>
+</html>
+

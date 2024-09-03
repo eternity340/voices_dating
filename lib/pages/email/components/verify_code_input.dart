@@ -1,3 +1,4 @@
+import 'package:first_app/pages/email/components/verification_box_cursor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,128 +6,134 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class VerifyCodeInput extends StatefulWidget {
   final int length;
   final void Function(String) onCompleted;
+  final double itemWidth;
+  final double itemHeight;
+  final Color focusedBorderColor;
+  final Color unfocusedBorderColor;
+  final Color fillColor;
+  final bool showCursor;
+  final Color cursorColor;
 
-  VerifyCodeInput({required this.length, required this.onCompleted});
+  VerifyCodeInput({
+    required this.length,
+    required this.onCompleted,
+    this.itemWidth = 50,
+    this.itemHeight = 70,
+    this.focusedBorderColor = const Color(0xFF20E2D7),
+    this.unfocusedBorderColor = Colors.grey,
+    this.fillColor = const Color(0xFFF4F4F4),
+    this.showCursor = true,
+    this.cursorColor = const Color(0xFF20E2D7),
+  });
 
   @override
   _VerifyCodeInputState createState() => _VerifyCodeInputState();
 }
 
 class _VerifyCodeInputState extends State<VerifyCodeInput> {
-  List<FocusNode> _focusNodes = [];
-  List<TextEditingController> _controllers = [];
-  List<String> _code = [];
+  late TextEditingController _controller;
+  late FocusNode _focusNode;
+  List<String> _codeList = [];
 
   @override
   void initState() {
     super.initState();
-    for (int i = 0; i < widget.length; i++) {
-      _focusNodes.add(FocusNode());
-      _controllers.add(TextEditingController());
-      _code.add('');
-      _controllers[i].addListener(() {
-        _onChanged(i, _controllers[i].text);
-      });
-    }
+    _controller = TextEditingController();
+    _focusNode = FocusNode();
+    _codeList = List.filled(widget.length, '');
   }
 
   @override
   void dispose() {
-    _focusNodes.forEach((node) => node.dispose());
-    _controllers.forEach((controller) => controller.dispose());
+    _controller.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
-  void _onChanged(int index, String value) {
-    if (value.length > 1) {
-      value = value.substring(value.length - 1);
-      _controllers[index].text = value;
-    }
-    _code[index] = value;
-    if (value.isEmpty) {
-      if (index > 0) {
-        Future.delayed(Duration(milliseconds: 100), () {
-          if (mounted && _focusNodes[index - 1].hasFocus) {
-            FocusScope.of(context).requestFocus(_focusNodes[index - 1]);
-          }
-        });
-      }
-    } else {
-      if (index + 1 < widget.length) {
-        Future.delayed(Duration(milliseconds: 100), () {
-          if (mounted && !_focusNodes[index + 1].hasFocus) {
-            FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
-          }
-        });
-      }
-    }
+  void _onChanged(String value) {
+    setState(() {
+      _codeList = value.split('');
+      _codeList.addAll(List.filled(widget.length - _codeList.length, ''));
+    });
 
-    // Join the code list to form the current code
-    String currentCode = _code.join();
-
-    // Check if the code is complete and call the onCompleted callback
-    if (currentCode.length == widget.length) {
-      if (mounted) {
-        widget.onCompleted(currentCode);
-        FocusScope.of(context).unfocus();
-      }
-      return; // Exit early if code is complete
-    }
-
-    // Update state only if necessary
-    if (mounted) {
-      setState(() {});
+    if (value.length == widget.length) {
+      widget.onCompleted(value);
+      _focusNode.unfocus();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: List.generate(widget.length, (index) {
-          return SizedBox(
-            width: 50.w, // Use ScreenUtil for width
-            height: 70.h, // Use ScreenUtil for height
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).requestFocus(_focusNode),
+      child: Stack(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: List.generate(
+              widget.length,
+                  (index) => _buildInputBox(index),
+            ),
+          ),
+          Opacity(
+            opacity: 0,
             child: TextField(
-              controller: _controllers[index],
-              focusNode: _focusNodes[index],
+              controller: _controller,
+              focusNode: _focusNode,
+              maxLength: widget.length,
               keyboardType: TextInputType.number,
-              textAlign: TextAlign.center,
-              maxLength: 1,
-              inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,
-              ],
-              onTap: () {
-                _controllers[index].selection = TextSelection(
-                  baseOffset: 0,
-                  extentOffset: _controllers[index].value.text.length,
-                );
-              },
-              onChanged: (value) {
-                if (value.length > 1) {
-                  value = value.substring(value.length - 1);
-                  _controllers[index].text = value;
-                }
-                _onChanged(index, value);
-              },
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              onChanged: _onChanged,
               decoration: InputDecoration(
-                filled: true,
-                fillColor: Color(0xFFF4F4F4),
                 counterText: '',
-                contentPadding: EdgeInsets.symmetric(vertical: 20.h), // Use ScreenUtil for padding
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.r), // Use ScreenUtil for border radius
-                  borderSide: BorderSide.none,
-                ),
-              ),
-              style: TextStyle(
-                fontSize: 24.sp, // Use ScreenUtil for font size
+                border: InputBorder.none,
               ),
             ),
-          );
-        }),
+          ),
+        ],
       ),
     );
   }
+
+  Widget _buildInputBox(int index) {
+    bool isFocused = _controller.text.length == index;
+    bool hasValue = index < _controller.text.length;
+
+    return Container(
+      width: widget.itemWidth.w,
+      height: widget.itemHeight.h,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: isFocused ? Colors.transparent : widget.fillColor,
+        borderRadius: BorderRadius.circular(10.r),
+        border: isFocused
+            ? Border.all(
+          color: widget.focusedBorderColor,
+          width: 2,
+        )
+            : null,
+      ),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Text(
+            hasValue ? _codeList[index] : '',
+            style: TextStyle(fontSize: 24.sp),
+          ),
+          if (widget.showCursor && isFocused)
+            _buildCursor(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCursor() {
+    return VerificationBoxCursor(
+      color: widget.cursorColor,
+      width: 2,
+      indent: 10,
+      endIndent: 10,
+    );
+  }
 }
+

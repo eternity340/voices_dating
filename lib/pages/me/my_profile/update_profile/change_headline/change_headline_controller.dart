@@ -1,9 +1,13 @@
 import 'package:dio/dio.dart' as dio;
 import 'package:dio/dio.dart';
+import 'package:first_app/constants/constant_data.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import '../../../../../entity/token_entity.dart';
 import '../../../../../entity/user_data_entity.dart';
+import '../../../../../net/api_constants.dart';
+import '../../../../../net/dio.client.dart';
+import '../../../../../routes/app_routes.dart';
 
 class ChangeHeadlineController extends GetxController {
   final TextEditingController headlineController = TextEditingController();
@@ -15,33 +19,40 @@ class ChangeHeadlineController extends GetxController {
 
   Future<void> updateHeadline(TokenEntity tokenEntity, UserDataEntity userData) async {
     try {
-      // Send API request
-      dio.Response response = await Dio().post(
-        'https://api.masonvips.com/v1/update_profile',
+      await DioClient.instance.requestNetwork<UserDataEntity>(
+        method: Method.post,
+        url: ApiConstants.updateProfile,
         options: Options(
           headers: {
             'token': tokenEntity.accessToken,
             'Content-Type': 'application/x-www-form-urlencoded',
           },
         ),
-        data: {
+        params: {
           'user[headline]': headlineController.text,
         },
+        onSuccess: (data) async {
+          if (data != null) {
+            userData.headline = headlineController.text;
+            Get.snackbar(ConstantData.successText, ConstantData.successUpdateProfile);
+            await Future.delayed(Duration(seconds: 2));
+            Get.toNamed(AppRoutes.meMyProfile, arguments: {
+              'token': tokenEntity,
+              'userData': userData
+            });
+          } else {
+            Get.snackbar(ConstantData.errorText, ConstantData.failedUpdateProfile);
+          }
+        },
+        onError: (code, msg, data) {
+          Get.snackbar(ConstantData.errorText, ConstantData.failedUpdateProfile);
+        },
       );
-      // Check response status
-      if (response.data['code'] == 200) {
-        userData.headline = headlineController.text;
-        Get.snackbar('Success', 'Headline updated successfully');
-        await Future.delayed(Duration(seconds: 2)); // 等待2秒以显示弹框
-        Get.toNamed('/me/my_profile', arguments: {'token': tokenEntity, 'userData': userData});
-      } else {
-        // Show error message
-        Get.snackbar('Error', 'Failed to update headline');
-      }
     } catch (e) {
-      Get.snackbar('Error', 'Failed to update headline');
+      Get.snackbar(ConstantData.errorText, ConstantData.failedUpdateProfile);
     }
   }
+
 
   @override
   void onClose() {

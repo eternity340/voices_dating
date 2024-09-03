@@ -1,3 +1,4 @@
+import 'package:first_app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -18,7 +19,7 @@ class UserDetailCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.toNamed('/home/profile_detail', arguments: {
+        Get.toNamed(AppRoutes.homeProfileDetail, arguments: {
           'userEntity': userEntity,
           'tokenEntity': tokenEntity,
         });
@@ -86,7 +87,7 @@ class UserDetailCard extends StatelessWidget {
                           Row(
                             children: [
                               Text(
-                                userEntity.username ?? 'Unknown',
+                                userEntity.username ?? ConstantData.unKnowText,
                                 style: ConstantStyles.usernameDetailTextStyle,
                                 textAlign: TextAlign.left,
                               ),
@@ -105,7 +106,7 @@ class UserDetailCard extends StatelessWidget {
                           Row(
                             children: [
                               Text(
-                                userEntity.location?.state ?? 'Unknown',
+                                userEntity.location?.state ?? ConstantData.unKnowText,
                                 style: ConstantStyles.locationTextStyle,
                               ),
                               SizedBox(width: 4.w),
@@ -115,7 +116,7 @@ class UserDetailCard extends StatelessWidget {
                               ),
                               SizedBox(width: 4.w),
                               Text(
-                                userEntity.age?.toString() ?? 'Unknown',
+                                userEntity.age?.toString() ?? ConstantData.unKnowText,
                                 style: ConstantStyles.locationTextStyle,
                               ),
                             ],

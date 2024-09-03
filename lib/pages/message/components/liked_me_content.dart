@@ -1,3 +1,4 @@
+import 'package:first_app/constants/constant_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -42,7 +43,7 @@ class _ViewedMeContentState extends State<LikedMeContent> {
           _refreshController.finishRefresh();
         },
         child: widget.controller.likedMeUsers.isEmpty
-            ? Center(child: Text('No one has liked you yet.'))
+            ? Center(child: Text(ConstantData.noOneLikedMeText))
             : ListView.builder(
           itemCount: widget.controller.likedMeUsers.length,
           itemBuilder: (context, index) {
@@ -85,17 +86,20 @@ class _ViewedMeContentState extends State<LikedMeContent> {
                   top: 30.h,
                   child: Row(
                     children: [
-                      VerifiedTag(
-                        text: 'Superior',
-                        backgroundColor: Color(0xFFFFA6CB),
-                        textColor: Colors.black,
-                      ),
-                      SizedBox(width: 8.w),
-                      VerifiedTag(
-                        text: 'Photos verified',
-                        backgroundColor: Color(0xFFD7FAAD),
-                        textColor: Colors.black,
-                      ),
+                      if(user.member == '1')
+                        VerifiedTag(
+                          text: ConstantData.superiorText,
+                          backgroundColor: Color(0xFFFFA6CB),
+                          textColor: Colors.black,
+                        ),
+                      if(user.member == '1')
+                        SizedBox(width: 8.w),
+                      if(user.verified == '1')
+                        VerifiedTag(
+                          text: ConstantData.photosVerified,
+                          backgroundColor: Color(0xFFD7FAAD),
+                          textColor: Colors.black,
+                        ),
                     ],
                   ),
                 ),

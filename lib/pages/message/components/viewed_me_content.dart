@@ -4,8 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:first_app/constants/Constant_styles.dart';
 import '../../../components/verified_tag.dart';
+import '../../../constants/constant_data.dart';
 import '../../../entity/list_user_entity.dart';
 import '../../../entity/chatted_user_entity.dart';
+import '../../../routes/app_routes.dart';
 import '../message_controller.dart';
 
 class ViewedMeContent extends StatefulWidget {
@@ -85,17 +87,20 @@ class _ViewedMeContentState extends State<ViewedMeContent> {
                   top: 30.h,
                   child: Row(
                     children: [
-                      VerifiedTag(
-                        text: 'Superior',
-                        backgroundColor: Color(0xFFFFA6CB),
-                        textColor: Colors.black,
-                      ),
+                      if(user.member == '1')
+                        VerifiedTag(
+                          text: ConstantData.superiorText,
+                          backgroundColor: Color(0xFFFFA6CB),
+                          textColor: Colors.black,
+                        ),
+                      if(user.member == '1')
                       SizedBox(width: 8.w),
-                      VerifiedTag(
-                        text: 'Photos verified',
-                        backgroundColor: Color(0xFFD7FAAD),
-                        textColor: Colors.black,
-                      ),
+                      if(user.verified == '1')
+                        VerifiedTag(
+                          text: ConstantData.photosVerified,
+                          backgroundColor: Color(0xFFD7FAAD),
+                          textColor: Colors.black,
+                        ),
                     ],
                   ),
                 ),
@@ -119,7 +124,7 @@ class _ViewedMeContentState extends State<ViewedMeContent> {
       avatar: user.avatar,
     );
 
-    Get.toNamed('/message/private_chat', arguments: {
+    Get.toNamed(AppRoutes.messagePrivateChat, arguments: {
       'token': widget.controller.tokenEntity,
       'chattedUser': chattedUser,
       'userData':widget.controller.userDataEntity

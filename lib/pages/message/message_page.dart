@@ -27,8 +27,8 @@ class _MessagePageState extends State<MessagePage> {
   void initState() {
     super.initState();
     final TokenEntity tokenEntity = Get.arguments['token'] as TokenEntity;
-    final UserDataEntity? userData = Get.arguments['userData'] as UserDataEntity?;
-    controller = Get.put(MessageController(tokenEntity, userData!));
+    final UserDataEntity userData = Get.arguments['userData'] as UserDataEntity;
+    controller = Get.put(MessageController(tokenEntity, userData));
     final GlobalService globalService = Get.find();
     ever(globalService.needRefresh, (needRefresh) {
       if (needRefresh) {
@@ -109,11 +109,10 @@ class _MessagePageState extends State<MessagePage> {
                     ),
                   ),
                 ),
-                if (controller.userDataEntity != null)
-                  AllNavigationBar(
-                    tokenEntity: controller.tokenEntity,
-                    userData: controller.userDataEntity,
-                  ),
+                AllNavigationBar(
+                  tokenEntity: controller.tokenEntity,
+                  userData: controller.userDataEntity,
+                ),
               ],
             ),
           );

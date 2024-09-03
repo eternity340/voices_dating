@@ -26,7 +26,7 @@ class ProfileMomentsController extends GetxController {
   Future<void> fetchMoments() async {
     DioClient().requestNetwork<List<MomentEntity>>(
       method: Method.get,
-      url: 'https://api.masonvips.com/v1/timelines',
+      url: ApiConstants.timelines,
       queryParameters: {
         'profId': userEntity.userId,
       },

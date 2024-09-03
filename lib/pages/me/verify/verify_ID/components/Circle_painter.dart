@@ -13,15 +13,12 @@ class CirclePainter extends CustomPainter {
     final double radius = size.width / 2;
     final double centerX = size.width / 2;
     final double centerY = size.height / 2;
-
-    // 绘制矩形
-    final double rectWidth = 11.06.w;
+    final double rectWidth = 18.06.w;
     final double rectHeight = 2.h;
     final double rectRadius = 1.w;
     final double distanceFromCircle = 9.h;
 
     for (int i = 0; i < rectColors.length; i++) {
-      // 从12点开始计算角度
       final double angle = (i * 4 * (math.pi / 180)) - (math.pi / 2);
       final double rectCenterX = centerX + (radius + distanceFromCircle + rectHeight / 2) * math.cos(angle);
       final double rectCenterY = centerY + (radius + distanceFromCircle + rectHeight / 2) * math.sin(angle);
@@ -29,14 +26,12 @@ class CirclePainter extends CustomPainter {
       final Paint rectPaint = Paint()
         ..color = rectColors[i]
         ..style = PaintingStyle.fill;
-
-      // 矩形缩放
       final double scale = rectScales[i];
 
       canvas.save();
       canvas.translate(rectCenterX, rectCenterY);
       canvas.rotate(angle);
-      canvas.scale(scale, scale); // 放大
+      canvas.scale(scale, scale);
       final RRect rRect = RRect.fromRectAndRadius(
         Rect.fromCenter(center: Offset(0, 0), width: rectWidth, height: rectHeight),
         Radius.circular(rectRadius),

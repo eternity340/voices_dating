@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:crypto/crypto.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -121,6 +122,20 @@ class CommonUtils{
       Get.back();
     }
   }
+
+  static Widget loadingIndicator({
+    Color color = Colors.grey,
+    double radius = 15.0,
+  }) {
+    return Center(
+      child: CupertinoActivityIndicator(
+        radius: radius,
+        color: color,
+      ),
+    );
+  }
+
+
 
 
   static SnackbarController showSnackBar(String message,

@@ -25,7 +25,7 @@ class AboutMePage extends StatelessWidget {
             child: Container(),
           ),
           Positioned(
-            left: 142.w,
+            left: 132.w,
             top: 139.h,
             child: Container(
               width: 91.w,

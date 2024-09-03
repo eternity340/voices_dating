@@ -1,5 +1,5 @@
 import 'dart:ui';
-
+import 'package:common_utils/common_utils.dart';
 import 'package:first_app/constants/constant_styles.dart';
 import 'package:first_app/pages/me/photo/photo_controller.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +35,7 @@ class PhotoPage extends StatelessWidget {
                     child: Column(
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(top: 100.0.h, left: 38.0.w, right: 38.0.w),
+                          padding: EdgeInsets.only(top: 100.0.h, left: 28.0.w, right: 28.0.w),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -46,7 +46,7 @@ class PhotoPage extends StatelessWidget {
                         ),
                         if (controller.userData.photos != null)
                           Padding(
-                            padding: EdgeInsets.only(top: 24.0.h, left: 38.0.w, right: 38.0.w),
+                            padding: EdgeInsets.only(top: 24.0.h, left: 28.0.w, right: 28.0.w),
                             child: Wrap(
                               spacing: 24.w,
                               runSpacing: 24.h,
@@ -80,7 +80,7 @@ class PhotoPage extends StatelessWidget {
         if (controller.tokenEntity.accessToken != null) {
           showOptions(context, controller.tokenEntity.accessToken!, controller);
         } else {
-          print('AccessToken is null');
+          LogUtil.e(ConstantData.errorTokenInvalid);
         }
       },
       child: Container(
@@ -192,11 +192,11 @@ class PhotoPage extends StatelessWidget {
           photoUrl: photoUrl,
           attachId: attachId,
           onDelete: () async {
-            await controller.deletePhoto(controller.tokenEntity.accessToken!, attachId);
+            await controller.deletePhoto(attachId);
             Navigator.of(context).pop();
           },
           onSetting: () async {
-            await controller.setAvatar(controller.tokenEntity.accessToken!, attachId);
+            await controller.setAvatar(attachId);
             Navigator.of(context).pop();
           },
         );
