@@ -153,6 +153,7 @@ class ApiConstants{
   static const String syncSignIn = "$urlVersion/sync/signin";
   static const String universalPopup = "$urlVersion/universal/popup";
   static const String getS3UploadUrl = "$urlVersion/s3/uploading/signed/url";
+  static const String getReplaceWords = "$urlVersion/get/replace/words";
 
   // static String baseUrl = kReleaseMode?debugUrl:debugUrl;
   //

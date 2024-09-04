@@ -1,4 +1,3 @@
-//Edit by Connor - Flutter 扩展实例
 extension StringEx on String?{
 
   bool get isNullOrEmpty{

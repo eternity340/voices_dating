@@ -7,6 +7,7 @@ import 'package:dio/dio.dart' as dio;
 import '../entity/moment_entity.dart';
 import '../net/dio.client.dart';
 import '../utils/log_util.dart';
+import '../utils/replace_word_util.dart';
 
 class GlobalService extends GetxController {
   RxBool needRefresh = false.obs;
@@ -57,10 +58,16 @@ class GlobalService extends GetxController {
         options: Options(headers: {'token': accessToken}),
       );
 
-      if (response.statusCode == 200) {
+      if (response.data['code'] == 200) {
         final jsonData = response.data;
         if (jsonData['code'] == 200 && jsonData['data'] != null) {
-          return UserDataEntity.fromJson(jsonData['data']);
+          ReplaceWordUtil replaceWordUtil = ReplaceWordUtil.getInstance();
+          await replaceWordUtil.getReplaceWord();
+          UserDataEntity userData = UserDataEntity.fromJson(jsonData['data']);
+          userData.username = replaceWordUtil.replaceWords(userData.username);
+          userData.headline = replaceWordUtil.replaceWords(userData.headline);
+          userData.about = replaceWordUtil.replaceWords(userData.about);
+          return userData;
         } else {
           LogUtil.e(message: '${jsonData['message']}');
         }
@@ -68,7 +75,7 @@ class GlobalService extends GetxController {
         LogUtil.e(message: '${response.statusCode}');
       }
     } catch (e) {
-      LogUtil.e(message:'$e');
+      LogUtil.e(message:e.toString());
     }
     return null;
   }

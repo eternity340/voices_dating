@@ -1,3 +1,4 @@
+import 'package:first_app/constants/constant_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -7,16 +8,17 @@ void showCommonActionDialog(
       bool isNeedGetBack = true,
       selectItemCount = 2,
       List<String> selectItemTitle = const [
-        "Take a photo",
-        "Choose from library"
+        ConstantData.takePhotoText,
+        ConstantData.fromAlbumText
       ]}) {
   Get.bottomSheet(Container(
     padding: EdgeInsets.only(bottom: 16.h),
-    height:Get.height, // 设置高度为屏幕高度的一半
+    height:Get.height,
     decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
-            topRight: Radius.circular(26.sp), topLeft: Radius.circular(26.sp))),
+            topRight: Radius.circular(26.sp),
+            topLeft: Radius.circular(26.sp))),
     child: Column(
       mainAxisSize: MainAxisSize.min,
       children: List.generate(selectItemCount + 1, (index) {
@@ -36,7 +38,7 @@ void showCommonActionDialog(
               width: 1.sw - 32.w,
               alignment: Alignment.center,
               child: Text(
-                "Cancel",
+                ConstantData.cancelText,
                 style: TextStyle(
                     fontSize: 18.sp, color: Colors.black, wordSpacing: 0.64.w),
               ),

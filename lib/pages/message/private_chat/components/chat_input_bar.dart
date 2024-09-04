@@ -1,5 +1,6 @@
-
+import 'package:common_utils/common_utils.dart';
 import 'package:dio/dio.dart';
+import 'package:first_app/constants/Constant_styles.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,6 +13,7 @@ import '../../../../components/bottom_options.dart';
 import '../../../../constants/constant_data.dart';
 import '../../../../entity/chatted_user_entity.dart';
 import '../../../../entity/token_entity.dart';
+import '../../../../image_res/image_res.dart';
 import '../../../../service/audio_service.dart';
 import '../../../../service/im_service.dart';
 
@@ -34,30 +36,30 @@ class ChatInputBar extends StatefulWidget {
 }
 
 class _ChatInputBarState extends State<ChatInputBar> {
-  bool _isVoiceMode = false;
-  FlutterSoundRecorder? _recorder = FlutterSoundRecorder();
-  bool _isRecording = false;
-  final GlobalKey _recordButtonKey = GlobalKey();
-  final GlobalKey _cancelAreaKey = GlobalKey();
-  final Uuid _uuid = const Uuid();
-  OverlayEntry? _overlayEntry;
-  bool _isCancelling = false;
-  final double _cancelAreaRatio = 0.3;
-  final AudioService _audioService = AudioService.instance;
+  bool isVoiceMode = false;
+  FlutterSoundRecorder? recorder = FlutterSoundRecorder();
+  bool isRecording = false;
+  final GlobalKey recordButtonKey = GlobalKey();
+  final GlobalKey cancelAreaKey = GlobalKey();
+  final Uuid uuid = const Uuid();
+  OverlayEntry? overlayEntry;
+  bool isCancelling = false;
+  final double cancelAreaRatio = 0.3;
+  final AudioService audioService = AudioService.instance;
 
   @override
   void initState() {
     super.initState();
-    _recorder = FlutterSoundRecorder();
-    _initRecorder();
-    _initAudioService();
+    recorder = FlutterSoundRecorder();
+    initRecorder();
+    initAudioService();
     WidgetsBinding.instance.addPostFrameCallback((_) {
     });
   }
 
-  Future<void> _initAudioService() async {
+  Future<void> initAudioService() async {
     try {
-      await _audioService.initRecorder();
+      await audioService.initRecorder();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to initialize audio: $e')),
@@ -66,10 +68,10 @@ class _ChatInputBarState extends State<ChatInputBar> {
   }
 
 
-  Future<void> _initRecorder() async {
+  Future<void> initRecorder() async {
     final status = await Permission.microphone.request();
     if (status.isGranted) {
-      await _recorder!.openRecorder();
+      await recorder!.openRecorder();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Microphone permission is required')),
@@ -99,24 +101,26 @@ class _ChatInputBarState extends State<ChatInputBar> {
             top: 15.5.h,
             child: IconButton(
               icon: Image.asset(
-                _isVoiceMode ? 'assets/images/icon_chat_message.png' : 'assets/images/icon_chat_voice.png',
+                isVoiceMode
+                    ? ImageRes.iconChatMessagePath
+                    : ImageRes.iconChatVoiceImagePath,
                 width: 18.w,
                 height: 18.h,
               ),
               onPressed: _toggleInputMode,
             ),
           ),
-          if (_isVoiceMode)
+          if (isVoiceMode)
             Positioned(
               left: 70.w,
               top: 12.h,
               child: GestureDetector(
-                key: _recordButtonKey,
-                onLongPressDown: _onLongPressDown,
-                onLongPressUp: _onLongPressUp,
-                onLongPressStart: _onLongPressStart,
-                onLongPressEnd: _onLongPressEnd,
-                onLongPressMoveUpdate: _onLongPressMoveUpdate,
+                key: recordButtonKey,
+                onLongPressDown: onLongPressDown,
+                onLongPressUp: onLongPressUp,
+                onLongPressStart: onLongPressStart,
+                onLongPressEnd: onLongPressEnd,
+                onLongPressMoveUpdate: onLongPressMoveUpdate,
                 child: Container(
                   width: 185.w,
                   height: 49.h,
@@ -130,14 +134,8 @@ class _ChatInputBarState extends State<ChatInputBar> {
                   ),
                   child: Center(
                     child: Text(
-                      "Hold to Talk",
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        fontFamily: ConstantData.fontPoppins,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                        letterSpacing: 2.0,
-                      ),
+                      ConstantData.holdToTalkText,
+                      style: ConstantStyles.optionSelectedTextStyle,
                     ),
                   ),
                 ),
@@ -157,15 +155,10 @@ class _ChatInputBarState extends State<ChatInputBar> {
                 child: TextField(
                   controller: widget.textController,
                   decoration: InputDecoration(
-                    hintText: "Send a message…",
+                    hintText: ConstantData.sendMessageText,
                     filled: true,
                     fillColor: Colors.transparent,
-                    hintStyle: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w500,
-                      fontSize: 12.sp,
-                      color: const Color(0xFF8E8E93),
-                    ),
+                    hintStyle: ConstantStyles.sectionTitle,
                     contentPadding: EdgeInsets.symmetric(horizontal: 10.w),
                     border: InputBorder.none,
                   ),
@@ -173,11 +166,11 @@ class _ChatInputBarState extends State<ChatInputBar> {
               ),
             ),
           Positioned(
-            left: 270.w,
+            left: 260.w,
             top: 15.h,
             child: IconButton(
               icon: Image.asset(
-                'assets/images/icon_chat_photo.png',
+                ImageRes.iconChatPhotoImagePath,
                 width: 24.w,
                 height: 24.h,
               ),
@@ -188,25 +181,25 @@ class _ChatInputBarState extends State<ChatInputBar> {
                   isScrollControlled: true,
                   builder: (context) => BottomOptions(
                     onFirstPressed: () async {
-                      await _pickAndUploadPhoto(context, ImageSource.camera);
+                      await pickAndUploadPhoto(context, ImageSource.camera);
                       Navigator.pop(context);
                     },
                     onSecondPressed: () async {
-                      await _pickAndUploadPhoto(context, ImageSource.gallery);
+                      await pickAndUploadPhoto(context, ImageSource.gallery);
                       Navigator.pop(context);
                     },
                     onCancelPressed: () {
                       Navigator.pop(context);
                     },
-                    firstText: 'Take Photo',
-                    secondText: 'From Album',
+                    firstText: ConstantData.takePhotoText,
+                    secondText: ConstantData.fromAlbumText,
                   ),
                 );
               },
             ),
           ),
           Positioned(
-            right: 20.w,
+            right: 10.w,
             top: 15.h,
             child: IconButton(
               icon: const Icon(Icons.send, color: Colors.black),
@@ -217,7 +210,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
             left: 20.w,
             top: 564.h,
             child: Container(
-              key: _cancelAreaKey,
+              key: cancelAreaKey,
               width: 76.w,
               height: 76.h,
               decoration: BoxDecoration(
@@ -226,7 +219,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
               ),
               child: const Center(
                 child: Text(
-                  "Cancel",
+                  ConstantData.cancelText,
                   style: TextStyle(color: Colors.white),
                 ),
               ),
@@ -237,8 +230,8 @@ class _ChatInputBarState extends State<ChatInputBar> {
     );
   }
 
-  void _createOverlay() {
-    _overlayEntry = OverlayEntry(
+  void createOverlay() {
+    overlayEntry = OverlayEntry(
       builder: (context) => Positioned.fill(
         child: StatefulBuilder(
           builder: (context, setState) {
@@ -259,13 +252,15 @@ class _ChatInputBarState extends State<ChatInputBar> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
-                            _isCancelling ? Icons.close : Icons.mic,
+                            isCancelling ? Icons.close : Icons.mic,
                             color: Colors.white,
                             size: 50.sp,
                           ),
                           SizedBox(height: 10.h),
                           Text(
-                            _isCancelling ? "Release to cancel" : "Slide up to cancel",
+                            isCancelling
+                                ? ConstantData.releaseCancelText
+                                : ConstantData.slideUpText,
                             style: TextStyle(color: Colors.white, fontSize: 16.sp),
                           ),
                         ],
@@ -279,60 +274,58 @@ class _ChatInputBarState extends State<ChatInputBar> {
         ),
       ),
     );
-    Overlay.of(context).insert(_overlayEntry!);
+    Overlay.of(context).insert(overlayEntry!);
   }
 
-  void _removeOverlay() {
-    if (_overlayEntry != null) {
-      _overlayEntry!.remove();
-      _overlayEntry = null;
+  void removeOverlay() {
+    if (overlayEntry != null) {
+      overlayEntry!.remove();
+      overlayEntry = null;
     }
   }
 
 
-  void _onLongPressDown(LongPressDownDetails details) {
+  void onLongPressDown(LongPressDownDetails details) {
     setState(() {
-      _isCancelling = false;
+      isCancelling = false;
     });
   }
 
-  void _onLongPressUp() {
-    _removeOverlay();
+  void onLongPressUp() {
+    removeOverlay();
   }
 
-  void _onLongPressStart(LongPressStartDetails details) async {
+  void onLongPressStart(LongPressStartDetails details) async {
     setState(() {
-      _isRecording = true;
+      isRecording = true;
     });
-    _createOverlay();
+    createOverlay();
     try {
-      await _audioService.startRecording();
+      await audioService.startRecording();
     } catch (e) {
-      debugPrint('Error starting recorder: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to start recording: $e')),
+        SnackBar(content: Text(e.toString())),
       );
     }
   }
 
-  void _onLongPressEnd(LongPressEndDetails details) async {
-    _removeOverlay();
-    if (_isRecording) {
+  void onLongPressEnd(LongPressEndDetails details) async {
+    removeOverlay();
+    if (isRecording) {
       try {
-        final path = await _audioService.stopRecording();
-        if (!_isCancelling) {
+        final path = await audioService.stopRecording();
+        if (!isCancelling) {
           if (path != null && path.isNotEmpty) {
             final voiceFile = XFile(path);
-            debugPrint('Recording stopped: $path');
+            LogUtil.d(path);
             await uploadVoice(voiceFile);
           } else {
-            debugPrint('Recording path is null or empty');
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Recording failed, path is empty')),
             );
           }
         } else {
-          debugPrint('Recording cancelled');
+          LogUtil.e('Recording cancelled');
         }
       } catch (e) {
         debugPrint('Failed to stop recording: $e');
@@ -343,26 +336,26 @@ class _ChatInputBarState extends State<ChatInputBar> {
     }
 
     setState(() {
-      _isRecording = false;
-      _isCancelling = false;
+      isRecording = false;
+      isCancelling = false;
     });
   }
 
-  void _onLongPressMoveUpdate(LongPressMoveUpdateDetails details) {
+  void onLongPressMoveUpdate(LongPressMoveUpdateDetails details) {
     final screenHeight = MediaQuery.of(context).size.height;
     final offsetY = details.localOffsetFromOrigin.dy;
 
-    bool newIsCancelling = offsetY < -screenHeight * _cancelAreaRatio;
-    if (newIsCancelling != _isCancelling) {
+    bool newIsCancelling = offsetY < -screenHeight * cancelAreaRatio;
+    if (newIsCancelling != isCancelling) {
       setState(() {
-        _isCancelling = newIsCancelling;
+        isCancelling = newIsCancelling;
       });
-      _overlayEntry?.markNeedsBuild();
+      overlayEntry?.markNeedsBuild();
     }
   }
 
 
-  Future<void> _pickAndUploadPhoto(BuildContext context, ImageSource source) async {
+  Future<void> pickAndUploadPhoto(BuildContext context, ImageSource source) async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     Permission permission = source == ImageSource.camera ? Permission.camera : Permission.photos;
 
@@ -370,7 +363,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
       final ImagePicker picker = ImagePicker();
       final XFile? image = await picker.pickImage(source: source);
       if (image != null) {
-        var localId = _uuid.v4().toString();
+        var localId = uuid.v4().toString();
         var success = await uploadImage(image, localId);
         if (success) {
           scaffoldMessenger.showSnackBar(
@@ -445,7 +438,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
         var attachId = response.data['data'][0]['attachId'].toString();
         var voiceUrl = response.data['data'][0]['url'].toString();
         var receiverId = widget.chattedUserEntity.userId;
-        var localId = _uuid.v4().toString();
+        var localId = uuid.v4().toString();
         return await IMService().sendVoice(
           attachId: attachId,
           voiceUrl: voiceUrl,
@@ -475,15 +468,15 @@ class _ChatInputBarState extends State<ChatInputBar> {
 
   void _toggleInputMode() {
     setState(() {
-      _isVoiceMode = !_isVoiceMode;
+      isVoiceMode = !isVoiceMode;
     });
   }
 
   @override
   void dispose() {
-    _removeOverlay();
-    _recorder!.closeRecorder();
-    _recorder = null;
+    removeOverlay();
+    recorder!.closeRecorder();
+    recorder = null;
     super.dispose();
   }
 }

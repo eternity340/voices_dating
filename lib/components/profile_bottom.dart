@@ -31,7 +31,7 @@ class _ProfileBottomState extends State<ProfileBottom> {
   late String _gradientButtonText;
   late String _gradientButtonIcon;
   late VoidCallback _gradientButtonAction;
-  String _currentMode = 'wink';
+  String _currentMode = ConstantData.winkButton;
   final Color _selectedColor = kPrimaryColor;
 
   @override
@@ -44,7 +44,7 @@ class _ProfileBottomState extends State<ProfileBottom> {
     _gradientButtonText = widget.initialGradientButtonText;
     _gradientButtonIcon = ImageRes.iconLoveInactive;
     _gradientButtonAction = widget.onInitialGradientButtonPressed;
-    _currentMode = 'wink';
+    _currentMode = ConstantData.winkButton;
   }
 
   void _setGradientButton(String mode, String text, String icon, VoidCallback action) {
@@ -94,7 +94,7 @@ class _ProfileBottomState extends State<ProfileBottom> {
                     ImageRes.imagePathIconCall,
                     width: 24.w,
                     height: 43.5.h,
-                    color: _currentMode == 'call' ? _selectedColor : null,
+                    color: _currentMode == ConstantData.callButton ? _selectedColor : null,
                   ),
                 ),
               ),
@@ -103,7 +103,7 @@ class _ProfileBottomState extends State<ProfileBottom> {
                 top: 14.h,
                 child: GestureDetector(
                   onTap: () => _setGradientButton(
-                      'chat',
+                      ConstantData.chatButton,
                       ConstantData.chatButton,
                       ImageRes.iconChatInactive,
                       widget.onChatButtonPressed
@@ -112,7 +112,9 @@ class _ProfileBottomState extends State<ProfileBottom> {
                     ImageRes.imagePathIconChat,
                     width: 24.w,
                     height: 43.5.h,
-                    color: _currentMode == 'chat' ? _selectedColor : null,
+                    color: _currentMode == ConstantData.chatButton
+                        ? _selectedColor
+                        : null,
                   ),
                 ),
               ),

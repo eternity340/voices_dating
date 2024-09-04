@@ -10,7 +10,7 @@ class PhotoDialog extends StatefulWidget {
   final String attachId;
   final VoidCallback? onDelete;
   final VoidCallback? onSetting;
-  final bool showSettings; // New property to control visibility of settings
+  final bool showSettings;
 
   const PhotoDialog({
     Key? key,
@@ -18,7 +18,7 @@ class PhotoDialog extends StatefulWidget {
     required this.attachId,
     required this.onDelete,
     required this.onSetting,
-    this.showSettings = true, // Default value is true
+    this.showSettings = true,
   }) : super(key: key);
 
   @override
@@ -138,8 +138,8 @@ class _PhotoDialogState extends State<PhotoDialog> {
           ),
           if (widget.showSettings)
             Positioned(
-              top: 640.h, // Adjusted top position
-              left: 265.w, // Adjusted left position
+              top: 640.h,
+              left: 265.w,
               child: Container(
                 width: 100.w,
                 height: 40.h,

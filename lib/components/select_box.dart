@@ -21,18 +21,18 @@ class SelectBox extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: double.infinity,
-        height: 69.h, // 使用ScreenUtil来适配高度
+        height: 69.h,
         decoration: BoxDecoration(
           color: isSelected ? Colors.transparent : Color(0xFFF8F8F9),
-          borderRadius: BorderRadius.circular(10.r), // 使用ScreenUtil来适配圆角
+          borderRadius: BorderRadius.circular(10.r),
           border: isSelected
-              ? Border.all(color: Color(0xFFABFFCF), width: 2.w) // 使用ScreenUtil来适配边框宽度
+              ? Border.all(color: Color(0xFFABFFCF), width: 2.w)
               : null,
         ),
         child: Row(
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w), // 使用ScreenUtil来适配内边距
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Text(
                 text,
                 style: ConstantStyles.selectBoxTextStyle,
@@ -40,11 +40,11 @@ class SelectBox extends StatelessWidget {
             ),
             Spacer(),
             Container(
-              width: 28.w, // 使用ScreenUtil来适配宽度
-              height: 28.h, // 使用ScreenUtil来适配高度
+              width: 28.w,
+              height: 28.h,
               decoration: BoxDecoration(
                 color: isSelected ? Color(0xFFAAFCCF) : Color(0xFFE1E1E1),
-                borderRadius: BorderRadius.circular(14.r), // 使用ScreenUtil来适配圆角
+                borderRadius: BorderRadius.circular(14.r),
               ),
               child: isSelected
                   ? const Center(
@@ -56,7 +56,7 @@ class SelectBox extends StatelessWidget {
               )
                   : null,
             ),
-            SizedBox(width: 16.w), // 使用ScreenUtil来适配宽度
+            SizedBox(width: 16.w),
           ],
         ),
       ),

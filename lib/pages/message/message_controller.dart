@@ -10,6 +10,7 @@
   import '../../../utils/log_util.dart';
   import '../../net/api_constants.dart';
   import '../../service/im_service.dart';
+import '../../utils/replace_word_util.dart';
 
   class MessageController extends GetxController {
     final TokenEntity tokenEntity;
@@ -29,7 +30,7 @@
     void onInit() {
       super.onInit();
       fetchChattedUsers();
-      getVisitedMeUsers();
+      getViewedMeUsers();
       getLikedMeUsers();
       connectWebSocket();
     }
@@ -103,23 +104,43 @@
             'token': tokenEntity.accessToken,
           },
         ));
-        dioClient.requestNetwork<List<ChattedUserEntity>>(
+
+        await dioClient.requestNetwork<List<ChattedUserEntity>>(
           method: Method.get,
           url: ApiConstants.chattedUsers,
           onSuccess: (data) {
-            chattedUsers = data!;
-            update();
+            if (data != null) {
+              ReplaceWordUtil replaceWordUtil = ReplaceWordUtil.getInstance();
+              replaceWordUtil.getReplaceWord();
+              chattedUsers = data.map((user) {
+                user.lastmessage = replaceWordUtil.replaceWords(user.lastmessage);
+                user.username = replaceWordUtil.replaceWords(user.username);
+                return user;
+              }).toList();
+              update();
+            }
           },
           onError: (code, msg, data) {
-            LogUtil.e(message: 'Fetch error: $msg');
+            LogUtil.e(message:msg);
           },
         );
       } catch (e) {
-        LogUtil.e(message: 'Fetch error: $e');
+        LogUtil.e(message:e.toString());
       }
     }
 
-    Future<void> getVisitedMeUsers() async {
+
+    String replaceWords(String? text) {
+      if (text == null || text.isEmpty) return '';
+
+      ReplaceWordUtil.words.forEach((key, value) {
+        text = text!.replaceAll(key, value);
+      });
+
+      return text!;
+    }
+
+    Future<void> getViewedMeUsers() async {
       try {
         DioClient dioClient = DioClient();
         dioClient.init(options: BaseOptions(
@@ -128,12 +149,19 @@
           },
         ));
 
-        dioClient.requestNetwork<List<dynamic>>(
+        await dioClient.requestNetwork<List<dynamic>>(
           method: Method.get,
           url: ApiConstants.visiteMeUsers,
           onSuccess: (data) {
             if (data != null) {
-              visitedMeUsers.value = data.map((json) => ListUserEntity.fromJson(json)).toList();
+              ReplaceWordUtil replaceWordUtil = ReplaceWordUtil.getInstance();
+              replaceWordUtil.getReplaceWord();
+              visitedMeUsers.value = data.map((json) {
+                ListUserEntity user = ListUserEntity.fromJson(json);
+                user.username = replaceWordUtil.replaceWords(user.username);
+                return user;
+              }).toList();
+
               update();
             }
           },
@@ -142,7 +170,7 @@
           },
         );
       } catch (e) {
-        LogUtil.e(message:e.toString());
+        LogUtil.e(message: e.toString());
       }
     }
 
@@ -155,12 +183,19 @@
           },
         ));
 
-        dioClient.requestNetwork<List<dynamic>>(
+        await dioClient.requestNetwork<List<dynamic>>(
           method: Method.get,
           url: ApiConstants.likeMeUser,
           onSuccess: (data) {
             if (data != null) {
-              likedMeUsers.value = data.map((json) => ListUserEntity.fromJson(json)).toList();
+              ReplaceWordUtil replaceWordUtil = ReplaceWordUtil.getInstance();
+              replaceWordUtil.getReplaceWord();
+              likedMeUsers.value = data.map((json) {
+                ListUserEntity user = ListUserEntity.fromJson(json);
+                user.username = replaceWordUtil.replaceWords(user.username);
+                return user;
+              }).toList();
+
               update();
             }
           },
@@ -169,7 +204,7 @@
           },
         );
       } catch (e) {
-        LogUtil.e(message:e.toString());
+        LogUtil.e(message: e.toString());
       }
     }
 

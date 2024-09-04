@@ -40,7 +40,7 @@ class _ViewedMeContentState extends State<ViewedMeContent> {
       return EasyRefresh(
         controller: _refreshController,
         onRefresh: () async {
-          await widget.controller.getVisitedMeUsers();
+          await widget.controller.getViewedMeUsers();
           _refreshController.finishRefresh();
         },
         child: widget.controller.visitedMeUsers.isEmpty

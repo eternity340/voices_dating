@@ -7,7 +7,6 @@ import '../../../entity/token_entity.dart';
 import '../../../entity/user_data_entity.dart';
 import '../../components/all_navigation_bar.dart';
 import '../../components/background.dart';
-import '../../image_res/image_res.dart';
 import '../../service/global_service.dart';
 import 'components/loading_overlay.dart';
 import 'components/message_content.dart';

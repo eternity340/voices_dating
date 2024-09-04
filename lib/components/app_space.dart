@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-//Edit by Connor - 封装用于设置水平/垂直方向的间距
 class RowSpace extends StatelessWidget{
   final double width;
 
