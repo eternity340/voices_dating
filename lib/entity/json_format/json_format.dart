@@ -3,6 +3,7 @@ import '../../utils/log_util.dart';
 import '../attach_result_entity.dart';
 import '../attachment_entity.dart';
 import '../badge_entity.dart';
+import '../block_member_entity.dart';
 import '../chat_status_entity.dart';
 import '../chatted_user_entity.dart';
 import '../city_entity.dart';
@@ -21,6 +22,7 @@ import '../prompt_no_photo_entity.dart';
 import '../pub_moment_result_entity.dart';
 import '../report_reason_item_entity.dart';
 import '../ret_entity.dart';
+import '../tag_entity.dart';
 import '../token_entity.dart';
 import '../universal_pop_entity.dart';
 import '../user_data_entity.dart';
@@ -38,7 +40,6 @@ void tryCatch(Function? f) {
   }
 }
 
-//Edit by Connor - 基于JsonToDart工具实现的JSON序列化/反序列化
 class FFConvert {
   FFConvert._();
 
@@ -110,7 +111,7 @@ M _generateItemOBJ<M>(String typeStr, dynamic jsonObj) {
     case 'PromptNoPhotoEntity':
       obj = PromptNoPhotoEntity.fromJson(jsonObj);
       break;
-    case 'WfUserDataEntity':
+    case 'UserDataEntity':
       obj = UserDataEntity.fromJson(jsonObj);
       break;
     case 'UserLocationEntity':
@@ -175,6 +176,12 @@ M _generateItemOBJ<M>(String typeStr, dynamic jsonObj) {
       break;
     case 'UniversalPopEntity':
       obj = UniversalPopEntity.fromJson(jsonObj);
+      break;
+    case 'BlockMemberEntity':
+      obj = BlockMemberEntity.fromJson(jsonObj);
+      break;
+    case 'TagEntity':
+      obj = TagEntity.fromJson(jsonObj);
       break;
     case 'Buttons':
       obj = Buttons.fromJson(jsonObj);
@@ -347,6 +354,18 @@ T _generateOBJList<T>(String typeStr, List data) {
       list = data
           .map<UniversalPopEntity>(
               (e) => _generateItemOBJ<UniversalPopEntity>(typeStr, e))
+          .toList();
+      break;
+    case 'BlockMemberEntity':
+      list = data
+          .map<BlockMemberEntity>(
+              (e) => _generateItemOBJ<BlockMemberEntity>(typeStr, e))
+          .toList();
+      break;
+    case 'TagEntity':
+      list = data
+          .map<TagEntity>(
+              (e) => _generateItemOBJ<TagEntity>(typeStr, e))
           .toList();
       break;
     case 'Buttons':

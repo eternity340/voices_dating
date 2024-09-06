@@ -16,6 +16,8 @@ class SignInModel extends ChangeNotifier {
   String? _emailErrorMessage;
   String? _passwordErrorMessage;
   String? _errorMessage;
+  bool _isPasswordVisible = false;
+
 
   SignInModel() {
     _getToken();
@@ -25,6 +27,7 @@ class SignInModel extends ChangeNotifier {
   String? get emailErrorMessage => _emailErrorMessage;
   String? get passwordErrorMessage => _passwordErrorMessage;
   String? get errorMessage => _errorMessage;
+  bool get isPasswordVisible => _isPasswordVisible;
 
   Future<void> _getToken() async {
     try {
@@ -33,6 +36,11 @@ class SignInModel extends ChangeNotifier {
       _errorMessage = "Failed to initialize token: $e";
       notifyListeners();
     }
+  }
+
+  void togglePasswordVisibility() {
+    _isPasswordVisible = !_isPasswordVisible;
+    notifyListeners();
   }
 
   Future<void> signIn() async {

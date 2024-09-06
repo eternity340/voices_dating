@@ -287,6 +287,18 @@ class ConstantStyles {
     fontFamily: ConstantData.fontOpenSans,
     color: Color(0xFF8E8E93),
   );
+  static TextStyle iconCoinTextStyle = TextStyle(
+    fontFamily: 'Open Sans',
+    fontSize: 12.sp,
+    fontWeight: FontWeight.w600,
+    color: Color(0xFF3EED86),
+  );
+  static TextStyle coinTimeTextStyle = TextStyle(
+    fontFamily: 'Open Sans',
+    fontSize: 12.sp,
+    fontWeight: FontWeight.w600,
+    color: Color(0xFF8E8E93),
+  );
   //profile_detail
   static TextStyle headlineStyle = TextStyle(
     fontSize: 18.sp,

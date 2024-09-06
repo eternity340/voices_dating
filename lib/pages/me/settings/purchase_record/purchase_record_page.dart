@@ -6,8 +6,8 @@ import '../../../../entity/user_data_entity.dart';
 
 
 class PurchaseRecordPage extends StatelessWidget{
-  final tokenEntity = Get.arguments['token'] as TokenEntity;
-  final userData = Get.arguments['userData'] as UserDataEntity;
+  final tokenEntity = Get.arguments['tokenEntity'] as TokenEntity;
+  final userData = Get.arguments['userDataEntity'] as UserDataEntity;
 
   @override
   Widget build(BuildContext context) {

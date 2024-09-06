@@ -1,6 +1,7 @@
 import 'package:first_app/net/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import '../../../components/background.dart';
 import '../../../components/bottom_options.dart';
@@ -8,14 +9,17 @@ import '../../../components/custom_message_dialog.dart';
 import '../../../components/profile_bottom.dart';
 import '../../../constants/Constant_styles.dart';
 import '../../../constants/constant_data.dart';
+import '../../../entity/moment_entity.dart';
 import '../../../image_res/image_res.dart';
 import '../../../routes/app_routes.dart';
+import '../../../service/global_service.dart';
 import '../components/profile_photo_wall.dart';
 import '../components/profile_card.dart';
 import 'profile_detail_controller.dart';
 
 class ProfileDetailPage extends StatelessWidget {
   ProfileDetailPage({super.key});
+  final GlobalService globalService = Get.find<GlobalService>();
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +38,7 @@ class ProfileDetailPage extends StatelessWidget {
           ),
           Positioned(
             left: 308.w,
-            top: 40.h,
+            top: 50.h,
             child: GestureDetector(
               onTap: () => showOptionsBottomSheet(context, controller),
               child: Image.asset(
@@ -59,7 +63,7 @@ class ProfileDetailPage extends StatelessWidget {
           onFirstPressed: () {
             Navigator.pop(context);
             Get.toNamed(AppRoutes.homeReport, arguments: {
-              'userEntity': controller.userEntity,
+              'userId': controller.userEntity.userId,
               'tokenEntity': controller.tokenEntity,
             });
           },
@@ -158,30 +162,50 @@ class ProfileDetailPage extends StatelessWidget {
 
   Widget buildMomentsSection(ProfileDetailController controller) {
     return GestureDetector(
-      onTap: () =>
-          Get.toNamed(AppRoutes.homeProfileMoments,
-              arguments: {
-                'tokenEntity': controller.tokenEntity,
-                'userData': controller.userDataEntity,
-                'userEntity': controller.userEntity
-          }),
+      onTap: () => Get.toNamed(AppRoutes.homeProfileMoments, arguments: {
+        'tokenEntity': controller.tokenEntity,
+        'userDataEntity': controller.userDataEntity,
+        'userEntity': controller.userEntity
+      }),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-              ConstantData.moments,
-              style: ConstantStyles.headlineStyle),
+          Text(ConstantData.moments, style: ConstantStyles.headlineStyle),
           SizedBox(height: 16.h),
           Container(
             height: 105.h,
-            child: controller.userEntity.lastTimeline?.isNotEmpty == true
-                ? buildMomentsListView(controller)
-                : Center(
-              child: Text(
-                ConstantData.noMomentsData,
-                style: ConstantStyles.bodyTextStyle,
-                textAlign: TextAlign.center,
+            child: FutureBuilder<List<MomentEntity>>(
+              future: globalService.getMoments(
+                userId: controller.userEntity.userId!,
+                accessToken: controller.tokenEntity.accessToken!,
               ),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: SpinKitCircle(
+                      color: Color(0xFFABFFCF),
+                      size: 50.0,
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Text(
+                      'Error loading moments',
+                      style: ConstantStyles.bodyTextStyle,
+                    ),
+                  );
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Center(
+                    child: Text(
+                      ConstantData.noMomentsData,
+                      style: ConstantStyles.bodyTextStyle,
+                      textAlign: TextAlign.center,
+                    ),
+                  );
+                } else {
+                  return buildMomentsListView(snapshot.data!, controller);
+                }
+              },
             ),
           ),
         ],
@@ -189,57 +213,55 @@ class ProfileDetailPage extends StatelessWidget {
     );
   }
 
-  Widget buildMomentsListView(ProfileDetailController controller) {
+  Widget buildMomentsListView(List<MomentEntity> moments, ProfileDetailController controller) {
     return ListView.builder(
       scrollDirection: Axis.horizontal,
-      itemCount:
-      controller.userEntity.lastTimeline?.length ?? 0,
-      itemBuilder: (context, index) => GestureDetector(
-        onTap: () =>
-            Get.toNamed('/home/profile_detail/profile_moments',
-                arguments: {
-                  'tokenEntity': controller.tokenEntity,
-                  'userData': controller.userDataEntity,
-                  'userEntity': controller.userEntity
-                }),
-        child: buildMomentItem(
-            controller.userEntity.lastTimeline?[index]),
+      itemCount: moments.length,
+      itemBuilder: (context, index) => buildMomentItem(moments[index], controller),
+    );
+  }
+
+  Widget buildMomentItem(MomentEntity moment, ProfileDetailController controller) {
+    final attachments = moment.attachments;
+    if (attachments == null || attachments.isEmpty) return SizedBox.shrink();
+    final hasVideo = attachments.any((attachment) => attachment.video != null);
+    if (hasVideo) return SizedBox.shrink();
+    final firstNonVideoAttachment = attachments.firstWhere(
+          (attachment) => attachment.video == null,
+      orElse: () => attachments.first,
+    );
+    return GestureDetector(
+      onTap: () => Get.toNamed(AppRoutes.homeProfileMoments, arguments: {
+        'tokenEntity': controller.tokenEntity,
+        'userDataEntity': controller.userDataEntity,
+        'userEntity': controller.userEntity
+      }),
+      child: Container(
+        width: 105.w,
+        height: 105.h,
+        margin: EdgeInsets.only(right: 16.w),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20.0),
+          child: buildAttachmentImage(firstNonVideoAttachment.url),
+        ),
       ),
     );
   }
 
-  //decoupling
-  Widget buildMomentItem(dynamic timeline) {
-    if (timeline is! Map<String, dynamic>) return SizedBox.shrink();
-    final attachments = timeline['attachments'] as List<dynamic>?;
-    if (attachments == null || attachments.isEmpty) return SizedBox.shrink();
 
-    return Row(
-      children: attachments.map((attachment) => buildAttachmentImage(attachment)).toList(),
-    );
-  }
 
-  Widget buildAttachmentImage(dynamic attachment) {
-    if (attachment is! Map<String, dynamic>) return SizedBox.shrink();
-    final imageUrl = attachment['url'] as String?;
-    if (imageUrl == null) return SizedBox.shrink();
-
-    return Padding(
-      padding: EdgeInsets.only(right: 16.w),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20.0),
-        child: Image.network(
-          imageUrl,
-          width: 105.w,
-          height: 105.h,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) => Container(
-            width: 105.w,
-            height: 105.h,
-            color: Colors.grey,
-            child: Icon(Icons.error),
-          ),
-        ),
+  Widget buildAttachmentImage(String? imageUrl) {
+    if (imageUrl == null || imageUrl.isEmpty) return SizedBox.shrink();
+    return Image.network(
+      imageUrl,
+      fit: BoxFit.cover,
+      width: 105.w,
+      height: 105.h,
+      errorBuilder: (context, error, stackTrace) => Container(
+        width: 105.w,
+        height: 105.h,
+        color: Colors.grey,
+        child: Icon(Icons.error),
       ),
     );
   }

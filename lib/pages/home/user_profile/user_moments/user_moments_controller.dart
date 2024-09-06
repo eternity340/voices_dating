@@ -6,6 +6,7 @@ import '../../../../entity/moment_entity.dart';
 import '../../../../entity/token_entity.dart';
 import '../../../../entity/user_data_entity.dart';
 import '../../../../net/dio.client.dart';
+import '../../../../utils/replace_word_util.dart';
 
 class UserMomentsController extends GetxController {
   late TokenEntity tokenEntity;
@@ -21,25 +22,46 @@ class UserMomentsController extends GetxController {
   }
 
   Future<void> fetchMoments() async {
-    DioClient().requestNetwork<List<MomentEntity>>(
-      method: Method.get,
-      url: ApiConstants.timelines,
-      queryParameters: {
-        'profId': userDataEntity.userId,
-      },
-      options: Options(
-        headers: {
-          'token': tokenEntity.accessToken,
+    try {
+      await DioClient.instance.requestNetwork<List<MomentEntity>>(
+        method: Method.get,
+        url: ApiConstants.timelines,
+        queryParameters: {
+          'profId': userDataEntity.userId,
         },
-      ),
-      onSuccess: (data) {
-        if (data != null) {
-          moments.assignAll(data);
-        }
-      },
-      onError: (code, msg, data) {
-        LogUtil.e(message: msg);
-      },
-    );
+        options: Options(
+          headers: {
+            'token': tokenEntity.accessToken,
+          },
+        ),
+        onSuccess: (data) {
+          if (data != null) {
+            ReplaceWordUtil replaceWordUtil = ReplaceWordUtil.getInstance();
+            replaceWordUtil.getReplaceWord();
+            List<MomentEntity> processedMoments = data.map((moment) {
+              moment.timelineDescr = replaceWordUtil.replaceWords(moment.timelineDescr);
+              moment.username = replaceWordUtil.replaceWords(moment.username);
+              if (moment.comments != null) {
+                moment.comments = moment.comments!.map((comment) {
+                  comment.commentContent = replaceWordUtil.replaceWords(comment.commentContent);
+                  comment.username = replaceWordUtil.replaceWords(comment.username);
+                  return comment;
+                }).toList();
+              }
+
+              return moment;
+            }).toList();
+
+            moments.assignAll(processedMoments);
+          }
+        },
+        onError: (code, msg, data) {
+          LogUtil.e(message: msg);
+        },
+      );
+    } catch (e) {
+      LogUtil.e(message: e.toString());
+    }
   }
+
 }

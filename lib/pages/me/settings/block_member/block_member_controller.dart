@@ -16,7 +16,7 @@ class BlockMemberController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    tokenEntity = Get.arguments['token'] as TokenEntity;
+    tokenEntity = Get.arguments['tokenEntity'] as TokenEntity;
     fetchBlockedMembers();
   }
 
@@ -28,7 +28,7 @@ class BlockMemberController extends GetxController {
         url: ApiConstants.blockedUsers,
         options: Options(
           headers: {
-            'token': tokenEntity.accessToken!,
+            'token': tokenEntity.accessToken,
           },
         ),
         onSuccess: (data) {

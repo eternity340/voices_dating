@@ -18,8 +18,8 @@ class NotificationPage extends StatefulWidget {
 }
 
 class _NotificationPageState extends State<NotificationPage> {
-  final TokenEntity tokenEntity = Get.arguments['token'] as TokenEntity;
-  final UserDataEntity userData = Get.arguments['userData'] as UserDataEntity;
+  final TokenEntity tokenEntity = Get.arguments['tokenEntity'] as TokenEntity;
+  final UserDataEntity userData = Get.arguments['userDataEntity'] as UserDataEntity;
   List<NotificationEntity> notifications = [];
 
   @override

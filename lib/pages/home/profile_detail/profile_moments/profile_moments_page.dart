@@ -26,23 +26,14 @@ class ProfileMomentsPage extends StatelessWidget {
         body: Stack(
           children: [
             Background(
-              showBackButton: false,
+              showBackButton: true,
               child: Container(),
+              showMiddleText: true,
+              middleText: ConstantData.moments,
             ),
+
             Positioned(
-              left: 16.w,
-              top: 67.h,
-              child: GestureDetector(
-                onTap: () {
-                },
-                child: Text(
-                    ConstantData.moments,
-                    style:ConstantStyles.momentsTitleStyle
-                ),
-              ),
-            ),
-            Positioned(
-              left: 20.w,
+              left: 10.w,
               top: 109.h,
               child: Container(
                 width: 335.w,
@@ -58,7 +49,7 @@ class ProfileMomentsPage extends StatelessWidget {
                             Get.toNamed(AppRoutes.momentsMomentsDetail, arguments: {
                               'moment': controller.moments[index],
                               'tokenEntity': controller.tokenEntity,
-                              'userData': controller.userData});
+                              'userDataEntity': controller.userDataEntity});
                           },
                           child: MomentsCard(
                             moment: controller.moments[index],

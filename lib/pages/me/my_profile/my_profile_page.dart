@@ -20,8 +20,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final tokenEntity = Get.arguments['token'] as TokenEntity;
-    final userData = Get.arguments['userData'] as UserDataEntity;
+    final tokenEntity = Get.arguments['tokenEntity'] as TokenEntity;
+    final userData = Get.arguments['userDataEntity'] as UserDataEntity;
     return Scaffold(
       body: Stack(
         children: [
@@ -35,8 +35,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
                   onTap: () {
                     Get.toNamed(AppRoutes.me,
                         arguments: {
-                          'token': tokenEntity,
-                          'userData': userData});
+                          'tokenEntity': tokenEntity,
+                          'userDataEntity': userData});
                   },
                   child: Row(
                     children: [

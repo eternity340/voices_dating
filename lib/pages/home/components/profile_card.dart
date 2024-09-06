@@ -5,6 +5,7 @@ import 'package:first_app/constants/constant_data.dart';
 import 'package:first_app/net/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../components/disable_audio_player_widget.dart';
 import '../../../components/verified_tag.dart';
 import '../../../constants/Constant_styles.dart';
 import '../../../entity/list_user_entity.dart';
@@ -126,8 +127,7 @@ class _ProfileCardState extends State<ProfileCard> {
         Positioned(
           left: 16.w,
           top: 116.h,
-          child: AudioPlayerWidget(
-              audioPath: widget.userEntity!.voice!.voiceUrl.toString()),
+          child: buildAudioPlayer(),
         ),
         Positioned(
           left: 230.w,
@@ -198,6 +198,14 @@ class _ProfileCardState extends State<ProfileCard> {
         updateLocalState(!isLiked);
       },
     );
+  }
+
+  Widget buildAudioPlayer() {
+    if (widget.userEntity?.voice != null && widget.userEntity!.voice!.voiceUrl != null) {
+      return AudioPlayerWidget(audioPath: widget.userEntity!.voice!.voiceUrl!);
+    } else {
+      return DisabledAudioPlayerWidget();
+    }
   }
 
 }

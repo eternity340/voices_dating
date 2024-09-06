@@ -73,7 +73,7 @@ class SettingsPage extends StatelessWidget {
   void _navigateTo(String route) {
     Get.toNamed(route,
         arguments: {
-          'token': controller.tokenEntity,
-          'userData': controller.userData});
+          'tokenEntity': controller.tokenEntity,
+          'userDataEntity': controller.userData});
   }
 }

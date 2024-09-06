@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import '../../../components/background.dart';
 import '../../../components/bottom_options.dart';
 import '../../../components/custom_message_dialog.dart';
+import '../../../components/profile_bottom.dart';
 import '../../../constants/Constant_styles.dart';
 import '../../../constants/constant_data.dart';
 import '../../../entity/moment_entity.dart';
@@ -34,7 +35,7 @@ class UserProfilePage extends StatelessWidget {
             child: Container(),
           ),
           Positioned(
-            left: 318.w,
+            left: 308.w,
             top: 52.h,
             child: GestureDetector(
               onTap: () => showOptionsBottomSheet(context, controller),
@@ -45,7 +46,7 @@ class UserProfilePage extends StatelessWidget {
               ),
             ),
           ), buildMainContent(controller),
-          //buildBottomBar(controller),
+          buildBottomBar(controller),
         ],
       ),
     );
@@ -267,6 +268,22 @@ class UserProfilePage extends StatelessWidget {
       ],
     );
   }
+
+  Widget buildBottomBar(UserProfileController controller) {
+    return Positioned(
+      left: 0,
+      right: 0,
+      bottom: 0,
+      child: ProfileBottom(
+        initialGradientButtonText: ConstantData.winkButton,
+        onInitialGradientButtonPressed: controller.onWinkButtonPressed,
+        onCallButtonPressed: controller.onCallButtonPressed,
+        onChatButtonPressed: controller.onChatButtonPressed,
+        tokenEntity: controller.tokenEntity,
+      ),
+    );
+  }
+
 
 
 }

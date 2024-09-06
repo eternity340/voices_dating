@@ -5,6 +5,7 @@ import '../../../../components/gradient_btn.dart';
 import '../../../../constants.dart';
 import '../../../../constants/Constant_styles.dart';
 import '../../../../constants/constant_data.dart';
+import '../../../../image_res/image_res.dart';
 import '../sign_in_model.dart';
 import 'package:get/get.dart' as getx;
 
@@ -64,18 +65,28 @@ class SignForm extends StatelessWidget {
             child: TextFormField(
               controller: model.passwordController,
               textInputAction: TextInputAction.done,
-              obscureText: true,
+              obscureText: !model.isPasswordVisible,
               cursorColor: kPrimaryColor,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 hintText: null,
-                enabledBorder: UnderlineInputBorder(
+                enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: Color(0xFFEBEBEB), width: 1),
                 ),
-                focusedBorder: UnderlineInputBorder(
+                focusedBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: Color(0xFFEBEBEB), width: 1),
                 ),
-                border: UnderlineInputBorder(
+                border: const UnderlineInputBorder(
                   borderSide: BorderSide(color: Color(0xFFEBEBEB), width: 1),
+                ),
+                suffixIcon: IconButton(
+                  icon: Image.asset(
+                    model.isPasswordVisible
+                        ? ImageRes.iconVisiblePath
+                        : ImageRes.iconInvisiblePath,
+                    width: 24,
+                    height: 24,
+                  ),
+                  onPressed: model.togglePasswordVisibility,
                 ),
               ),
               style: ConstantStyles.inputTextStyle,

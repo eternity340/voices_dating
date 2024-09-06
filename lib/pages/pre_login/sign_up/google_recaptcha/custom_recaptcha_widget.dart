@@ -1,3 +1,4 @@
+import 'package:common_utils/common_utils.dart';
 import 'package:first_app/net/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -74,11 +75,11 @@ class _CustomRecaptchaState extends State<CustomRecaptchaWidget> {
               isLoading = false;
             });
             webViewController.runJavaScript("execute()");
-            // logger.v("execute!!!");
-            // smmLogger.e(url);
+            LogUtil.v("execute!!!");
+            LogUtil.e(url);
           },
           onWebResourceError: (WebResourceError error) {
-            // smmLogger.e(error);
+            LogUtil.e(error);
           },
           onNavigationRequest: (NavigationRequest request) {
             return NavigationDecision.navigate;

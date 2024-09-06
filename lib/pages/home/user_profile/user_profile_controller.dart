@@ -5,6 +5,7 @@ import 'package:first_app/net/api_constants.dart';
 import 'package:first_app/routes/app_routes.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import '../../../entity/chatted_user_entity.dart';
 import '../../../entity/ret_entity.dart';
 import '../../../entity/token_entity.dart';
 import '../../../entity/user_data_entity.dart';
@@ -72,5 +73,27 @@ class UserProfileController extends GetxController {
         Get.snackbar(ConstantData.errorText, msg);
       },
     );
+  }
+
+  void onWinkButtonPressed() {
+
+  }
+
+  void onCallButtonPressed() {
+
+  }
+
+  void onChatButtonPressed() {
+    ChattedUserEntity chattedUser = ChattedUserEntity(
+      userId: userDataEntity.userId,
+      username: userDataEntity.username,
+      avatar: userDataEntity.avatar,
+    );
+
+    Get.toNamed(AppRoutes.messagePrivateChat, arguments: {
+      'tokenEntity': tokenEntity,
+      'chattedUser': chattedUser,
+      'userDataEntity': userDataEntity
+    });
   }
 }

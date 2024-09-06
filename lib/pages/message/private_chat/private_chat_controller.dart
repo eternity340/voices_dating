@@ -23,8 +23,8 @@ import '../../../components/photo_dialog.dart';
 import '../../home/user_profile/user_profile_page.dart';
 
 class PrivateChatController extends GetxController {
-  final TokenEntity tokenEntity = Get.arguments['token'] as TokenEntity;
-  final UserDataEntity userDataEntity = Get.arguments['userData'] as UserDataEntity;
+  final TokenEntity tokenEntity = Get.arguments['tokenEntity'] as TokenEntity;
+  final UserDataEntity userDataEntity = Get.arguments['userDataEntity'] as UserDataEntity;
   final ChattedUserEntity chattedUser = Get.arguments['chattedUser'] as ChattedUserEntity;
   var messages = <IMNewMessageEntity>[].obs;
   final ScrollController scrollController = ScrollController();

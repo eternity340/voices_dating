@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'json_format/json_format.dart'; // Make sure to import necessary dependencies
+import 'json_format/json_format.dart';
 import 'list_user_entity.dart'; // Import other necessary entities or utilities
-import '../utils/string_extension.dart'; // Import any required utility functions
+
 
 class BlockMemberEntity {
   BlockMemberEntity({

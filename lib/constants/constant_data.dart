@@ -124,6 +124,7 @@ class ConstantData {
   static const userDataNotFound = 'User data not found. Please log in again.';
   static const deleteMomentContent = 'Are you sure you want to delete this moment?';
   static const signOutText = 'Are you sure you want to sign out?';
+  static const momentUploadSuccess = 'Moment uploaded successfully!';
   //snack
   static const userHasBlocked = 'User has been blocked';
   static const failedBlocked ='Failed to block user';
@@ -140,6 +141,7 @@ class ConstantData {
   static const unlockSuccess = 'User unblocked successfully';
   static const unlockFailed ='Failed to unblock user';
   static const feedBackSuccess = 'Feedback submitted successfully';
+  static const failedComment = 'Failed to add comment';
   static const errorText = 'Error';
   //detail_bottom_bar
   static const likeText='like';
@@ -276,6 +278,7 @@ class ConstantData {
   //moments
   static const  recordMomentText = 'record the moment ...';
   static const  colorTopicsHintText = 'You can use #+ content to add color topics.';
+  static const  recordTheMomentText = 'record the moment ...';
   static const  momentUploadSuccessText = 'Moment uploaded successfully!';
   static const  noComments = 'No comments';
   static const  unknownText = 'Unknown';
@@ -303,6 +306,7 @@ class ConstantData {
   static const  superiorText = 'Superior';
   //user_detail_card
   static const unKnowText ='Unknown';
+  static const oneHourText = '/H';
   //record
   static const  recordButtonText ='Record a new voice prologue';
   static const  recordTitle = 'Record';

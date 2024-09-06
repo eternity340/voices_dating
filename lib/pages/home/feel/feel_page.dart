@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../components/background.dart';
 import '../../../constants/constant_data.dart';
 import '../../../utils/common_utils.dart';
-import '../components/user_detail_card.dart';
+import '../components/feel_detail_card.dart';
 import 'feel_controller.dart';
 
 class FeelPage extends StatelessWidget {
@@ -39,7 +39,7 @@ class FeelPage extends StatelessWidget {
                   itemCount: controller.userList.length,
                   itemBuilder: (context, index) {
                     final user = controller.userList[index];
-                    return UserDetailCard(
+                    return FeelDetailCard(
                       userEntity: user,
                       tokenEntity: controller.tokenEntity,
                     );

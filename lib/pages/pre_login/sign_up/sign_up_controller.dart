@@ -12,6 +12,10 @@ class SignUpController extends GetxController {
   final formKey = GlobalKey<FormState>();
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+  RxBool isPasswordVisible = false.obs;
+  RxBool isConfirmPasswordVisible = false.obs;
+  RxString confirmPasswordErrorMessage = ''.obs;
 
   RxBool isLoading = false.obs;
   RxString emailErrorMessage = ''.obs;
@@ -46,6 +50,21 @@ class SignUpController extends GetxController {
   void setPassword(String password) {
     user.password = password;
     passwordErrorMessage.value = '';
+  }
+
+  void togglePasswordVisibility() {
+    isPasswordVisible.value = !isPasswordVisible.value;
+  }
+
+  void toggleConfirmPasswordVisibility() {
+    isConfirmPasswordVisible.value = !isConfirmPasswordVisible.value;
+  }
+
+  void setConfirmPassword(String confirmPassword) {
+    confirmPasswordErrorMessage.value = '';
+    if (confirmPassword != passwordController.text) {
+      confirmPasswordErrorMessage.value = 'Passwords do not match';
+    }
   }
 
   Future<void> signUp() async {
@@ -121,7 +140,7 @@ class SignUpController extends GetxController {
       }
 
       final Map<String, dynamic> userData = user.toJson();
-      userData['recaptchaToken'] = recaptchaToken; // 添加 reCAPTCHA token 到请求数据中
+      userData['token'] = recaptchaToken; // 添加 reCAPTCHA token 到请求数据中
 
       await DioClient.instance.requestNetwork<dynamic>(
         method: Method.post,
@@ -168,6 +187,7 @@ class SignUpController extends GetxController {
   void onClose() {
     usernameController.dispose();
     passwordController.dispose();
+    confirmPasswordController.dispose();
     super.onClose();
   }
 }

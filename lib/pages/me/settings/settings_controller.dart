@@ -10,8 +10,8 @@ import '../../../net/dio.client.dart';
 import '../../../service/app_service.dart';
 
 class SettingsController extends GetxController {
-  final TokenEntity tokenEntity = Get.arguments['token'];
-  final UserDataEntity userData = Get.arguments['userData'];
+  final TokenEntity tokenEntity = Get.arguments['tokenEntity'];
+  final UserDataEntity userData = Get.arguments['userDataEntity'];
 
   Future<void> signOut() async {
     try {

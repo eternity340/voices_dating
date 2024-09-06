@@ -120,9 +120,9 @@ class MessageContent extends StatelessWidget {
 
   void _navigateToPrivateChat(ChattedUserEntity user) {
     Get.toNamed('/message/private_chat', arguments: {
-      'token': controller.tokenEntity,
+      'tokenEntity': controller.tokenEntity,
       'chattedUser': user,
-      'userData':controller.userDataEntity
+      'userDataEntity':controller.userDataEntity
     })?.then((_) {
       controller.clearNewNumber(user.userId.toString());
     });

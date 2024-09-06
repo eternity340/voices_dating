@@ -18,7 +18,7 @@ class ReportPage extends StatelessWidget {
     final ReportController controller = Get.put(
       ReportController(
         Get.arguments['tokenEntity'] as TokenEntity,
-        Get.arguments['userEntity'] as ListUserEntity,
+        Get.arguments['userId'] as String,
       ),
     );
 
@@ -62,7 +62,7 @@ class ReportPage extends StatelessWidget {
                 ),
               ),
               Positioned(
-                left: 20.w,
+                left: 10.w,
                 top: 110.h,
                 child: ReportOption(
                   optionText: ConstantData.pornographicOption,
@@ -71,7 +71,7 @@ class ReportPage extends StatelessWidget {
                 ),
               ),
               Positioned(
-                left: 20.w,
+                left: 10.w,
                 top: 200.h,
                 child: ReportOption(
                   optionText: ConstantData.violentOption,
@@ -80,7 +80,7 @@ class ReportPage extends StatelessWidget {
                 ),
               ),
               Positioned(
-                left: 20.w,
+                left: 10.w,
                 top: 290.h,
                 child: ReportOption(
                   optionText: ConstantData.maliciousAttackOption,
@@ -89,7 +89,7 @@ class ReportPage extends StatelessWidget {
                 ),
               ),
               Positioned(
-                left: 20.w,
+                left: 10.w,
                 top: 380.h,
                 child: ReportOption(
                   optionText: ConstantData.disgustingOption,
@@ -98,12 +98,12 @@ class ReportPage extends StatelessWidget {
                 ),
               ),
               Positioned(
-                left: 20.w,
+                left: 10.w,
                 top: 470.h,
                 child: buildOtherOption(controller),
               ),
               Positioned(
-                left: 20.w,
+                left: 10.w,
                 top: 690.h,
                 child: buildImagePicker(controller),
               ),

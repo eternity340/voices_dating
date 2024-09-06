@@ -18,8 +18,8 @@ class MomentsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    tokenEntity = Get.arguments['token'] as TokenEntity;
-    userDataEntity = Get.arguments['userData'] as UserDataEntity;
+    tokenEntity = Get.arguments['tokenEntity'] as TokenEntity;
+    userDataEntity = Get.arguments['userDataEntity'] as UserDataEntity;
     easyRefreshController = EasyRefreshController();
     fetchMoments();
   }

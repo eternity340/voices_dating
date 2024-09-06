@@ -121,10 +121,12 @@ class HomePage extends StatelessWidget {
           bottom: 0,
           child: PageView(
             controller: controller.pageController,
-            onPageChanged: controller.onPageChanged,
+            onPageChanged: (index) {
+              controller.onPageChanged(index);
+            },
             children: [
               honeyOption(controller),
-              Center(child: Text('Nearby Page')),
+              nearbyOption(controller)
             ],
           ),
         ),
@@ -136,7 +138,7 @@ class HomePage extends StatelessWidget {
     return Obx(() {
       return EasyRefresh(
         onRefresh: () async {
-          controller.currentPage = 1;
+          controller.honeyCurrentPage = 1;
           controller.hasMoreData.value = true;
           controller.users.clear();
           await controller.fetchUsers();
@@ -151,6 +153,34 @@ class HomePage extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 10.h),
               child: UserCard(
                 userEntity: controller.users[index],
+                tokenEntity: controller.tokenEntity,
+              ),
+            );
+          },
+        ),
+      );
+    });
+  }
+
+  Widget nearbyOption(HomeController controller) {
+    return Obx(() {
+      return EasyRefresh(
+        onRefresh: () async {
+          controller.nearbyCurrentPage = 1;
+          controller.hasMoreData.value = true;
+          controller.nearUsers.clear();
+          await controller.fetchNearUsers();
+        },
+        onLoad: () async {
+          await controller.fetchNearUsers();
+        },
+        child: ListView.builder(
+          itemCount: controller.nearUsers.length,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.h),
+              child: UserCard(
+                userEntity: controller.nearUsers[index],
                 tokenEntity: controller.tokenEntity,
               ),
             );

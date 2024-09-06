@@ -125,9 +125,9 @@ class _ViewedMeContentState extends State<ViewedMeContent> {
     );
 
     Get.toNamed(AppRoutes.messagePrivateChat, arguments: {
-      'token': widget.controller.tokenEntity,
+      'tokenEntity': widget.controller.tokenEntity,
       'chattedUser': chattedUser,
-      'userData':widget.controller.userDataEntity
+      'userDataEntity':widget.controller.userDataEntity
     });
   }
 }

@@ -6,7 +6,7 @@ import '../../../entity/token_entity.dart';
 import '../../../net/dio.client.dart';
 
 class FeelController extends GetxController {
-  final TokenEntity tokenEntity = Get.arguments?['token'] as TokenEntity;
+  final TokenEntity tokenEntity = Get.arguments?['tokenEntity'] as TokenEntity;
   var userList = <ListUserEntity>[].obs;
   var isLoading = true.obs;
   var currentPage = 1.obs;

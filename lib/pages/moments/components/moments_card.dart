@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:first_app/constants/constant_styles.dart';
+import 'package:first_app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -188,7 +189,7 @@ class MomentsCard extends StatelessWidget {
     );
 
     if (userDataEntity != null) {
-      Get.toNamed('/message/private_chat/user_profile', arguments: {
+      Get.toNamed(AppRoutes.messageUserProfile, arguments: {
         'userDataEntity': userDataEntity,
         'tokenEntity': tokenEntity,
       });

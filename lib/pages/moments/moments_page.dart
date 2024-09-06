@@ -1,3 +1,4 @@
+import 'package:first_app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -35,10 +36,10 @@ class MomentsPage extends StatelessWidget {
             top: 67.h,
             child: GestureDetector(
               onTap: () {
-                Get.toNamed('/moments/add_moment',
+                Get.toNamed(AppRoutes.momentsAddMoment,
                     arguments: {
-                  'token': controller.tokenEntity,
-                  'userData': controller.userDataEntity});
+                  'tokenEntity': controller.tokenEntity,
+                  'userDataEntity': controller.userDataEntity});
               },
               child: Text(
                 ConstantData.moments,
@@ -52,10 +53,10 @@ class MomentsPage extends StatelessWidget {
             child: GestureDetector(
               onTap: () {
                 Get.toNamed(
-                    '/moments/add_moment',
+                    AppRoutes.momentsAddMoment,
                     arguments: {
-                      'token': controller.tokenEntity,
-                      'userData': controller.userDataEntity});
+                      'tokenEntity': controller.tokenEntity,
+                      'userDataEntity': controller.userDataEntity});
               },
               child: Container(
                 width: 40.w,
@@ -77,7 +78,7 @@ class MomentsPage extends StatelessWidget {
               ),
             ),
           ),
-          Positioned(
+          /*Positioned(
             right: 10.w,
             top: 59.5.h,
             child: GestureDetector(
@@ -95,7 +96,7 @@ class MomentsPage extends StatelessWidget {
                 ),
               ),
             ),
-          ),
+          ),*/
           Positioned(
             left: 10.w,
             top: 109.h,
@@ -115,7 +116,7 @@ class MomentsPage extends StatelessWidget {
                       itemBuilder: (context, index) {
                         return GestureDetector(
                           onTap: () {
-                            Get.toNamed('/moments/moments_detail',
+                            Get.toNamed(AppRoutes.momentsMomentsDetail,
                                 arguments: {
                                   'moment': controller.moments[index],
                                   'tokenEntity': controller.tokenEntity,

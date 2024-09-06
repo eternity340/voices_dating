@@ -28,10 +28,13 @@ class ImageRes{
   //pre_login background
   static const imagePathLoginBottom="assets/images/login_bottom.png";
   static const imagePathMainTop="assets/images/main_top.png";
+  static const iconVisiblePath = 'assets/images/icon_visible.png';
+  static const iconInvisiblePath = 'assets/images/icon_invisible.png';
   //user_card
   static const  iconLoveSelect = 'assets/images/icon_love_select.png';
   static const  iconLoveUnselect = 'assets/images/icon_love_unselect.png';
   static const  audioPath = 'audio/AI_Sunday.mp3';
+  static const  iconCoinImagePath = 'assets/images/icon_coin.png';
   //user_detail_card
   static const  placeholderAvatar = 'assets/images/placeholder1.png';
   //profile_detail

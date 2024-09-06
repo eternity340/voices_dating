@@ -6,6 +6,7 @@ import '../../../components/background.dart';
 import '../../../components/gradient_btn.dart';
 import '../../../constants/constant_styles.dart';
 import '../../../constants/constant_data.dart';
+import '../../../utils/common_utils.dart';
 import '../components/verify_code_input.dart';
 import '../controller/verify_email_controller.dart';
 
@@ -123,11 +124,16 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
                     : Container(),
                 SizedBox(height: 250.h),
                 Obx(() => controller.isLoading.value
-                    ? CircularProgressIndicator()
+                    ? CommonUtils.loadingIndicator(
+                  color: Colors.black,
+                  radius: 15.0,
+                )
                     : Center(
                   child: GradientButton(
                     text: ConstantData.verifyButtonText,
-                    onPressed: controller.verifyEmail,
+                    onPressed: () {
+                      controller.verifyEmail();
+                    },
                     width: 200.w,
                   ),
                 )),

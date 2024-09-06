@@ -36,7 +36,9 @@ class _MomentsContentState extends State<MomentsContent> {
         queryParameters: {'profId': widget.userData.userId},
         options: Options(headers: {'token': widget.tokenEntity.accessToken}),
         onSuccess: (data) {
-          _moments = data!;
+          setState(() {
+            _moments = data ?? [];
+          });
         },
         onError: (code, msg, data) {
           LogUtil.e(msg);
@@ -46,7 +48,6 @@ class _MomentsContentState extends State<MomentsContent> {
       LogUtil.e(e.toString());
     }
   }
-
 
   void _removeMoment(MomentEntity moment) {
     setState(() {

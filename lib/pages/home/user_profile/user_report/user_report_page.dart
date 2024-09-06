@@ -37,7 +37,7 @@ class UserReportPage extends StatelessWidget {
               ),
               Positioned(
                 top: 58.h,
-                right: 10.w,
+                right: 0.w,
                 child: AnimatedContainer(
                   duration: Duration(milliseconds: 300),
                   curve: Curves.easeOut,
@@ -64,7 +64,7 @@ class UserReportPage extends StatelessWidget {
                 ),
               ),
               Positioned(
-                left: 20.w,
+                left: 10.w,
                 top: 110.h,
                 child: ReportOption(
                   optionText: ConstantData.pornographicOption,
@@ -73,7 +73,7 @@ class UserReportPage extends StatelessWidget {
                 ),
               ),
               Positioned(
-                left: 20.w,
+                left: 10.w,
                 top: 200.h,
                 child: ReportOption(
                   optionText: ConstantData.violentOption,
@@ -82,7 +82,7 @@ class UserReportPage extends StatelessWidget {
                 ),
               ),
               Positioned(
-                left: 20.w,
+                left: 10.w,
                 top: 290.h,
                 child: ReportOption(
                   optionText: ConstantData.maliciousAttackOption,
@@ -91,7 +91,7 @@ class UserReportPage extends StatelessWidget {
                 ),
               ),
               Positioned(
-                left: 20.w,
+                left: 10.w,
                 top: 380.h,
                 child: ReportOption(
                   optionText: ConstantData.disgustingOption,
@@ -100,12 +100,12 @@ class UserReportPage extends StatelessWidget {
                 ),
               ),
               Positioned(
-                left: 20.w,
+                left: 10.w,
                 top: 470.h,
                 child: buildOtherOption(controller),
               ),
               Positioned(
-                left: 20.w,
+                left: 10.w,
                 top: 690.h,
                 child: buildImagePicker(controller),
               ),

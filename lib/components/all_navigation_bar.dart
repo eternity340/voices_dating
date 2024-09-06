@@ -3,7 +3,6 @@ import 'package:first_app/image_res/image_res.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../constants/constant_data.dart';
 import '../entity/token_entity.dart';
 
 class AllNavigationBar extends StatelessWidget {
@@ -69,14 +68,18 @@ class AllNavigationBar extends StatelessWidget {
     );
   }
 
-  Widget _buildNavItem(String activeIcon, String inactiveIcon, String route, UserDataEntity? userData) {
+  Widget _buildNavItem(
+      String activeIcon,
+      String inactiveIcon,
+      String route,
+      UserDataEntity? userDataEntity) {
     bool isActive = Get.currentRoute == route;
     return GestureDetector(
       onTap: () {
         if (!isActive) {
           Get.offAllNamed(route, arguments: {
-            'token': tokenEntity,
-            if (userData != null) 'userData': userData
+            'tokenEntity': tokenEntity,
+            if (userData != null) 'userDataEntity': userDataEntity
           });
         }
       },

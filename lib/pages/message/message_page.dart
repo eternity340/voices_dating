@@ -25,8 +25,8 @@ class _MessagePageState extends State<MessagePage> {
   @override
   void initState() {
     super.initState();
-    final TokenEntity tokenEntity = Get.arguments['token'] as TokenEntity;
-    final UserDataEntity userData = Get.arguments['userData'] as UserDataEntity;
+    final TokenEntity tokenEntity = Get.arguments['tokenEntity'] as TokenEntity;
+    final UserDataEntity userData = Get.arguments['userDataEntity'] as UserDataEntity;
     controller = Get.put(MessageController(tokenEntity, userData));
     final GlobalService globalService = Get.find();
     ever(globalService.needRefresh, (needRefresh) {

@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:first_app/entity/user_data_entity.dart';
 import 'package:first_app/net/api_constants.dart';
+import 'package:first_app/utils/common_utils.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
 import '../entity/moment_entity.dart';
@@ -49,7 +51,7 @@ class GlobalService extends GetxController {
     }
   }
 
-  Future<UserDataEntity?> getUserProfile({required String userId, required String accessToken}) async {
+  /*Future<UserDataEntity?> getUserProfile({required String userId, required String accessToken}) async {
     try {
       final dio = Dio();
       final response = await dio.get(
@@ -71,14 +73,26 @@ class GlobalService extends GetxController {
         } else {
           LogUtil.e(message: '${jsonData['message']}');
         }
+      }
+      else if (response.data['code'] == 30001136) {
+        final message = response.data['data']['message'];
+        Get.snackbar(
+          'Profile Restricted',
+          message,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          duration: Duration(seconds: 3),
+        );
+        return null;
       } else {
         LogUtil.e(message: '${response.statusCode}');
       }
     } catch (e) {
-      LogUtil.e(message:e.toString());
+      LogUtil.e(message: e.toString());
     }
     return null;
-  }
+  }*/
+
 
   Future<List<MomentEntity>> getMoments({required String userId, required String accessToken}) async {
     List<MomentEntity> moments = [];
@@ -134,6 +148,36 @@ class GlobalService extends GetxController {
     if (updatedUserData != null) {
       userDataEntity.value = updatedUserData;
     }
+  }
+
+  Future<UserDataEntity?> getUserProfile({required String userId,required String accessToken}) async {
+    UserDataEntity? userData;
+
+    await DioClient.instance.requestNetwork<UserDataEntity>(
+      method: Method.get,
+      url: ApiConstants.getProfile,
+      queryParameters: {'profId': userId},
+      options: Options(headers: {'token': accessToken}),
+      onSuccess: (data) {
+        if (data != null) {
+          userData = data;
+          /*ReplaceWordUtil replaceWordUtil = ReplaceWordUtil.getInstance();
+          replaceWordUtil.getReplaceWord();
+          userData!.username = replaceWordUtil.replaceWords(userData!.username);
+          userData!.headline = replaceWordUtil.replaceWords(userData!.headline);
+          userData!.about = replaceWordUtil.replaceWords(userData!.about);*/
+        }
+      },
+      onError: (code, message, data) {
+        if (code == 30001136) {
+          CommonUtils.showSnackBar(message);
+        } else {
+          LogUtil.e(message: 'Failed to get profile: $message');
+        }
+      },
+    );
+
+    return userData;
   }
 
 }

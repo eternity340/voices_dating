@@ -11,7 +11,7 @@ import '../../../../entity/token_entity.dart';
 import '../../../../image_res/image_res.dart';
 import '../../../../net/dio.client.dart';
 import '../../../../components/audio_player_widget.dart';
-
+import '../../../../components/disable_audio_player_widget.dart';
 
 class UserProfileCard extends StatefulWidget {
   final UserDataEntity? userDataEntity;
@@ -114,7 +114,7 @@ class _ProfileCardState extends State<UserProfileCard> {
                 style: ConstantStyles.countryTextStyle,
               ),
               SizedBox(width: 4.w),
-               Text(
+              Text(
                 '|',
                 style: ConstantStyles.countryTextStyle,
               ),
@@ -129,7 +129,7 @@ class _ProfileCardState extends State<UserProfileCard> {
         Positioned(
           left: 16.w,
           top: 116.h,
-          child: AudioPlayerWidget(audioPath: ImageRes.audioPath),
+          child: buildAudioPlayer(),
         ),
         Positioned(
           left: 230.w,
@@ -147,6 +147,14 @@ class _ProfileCardState extends State<UserProfileCard> {
         ),
       ],
     );
+  }
+
+  Widget buildAudioPlayer() {
+    if (widget.userDataEntity?.voice != null && widget.userDataEntity!.voice!.voiceUrl != null) {
+      return AudioPlayerWidget(audioPath: widget.userDataEntity!.voice!.voiceUrl!);
+    } else {
+      return DisabledAudioPlayerWidget();
+    }
   }
 
   void _toggleLike() {
@@ -190,5 +198,4 @@ class _ProfileCardState extends State<UserProfileCard> {
       },
     );
   }
-
 }

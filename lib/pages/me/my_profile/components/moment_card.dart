@@ -55,7 +55,7 @@ class MomentCard extends StatelessWidget {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                          image: NetworkImage(moment.avatar ?? ImageRes.placeholderAvatar), // Default placeholder image
+                          image: NetworkImage(moment.avatar ?? ImageRes.placeholderAvatar),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -64,7 +64,7 @@ class MomentCard extends StatelessWidget {
                     Flexible(
                       child: Text(
                         moment.username ?? ConstantData.unknownText,
-                        style: ConstantStyles.usernameMomentStyle, // 使用常量中的样式
+                        style: ConstantStyles.usernameMomentStyle,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),

@@ -10,7 +10,7 @@ import '../../../../net/dio.client.dart';
 
 class ProfileMomentsController extends GetxController {
   late TokenEntity tokenEntity;
-  late UserDataEntity userData;
+  late UserDataEntity userDataEntity;
   late ListUserEntity userEntity;
   var moments = <MomentEntity>[].obs;
 
@@ -18,7 +18,7 @@ class ProfileMomentsController extends GetxController {
   void onInit() {
     super.onInit();
     tokenEntity = Get.arguments['tokenEntity'] as TokenEntity;
-    userData = Get.arguments['userData'] as UserDataEntity;
+    userDataEntity = Get.arguments['userDataEntity'] as UserDataEntity;
     userEntity = Get.arguments['userEntity'] as ListUserEntity;
     fetchMoments();
   }

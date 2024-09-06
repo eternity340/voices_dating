@@ -16,8 +16,8 @@ import 'me_controller.dart';
 
 class MePage extends StatelessWidget {
   final MeController controller = Get.put(MeController());
-  final tokenEntity = Get.arguments['token'] as TokenEntity;
-  final userData = Get.arguments['userData'] as UserDataEntity;
+  final tokenEntity = Get.arguments['tokenEntity'] as TokenEntity;
+  final userDataEntity = Get.arguments['userDataEntity'] as UserDataEntity;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,7 @@ class MePage extends StatelessWidget {
               top: 130.h,
               left: 0,
               right: 0,
-              child: profileSection(userData),
+              child: profileSection(userDataEntity),
             ),
             Positioned(
               top: 330.h,
@@ -54,9 +54,9 @@ class MePage extends StatelessWidget {
             Positioned(
               top: 500.h,
               left: 20.w,
-              child: optionsSection(context, tokenEntity, userData),
+              child: optionsSection(context, tokenEntity, userDataEntity),
             ),
-            AllNavigationBar(tokenEntity: tokenEntity, userData: userData),
+            AllNavigationBar(tokenEntity: tokenEntity, userData: userDataEntity),
           ],
         ),
       ),
@@ -69,15 +69,15 @@ class MePage extends StatelessWidget {
         buildIconButton(ImageRes.imagePathIconNotification, () {
           Get.toNamed(AppRoutes.meNotification,
               arguments: {
-                'token': tokenEntity,
-                'userData': userData});
+                'tokenEntity': tokenEntity,
+                'userDataEntity': userDataEntity});
         }),
         SizedBox(width: 5.w),
         buildIconButton(ImageRes.imagePathIconSetting, () {
           Get.toNamed(AppRoutes.meSettings,
               arguments: {
-                'token': tokenEntity,
-                'userData': userData});
+                'tokenEntity': tokenEntity,
+                'userDataEntity': userDataEntity});
         }),
       ],
     );
@@ -133,8 +133,8 @@ class MePage extends StatelessWidget {
                     onPressed: () {
                       Get.toNamed(AppRoutes.mePhoto,
                           arguments: {
-                            'token': tokenEntity,
-                            'userData': userData});
+                            'tokenEntity': tokenEntity,
+                            'userDataEntity': userData});
                     },
                   ),
                 ),
@@ -210,8 +210,8 @@ class MePage extends StatelessWidget {
             Get.toNamed(
                 AppRoutes.meMyProfile,
                 arguments: {
-                  'token': tokenEntity,
-                  'userData': userData});
+                  'tokenEntity': tokenEntity,
+                  'userDataEntity': userDataEntity});
           },
         ),
         separator(),
@@ -221,8 +221,8 @@ class MePage extends StatelessWidget {
           onTap: () {
             Get.toNamed(AppRoutes.meVerify,
                 arguments: {
-                  'token': tokenEntity,
-                  'userData': userData});
+                  'tokenEntity': tokenEntity,
+                  'userDataEntity': userDataEntity});
           },
         ),
         separator(),

@@ -124,9 +124,9 @@ class _ViewedMeContentState extends State<LikedMeContent> {
     );
 
     Get.toNamed('/message/private_chat', arguments: {
-      'token': widget.controller.tokenEntity,
+      'tokenEntity': widget.controller.tokenEntity,
       'chattedUser': chattedUser,
-      'userData': widget.controller.userDataEntity
+      'userDataEntity': widget.controller.userDataEntity
     });
   }
 }
