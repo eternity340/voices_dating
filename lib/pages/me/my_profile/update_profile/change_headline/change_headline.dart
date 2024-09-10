@@ -8,13 +8,29 @@ import '../../../../../entity/token_entity.dart';
 import '../../../../../entity/user_data_entity.dart';
 import 'change_headline_controller.dart';
 
-class ChangeHeadline extends StatelessWidget {
+class ChangeHeadline extends StatefulWidget {
+  @override
+  _ChangeHeadlineState createState() => _ChangeHeadlineState();
+}
+
+class _ChangeHeadlineState extends State<ChangeHeadline> {
   final ChangeHeadlineController controller = Get.put(ChangeHeadlineController());
+  late String initialHeadline;
+  bool isButtonEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final userData = Get.arguments['userDataEntity'] as UserDataEntity;
+    initialHeadline = userData.headline ?? '';
+    controller.headlineController.text = initialHeadline;
+    controller.updateCharCount(initialHeadline);
+  }
 
   @override
   Widget build(BuildContext context) {
-    final tokenEntity = Get.arguments['token'] as TokenEntity;
-    final userData = Get.arguments['userData'] as UserDataEntity;
+    final tokenEntity = Get.arguments['tokenEntity'] as TokenEntity;
+    final userData = Get.arguments['userDataEntity'] as UserDataEntity;
 
     return Scaffold(
       body: Background(
@@ -36,7 +52,7 @@ class ChangeHeadline extends StatelessWidget {
                 ),
                 child: TextField(
                   controller: controller.headlineController,
-                  style:  ConstantStyles.changeLocationTextStyle,
+                  style: ConstantStyles.changeLocationTextStyle,
                   maxLines: null,
                   decoration: const InputDecoration(
                     filled: true,
@@ -46,6 +62,9 @@ class ChangeHeadline extends StatelessWidget {
                   ),
                   onChanged: (text) {
                     controller.updateCharCount(text);
+                    setState(() {
+                      isButtonEnabled = text.trim().isNotEmpty && text.trim() != initialHeadline;
+                    });
                   },
                 ),
               ),
@@ -56,15 +75,15 @@ class ChangeHeadline extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                   Text(
-                     ConstantData.enterCharactersText,
-                    style:ConstantStyles.charactersTextStyle
-                   ),
-                   SizedBox(width: 180.w),
+                  Text(
+                      ConstantData.enterCharactersText,
+                      style: ConstantStyles.charactersTextStyle
+                  ),
+                  SizedBox(width: 180.w),
                   Obx(
                         () => Text(
-                      '${controller.charCount}/50',
-                      style:ConstantStyles.charCountTextStyle
+                        '${controller.charCount}/50',
+                        style: ConstantStyles.charCountTextStyle
                     ),
                   ),
                 ],
@@ -78,18 +97,22 @@ class ChangeHeadline extends StatelessWidget {
                 curve: Curves.easeOut,
                 transform: Matrix4.translationValues(-8.w, 0, 0),
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
+                  gradient: LinearGradient(
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
-                    colors: [Color(0xFFD6FAAE), Color(0xFF20E2D7)],
+                    colors: isButtonEnabled
+                        ? [Color(0xFFD6FAAE), Color(0xFF20E2D7)]
+                        : [Color(0xFFC3C3CB), Color(0xFFC3C3CB)],
                   ),
                   borderRadius: BorderRadius.circular(24.5.r),
                 ),
                 width: 88.w,
                 height: 36.h,
                 child: TextButton(
-                  onPressed: () => controller.updateHeadline(tokenEntity, userData),
-                  child:  Text(
+                  onPressed: isButtonEnabled
+                      ? () => controller.updateHeadline(tokenEntity, userData)
+                      : null,
+                  child: Text(
                     ConstantData.updateHeadlineText,
                     style: ConstantStyles.updateHeadlineTextStyle,
                   ),

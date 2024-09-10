@@ -1,13 +1,17 @@
 import 'package:first_app/net/api_constants.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../../components/custom_message_dialog.dart';
+import '../../../components/photo_dialog.dart';
 import '../../../constants/constant_data.dart';
 import '../../../entity/ret_entity.dart';
 import '../../../entity/token_entity.dart';
 import '../../../entity/user_data_entity.dart';
 import '../../../net/dio.client.dart';
+import '../../../routes/app_routes.dart';
 import '../../../service/global_service.dart';
 
 class PhotoController extends GetxController {
@@ -18,8 +22,8 @@ class PhotoController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    tokenEntity = Get.arguments['token'] as TokenEntity;
-    userData = Get.arguments['userData'] as UserDataEntity;
+    tokenEntity = Get.arguments['tokenEntity'] as TokenEntity;
+    userData = Get.arguments['userDataEntity'] as UserDataEntity;
     fetchUserData();
   }
 
@@ -101,7 +105,7 @@ class PhotoController extends GetxController {
 
   Future<void> setAvatar(String attachId) async {
     try {
-      await DioClient.instance.requestNetwork<Map<String, dynamic>>(
+      await DioClient.instance.requestNetwork<RetEntity>(
         method: Method.post,
         url: ApiConstants.setAvatar,
         queryParameters: {
@@ -114,22 +118,26 @@ class PhotoController extends GetxController {
           },
         ),
         onSuccess: (data) async {
-          if (data != null && data['code'] == 200) {
-            Get.snackbar(
-              ConstantData.successText, ConstantData.avatarSetSuccess);
+          if (data != null && data.ret == true) {
+            Get.snackbar(ConstantData.successText, ConstantData.avatarSetSuccess);
             await fetchUserData();
+            Get.offNamed(AppRoutes.me, arguments: {
+              'tokenEntity': tokenEntity,
+              'userDataEntity': globalService.userDataEntity.value,
+            });
           } else {
             Get.snackbar(ConstantData.errorText, ConstantData.avatarSetFailed);
           }
         },
         onError: (code, msg, data) {
-          Get.snackbar(ConstantData.errorText,msg);
+          Get.snackbar(ConstantData.errorText, msg);
         },
       );
     } catch (e) {
-      Get.snackbar(ConstantData.errorText,e.toString());
+      Get.snackbar(ConstantData.errorText, e.toString());
     }
   }
+
 
   Future<bool> requestPermission(Permission permission) async {
     if (await permission.isGranted) {
@@ -140,5 +148,37 @@ class PhotoController extends GetxController {
     }
   }
 
+  void showPhotoDialog(String photoUrl, String attachId) {
+    final PhotoController controller = Get.find<PhotoController>();
 
+    showDialog(
+      context: Get.context!,
+      barrierDismissible: true,
+      builder: (context) {
+        return PhotoDialog(
+          photoUrl: photoUrl,
+          attachId: attachId,
+          onDelete: () async {
+            await controller.deletePhoto(attachId);
+            Navigator.of(context).pop();
+          },
+          onSetting: () {
+            showDialog(
+              context: Get.context!,
+              builder: (BuildContext context) {
+                return CustomMessageDialog(
+                  title: Text(ConstantData.setAvatarTitle),
+                  content: Text(ConstantData.setAvatarContent),
+                  onYesPressed: () async {
+                    Navigator.of(context).pop();
+                    await controller.setAvatar(attachId);
+                  },
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
 }

@@ -10,13 +10,19 @@ import '../../../../../constants/constant_data.dart';
 import '../../../../pre_login/sign_up/components/widget/picker_components.dart';
 import 'change_age_controller.dart';
 
-class ChangeAge extends StatelessWidget {
+class ChangeAge extends StatefulWidget {
+  @override
+  _ChangeAgeState createState() => _ChangeAgeState();
+}
+
+class _ChangeAgeState extends State<ChangeAge> {
   final ChangeAgeController controller = Get.put(ChangeAgeController());
+  bool isButtonEnabled = false;
 
   @override
   Widget build(BuildContext context) {
-    final tokenEntity = Get.arguments['token'] as TokenEntity;
-    final userData = Get.arguments['userData'] as UserDataEntity;
+    final tokenEntity = Get.arguments['tokenEntity'] as TokenEntity;
+    final userData = Get.arguments['userDataEntity'] as UserDataEntity;
 
     double pickerWidth = 80.w;
     double pickerHeight = 280.h;
@@ -47,12 +53,21 @@ class ChangeAge extends StatelessWidget {
                 selectedYear: controller.selectedYear.value,
                 onDayChanged: (index) {
                   controller.selectedDay.value = index + 1;
+                  setState(() {
+                    isButtonEnabled = true;
+                  });
                 },
                 onMonthChanged: (index) {
                   controller.selectedMonth.value = index + 1;
+                  setState(() {
+                    isButtonEnabled = true;
+                  });
                 },
                 onYearChanged: (index) {
                   controller.selectedYear.value = DateTime.now().year - index;
+                  setState(() {
+                    isButtonEnabled = true;
+                  });
                 },
               ),
             ),
@@ -64,17 +79,21 @@ class ChangeAge extends StatelessWidget {
                 curve: Curves.easeOut,
                 transform: Matrix4.translationValues(-8.w, 0, 0),
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
+                  gradient: LinearGradient(
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
-                    colors: [Color(0xFFD6FAAE), Color(0xFF20E2D7)],
+                    colors: isButtonEnabled
+                        ? [Color(0xFFD6FAAE), Color(0xFF20E2D7)]
+                        : [Color(0xFFC3C3CB), Color(0xFFC3C3CB)],
                   ),
                   borderRadius: BorderRadius.circular(24.5.r),
                 ),
                 width: 88.w,
                 height: 36.h,
                 child: TextButton(
-                  onPressed: () => controller.updateProfile(tokenEntity, userData),
+                  onPressed: isButtonEnabled
+                      ? () => controller.updateProfile(tokenEntity, userData)
+                      : null,
                   child: Text(
                       ConstantData.saveText,
                       style: ConstantStyles.saveButtonTextStyle

@@ -1,4 +1,6 @@
+import 'package:first_app/constants/Constant_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LocationBox extends StatelessWidget {
   final String text;
@@ -14,24 +16,19 @@ class LocationBox extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 335,
-        height: 69,
+        width: 335.w,
+        constraints: BoxConstraints(minHeight: 50.h),
         decoration: BoxDecoration(
-          color: Color(0xFFF8F8F9), // 背景颜色
-          borderRadius: BorderRadius.circular(10), // 圆角
+          color: Color(0xFFF8F8F9),
+          borderRadius: BorderRadius.circular(10),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0), // 内边距
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
           child: Align(
-            alignment: Alignment.centerLeft, // 左对齐
+            alignment: Alignment.centerLeft,
             child: Text(
               text,
-              style: const TextStyle(
-                fontSize: 18,
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.w500,
-                color: Colors.black,
-              ),
+              style: ConstantStyles.locationListStyle,
             ),
           ),
         ),

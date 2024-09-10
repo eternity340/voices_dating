@@ -215,10 +215,10 @@ class MomentsCard extends StatelessWidget {
       }
     }
 
-    Get.toNamed('/message/private_chat', arguments: {
-      'token': tokenEntity,
+    Get.toNamed(AppRoutes.messagePrivateChat, arguments: {
+      'tokenEntity': tokenEntity,
       'chattedUser': chattedUser,
-      'userData': userData,
+      'userDataEntity': userData,
     });
   }
 }

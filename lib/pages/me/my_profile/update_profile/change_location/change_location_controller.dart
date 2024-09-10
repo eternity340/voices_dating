@@ -27,8 +27,8 @@ class ChangeLocationController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    userData = Get.arguments['userData'] as UserDataEntity;
-    tokenEntity = Get.arguments['token'] as TokenEntity;
+    userData = Get.arguments['userDataEntity'] as UserDataEntity;
+    tokenEntity = Get.arguments['tokenEntity'] as TokenEntity;
   }
 
   Future<List<String>> getItemsByType(String type) async {
@@ -93,8 +93,8 @@ class ChangeLocationController extends GetxController {
       onSuccess: (data) async {
         await globalService.refreshUserData(tokenEntity.accessToken.toString());
         Get.offNamed(AppRoutes.meMyProfileChangeLocation, arguments: {
-          'userData': globalService.userDataEntity.value,
-          'token': tokenEntity,
+          'userDataEntity': globalService.userDataEntity.value,
+          'tokenEntity': tokenEntity,
         });
       },
       onError: (code, msg, data) {

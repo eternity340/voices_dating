@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart' as dio;
 import 'package:dio/dio.dart';
 import 'package:first_app/constants/constant_data.dart';
 import 'package:first_app/net/api_constants.dart';
@@ -7,14 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:first_app/entity/token_entity.dart';
 import 'package:first_app/entity/user_data_entity.dart';
-
-import '../../../../../entity/ret_entity.dart';
 import '../../../../../net/dio.client.dart';
+import '../../../../../service/app_service.dart';
 
 class ChangeAgeController extends GetxController {
   final FixedExtentScrollController dayController = FixedExtentScrollController();
   final FixedExtentScrollController monthController = FixedExtentScrollController();
   final FixedExtentScrollController yearController = FixedExtentScrollController();
+  final AppService appService = Get.find<AppService>();
   var selectedDay = 1.obs;
   var selectedMonth = 1.obs;
   var selectedYear = DateTime.now().year.obs;
@@ -57,19 +56,21 @@ class ChangeAgeController extends GetxController {
         onSuccess: (data) async {
           if (data != null) {
             userData.age = age.toString();
+            await appService.updateStoredUserData({'birthday':formattedDate});
+            await appService.updateStoredUserData({'age': age});
             Get.snackbar(ConstantData.successText, ConstantData.successUpdateProfile);
-            await Future.delayed(Duration(seconds: 2));
+            await Future.delayed(Duration(seconds: 1));
             Get.toNamed(AppRoutes.meMyProfile,
                 arguments: {
-                  'token': tokenEntity,
-                  'userData': userData
+                  'tokenEntity': tokenEntity,
+                  'userDataEntity': userData
                 });
           } else {
             Get.snackbar(ConstantData.errorText, ConstantData.failedUpdateProfile);
           }
         },
         onError: (code, msg, data) {
-          Get.snackbar(ConstantData.errorText, ConstantData.failedUpdateProfile);
+          Get.snackbar(ConstantData.errorText, msg);
         },
       );
     } catch (e) {

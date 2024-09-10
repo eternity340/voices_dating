@@ -15,11 +15,12 @@ class ChangeUsername extends StatefulWidget {
 
 class _ChangeUsernameState extends State<ChangeUsername> {
   final ChangeUsernameController controller = Get.put(ChangeUsernameController());
+  bool isButtonEnabled = false;
 
   @override
   Widget build(BuildContext context) {
-    final tokenEntity = Get.arguments['token'] as TokenEntity;
-    final userData = Get.arguments['userData'] as UserDataEntity;
+    final tokenEntity = Get.arguments['tokenEntity'] as TokenEntity;
+    final userData = Get.arguments['userDataEntity'] as UserDataEntity;
 
     return Scaffold(
       body: Background(
@@ -31,7 +32,7 @@ class _ChangeUsernameState extends State<ChangeUsername> {
           children: [
             Positioned(
               top: 80.h,
-              left: MediaQuery.of(context).size.width / 2 - 167.5.w, // Use ScreenUtil for width
+              left: MediaQuery.of(context).size.width / 2 - 167.5.w,
               child: Container(
                 width: 335.w,
                 height: 56.h,
@@ -51,6 +52,7 @@ class _ChangeUsernameState extends State<ChangeUsername> {
                   onChanged: (text) {
                     setState(() {
                       controller.charCount = text.length;
+                      isButtonEnabled = text.trim().isNotEmpty && text.length <= 16;
                     });
                   },
                 ),
@@ -69,7 +71,7 @@ class _ChangeUsernameState extends State<ChangeUsername> {
                   SizedBox(width: 190.w),
                   Text(
                     '${controller.charCount}/16',
-                    style:ConstantStyles.charCountTextStyle,
+                    style: ConstantStyles.charCountTextStyle,
                   ),
                 ],
               ),
@@ -85,17 +87,21 @@ class _ChangeUsernameState extends State<ChangeUsername> {
                   gradient: LinearGradient(
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
-                    colors: [Color(0xFFD6FAAE), Color(0xFF20E2D7)],
+                    colors: isButtonEnabled
+                        ? [Color(0xFFD6FAAE), Color(0xFF20E2D7)]
+                        : [Color(0xFFC3C3CB), Color(0xFFC3C3CB)],
                   ),
                   borderRadius: BorderRadius.circular(24.5.r),
                 ),
                 width: 88.w,
                 height: 36.h,
                 child: TextButton(
-                  onPressed: () => controller.saveUsername(tokenEntity, userData),
+                  onPressed: isButtonEnabled
+                      ? () => controller.saveUsername(tokenEntity, userData)
+                      : null,
                   child: Text(
                     ConstantData.saveText,
-                    style: ConstantStyles.saveButtonTextStyle,
+                    style: ConstantStyles.saveButtonTextStyle
                     ),
                   ),
                 ),

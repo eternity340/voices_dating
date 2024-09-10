@@ -20,14 +20,12 @@ import 'im_service.dart';
 
 class AppService extends GetxService {
   static AppService get instance => Get.find<AppService>();
-
   UserDataEntity? selfUser;
   bool isLogin = false;
   var canShowAsyncTip = false;
   final Rx<UserDataEntity?> rxSelfUser = Rx<UserDataEntity?>(null);
   var badgeEntity = BadgeEntity().obs;
   var languageMatchInfo = LanguageMatchInfoEntity().obs;
-
   var badgeRetryTime = 0;
   List<ReportReasonEntity> reportReasonList = [];
   final plainNotificationToken = PlainNotificationToken();
@@ -72,13 +70,10 @@ class AppService extends GetxService {
     await SharedPreferenceUtil.instance.setValue(key: SharedPresKeys.selfEntity, value: null);
     selfUser = null;
     isLogin = false;
+    rxSelfUser.value = null;
     Get.offAllNamed('/welcome');
   }
-  bool isMember(){
-    int memberStatus = int.parse(selfUser?.member??"0");
 
-    return memberStatus>=1;
-  }
 
 
   syncSelfProfile() async{
@@ -95,12 +90,6 @@ class AppService extends GetxService {
         }
     );
   }
-
-  // viewProfile({required String userId}){
-  //   Map<String,String> params = {};
-  //   params.putIfAbsent(ConstantData.paramsUserId, () => userId);
-  //   Get.toNamed(WfRoutes.userProfile,parameters: params);
-  // }
 
   void requestNewBadges() {
     Map<String, dynamic> requestMap = {};
@@ -138,7 +127,6 @@ class AppService extends GetxService {
     );
   }
 
-
   getReportItems(){
     DioClient.instance.requestNetwork<List<ReportReasonEntity>>(url: ApiConstants.reportItems,method: Method.get,
         onSuccess: (result){
@@ -155,23 +143,6 @@ class AppService extends GetxService {
     ChattedUserEntity item = ChattedUserEntity.fromJson(userDataEntity.toJson());
     //Get.toNamed(WfRoutes.singleConversationPage,arguments: item);
   }
-
-  // checkShowAsyncPop({bool immediately = false}){
-  //   if(!canShowAsyncTip||selfUser!.appleTag==true) {
-  //     return false;
-  //   }
-  //
-  //   var viewCount = SharedPreferenceUtil.instance.getValue(key: SharedPresKeys.viewRecommendUserCount)??0;
-  //
-  //   if(immediately||viewCount>3){
-  //     Get.dialog(CustomNavigateWidget(onConfirmTap: (){
-  //       Get.back();
-  //       asyncUserAccount();
-  //     }, gender: 1,));
-  //     return true;
-  //   }
-  //   return false;
-  // }
 
   Future<bool> asyncUserAccount() async{
     bool status = false;
@@ -223,6 +194,18 @@ class AppService extends GetxService {
     Map<String,String> params = {};
     params.putIfAbsent(ConstantData.paramsUserId, () => userId);
     //Get.toNamed(WfRoutes.userProfile,parameters: params);
+  }
+
+  Future<void> updateStoredUserData(Map<String, dynamic> updates) async {
+    String? storedUserJson = await SharedPreferenceUtil.instance.getValue(key: SharedPresKeys.selfEntity);
+    if (storedUserJson != null) {
+      Map<String, dynamic> storedUserMap = json.decode(storedUserJson);
+      storedUserMap.addAll(updates);
+      String updatedUserJson = json.encode(storedUserMap);
+      await SharedPreferenceUtil.instance.setValue(key: SharedPresKeys.selfEntity, value: updatedUserJson);
+      selfUser = UserDataEntity.fromJson(storedUserMap);
+      rxSelfUser.value = selfUser;
+    }
   }
 
 

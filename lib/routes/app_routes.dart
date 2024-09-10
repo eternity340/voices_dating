@@ -6,6 +6,7 @@ import 'package:first_app/pages/home/profile_detail/profile_detail_page.dart';
 import 'package:first_app/pages/home/user_profile/user_moments/user_moments_page.dart';
 import 'package:first_app/pages/home/user_profile/user_profile_page.dart';
 import 'package:first_app/pages/home/user_profile/user_report/user_report_page.dart';
+import 'package:first_app/pages/me/host/host_page.dart';
 import 'package:first_app/pages/me/my_profile/update_profile/change_username/change_username.dart';
 import 'package:first_app/pages/me/my_profile/update_profile/upload_voice/record/record_page.dart';
 import 'package:first_app/pages/me/my_profile/update_profile/upload_voice/upload_voice_page.dart';
@@ -35,7 +36,7 @@ import '../pages/me/my_profile/update_profile/change_location/change_location.da
 import '../pages/me/my_profile/update_profile/change_location/components/location_detail.dart';
 import '../pages/me/notification/notification_page.dart';
 import '../pages/me/settings/settings_page.dart';
-import '../pages/me/verify/verify_ID/verify_ID_page.dart';
+import '../pages/me/verify/verify_video/verify_video_page.dart';
 import '../pages/me/verify/verify_photo/verify_photo_page.dart';
 import '../pages/message/message_page.dart';
 import '../pages/moments/moments_page.dart';
@@ -100,6 +101,7 @@ class AppRoutes {
   static const String purchaseRecord = '/purchase_record';
   static const String aboutMe = '/about_me';
   static const String notification = '/notification';
+  static const String host = '/host';
 
   static const String homeProfileDetail = '$home$profileDetail';
   static const String homeProfileMoments = '$homeProfileDetail$profileMoments';
@@ -133,6 +135,7 @@ class AppRoutes {
   static const String meSettingsPurchaseRecord = '$meSettings$purchaseRecord';
   static const String meSettingsAboutMe = '$meSettings$aboutMe';
   static const String meLocationDetail = '$meMyProfileChangeLocation$locationDetail';
+  static const String meHost ='$me$host';
 
 
   //route transition
@@ -367,6 +370,12 @@ class AppRoutes {
       page: () => MePage(),
       children: [
         getx.GetPage(
+          name: host,
+          page: () => HostPage(),
+          transition: defaultTransition,
+          transitionDuration: defaultDuration,
+        ),
+        getx.GetPage(
           name: photo,
           page: () => PhotoPage(),
           transition: defaultTransition,
@@ -444,7 +453,7 @@ class AppRoutes {
             ),
             getx.GetPage(
               name: verifyID,
-              page: () => VerifyIDPage(),
+              page: () => VerifyVideoPage(),
               transition: defaultTransition,
               transitionDuration: defaultDuration,
             ),

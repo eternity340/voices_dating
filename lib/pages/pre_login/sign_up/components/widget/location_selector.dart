@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import '../../../../../entity/User.dart';
 import '../location_box.dart';
 
-
 class LocationSelector extends StatefulWidget {
   final User user;
   final Function(String? country, String? state, String? city) onLocationSelected;
@@ -21,17 +20,34 @@ class _LocationSelectorState extends State<LocationSelector> {
 
   void updateLocation({String? country, String? state, String? city}) {
     setState(() {
-      if (country != null) selectedCountry = country;
-      if (state != null) selectedState = state;
-      if (city != null) selectedCity = city;
+      selectedCountry = country;
+      selectedState = state;
+      selectedCity = city;
       widget.onLocationSelected(selectedCountry, selectedState, selectedCity);
     });
+  }
+
+  String _getDisplayText() {
+    if (selectedCountry == null || selectedCountry == "Select Country") {
+      return "Select location";
+    }
+
+    List<String> parts = [];
+    if (selectedCity != null && selectedCity != "Select City") {
+      parts.add(selectedCity!);
+    }
+    if (selectedState != null && selectedState != "Select State") {
+      parts.add(selectedState!);
+    }
+    parts.add(selectedCountry!);
+
+    return parts.join(", ");
   }
 
   @override
   Widget build(BuildContext context) {
     return LocationBox(
-      text: 'State: ${selectedState ?? "Select State"}, Country: ${selectedCountry ?? "Select Country"}',
+      text: _getDisplayText(),
       onTap: () async {
         final result = await Get.toNamed('/location_detail', arguments: widget.user);
         if (result != null) {

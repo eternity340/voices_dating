@@ -22,11 +22,22 @@ class HomeController extends GetxController {
   var honeyCurrentPage = 1;
   var nearbyCurrentPage = 1;
   var hasMoreData = true.obs;
+  final Rx<UserDataEntity?> rxUserData = Rx<UserDataEntity?>(null);
 
   HomeController(this.tokenEntity) {
     pageController = PageController(initialPage: 0);
     fetchUsers();
     fetchNearUsers();
+    _initUserData();
+  }
+
+  UserDataEntity? get userData => AppService.instance.selfUser;
+
+  void _initUserData() {
+    rxUserData.value = AppService.instance.rxSelfUser.value;
+    ever(AppService.instance.rxSelfUser, (userData) {
+      rxUserData.value = userData;
+    });
   }
 
 
@@ -144,8 +155,6 @@ class HomeController extends GetxController {
   void _setErrorMessage(String value) {
     errorMessage.value = value;
   }
-
-  UserDataEntity? get userData => AppService.instance.rxSelfUser.value;
 
   void navigateToFeelPage() {
     if (userData != null) {

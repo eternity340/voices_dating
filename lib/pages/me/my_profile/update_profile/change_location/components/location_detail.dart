@@ -32,12 +32,13 @@ class _LocationDetailPageState extends State<LocationDetail> {
   late TokenEntity tokenEntity;
   int? selectedStateId;
   List<CityEntity> cities = [];
+  bool isButtonEnabled = false;
 
   @override
   void initState() {
     super.initState();
-    userData = Get.arguments['userData'] as UserDataEntity;
-    tokenEntity = Get.arguments['token'] as TokenEntity;
+    userData = Get.arguments['userDataEntity'] as UserDataEntity;
+    tokenEntity = Get.arguments['tokenEntity'] as TokenEntity;
   }
 
   @override
@@ -85,20 +86,22 @@ class _LocationDetailPageState extends State<LocationDetail> {
               curve: Curves.easeOut,
               transform: Matrix4.translationValues(-8.w, 0, 0),
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
+                gradient: LinearGradient(
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
-                  colors: [Color(0xFFD6FAAE), Color(0xFF20E2D7)],
+                  colors: isButtonEnabled
+                      ? [Color(0xFFD6FAAE), Color(0xFF20E2D7)]
+                      : [Color(0xFFC3C3CB), Color(0xFFC3C3CB)],
                 ),
                 borderRadius: BorderRadius.circular(24.5.r),
               ),
               width: 88.w,
               height: 36.h,
               child: TextButton(
-                onPressed: updateProfile,
+                onPressed: isButtonEnabled ? updateProfile : null,
                 child: Text(
                   ConstantData.saveText,
-                  style: ConstantStyles.actionButtonTextStyle,
+                  style: ConstantStyles.actionButtonTextStyle
                 ),
               ),
             ),
@@ -187,6 +190,7 @@ class _LocationDetailPageState extends State<LocationDetail> {
                           selectedCountry = items[index].toString();
                           selectedState = ConstantData.selectedState;
                           selectedCity = ConstantData.selectedCity;
+                          isButtonEnabled = true;
                         } else if (type == ConstantData.stateText) {
                           selectedState = items[index].toString();
                           selectedCity = ConstantData.selectedCity;
@@ -258,19 +262,29 @@ class _LocationDetailPageState extends State<LocationDetail> {
     int? countryId = await LocationDataDB.db.getCountryIdByName(selectedCountry);
     int? stateId = await LocationDataDB.db.getStateIdByName(selectedState);
     String? cityId = cities.firstWhereOrNull((city) => city.cityName == selectedCity)?.cityId?.toString();
-    if (countryId == null || stateId == null || cityId == null || cityId.isEmpty) {
+
+    // 只检查 countryId，因为我们允许只选择国家就保存
+    if (countryId == null) {
       Get.snackbar(ConstantData.errorText, ConstantData.invalidLocation);
       return;
+    }
+
+    Map<String, dynamic> updateParams = {
+      'user[countryId]': countryId,
+    };
+
+    // 如果选择了州/省和城市，则添加到更新参数中
+    if (stateId != null) {
+      updateParams['user[stateId]'] = stateId;
+    }
+    if (cityId != null && cityId.isNotEmpty) {
+      updateParams['user[cityId]'] = cityId;
     }
 
     await DioClient.instance.requestNetwork<void>(
       method: Method.post,
       url: ApiConstants.updateProfile,
-      queryParameters: {
-        'user[countryId]': countryId,
-        'user[stateId]': stateId,
-        'user[cityId]': cityId,
-      },
+      queryParameters: updateParams,
       options: Options(headers: {'token': tokenEntity.accessToken}),
       onSuccess: (data) async {
         await globalService.refreshUserData(tokenEntity.accessToken.toString());
@@ -280,11 +294,9 @@ class _LocationDetailPageState extends State<LocationDetail> {
         });
       },
       onError: (code, msg, data) {
-        Get.snackbar(ConstantData.failedText,msg);
+        Get.snackbar(ConstantData.failedText, msg);
       },
     );
   }
-
-
 }
 

@@ -77,4 +77,6 @@ class ImageRes{
   static const  iconChatMessagePath = 'assets/images/icon_chat_message.png';
   static const  iconChatVoiceImagePath = 'assets/images/icon_chat_voice.png';
   static const  iconChatPhotoImagePath = 'assets/images/icon_chat_photo.png';
+  //host
+  static const  hostLiveImagePath = 'assets/images/host_live.png';
 }

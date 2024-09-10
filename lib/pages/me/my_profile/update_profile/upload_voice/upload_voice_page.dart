@@ -15,8 +15,8 @@ class UploadVoicePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<UploadVoiceController>(
       init: UploadVoiceController(
-          Get.arguments['token'],
-          Get.arguments['userData'],
+          Get.arguments['tokenEntity'],
+          Get.arguments['userDataEntity'],
           Get.arguments['recordFilePath']
       ),
       builder: (controller) => PopScope(

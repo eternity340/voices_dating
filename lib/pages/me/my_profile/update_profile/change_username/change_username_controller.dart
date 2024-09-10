@@ -1,5 +1,4 @@
-import 'package:first_app/entity/User.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
 import '../../../../../constants/constant_data.dart';
@@ -8,9 +7,11 @@ import '../../../../../entity/user_data_entity.dart';
 import '../../../../../net/api_constants.dart';
 import '../../../../../net/dio.client.dart';
 import '../../../../../routes/app_routes.dart';
+import '../../../../../service/app_service.dart';
 
-class ChangeUsernameController {
+class ChangeUsernameController extends GetxController {
   final TextEditingController controller = TextEditingController();
+  final AppService appService = Get.find<AppService>();
 
   int charCount = 0;
 
@@ -25,16 +26,16 @@ class ChangeUsernameController {
       await DioClient.instance.requestNetwork<UserDataEntity>(
         method: Method.post,
         url: ApiConstants.updateProfile,
-        queryParameters: {'username': newUsername},
+        queryParameters: {'user[username]': newUsername},
         options: Options(headers: {'token': tokenEntity.accessToken}),
         onSuccess: (data) async {
           if (data != null) {
-            userData.username = newUsername;
-            Get.snackbar('Success', 'Change username success');
-            await Future.delayed(Duration(seconds: 2));
+            await appService.updateStoredUserData({'username': newUsername});
+            Get.snackbar(ConstantData.successText, ConstantData.successUpdateProfile);
+            await Future.delayed(Duration(seconds: 1));
             Get.toNamed(AppRoutes.meMyProfile, arguments: {
-              'token': tokenEntity,
-              'userData': userData
+              'tokenEntity': tokenEntity,
+              'userDataEntity': appService.selfUser
             });
           } else {
             Get.snackbar(ConstantData.errorText, ConstantData.failedUpdateProfile);
@@ -42,11 +43,10 @@ class ChangeUsernameController {
         },
         onError: (code, msg, data) {
           Get.snackbar(ConstantData.errorText, msg);
-        },
+        }
       );
     } catch (e) {
       Get.snackbar(ConstantData.errorText, e.toString());
     }
   }
-
 }

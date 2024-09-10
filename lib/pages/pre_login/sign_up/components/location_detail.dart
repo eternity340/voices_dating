@@ -1,6 +1,17 @@
+import 'package:dio/dio.dart';
+import 'package:first_app/service/token_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import '../../../../constants/Constant_styles.dart';
+import '../../../../constants/constant_data.dart';
 import '../../../../entity/User.dart';
 import '../../../../components/background.dart';
+import '../../../../entity/city_entity.dart';
+import '../../../../image_res/image_res.dart';
+import '../../../../net/api_constants.dart';
+import '../../../../net/dio.client.dart';
 import '../../../../storage/location_data_db.dart';
 
 class LocationDetailPage extends StatefulWidget {
@@ -13,198 +24,245 @@ class LocationDetailPage extends StatefulWidget {
 }
 
 class _LocationDetailPageState extends State<LocationDetailPage> {
-  String selectedCountry = "Select Country";
-  String selectedState = "Select State";
-  String selectedCity = "Select City";
-
-  void _showLocationSelection(BuildContext context, String type) async {
-    final items = await _getItemsByType(type);
-
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          height: 250,
-          child: ListView.builder(
-            itemCount: items.length,
-            itemBuilder: (BuildContext context, int index) {
-              return ListTile(
-                title: Text(items[index].toString()),
-                onTap: () {
-                  setState(() {
-                    if (type == 'country') {
-                      selectedCountry = items[index].toString();
-                      selectedState = "Select State";
-                      selectedCity = "Select City";
-                    } else if (type == 'state') {
-                      selectedState = items[index].toString();
-                      selectedCity = "Select City";
-                    } else if (type == 'city') {
-                      selectedCity = items[index].toString();
-                    }
-                  });
-                  Navigator.pop(context);
-                },
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
-
-  Future<List<String>> _getItemsByType(String type) async {
-    if (type == 'country') {
-      return (await LocationDataDB.db.getCountries).map((country) => country.couName!).toList();
-    } else if (type == 'state') {
-      if (selectedCountry != "Select Country") {
-        int countryId = await LocationDataDB.db.getCountryIdByName(selectedCountry) ?? -1;
-        if (countryId != -1) {
-          return (await LocationDataDB.db.getStatesListById(countryId)).map((state) => state.sttName!).toList();
-        }
-      }
-    } else if (type == 'city') {
-      if (selectedState != "Select State") {
-        int stateId = await LocationDataDB.db.getStateIdByName(selectedState) ?? -1;
-        int countryId = await LocationDataDB.db.getCountryIdByName(selectedCountry) ?? -1;
-        if (stateId != -1 && countryId != -1) {
-          return (await LocationDataDB.db.getCitiesListById(stateId, countryId)).map((city) => city.cityName!).toList();
-        }
-      }
-    }
-    return [];
-  }
+  String selectedCountry = ConstantData.selectedCountry;
+  String selectedState = ConstantData.selectedState;
+  String selectedCity = ConstantData.selectedCity;
+  int? selectedStateId;
+  List<CityEntity> cities = [];
+  bool isCityLoading = false;
 
   @override
   Widget build(BuildContext context) {
     return Background(
       showBackgroundImage: false,
-      showBackButton: false,
-      child: Column(
+      showBackButton: true,
+      showMiddleText: true,
+      middleText: ConstantData.locationHeaderTitle,
+      child: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        'assets/images/back.png',
-                        width: 24,
-                        height: 24,
-                      ),
-                      SizedBox(width: 8),
-                      const Text(
-                        'Back',
-                        style: TextStyle(
-                          fontFamily: 'OpenSans',
-                          fontSize: 14,
-                          color: Colors.black,
-                          letterSpacing: 2,
-                        ),
-                      ),
-                    ],
-                  ),
+          Positioned(
+            top: 0.h,
+            right: 20.w,
+            child: AnimatedContainer(
+              duration: Duration(milliseconds: 300),
+              curve: Curves.easeOut,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [Color(0xFFD6FAAE), Color(0xFF20E2D7)],
                 ),
-                const Text(
-                  'Location',
+                borderRadius: BorderRadius.circular(24.5.r),
+              ),
+              width: 88.w,
+              height: 36.h,
+              child: TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop({
+                    'country': selectedCountry,
+                    'state': selectedState,
+                    'city': selectedCity,
+                  });
+                },
+                child: Text(
+                  'Save',
                   style: TextStyle(
                     fontFamily: 'Poppins',
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    height: 22 / 18,
+                    fontSize: 14.sp,
                     color: Colors.black,
                   ),
                 ),
-                AnimatedContainer(
-                  duration: Duration(milliseconds: 300),
-                  curve: Curves.easeOut,
-                  transform: Matrix4.translationValues(-8, 0, 0),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                      colors: [Color(0xFFD6FAAE), Color(0xFF20E2D7)],
-                    ),
-                    borderRadius: BorderRadius.circular(24.5),
-                  ),
-                  width: 88,
-                  height: 36,
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop({
-                        'country': selectedCountry,
-                        'state': selectedState,
-                        'city': selectedCity,
-                      });
-                    },
-                    child: const Text(
-                      'Save',
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 14,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 80.h,
+            left: 20.w,
+            right: 20.w,
+            child: Column(
+              children: [
+                _buildLocationBox(
+                    'Country: $selectedCountry',
+                    ImageRes.imagePathBackButton,
+                    ConstantData.countryText),
+                SizedBox(height: 20.h),
+                _buildLocationBox(
+                    'State: $selectedState'
+                    ,ImageRes.imagePathBackButton,
+                    ConstantData.stateText),
+                SizedBox(height: 20.h),
+                _buildLocationBox(
+                    'City: $selectedCity',
+                    ImageRes.imagePathBackButton,
+                    ConstantData.cityText),
               ],
             ),
           ),
-          SizedBox(height: 100),
-          _buildLocationBox('Country: $selectedCountry', 'assets/images/Path.png', 'country'),
-          SizedBox(height: 20),
-          _buildLocationBox('State: $selectedState', 'assets/images/Path.png', 'state'),
-          SizedBox(height: 20),
-          _buildLocationBox('City: $selectedCity', 'assets/images/Path.png', 'city'),
         ],
       ),
     );
   }
 
   Widget _buildLocationBox(String text, String iconPath, String type) {
+    bool isEnabled = type == 'country' ||
+        (type == 'state' && selectedCountry != ConstantData.selectedCountry) ||
+        (type == 'city' && selectedState != ConstantData.selectedState && !isCityLoading);
+
     return GestureDetector(
-      onTap: () {
-        _showLocationSelection(context, type);
-      },
-      child: Container(
-        width: 335,
-        height: 69,
-        decoration: BoxDecoration(
-          color: Color(0xFFF8F8F9),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(
-                child: Text(
-                  text,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
+      onTap: isEnabled ? () => _showLocationSelection(context, type) : null,
+      child: Opacity(
+        opacity: isEnabled ? 1.0 : 0.5,
+        child: Container(
+          width: 335.w,
+          height: 69.h,
+          decoration: BoxDecoration(
+            color: Color(0xFFF8F8F9),
+            borderRadius: BorderRadius.circular(10.r),
+          ),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  child: Text(
+                    text,
+                    style: ConstantStyles.locationListStyle,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-              Image.asset(
-                iconPath,
-                width: 10,
-                height: 12,
-              ),
-            ],
+                if (type == 'city' && isCityLoading)
+                  SizedBox(
+                    width: 20.w,
+                    height: 20.h,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.w,
+                    ),
+                  )
+                else
+                  Image.asset(
+                    iconPath,
+                    width: 10.w,
+                    height: 12.h,
+                  ),
+              ],
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  void _showLocationSelection(BuildContext context, String type) async {
+    final items = await _getItemsByType(type);
+
+    Get.bottomSheet(
+      Container(
+        height: Get.height * 0.5,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+        ),
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 16.h),
+              child: Text(
+                'Select ${type.capitalize}',
+                style: ConstantStyles.selectLocationStyle,
+              ),
+            ),
+            Expanded(
+              child: ListView.separated(
+                itemCount: items.length,
+                separatorBuilder: (context, index) => Divider(
+                  height: 1.h,
+                  color: Colors.grey[300],
+                ),
+                itemBuilder: (BuildContext context, int index) {
+                  return ListTile(
+                    title: Text(
+                      items[index].toString(),
+                      style: ConstantStyles.locationListStyle,
+                    ),
+                    onTap: () {
+                      setState(() {
+                        if (type == 'country') {
+                          selectedCountry = items[index].toString();
+                          selectedState = ConstantData.selectedState;
+                          selectedCity = ConstantData.selectedCity;
+                          cities.clear();
+                        } else if (type == 'state') {
+                          selectedState = items[index].toString();
+                          selectedCity = ConstantData.selectedCity;
+                          _getStateId(selectedState);
+                        } else if (type == 'city') {
+                          selectedCity = items[index].toString();
+                        }
+                      });
+                      Get.back();
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      backgroundColor: Colors.transparent,
+    );
+  }
+
+
+  Future<List<String>> _getItemsByType(String type) async {
+    if (type == 'country') {
+      return (await LocationDataDB.db.getCountries).map((country) => country.couName!).toList();
+    } else if (type == 'state') {
+      if (selectedCountry != ConstantData.selectedCountry) {
+        int countryId = await LocationDataDB.db.getCountryIdByName(selectedCountry) ?? -1;
+        if (countryId != -1) {
+          return (await LocationDataDB.db.getStatesListById(countryId)).map((state) => state.sttName!).toList();
+        }
+      }
+    } else if (type == 'city') {
+      return cities.map((city) => city.cityName!).toList();
+    }
+    return [];
+  }
+
+  void _getStateId(String stateName) async {
+    setState(() {
+      isCityLoading = true;
+    });
+    selectedStateId = await LocationDataDB.db.getStateIdByName(stateName);
+    if (selectedStateId != null) {
+      await _fetchCities(selectedStateId!);
+    }
+    setState(() {
+      isCityLoading = false;
+    });
+  }
+
+  Future<void> _fetchCities(int stateId) async {
+    await DioClient.instance.requestNetwork<List<CityEntity>>(
+      method: Method.get,
+      url: ApiConstants.getCityList,
+      queryParameters: {'stateId': stateId},
+      options: Options(headers: {'token': TokenService.instance.getToken()}),
+      onSuccess: (data) {
+        if (data != null) {
+          setState(() {
+            cities = data;
+          });
+        }
+      },
+      onError: (code, msg, data) {
+        print("Error fetching cities: $msg");
+      },
     );
   }
 }

@@ -229,8 +229,13 @@ class MePage extends StatelessWidget {
         _buildOptionRow(
             iconPath: ImageRes.imagePathIconHost,
             text: ConstantData.hostText,
-            onTap: () {
-            }),
+          onTap: () {
+            Get.toNamed(AppRoutes.meHost,
+                arguments: {
+                  'tokenEntity': tokenEntity,
+                  'userDataEntity': userDataEntity});
+          },
+        ),
         separator(),
       ],
     );

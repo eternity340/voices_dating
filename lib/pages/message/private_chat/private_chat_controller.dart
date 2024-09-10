@@ -1,4 +1,3 @@
-import 'package:first_app/entity/moment_entity.dart';
 import 'package:first_app/entity/user_data_entity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +7,6 @@ import 'package:dio/dio.dart';
 import 'package:first_app/entity/chatted_user_entity.dart';
 import 'package:intl/intl.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 import '../../../entity/im_message_entity.dart';
 import '../../../entity/im_new_message_emtity.dart';
@@ -32,11 +30,9 @@ class PrivateChatController extends GetxController {
   final TextEditingController textController = TextEditingController();
   Sender? currentUserSender;
   Sender? currentChatSender;
-  FlutterSoundRecorder? _audioRecorder;
-  String? _recordingPath;
   RxBool isRecording = false.obs;
-  int _currentPage = 1;
-  static const int _pageSize = 20;
+  int currentPage = 1;
+  static const int pageSize = 20;
   final AudioService audioService = AudioService();
 
   @override
@@ -155,7 +151,7 @@ class PrivateChatController extends GetxController {
       queryParameters: {
         'profId': chattedUser.userId,
         'page': page,
-        'offset': _pageSize
+        'offset': pageSize
       },
       options: Options(
         headers: {
@@ -189,8 +185,8 @@ class PrivateChatController extends GetxController {
   }
 
   Future<void> loadMoreMessages() async {
-    _currentPage++;
-    await getHistoryMessages(page: _currentPage, isLoadMore: true);
+    currentPage++;
+    await getHistoryMessages(page: currentPage, isLoadMore: true);
   }
 
   void sendTextMessage() {

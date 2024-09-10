@@ -73,6 +73,7 @@ dependencies:
   cupertino_icons: ^1.0.6
   flutter_svg: ^1.1.0
   modal_bottom_sheet:
+  device_info_plus:
 
 dev_dependencies:
   flutter_test:

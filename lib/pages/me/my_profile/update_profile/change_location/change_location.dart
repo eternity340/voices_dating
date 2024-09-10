@@ -11,8 +11,8 @@ import '../../../../../entity/user_data_entity.dart';
 import '../../../../../image_res/image_res.dart';
 
 class ChangeLocation extends StatelessWidget {
-  final TokenEntity tokenEntity = Get.arguments['token'] as TokenEntity;
-  final UserDataEntity userData = Get.arguments['userData'] as UserDataEntity;
+  final TokenEntity tokenEntity = Get.arguments['tokenEntity'] as TokenEntity;
+  final UserDataEntity userData = Get.arguments['userDataEntity'] as UserDataEntity;
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +35,8 @@ class ChangeLocation extends StatelessWidget {
                 child: GestureDetector(
                   onTap: () {
                     Get.toNamed(AppRoutes.meLocationDetail, arguments: {
-                      'userData': userData,
-                      'token': tokenEntity,
+                      'userDataEntity': userData,
+                      'tokenEntity': tokenEntity,
                     });
                   },
                   child: Container(
@@ -86,8 +86,8 @@ class ChangeLocation extends StatelessWidget {
 
   void navigateToMyProfile() {
     Get.offAllNamed(AppRoutes.meMyProfile, arguments: {
-      'token': tokenEntity,
-      'userData': userData,
+      'tokenEntity': tokenEntity,
+      'userDataEntity': userData,
     });
   }
 

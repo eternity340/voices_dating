@@ -1,7 +1,7 @@
+import 'package:first_app/constants/Constant_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../constants/constant_data.dart';
 
 class GradientButton extends StatelessWidget {
   final String text;
@@ -10,6 +10,7 @@ class GradientButton extends StatelessWidget {
   final double? height;
   final TextStyle? textStyle;
   final String? iconPath;
+  final bool isDisabled;
 
   GradientButton({
     required this.text,
@@ -18,19 +19,22 @@ class GradientButton extends StatelessWidget {
     this.height,
     this.textStyle,
     this.iconPath,
+    this.isDisabled = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onPressed ?? () {},
+      onTap: isDisabled ? null : (onPressed ?? () {}),
       child: Container(
         width: width?.w ?? 248.w,
         height: height?.h ?? 49.h,
         padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 24.w),
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFF20E2D7), Color(0xFFD8FAAD)],
+          gradient: LinearGradient(
+            colors: isDisabled
+                ? [Color(0xFFC3C3CB), Color(0xFFC3C3CB)]
+                : [Color(0xFF20E2D7), Color(0xFFD8FAAD)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -45,19 +49,15 @@ class GradientButton extends StatelessWidget {
                   iconPath!,
                   width: 24.w,
                   height: 24.h,
+                  color: isDisabled ? Colors.grey : null,
                 ),
                 SizedBox(width: 8.w),
               ],
               Text(
                 text.toUpperCase(),
-                style: textStyle ??
-                    TextStyle(
-                      fontSize: 16.sp,
-                      fontFamily: ConstantData.fontPoppins,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black,
-                      letterSpacing: 2.0,
-                    ),
+                style: isDisabled
+                    ? ConstantStyles.bottomBarTextStyle
+                    : ConstantStyles.bottomBarTextStyle,
               ),
             ],
           ),

@@ -6,6 +6,7 @@
     <script>
         var onSubmit = function(token) {
           console.log('success!');
+          console.log('Received token:', token);
            try {
                 RecaptchaFlutterChannel.postMessage(token);
               } catch (e) {
@@ -25,7 +26,6 @@
 
         function execute(){
             console.log("submit!!!");
-<!--            post({action:"submit"});-->
             grecaptcha.execute();
         }
 
@@ -33,12 +33,8 @@
 </head>
 <body>
 <span id="submit"></span>
-<!--<form action="?" method="POST">-->
-<!--    <input id='submit' type="submit" value="Submit">-->
-<!--</form>-->
 <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
         async defer>
 </script>
 </body>
 </html>
-

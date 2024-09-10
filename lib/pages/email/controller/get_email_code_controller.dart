@@ -14,6 +14,8 @@ class GetEmailCodeController extends GetxController {
   final FocusNode emailFocusNode = FocusNode();
   final RxBool isEmailFocused = false.obs;
   final RxString selectedDomain = '@gmail.com'.obs;
+  final RxBool isCustomDomain = false.obs;
+  final TextEditingController customDomainController = TextEditingController();
   final List<String> emailDomains = [
     '@gmail.com',
     '@yahoo.com',
@@ -28,16 +30,23 @@ class GetEmailCodeController extends GetxController {
     emailFocusNode.addListener(() {
       isEmailFocused.value = emailFocusNode.hasFocus;
     });
+    emailDomains.add('other');
   }
-
 
   void onDomainChanged(String? newValue) {
     if (newValue != null) {
       selectedDomain.value = newValue;
+      isCustomDomain.value = (newValue == 'other');
     }
   }
 
-  String get fullEmail => '${emailController.text}${selectedDomain.value}';
+  String get fullEmail {
+    if (isCustomDomain.value) {
+      return '${emailController.text}${customDomainController.text}';
+    } else {
+      return '${emailController.text}${selectedDomain.value}';
+    }
+  }
 
   Future<void> sendVerificationCode() async {
     isLoading.value = true;
@@ -89,6 +98,7 @@ class GetEmailCodeController extends GetxController {
   @override
   void onClose() {
     emailFocusNode.dispose();
+    customDomainController.dispose();
     super.onClose();
   }
 

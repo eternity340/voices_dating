@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart' as dio;
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import '../../../../../constants/constant_data.dart';
@@ -7,18 +6,13 @@ import '../../../../../entity/user_data_entity.dart';
 import '../../../../../net/api_constants.dart';
 import '../../../../../net/dio.client.dart';
 import '../../../../../routes/app_routes.dart';
+import '../../../../../service/app_service.dart';
 
 class ChangeHeightController extends GetxController {
-  late TokenEntity tokenEntity;
-  late UserDataEntity userData;
   int selectedHeight = 170;
+  final AppService appService = Get.find<AppService>();
 
-  void init(TokenEntity token, UserDataEntity user) {
-    tokenEntity = token;
-    userData = user;
-  }
-
-  void updateHeight() async {
+  void updateHeight(TokenEntity tokenEntity, UserDataEntity userData) async {
     try {
       await DioClient.instance.requestNetwork<UserDataEntity>(
         method: Method.post,
@@ -35,11 +29,12 @@ class ChangeHeightController extends GetxController {
         onSuccess: (updatedUserData) async {
           if (updatedUserData != null) {
             userData.height = updatedUserData.height;
+            await appService.updateStoredUserData({'height': updatedUserData.height});
             Get.snackbar(ConstantData.successText, ConstantData.successUpdateProfile);
-            await Future.delayed(Duration(seconds: 2));
+            await Future.delayed(Duration(seconds: 1));
             Get.toNamed(AppRoutes.meMyProfile, arguments: {
-              'token': tokenEntity,
-              'userData': userData
+              'tokenEntity': tokenEntity,
+              'userDataEntity': userData
             });
           } else {
             Get.snackbar(ConstantData.errorText, ConstantData.failedUpdateProfile);

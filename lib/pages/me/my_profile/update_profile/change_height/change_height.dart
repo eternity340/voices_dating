@@ -10,19 +10,18 @@ import '../../../../pre_login/sign_up/components/height_picker.dart';
 import 'change_height_controller.dart';
 
 class ChangeHeight extends StatefulWidget {
-  final TokenEntity tokenEntity = Get.arguments['token'] as TokenEntity;
-  final UserDataEntity userData = Get.arguments['userData'] as UserDataEntity;
-
   @override
   _ChangeHeightState createState() => _ChangeHeightState();
 }
 
 class _ChangeHeightState extends State<ChangeHeight> {
   final ChangeHeightController _controller = ChangeHeightController();
+  bool isButtonEnabled = false;
 
   @override
   Widget build(BuildContext context) {
-
+    final TokenEntity tokenEntity = Get.arguments['tokenEntity'] as TokenEntity;
+    final UserDataEntity userData = Get.arguments['userDataEntity'] as UserDataEntity;
     return Scaffold(
       body: Background(
         showBackgroundImage: false,
@@ -38,7 +37,7 @@ class _ChangeHeightState extends State<ChangeHeight> {
               child: Center(
                 child: Column(
                   children: [
-                     Text(
+                    Text(
                       ConstantData.changeHeightText,
                       style: ConstantStyles.changeHeightTextStyle,
                       textAlign: TextAlign.center,
@@ -49,6 +48,7 @@ class _ChangeHeightState extends State<ChangeHeight> {
                       onHeightChanged: (newHeight) {
                         setState(() {
                           _controller.selectedHeight = newHeight;
+                          isButtonEnabled = true;
                         });
                       },
                     ),
@@ -64,18 +64,22 @@ class _ChangeHeightState extends State<ChangeHeight> {
                 curve: Curves.easeOut,
                 transform: Matrix4.translationValues(-8.w, 0, 0),
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
+                  gradient: LinearGradient(
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
-                    colors: [Color(0xFFD6FAAE), Color(0xFF20E2D7)],
+                    colors: isButtonEnabled
+                        ? [Color(0xFFD6FAAE), Color(0xFF20E2D7)]
+                        : [Color(0xFFC3C3CB), Color(0xFFC3C3CB)],
                   ),
                   borderRadius: BorderRadius.circular(24.5.r),
                 ),
                 width: 88.w,
                 height: 36.h,
                 child: TextButton(
-                  onPressed: () => _controller.updateHeight(),
-                  child:  Text(
+                  onPressed: isButtonEnabled
+                      ? () => _controller.updateHeight(tokenEntity, userData)
+                      : null,
+                  child: Text(
                     ConstantData.saveText,
                     style: ConstantStyles.saveButtonTextStyle,
                   ),

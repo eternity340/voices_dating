@@ -66,10 +66,14 @@ class GetMailCodePage extends GetView<GetEmailCodeController> {
                           filled: true,
                           fillColor: Colors.transparent,
                           labelStyle: TextStyle(
-                            color: controller.isEmailFocused.value ? Color(0xFF20E2D7) : Colors.black,
+                            color: controller.isEmailFocused.value
+                                ? Color(0xFF20E2D7)
+                                : Colors.black,
                           ),
                           floatingLabelStyle: TextStyle(
-                            color: controller.isEmailFocused.value ? Color(0xFF20E2D7) : Colors.black,
+                            color: controller.isEmailFocused.value
+                                ? Color(0xFF20E2D7)
+                                : Colors.black,
                           ),
                         ),
                         keyboardType: TextInputType.emailAddress,
@@ -80,28 +84,41 @@ class GetMailCodePage extends GetView<GetEmailCodeController> {
                     SizedBox(width: 10.w),
                     Expanded(
                       flex: 3,
-                      child: Obx(() => DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          value: controller.selectedDomain.value,
-                          icon: Icon(Icons.arrow_drop_down, color: Colors.black),
-                          isExpanded: true,
-                          dropdownColor: Colors.white,
-                          items: controller.emailDomains.map((String domain) {
-                            return DropdownMenuItem<String>(
-                              value: domain,
-                              child: Text(
-                                domain,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 16.sp,
-                                  fontFamily: ConstantData.fontPoppins,
-                                ),
+                      child: Column(
+                        children: [
+                          Obx(() => DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              value: controller.selectedDomain.value,
+                              icon: Icon(Icons.arrow_drop_down, color: Colors.black),
+                              isExpanded: true,
+                              dropdownColor: Colors.white,
+                              style: ConstantStyles.pathBoxTextStyle,
+                              items: controller.emailDomains.map((String domain) {
+                                return DropdownMenuItem<String>(
+                                  value: domain,
+                                  child: Text(domain),
+                                );
+                              }).toList(),
+                              onChanged: controller.onDomainChanged,
+                            ),
+                          )),
+                          Obx(() => controller.isCustomDomain.value
+                              ? Padding(
+                            padding: EdgeInsets.only(top: 8.h),
+                            child: TextField(
+                              controller: controller.customDomainController,
+                              decoration: InputDecoration(
+                                hintText: 'your email domain',
+                                border: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                                focusedBorder: InputBorder.none,
                               ),
-                            );
-                          }).toList(),
-                          onChanged: controller.onDomainChanged,
-                        ),
-                      )),
+                              style: ConstantStyles.pathBoxTextStyle,
+                            ),
+                          )
+                              : SizedBox.shrink()),
+                        ],
+                      ),
                     ),
                   ],
                 ),

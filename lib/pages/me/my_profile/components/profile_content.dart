@@ -28,7 +28,7 @@ class ProfileContent extends StatelessWidget {
               value: userData.username,
               onTap: () {
                 Get.toNamed(AppRoutes.meMyProfileChangeUsername,
-                    arguments: {'token': tokenEntity, 'userData': userData});
+                    arguments: {'tokenEntity': tokenEntity, 'userDataEntity': userData});
               },
             ),
             _buildInfoSection(
@@ -37,7 +37,7 @@ class ProfileContent extends StatelessWidget {
               value: userData.age.toString(),
               onTap: () {
                 Get.toNamed(AppRoutes.meMyProfileChangeAge,
-                    arguments: {'token': tokenEntity, 'userData': userData});
+                    arguments: {'tokenEntity': tokenEntity, 'userDataEntity': userData});
               },
             ),
             _buildInfoSection(
@@ -46,7 +46,7 @@ class ProfileContent extends StatelessWidget {
               value: userData.height != null ? '${userData.height} cm' : '',
               onTap: () {
                 Get.toNamed(AppRoutes.meMyProfileChangeHeight,
-                    arguments: {'token': tokenEntity, 'userData': userData});
+                    arguments: {'tokenEntity': tokenEntity, 'userDataEntity': userData});
               },
             ),
             _buildInfoSection(
@@ -55,7 +55,7 @@ class ProfileContent extends StatelessWidget {
               value: userData.headline.toString(),
               onTap: () {
                 Get.toNamed(AppRoutes.meMyProfileChangeHeadline,
-                    arguments: {'token': tokenEntity, 'userData': userData});
+                    arguments: {'tokenEntity': tokenEntity, 'userDataEntity': userData});
               },
             ),
             _buildInfoSection(
@@ -68,7 +68,7 @@ class ProfileContent extends StatelessWidget {
                   : '',
               onTap: () {
                 Get.toNamed(AppRoutes.meMyProfileChangeLocation,
-                    arguments: {'token': tokenEntity, 'userData': userData});
+                    arguments: {'tokenEntity': tokenEntity, 'userDataEntity': userData});
               },
             ),
             _buildInfoSection(
@@ -77,7 +77,7 @@ class ProfileContent extends StatelessWidget {
                 value: userData.voice?.description ?? ConstantData.noVoiceText,
                 onTap: () {
                   Get.toNamed(AppRoutes.meMyProfileUploadVoice,
-                      arguments: {'token': tokenEntity, 'userData': userData});
+                    arguments: {'tokenEntity': tokenEntity, 'userDataEntity': userData});
                 }
             ),
           ],

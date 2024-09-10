@@ -8,9 +8,11 @@ import '../../../../../entity/user_data_entity.dart';
 import '../../../../../net/api_constants.dart';
 import '../../../../../net/dio.client.dart';
 import '../../../../../routes/app_routes.dart';
+import '../../../../../service/app_service.dart';
 
 class ChangeHeadlineController extends GetxController {
   final TextEditingController headlineController = TextEditingController();
+  final AppService appService = Get.find<AppService>();
   var charCount = 0.obs;
 
   void updateCharCount(String text) {
@@ -34,11 +36,12 @@ class ChangeHeadlineController extends GetxController {
         onSuccess: (data) async {
           if (data != null) {
             userData.headline = headlineController.text;
+            await appService.updateStoredUserData({'headline': headlineController.text});
             Get.snackbar(ConstantData.successText, ConstantData.successUpdateProfile);
-            await Future.delayed(Duration(seconds: 2));
+            await Future.delayed(Duration(seconds: 1));
             Get.toNamed(AppRoutes.meMyProfile, arguments: {
-              'token': tokenEntity,
-              'userData': userData
+              'tokenEntity': tokenEntity,
+              'userDataEntity': userData
             });
           } else {
             Get.snackbar(ConstantData.errorText, ConstantData.failedUpdateProfile);

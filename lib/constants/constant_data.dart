@@ -125,6 +125,8 @@ class ConstantData {
   static const deleteMomentContent = 'Are you sure you want to delete this moment?';
   static const signOutText = 'Are you sure you want to sign out?';
   static const momentUploadSuccess = 'Moment uploaded successfully!';
+  static const setAvatarTitle = 'Set Avatar';
+  static const setAvatarContent = "Are you sure you want to set this photo as your avatar?";
   //snack
   static const userHasBlocked = 'User has been blocked';
   static const failedBlocked ='Failed to block user';
@@ -143,6 +145,7 @@ class ConstantData {
   static const feedBackSuccess = 'Feedback submitted successfully';
   static const failedComment = 'Failed to add comment';
   static const errorText = 'Error';
+  static const noticeText = 'Notice';
   //detail_bottom_bar
   static const likeText='like';
   //get_email_code
@@ -259,7 +262,7 @@ class ConstantData {
   static const  cleanUpMemory = 'Clean up memory';
   static const  signOut = 'Sign Out';
   //verify_id
-  static const  verifyIdText = 'Verify ID';
+  static const  verifyPhotoText = 'Verify Photo';
   static const  turnLeftText = 'Turn left';
   static const  turnRightText = 'Turn right';
   static const  nodText = "Please nod";
@@ -268,10 +271,12 @@ class ConstantData {
   static const  startText = 'Start';
   static const  followPromptsText = 'Follow the prompts';
   //verify_photo
-  static const  verifyPhotoText = 'Verify Photo';
-  static const  verifyContentText = 'Please upload a live photo and we will analyze whether your photo is yourself.';
+  static const  verifyVideoText = 'Verify Video';
+  static const  verifyContentText = 'Please upload an ID and we will analyze your photo to see if it is you.';
   static const  uploadText = 'Upload';
   static const  verifyMiddleText =  'Verify';
+  static const  verifySuccessTitle = 'Verify Photo does not match ';
+
   //me_page
   static const  myProfileText = 'My Profile';
   static const  hostText = 'I am Host';
@@ -322,5 +327,13 @@ class ConstantData {
   static const sendMessageText = "Send a message…";
   static const releaseCancelText = "Release to cancel";
   static const slideUpText =  "Slide up to cancel";
+  //host
+  static const hostTitle = 'I am the Host';
+  static const emotionalExpertText ='Emotional expert';
+  static const wakeUpAlarmText = 'Wake up alarm';
+  static const gameAccompanimentText = 'Game accompaniment';
+  static const nightReliefText ='Night relief';
+  static const lifeGossipText = 'Life gossip';
+  static const becomePodcastText = 'Become a podcast';
 }
 

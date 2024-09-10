@@ -12,7 +12,7 @@ import '../../../components/background.dart';
 import '../../../components/bottom_options.dart';
 import '../../../constants/constant_data.dart';
 import '../../../image_res/image_res.dart';
-import '../../../components/photo_dialog.dart';
+
 
 class PhotoPage extends StatelessWidget {
   @override
@@ -156,7 +156,7 @@ class PhotoPage extends StatelessWidget {
     return List.generate(controller.userData.photos!.length - 1, (i) {
       return GestureDetector(
         onTap: () {
-          showPhotoDialog(controller.userData.photos![i + 1].url!,controller.userData.photos![i+1].attachId!);
+          controller.showPhotoDialog(controller.userData.photos![i + 1].url!,controller.userData.photos![i+1].attachId!);
         },
         child: Container(
           width: 137.09.w,
@@ -179,29 +179,6 @@ class PhotoPage extends StatelessWidget {
         ),
       );
     });
-  }
-
-  void showPhotoDialog(String photoUrl, String attachId) {
-    final PhotoController controller = Get.find<PhotoController>();
-
-    showDialog(
-      context: Get.context!,
-      barrierDismissible: true,
-      builder: (context) {
-        return PhotoDialog(
-          photoUrl: photoUrl,
-          attachId: attachId,
-          onDelete: () async {
-            await controller.deletePhoto(attachId);
-            Navigator.of(context).pop();
-          },
-          onSetting: () async {
-            await controller.setAvatar(attachId);
-            Navigator.of(context).pop();
-          },
-        );
-      },
-    );
   }
 
   void showOptions(BuildContext context, String accessToken, PhotoController controller) {
