@@ -135,6 +135,7 @@ class ConstantData {
   static const invalidLocation =  'Invalid location selection';
   static const usernameCharacters = 'Username must be 16 characters or fewer';
   static const uploadSuccess = 'Upload successful!';
+  static const uploadFailed = 'Upload failed, please try again later';
   static const deletePhotoSuccess = 'Photo deleted successfully!';
   static const failedDeletePhoto =  'Failed to delete photo';
   static const avatarSetSuccess = 'Avatar set successfully!';
@@ -144,8 +145,11 @@ class ConstantData {
   static const unlockFailed ='Failed to unblock user';
   static const feedBackSuccess = 'Feedback submitted successfully';
   static const failedComment = 'Failed to add comment';
+  static const verifyVideoSuccessTitle = 'Video verification request sent successfully';
+  static const verifyVideoSuccessContent = 'Video verification request sent successfully,Video verification request sent successfully. Please wait patiently for manual review.';
   static const errorText = 'Error';
   static const noticeText = 'Notice';
+  static const gotItText = 'Got it';
   //detail_bottom_bar
   static const likeText='like';
   //get_email_code
@@ -275,14 +279,19 @@ class ConstantData {
   static const  verifyContentText = 'Please upload an ID and we will analyze your photo to see if it is you.';
   static const  uploadText = 'Upload';
   static const  verifyMiddleText =  'Verify';
-  static const  verifySuccessTitle = 'Verify Photo does not match ';
-
+  static const  verifyNotMatchTitle = 'Verify Photo does not match ';
+  static const  verificationRejectedTitle = 'Verification Rejected';
+  static const  verificationRejectedMessage = 'Your previous verification was rejected. Please try again.';
+  static const  verificationPendingTitle = 'Verification Pending';
+  static const  verificationPendingMessage = 'Currently under review, please wait for 1-2 business days.';
+  static const  verificationApprovalTitle = 'Verification Approval';
+  static const verificationApprovalMessage = "Congratulations! You have successfully passed the 'Verified Photo' review. Your profile is now verified.";
   //me_page
   static const  myProfileText = 'My Profile';
   static const  hostText = 'I am Host';
   //moments
   static const  recordMomentText = 'record the moment ...';
-  static const  colorTopicsHintText = 'You can use #+ content to add color topics.';
+  static const  colorTopicsHintText = 'You can use #+ content to add your emotion.';
   static const  recordTheMomentText = 'record the moment ...';
   static const  momentUploadSuccessText = 'Moment uploaded successfully!';
   static const  noComments = 'No comments';

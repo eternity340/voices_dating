@@ -2,7 +2,6 @@ import 'package:first_app/constants/Constant_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-
 class GradientButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
@@ -26,7 +25,8 @@ class GradientButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: isDisabled ? null : (onPressed ?? () {}),
-      child: Container(
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 300),
         width: width?.w ?? 248.w,
         height: height?.h ?? 49.h,
         padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 24.w),
@@ -45,19 +45,24 @@ class GradientButton extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (iconPath != null) ...[
-                Image.asset(
-                  iconPath!,
-                  width: 24.w,
-                  height: 24.h,
-                  color: isDisabled ? Colors.grey : null,
+                AnimatedSwitcher(
+                  duration: Duration(milliseconds: 300),
+                  child: Image.asset(
+                    iconPath!,
+                    key: ValueKey<bool>(isDisabled),
+                    width: 24.w,
+                    height: 24.h,
+                    color: isDisabled ? Colors.grey : null,
+                  ),
                 ),
                 SizedBox(width: 8.w),
               ],
-              Text(
-                text.toUpperCase(),
+              AnimatedDefaultTextStyle(
+                duration: Duration(milliseconds: 300),
                 style: isDisabled
                     ? ConstantStyles.bottomBarTextStyle
                     : ConstantStyles.bottomBarTextStyle,
+                child: Text(text.toUpperCase()),
               ),
             ],
           ),

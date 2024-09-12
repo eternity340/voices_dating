@@ -518,6 +518,22 @@ class ConstantStyles {
     fontSize: 12.sp,
     color: Colors.black,
   );
+  static TextStyle customDialogTitle = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 22.sp,
+    fontWeight: FontWeight.w500,
+    height: 22 / 16,
+    letterSpacing: -0.01,
+    color: Color(0xFF000000),
+  );
+  static TextStyle customDialogContent = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 16.sp,
+    fontWeight: FontWeight.normal,
+    height: 22 / 16,
+    letterSpacing: -0.01,
+    color: Color(0xFF000000),
+  );
   //me_page
   static TextStyle mePageUsernameTextStyle = TextStyle(
     fontFamily: ConstantData.fontOpenSans,

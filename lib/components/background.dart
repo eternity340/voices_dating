@@ -13,6 +13,9 @@ class Background extends StatelessWidget {
   final String? middleText;
   final bool showMiddleText;
   final bool showActionButton;
+  final VoidCallback? onBackPressed;
+  final VoidCallback? onSettingPressed;
+  final VoidCallback? onActionButtonPressed;
 
   const Background({
     Key? key,
@@ -23,6 +26,9 @@ class Background extends StatelessWidget {
     this.middleText,
     this.showMiddleText = false,
     this.showActionButton = false,
+    this.onBackPressed,
+    this.onSettingPressed,
+    this.onActionButtonPressed,
   }) : super(key: key);
 
   @override
@@ -52,9 +58,7 @@ class Background extends StatelessWidget {
                       top: 8.h,
                       left: 16.w,
                       child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
+                        onTap: onBackPressed ?? () => Navigator.of(context).pop(),
                         child: Row(
                           children: [
                             Image.asset(
@@ -102,9 +106,7 @@ class Background extends StatelessWidget {
                         width: 88.w,
                         height: 36.h,
                         child: TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
+                          onPressed: onActionButtonPressed ?? () => Navigator.of(context).pop(),
                           child: Text(
                             ConstantData.saveText,
                             style: ConstantStyles.actionButtonTextStyle,
@@ -117,8 +119,8 @@ class Background extends StatelessWidget {
                       top: 0.h,
                       right: 16.w,
                       child: GestureDetector(
-                        onTap: () {
-                          // 添加您的设置按钮操作
+                        onTap: onSettingPressed ?? () {
+                          // 默认的设置按钮操作
                         },
                         child: Image.asset(
                           ImageRes.imagePathSettingButton,
