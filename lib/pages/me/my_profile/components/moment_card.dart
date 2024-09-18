@@ -1,7 +1,9 @@
 import 'package:common_utils/common_utils.dart';
+import 'package:first_app/entity/attachment_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:dio/dio.dart';
+import '../../../../components/audio_player_widget.dart';
 import '../../../../components/bottom_options.dart';
 import '../../../../constants/Constant_styles.dart';
 import '../../../../constants/constant_data.dart';
@@ -47,81 +49,129 @@ class MomentCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 32.w,
-                      height: 32.h,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: NetworkImage(moment.avatar ?? ImageRes.placeholderAvatar),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 8.w),
-                    Flexible(
-                      child: Text(
-                        moment.username ?? ConstantData.unknownText,
-                        style: ConstantStyles.usernameMomentStyle,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    Spacer(),
-                  ],
-                ),
+                _buildUserInfo(),
                 SizedBox(height: 16.h),
-                Text(
-                  moment.timelineDescr ?? ConstantData.noDescription,
-                  style: ConstantStyles.descriptionStyle,
-                ),
+                _buildDescription(),
                 SizedBox(height: 16.h),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: moment.attachments?.map((attachment) {
-                      return Container(
-                        width: 137.09.w,
-                        height: 174.h,
-                        margin: EdgeInsets.only(right: 10.w),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20.r),
-                          image: DecorationImage(
-                            image: NetworkImage(attachment.url ?? ImageRes.placeholderAvatar),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      );
-                    }).toList() ?? [],
-                  ),
-                ),
+                _buildAttachments(),
               ],
             ),
           ),
-          Positioned(
-            left: 259.w,
-            top: 12.h,
-            child: GestureDetector(
-              onTap: () {
-                _showBottomOptions(context);
-              },
-              child: Container(
-                width: 40.w,
-                height: 40.h,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(ImageRes.settingsButtonImage),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            ),
-          ),
+          _buildSettingsButton(context),
         ],
       ),
     );
   }
+
+  Widget _buildDescription() {
+    return Text(
+      moment.timelineDescr ?? ConstantData.noDescription,
+      style: ConstantStyles.descriptionStyle,
+    );
+  }
+
+  Widget _buildUserInfo() {
+    return Row(
+      children: [
+        Container(
+          width: 32.w,
+          height: 32.h,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            image: DecorationImage(
+              image: NetworkImage(moment.avatar ?? ImageRes.placeholderAvatar),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        SizedBox(width: 8.w),
+        Flexible(
+          child: Text(
+            moment.username ?? ConstantData.unknownText,
+            style: ConstantStyles.usernameMomentStyle,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        Spacer(),
+      ],
+    );
+  }
+
+  Widget _buildAttachments() {
+    if (moment.attachments == null || moment.attachments!.isEmpty) {
+      return SizedBox.shrink();
+    }
+
+    // 过滤出图片附件（包括 type 为 null 的附件）
+    final imageAttachments = moment.attachments!.where((attachment) =>
+    attachment.type == 1 || attachment.type == null).toList();
+
+    // 过滤出音频附件
+    final audioAttachments = moment.attachments!.where((attachment) =>
+    attachment.type == 2).toList();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (imageAttachments.isNotEmpty)
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: imageAttachments.map((attachment) {
+                return Container(
+                  width: imageAttachments.length == 1 ? 303.w : 137.09.w,
+                  height: imageAttachments.length == 1 ? 400.h : 174.h,
+                  margin: EdgeInsets.only(right: 10.w),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.r),
+                    image: DecorationImage(
+                      image: attachment.url != null
+                          ? NetworkImage(attachment.url!)
+                          : AssetImage(ImageRes.placeholderAvatar) as ImageProvider,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        if (audioAttachments.isNotEmpty) ...[
+          SizedBox(height: 16.h),
+          ...audioAttachments.map((attachment) => _buildAudioAttachment(attachment)),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildAudioAttachment(AttachmentEntity attachment) {
+    return Container(
+      width: 303.w,
+      height: 50.h,
+      margin: EdgeInsets.only(bottom: 10.h),
+      child: AudioPlayerWidget(audioPath: attachment.url ?? ''),
+    );
+  }
+
+  Widget _buildSettingsButton(BuildContext context) {
+    return Positioned(
+      left: 259.w,
+      top: 12.h,
+      child: GestureDetector(
+        onTap: () => _showBottomOptions(context),
+        child: Container(
+          width: 40.w,
+          height: 40.h,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(ImageRes.settingsButtonImage),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
 
   void _showBottomOptions(BuildContext context) {
     showModalBottomSheet(

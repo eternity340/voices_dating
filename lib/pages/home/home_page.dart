@@ -10,23 +10,37 @@ import '../../constants/Constant_styles.dart';
 import '../../constants/constant_data.dart';
 import '../../entity/token_entity.dart';
 import '../../image_res/image_res.dart';
+import '../../service/app_service.dart';
 import '../../utils/shared_preference_util.dart';
 import 'components/home_icon_button.dart';
 import 'components/user_card.dart';
 import 'home_controller.dart';
 
-class HomePage extends StatelessWidget {
-  HomePage({Key? key}) : super(key: key) {
-    _initializeController();
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    _refreshUserData();
+    _initializeToken();
   }
 
-  void _initializeController() {
+  Future<void> _refreshUserData() async {
+    await AppService.instance.syncUserData();
+  }
+
+
+  void _initializeToken() {
     final tokenJson = SharedPreferenceUtil.instance.getValue(key: SharedPresKeys.userToken);
     if (tokenJson != null) {
       final tokenEntity = TokenEntity.fromJson(json.decode(tokenJson));
       Get.put(HomeController(tokenEntity));
     } else {
-      LogUtil.e(ConstantData.noTokenInLocal);
+        LogUtil.e(ConstantData.noTokenInLocal);
     }
   }
 

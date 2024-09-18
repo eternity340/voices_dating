@@ -26,6 +26,7 @@ class ProfileCard extends StatefulWidget {
 
 class _ProfileCardState extends State<ProfileCard> {
   late bool _isLiked;
+  final DioClient dioClient = DioClient.instance;
 
   @override
   void initState() {
@@ -186,7 +187,7 @@ class _ProfileCardState extends State<ProfileCard> {
   }
 
   void sendLikeRequest(String url, bool isLiked) {
-    DioClient.instance.requestNetwork<void>(
+    dioClient.requestNetwork<void>(
       method: Method.post,
       url: url,
       params: {'userId': widget.userEntity!.userId},

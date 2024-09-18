@@ -27,6 +27,7 @@ class ChangeLocation extends StatelessWidget {
           showMiddleText: true,
           middleText: ConstantData.locationHeaderTitle,
           showBackgroundImage: false,
+          onBackPressed: navigateToMyProfile,
           child: Stack(
             children: [
               Positioned(

@@ -29,11 +29,6 @@ void showRecaptcha(
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    ImageRes.imagePathBackButton,
-                    width: 34.w,
-                    height: 34.h,
-                  ),
                   Container(
                     width: 15.w,
                   ),

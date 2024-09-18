@@ -12,10 +12,11 @@ import '../../../service/app_service.dart';
 class SettingsController extends GetxController {
   final TokenEntity tokenEntity = Get.arguments['tokenEntity'];
   final UserDataEntity userData = Get.arguments['userDataEntity'];
+  final DioClient dioClient = DioClient.instance;
 
   Future<void> signOut() async {
     try {
-      await DioClient.instance.requestNetwork(
+      await dioClient.requestNetwork(
         method: Method.post,
         url: ApiConstants.signOut,
         options: Options(

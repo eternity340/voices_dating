@@ -1,8 +1,11 @@
+import 'dart:io';
+import 'dart:math';
 import 'dart:ui';
 import 'package:common_utils/common_utils.dart';
 import 'package:first_app/constants/constant_styles.dart';
 import 'package:first_app/pages/me/photo/photo_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -19,8 +22,14 @@ class PhotoPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final PhotoController controller = Get.put(PhotoController());
 
-    return Scaffold(
-      body: GetBuilder<PhotoController>(
+    return PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) {
+          if (didPop) return;
+          controller.navigateToMePage();
+        },
+        child: Scaffold(
+        body: GetBuilder<PhotoController>(
         builder: (controller) {
           return RefreshIndicator(
             onRefresh: controller.fetchUserData,
@@ -45,14 +54,7 @@ class PhotoPage extends StatelessWidget {
                           ),
                         ),
                         if (controller.userData.photos != null)
-                          Padding(
-                            padding: EdgeInsets.only(top: 24.0.h, left: 28.0.w, right: 28.0.w),
-                            child: Wrap(
-                              spacing: 24.w,
-                              runSpacing: 24.h,
-                              children: buildPhotoContainers(controller),
-                            ),
-                          ),
+                          buildPhotoContainers(controller),
                       ],
                     ),
                   ),
@@ -71,7 +73,7 @@ class PhotoPage extends StatelessWidget {
           );
         },
       ),
-    );
+    ));
   }
 
   Widget buildAddPhotoContainer(BuildContext context, PhotoController controller) {
@@ -152,33 +154,87 @@ class PhotoPage extends StatelessWidget {
     );
   }
 
-  List<Widget> buildPhotoContainers(PhotoController controller) {
-    return List.generate(controller.userData.photos!.length - 1, (i) {
-      return GestureDetector(
-        onTap: () {
-          controller.showPhotoDialog(controller.userData.photos![i + 1].url!,controller.userData.photos![i+1].attachId!);
-        },
-        child: Container(
-          width: 137.09.w,
-          height: 174.h,
-          decoration: BoxDecoration(
-            color: Color(0xFFF8F8F9),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: controller.userData.photos![i + 1].url != null
-              ? ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Image.network(
-              controller.userData.photos![i + 1].url!,
-              fit: BoxFit.cover,
-              width: 137.09.w,
-              height: 174.h,
+  Widget buildPhotoContainers(PhotoController controller) {
+    List<Widget> photoWidgets = [];
+
+    // 添加已上传的图片
+    if (controller.userData.photos != null && controller.userData.photos!.length > 1) {
+      for (int i = 1; i < controller.userData.photos!.length; i++) {
+        final photo = controller.userData.photos![i];
+        photoWidgets.add(
+          GestureDetector(
+            onTap: () {
+              controller.showPhotoDialog(photo.url!, photo.attachId!);
+            },
+            child: _buildPhotoContainer(
+              imageProvider: NetworkImage(photo.url!),
+              isUploading: false,
             ),
-          )
-              : Container(),
+          ),
+        );
+      }
+    }
+
+    // 添加正在上传的本地图片
+    controller.uploadingPhotos.forEach((localPath, isUploading) {
+      photoWidgets.add(
+        _buildPhotoContainer(
+          imageProvider: FileImage(File(localPath)),
+          isUploading: true,
         ),
       );
     });
+
+    if (photoWidgets.isEmpty) {
+      return SizedBox.shrink();
+    }
+
+    return GridView.count(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      padding: EdgeInsets.symmetric(horizontal: 28.w, vertical: 24.h),
+      crossAxisCount: 2,
+      childAspectRatio: 137.09 / 174,
+      crossAxisSpacing: 24.w,
+      mainAxisSpacing: 24.h,
+      children: photoWidgets,
+    );
+  }
+  
+  Widget _buildPhotoContainer({required ImageProvider imageProvider, required bool isUploading}) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Color(0xFFF8F8F9),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Image(
+              image: imageProvider,
+              fit: BoxFit.cover,
+            ),
+          ),
+          if (isUploading)
+            ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                child: Container(
+                  color: Colors.black.withOpacity(0.5),
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
   }
 
   void showOptions(BuildContext context, String accessToken, PhotoController controller) {

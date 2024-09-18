@@ -21,6 +21,8 @@ import '../../utils/replace_word_util.dart';
     bool _disposed = false;
     final RxList<ListUserEntity> visitedMeUsers = <ListUserEntity>[].obs;
     final RxList<ListUserEntity> likedMeUsers = <ListUserEntity>[].obs;
+    final ReplaceWordUtil replaceWordUtil = ReplaceWordUtil.getInstance();
+    final DioClient dioClient = DioClient.instance;
 
     MessageController(this.tokenEntity, this.userDataEntity) {
       pageController = PageController(initialPage: selectedIndex);
@@ -81,87 +83,50 @@ import '../../utils/replace_word_util.dart';
       safeUpdate();
     }
 
-    @override
-    void onClose() {
-      _disposed = true;
-      pageController.dispose();
-      IMService.instance.removeMessageCallBack(_handleWebSocketMessage);
-      IMService.instance.disconnect();
-      super.onClose();
-    }
-
-    void safeUpdate() {
-      if (!_disposed) {
-        update();
-      }
-    }
-
     Future<void> fetchChattedUsers() async {
       try {
-        DioClient dioClient = DioClient();
-        dioClient.init(options: BaseOptions(
-          headers: {
-            'token': tokenEntity.accessToken,
-          },
-        ));
-
-        await dioClient.requestNetwork<List<ChattedUserEntity>>(
+        await dioClient.requestNetwork<List<dynamic>>(
           method: Method.get,
           url: ApiConstants.chattedUsers,
+          options: Options(
+            headers: {
+              'token': tokenEntity.accessToken,
+            },
+          ),
           onSuccess: (data) {
             if (data != null) {
-              ReplaceWordUtil replaceWordUtil = ReplaceWordUtil.getInstance();
-              replaceWordUtil.getReplaceWord();
               chattedUsers = data.map((user) {
-                user.lastmessage = replaceWordUtil.replaceWords(user.lastmessage);
-                user.username = replaceWordUtil.replaceWords(user.username);
-                return user;
+                var processedUser = replaceWordUtil.replaceWordsInJson(user);
+                return ChattedUserEntity.fromJson(processedUser);
               }).toList();
               update();
             }
           },
           onError: (code, msg, data) {
-            LogUtil.e(message:msg);
+            LogUtil.e(message: msg);
           },
         );
       } catch (e) {
-        LogUtil.e(message:e.toString());
+        LogUtil.e(message: e.toString());
       }
-    }
-
-
-    String replaceWords(String? text) {
-      if (text == null || text.isEmpty) return '';
-
-      ReplaceWordUtil.words.forEach((key, value) {
-        text = text!.replaceAll(key, value);
-      });
-
-      return text!;
     }
 
     Future<void> getViewedMeUsers() async {
       try {
-        DioClient dioClient = DioClient();
-        dioClient.init(options: BaseOptions(
-          headers: {
-            'token': tokenEntity.accessToken,
-          },
-        ));
-
         await dioClient.requestNetwork<List<dynamic>>(
           method: Method.get,
           url: ApiConstants.visiteMeUsers,
+          options: Options(
+            headers: {
+              'token': tokenEntity.accessToken,
+            },
+          ),
           onSuccess: (data) {
             if (data != null) {
-              ReplaceWordUtil replaceWordUtil = ReplaceWordUtil.getInstance();
-              replaceWordUtil.getReplaceWord();
               visitedMeUsers.value = data.map((json) {
-                ListUserEntity user = ListUserEntity.fromJson(json);
-                user.username = replaceWordUtil.replaceWords(user.username);
-                return user;
+                var processedJson = replaceWordUtil.replaceWordsInJson(json);
+                return ListUserEntity.fromJson(processedJson);
               }).toList();
-
               update();
             }
           },
@@ -176,26 +141,20 @@ import '../../utils/replace_word_util.dart';
 
     Future<void> getLikedMeUsers() async {
       try {
-        DioClient dioClient = DioClient();
-        dioClient.init(options: BaseOptions(
-          headers: {
-            'token': tokenEntity.accessToken,
-          },
-        ));
-
         await dioClient.requestNetwork<List<dynamic>>(
           method: Method.get,
           url: ApiConstants.likeMeUser,
+          options: Options(
+            headers: {
+              'token': tokenEntity.accessToken,
+            },
+          ),
           onSuccess: (data) {
             if (data != null) {
-              ReplaceWordUtil replaceWordUtil = ReplaceWordUtil.getInstance();
-              replaceWordUtil.getReplaceWord();
               likedMeUsers.value = data.map((json) {
-                ListUserEntity user = ListUserEntity.fromJson(json);
-                user.username = replaceWordUtil.replaceWords(user.username);
-                return user;
+                var processedJson = replaceWordUtil.replaceWordsInJson(json);
+                return ListUserEntity.fromJson(processedJson);
               }).toList();
-
               update();
             }
           },
@@ -214,5 +173,20 @@ import '../../utils/replace_word_util.dart';
         chattedUsers[index].newNumber = '0';
         update();
       }
+    }
+
+    void safeUpdate() {
+      if (!_disposed) {
+        update();
+      }
+    }
+
+    @override
+    void onClose() {
+      _disposed = true;
+      pageController.dispose();
+      IMService.instance.removeMessageCallBack(_handleWebSocketMessage);
+      IMService.instance.disconnect();
+      super.onClose();
     }
   }

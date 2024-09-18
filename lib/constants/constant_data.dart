@@ -150,6 +150,7 @@ class ConstantData {
   static const errorText = 'Error';
   static const noticeText = 'Notice';
   static const gotItText = 'Got it';
+  static const registerFailed = 'Register failed';
   //detail_bottom_bar
   static const likeText='like';
   //get_email_code

@@ -12,8 +12,8 @@ class RecordPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final RecordController controller = Get.put(RecordController(
-      Get.arguments['token'],
-      Get.arguments['userData'],
+      Get.arguments['tokenEntity'],
+      Get.arguments['userDataEntity'],
     ));
 
     return Scaffold(
@@ -21,6 +21,7 @@ class RecordPage extends StatelessWidget {
         showMiddleText: true,
         showBackgroundImage: false,
         middleText: ConstantData.introductionText,
+        onBackPressed: controller.navigateToUploadVoicePage,
         child: GetBuilder<RecordController>(
           builder: (_) {
             return Stack(

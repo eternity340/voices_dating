@@ -15,6 +15,7 @@ class VerifyEmailController extends GetxController {
   final TextEditingController codeController = TextEditingController();
   final RxBool isLoading = false.obs;
   final RxString errorMessage = ''.obs;
+  final DioClient dioClient = DioClient.instance;
 
   VerifyEmailController({required this.email, required this.verificationKey}) {
     _initializeToken();
@@ -44,7 +45,7 @@ class VerifyEmailController extends GetxController {
         throw Exception("No access token available");
       }
 
-      await DioClient.instance.requestNetwork<Map<String, dynamic>>(
+      await dioClient.requestNetwork<Map<String, dynamic>>(
         method: Method.post,
         url: ApiConstants.verifyEmail,
         queryParameters: {

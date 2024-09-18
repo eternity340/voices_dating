@@ -5,7 +5,7 @@ import '../location_box.dart';
 
 class LocationSelector extends StatefulWidget {
   final User user;
-  final Function(String? country, String? state, String? city) onLocationSelected;
+  final Function(String? country, String? state, String? city, String? cityId) onLocationSelected;
 
   LocationSelector({required this.user, required this.onLocationSelected});
 
@@ -17,13 +17,15 @@ class _LocationSelectorState extends State<LocationSelector> {
   String? selectedCountry;
   String? selectedState;
   String? selectedCity;
+  String? selectedCityId;
 
-  void updateLocation({String? country, String? state, String? city}) {
+  void updateLocation({String? country, String? state, String? city, String? cityId}) {
     setState(() {
       selectedCountry = country;
       selectedState = state;
       selectedCity = city;
-      widget.onLocationSelected(selectedCountry, selectedState, selectedCity);
+      selectedCityId = cityId;
+      widget.onLocationSelected(selectedCountry, selectedState, selectedCity, selectedCityId);
     });
   }
 
@@ -55,6 +57,7 @@ class _LocationSelectorState extends State<LocationSelector> {
             country: result['country'],
             state: result['state'],
             city: result['city'],
+            cityId: result['cityId'],
           );
         }
       },

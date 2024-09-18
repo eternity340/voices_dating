@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart' as Dio;
+import 'package:first_app/net/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../constants/constant_data.dart';
@@ -65,12 +66,6 @@ class SignInController extends GetxController {
     update();
 
     try {
-      final TokenEntity tokenEntity = await TokenService.instance.getTokenEntity();
-
-      if (tokenEntity.accessToken == null) {
-        throw Exception("No access token available");
-      }
-
       final params = Dio.FormData.fromMap({
         'email': email,
         'password': password,
@@ -79,23 +74,20 @@ class SignInController extends GetxController {
       final options = Dio.Options(
         headers: {
           'Content-Type': 'multipart/form-data',
-          'token': tokenEntity.accessToken,
+          'token': await TokenService.instance.getToken(),
         },
       );
 
       await dioClient.requestNetwork<UserDataEntity>(
         method: Method.post,
-        url: 'https://api.masonvips.com/v1/signin',
+        url: ApiConstants.signIn,
         params: params,
         options: options,
-        onSuccess: (userData) {
+        onSuccess: (userData)  {
           AppService.instance.isLogin = true;
           AppService.instance.saveUserData(userData: userData!);
           SharedPreferenceUtil.instance.setValue(key: SharedPresKeys.isLogin, value: true);
-          Get.offAll(() => HomePage(), arguments: {
-            'token': tokenEntity,
-            'userData': userData,
-          });
+          Get.offAll(() => HomePage());
         },
         onError: (code, msg, data) {
           if (code == ConstantData.errorCodeInvalidEmailOrPassword) {

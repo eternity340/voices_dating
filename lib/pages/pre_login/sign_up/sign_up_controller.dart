@@ -1,6 +1,11 @@
+import 'package:common_utils/common_utils.dart';
+import 'package:first_app/net/api_constants.dart';
+import 'package:first_app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
+import '../../../components/custom_content_dialog.dart';
+import '../../../constants/constant_data.dart';
 import '../../../entity/User.dart';
 import '../../../entity/token_entity.dart';
 import '../../../net/dio.client.dart';
@@ -24,7 +29,6 @@ class SignUpController extends GetxController {
   RxString errorMessage = ''.obs;
 
   SignUpController(this.user) {
-    _initializeToken();
   }
 
   @override
@@ -34,13 +38,6 @@ class SignUpController extends GetxController {
     passwordController.text = user.password ?? '';
   }
 
-  Future<void> _initializeToken() async {
-    try {
-      await TokenService.instance.getTokenEntity();
-    } catch (e) {
-      errorMessage.value = "Failed to initialize token: $e";
-    }
-  }
 
   void setUsername(String username) {
     user.username = username;
@@ -76,31 +73,29 @@ class SignUpController extends GetxController {
     errorMessage.value = '';
 
     try {
-      final TokenEntity tokenEntity = await TokenService.instance.getTokenEntity();
-
-      if (tokenEntity.accessToken == null) {
-        throw Exception("No access token available");
-      }
-
       user.username = usernameController.text;
       user.password = passwordController.text;
-      final Map<String, dynamic> userData = user.toJson();
+
+      final Map<String, dynamic> queryParameters = user.toJson();
+
+      LogUtil.d('User data being sent: ${user.toJson()}');
 
       await DioClient.instance.requestNetwork<dynamic>(
         method: Method.post,
-        url: 'https://api.masonvips.com/v1/signup',
-        params: userData,
+        url: ApiConstants.signUP,
+        queryParameters: queryParameters,
         options: dio.Options(
           headers: {
-            'Content-Type': 'application/json',
-            'token': tokenEntity.accessToken,
+            'token': await TokenService.instance.getToken(),
           },
         ),
         onSuccess: (data) {
-          Get.toNamed('/welcome', arguments: user);
+          print('Sign up successful. Response data: $data');
+          Get.toNamed(AppRoutes.welcome, arguments: user);
         },
         onError: (code, msg, data) {
-          if (code == 30001051 && data is Map<String, dynamic>) {
+          print('Sign up error. Code: $code, Message: $msg, Data: $data');
+          if (code == 30001051) {
             final siteKey = data['siteKey'] as String?;
             if (siteKey != null) {
               showRecaptcha(
@@ -112,17 +107,28 @@ class SignUpController extends GetxController {
               );
             } else {
               errorMessage.value = "Invalid reCAPTCHA site key";
-              _showErrorDialog(errorMessage.value);
+              _showCustomDialog(
+                ConstantData.errorText,
+                errorMessage.value,
+                ConstantData.cancelText,
+                    () => Get.back(),
+              );
             }
           } else {
             errorMessage.value = msg;
-            _showErrorDialog(errorMessage.value);
+            _showCustomDialog(
+              'Sign Up Error',
+              errorMessage.value,
+              ConstantData.cancelText,
+                  () => Get.back(),
+            );
           }
         },
       );
     } catch (e) {
+      print('Exception during sign up: $e');
       errorMessage.value = "exception: $e";
-      _showErrorDialog(errorMessage.value);
+      _showCustomDialog('Error', errorMessage.value, 'OK', () => Get.back());
     } finally {
       isLoading.value = false;
     }
@@ -134,17 +140,13 @@ class SignUpController extends GetxController {
 
     try {
       final TokenEntity tokenEntity = await TokenService.instance.getTokenEntity();
-
       if (tokenEntity.accessToken == null) {
         throw Exception("No access token available");
       }
-
       final Map<String, dynamic> userData = user.toJson();
-      userData['token'] = recaptchaToken; // 添加 reCAPTCHA token 到请求数据中
-
       await DioClient.instance.requestNetwork<dynamic>(
         method: Method.post,
-        url: 'https://api.masonvips.com/v1/signup',
+        url: ApiConstants.signUP,
         params: userData,
         options: dio.Options(
           headers: {
@@ -153,32 +155,36 @@ class SignUpController extends GetxController {
           },
         ),
         onSuccess: (data) {
-          Get.toNamed('/welcome', arguments: user);
+          Get.toNamed(AppRoutes.welcome, arguments: user);
         },
         onError: (code, msg, data) {
           errorMessage.value = msg;
-          _showErrorDialog(errorMessage.value);
+          _showCustomDialog(
+              ConstantData.registerFailed,
+              errorMessage.value,
+              ConstantData.cancelText,
+              () => Get.back());
         },
       );
     } catch (e) {
       errorMessage.value = "exception: $e";
-      _showErrorDialog(errorMessage.value);
+      _showCustomDialog(
+          ConstantData.errorText,
+          errorMessage.value,
+          ConstantData.cancelText,
+          () => Get.back());
     } finally {
       isLoading.value = false;
     }
   }
 
-  void _showErrorDialog(String message) {
+  void _showCustomDialog(String title, String content, String buttonText, VoidCallback onButtonPressed) {
     Get.dialog(
-      AlertDialog(
-        title: const Text('Sign Up Error'),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: const Text('OK'),
-          ),
-        ],
+      CustomContentDialog(
+        title: title,
+        content: content,
+        buttonText: buttonText,
+        onButtonPressed: onButtonPressed,
       ),
     );
   }

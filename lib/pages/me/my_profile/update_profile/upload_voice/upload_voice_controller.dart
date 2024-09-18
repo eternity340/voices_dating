@@ -1,18 +1,26 @@
+import 'dart:io';
+
 import 'package:common_utils/common_utils.dart';
 import 'package:dio/dio.dart';
 import 'package:first_app/net/api_constants.dart';
+import 'package:first_app/pages/me/my_profile/update_profile/upload_voice/record/record_page.dart';
 import 'package:first_app/routes/app_routes.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
+import '../../../../../entity/ret_entity.dart';
 import '../../../../../entity/token_entity.dart';
 import '../../../../../entity/user_data_entity.dart';
+import '../../../../../entity/user_voice_entity.dart';
+import '../../../../../net/dio.client.dart';
 import '../../../../../service/audio_service.dart';
 import '../../../../../service/global_service.dart';
+import '../../my_profile_page.dart';
 
 class UploadVoiceController extends GetxController {
   final TokenEntity tokenEntity;
-  final UserDataEntity userData;
+  late  UserDataEntity userData;
   final String? recordFilePath;
   RxInt selectedIndex = RxInt(-1);
   late AudioPlayer audioPlayer;
@@ -21,6 +29,7 @@ class UploadVoiceController extends GetxController {
   RxList<String> audioList = <String>[].obs;
   final GlobalService globalService = Get.find<GlobalService>();
   final AudioService audioService = AudioService.instance;
+  final DioClient dioClient = DioClient.instance;
 
   UploadVoiceController(this.tokenEntity, this.userData, this.recordFilePath);
 
@@ -29,6 +38,14 @@ class UploadVoiceController extends GetxController {
     super.onInit();
     _initAudioList();
     _initAudioPlayer();
+  }
+
+  bool get isButtonEnabled {
+    if (selectedIndex.value == -1) return false;
+    if (userData.voice != null && userData.voice!.voiceUrl != null) {
+      return audioList[selectedIndex.value] != userData.voice!.voiceUrl;
+    }
+    return true;
   }
 
   void _initAudioList() {
@@ -60,46 +77,119 @@ class UploadVoiceController extends GetxController {
     update();
   }
 
-  Future<bool> saveSelectedVoice() async {
+  Future<void> saveSelectedVoice() async {
     if (selectedIndex.value == -1 || audioList.isEmpty) {
-      return false;
+      return;
     }
 
     String selectedAudioPath = audioList[selectedIndex.value];
     String? attachId = await globalService.uploadFile(
         selectedAudioPath,
         tokenEntity.accessToken.toString());
-
     if (attachId == null) {
-      return false;
+      return;
     }
-
     int duration = await audioService.getAudioDuration(selectedAudioPath);
 
     try {
-      final response = await Dio().post(
-        ApiConstants.uploadVoice,
+      await dioClient.requestNetwork<UserVoiceEntity>(
+        method: Method.post,
+        url: ApiConstants.uploadVoice,
         options: Options(headers: {'token': tokenEntity.accessToken}),
-        queryParameters: {
+        params: {
           'attachId': attachId,
           'duration': duration,
           'description': 'voiceMessage',
         },
-      );
+        onSuccess: (data) async {
+          if (data != null) {
+            await globalService.refreshUserData(tokenEntity.accessToken.toString());
+            userData = globalService.userDataEntity.value!;
 
-      if (response.data['code'] == 200) {
-        await globalService.refreshUserData(tokenEntity.accessToken.toString());
-        return true;
-      } else {
-        return false;
-      }
+            // 删除之前从 record 页面获得的音频
+            if (recordFilePath != null) {
+              int recordIndex = audioList.indexOf(recordFilePath!);
+              if (recordIndex != -1) {
+                await deleteAudio(recordIndex);
+              }
+            }
+
+            // 更新音频列表
+            audioList.clear();
+            _initAudioList();
+            selectedIndex.value = -1; // 重置选中状态
+            update();
+            Get.snackbar('Success', 'Voice saved successfully');
+            navigateToMeMyProfilePage();
+          }
+        },
+        onError: (int code, String msg, UserVoiceEntity? data) {
+          LogUtil.e(msg);
+          Get.snackbar('Error', 'Failed to save voice: $msg');
+        },
+      );
     } catch (e) {
       LogUtil.e(e.toString());
-      return false;
+      Get.snackbar('Error', 'An unexpected error occurred');
     }
   }
 
-  void deleteAudio(int index) {
+  Future<void> deleteUserVoice() async {
+    if (userData.voice == null || userData.voice!.attachId == null) {
+      Get.snackbar('Error', 'No voice to delete');
+      return;
+    }
+
+    try {
+      await dioClient.requestNetwork<RetEntity>(
+        method: Method.post,
+        url: ApiConstants.deleteVoice,
+        options: Options(headers: {'token': tokenEntity.accessToken}),
+        params: {
+          'attachId': userData.voice!.attachId,
+        },
+        onSuccess: (data) async {
+          if (data!.ret == true) {
+            await globalService.refreshUserData(tokenEntity.accessToken.toString());
+            userData = globalService.userDataEntity.value!;
+            audioList.clear();
+            _initAudioList();
+
+            selectedIndex.value = -1;
+            update();
+            Get.snackbar('Success', 'Voice deleted successfully');
+          } else {
+            Get.snackbar('Error', 'Failed to delete voice');
+          }
+        },
+        onError: (int code, String msg, RetEntity? data) {
+          LogUtil.e(msg);
+          Get.snackbar('Error', 'Failed to delete voice: $msg');
+        },
+      );
+    } catch (e) {
+      LogUtil.e(e.toString());
+      Get.snackbar('Error', 'An unexpected error occurred');
+    }
+  }
+
+  // 修改 deleteAudio 方法
+  Future<void> deleteAudio(int index) async {
+    if (audioList[index] == userData.voice?.voiceUrl) {
+      await deleteUserVoice();
+    } else {
+      audioList.removeAt(index);
+      if (selectedIndex.value == index) {
+        selectedIndex.value = -1;
+      } else if (selectedIndex.value > index) {
+        selectedIndex.value--;
+      }
+      hasAudio.value = audioList.isNotEmpty;
+      update();
+    }
+  }
+
+  /*void deleteAudio(int index) {
     String removedItem = audioList.removeAt(index);
     if (selectedIndex.value == index) {
       selectedIndex.value = -1;
@@ -108,7 +198,7 @@ class UploadVoiceController extends GetxController {
     }
     hasAudio.value = audioList.isNotEmpty;
     update();
-  }
+  }*/
 
   Future<void> playPause() async {
     if (!hasAudio.value) return;
@@ -121,17 +211,36 @@ class UploadVoiceController extends GetxController {
     isPlaying.toggle();
   }
 
-  void navigateToMyProfile() {
-    Get.offAllNamed(AppRoutes.meMyProfile, arguments: {
-      'token': tokenEntity,
-      'userData': globalService.userDataEntity.value,
+  Future<void> handleSave(BuildContext context) async {
+    if (selectedIndex.value != -1) {
+      await saveSelectedVoice();
+    } else {
+      Get.snackbar('Warning', 'Please select a voice to save');
+    }
+  }
+
+  void navigateToRecordPage() {
+    Get.toNamed(AppRoutes.meMyProfileRecord, arguments: {
+      'tokenEntity': tokenEntity,
+      'userDataEntity': userData,
+    });
+  }
+
+  void navigateToMeMyProfilePage() {
+    Get.to(() => MyProfilePage(), arguments: {
+      'tokenEntity': tokenEntity,
+      'userDataEntity': userData,
     });
   }
 
   @override
   void onClose() {
+    if (recordFilePath != null) {
+      File(recordFilePath!).delete();
+    }
     Get.delete<UploadVoiceController>();
     audioPlayer.dispose();
     super.onClose();
   }
+
 }

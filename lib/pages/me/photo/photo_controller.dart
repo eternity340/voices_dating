@@ -1,3 +1,4 @@
+import 'package:first_app/entity/user_photo_entity.dart';
 import 'package:first_app/net/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,6 +19,8 @@ class PhotoController extends GetxController {
   late TokenEntity tokenEntity;
   late UserDataEntity userData;
   final GlobalService globalService = Get.find<GlobalService>();
+  final DioClient dioClient = DioClient.instance;
+  final RxMap<String, bool> uploadingPhotos = <String, bool>{}.obs;
 
   @override
   void onInit() {
@@ -37,44 +40,58 @@ class PhotoController extends GetxController {
     final ImagePicker _picker = ImagePicker();
     final XFile? image = await _picker.pickImage(source: source);
     if (image != null) {
+      final String localPath = image.path;
+      uploadingPhotos[localPath] = true;
+      update();
+
       await uploadPhoto(accessToken, image);
+
+      uploadingPhotos.remove(localPath);
       await fetchUserData();
     }
   }
 
   Future<void> uploadPhoto(String accessToken, XFile image) async {
-    final dio.Dio dioInstance = dio.Dio();
     final dio.FormData formData = dio.FormData.fromMap({
       'file': await dio.MultipartFile.fromFile(image.path),
       'maskInfo': 'mask information,json format',
       'photoType': '1',
     });
 
-    try {
-      final response = await dioInstance.post(
-        ApiConstants.uploadPicture,
-        data: formData,
-        options: dio.Options(
-          headers: {
-            'token': accessToken,
-            'Content-Type': 'multipart/form-data',
-          },
-        ),
-      );
-
-      if (response.data[ConstantData.code] == 200) {
-        Get.snackbar(ConstantData.successText, ConstantData.uploadSuccess);
-      } else {
-        Get.snackbar(ConstantData.errorText, ConstantData.failedUpdateProfile);
-      }
-    } catch (e) {
-      Get.snackbar(ConstantData.errorText, e.toString());
-    }
+    await dioClient.requestNetwork<List<dynamic>>(
+      method: Method.post,
+      url: ApiConstants.uploadPicture,
+      params: formData,
+      options: dio.Options(
+        headers: {
+          'token': accessToken,
+          'Content-Type': 'multipart/form-data',
+        },
+      ),
+      onSuccess: (data) {
+        if (data != null && data.isNotEmpty) {
+          final List<UserPhotoEntity> photos = data.map((item) => UserPhotoEntity.fromJson(item)).toList();
+          if (photos.isNotEmpty) {
+            final photo = photos[0];
+            Get.snackbar(ConstantData.successText, ConstantData.uploadSuccess);
+            print('Uploaded photo: AttachId: ${photo.attachId}, URL: ${photo.url}');
+          } else {
+            Get.snackbar(ConstantData.errorText, ConstantData.failedUpdateProfile);
+          }
+        } else {
+          Get.snackbar(ConstantData.errorText, ConstantData.failedUpdateProfile);
+        }
+      },
+      onError: (code, msg, data) {
+        Get.snackbar(ConstantData.errorText, msg);
+      },
+      formParams: true,
+    );
   }
 
   Future<void> deletePhoto(String attachId) async {
     try {
-      await DioClient.instance.requestNetwork<RetEntity>(
+      await dioClient.requestNetwork<RetEntity>(
         method: Method.post,
         url: ApiConstants.deletePhoto,
         queryParameters: {
@@ -105,7 +122,7 @@ class PhotoController extends GetxController {
 
   Future<void> setAvatar(String attachId) async {
     try {
-      await DioClient.instance.requestNetwork<RetEntity>(
+      await dioClient.requestNetwork<RetEntity>(
         method: Method.post,
         url: ApiConstants.setAvatar,
         queryParameters: {
@@ -180,5 +197,12 @@ class PhotoController extends GetxController {
         );
       },
     );
+  }
+
+  void navigateToMePage() {
+    Get.offAllNamed(AppRoutes.me, arguments: {
+      'tokenEntity': tokenEntity,
+      'userDataEntity': userData,
+    });
   }
 }

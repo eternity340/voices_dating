@@ -12,6 +12,7 @@ class UserMomentsController extends GetxController {
   late TokenEntity tokenEntity;
   late UserDataEntity userDataEntity;
   var moments = <MomentEntity>[].obs;
+  final ReplaceWordUtil replaceWordUtil = ReplaceWordUtil.getInstance();
 
   @override
   void onInit() {
@@ -23,7 +24,9 @@ class UserMomentsController extends GetxController {
 
   Future<void> fetchMoments() async {
     try {
-      await DioClient.instance.requestNetwork<List<MomentEntity>>(
+      await replaceWordUtil.getReplaceWord(); // 确保替换词已加载
+
+      await DioClient.instance.requestNetwork<List<dynamic>>(
         method: Method.get,
         url: ApiConstants.timelines,
         queryParameters: {
@@ -36,22 +39,10 @@ class UserMomentsController extends GetxController {
         ),
         onSuccess: (data) {
           if (data != null) {
-            ReplaceWordUtil replaceWordUtil = ReplaceWordUtil.getInstance();
-            replaceWordUtil.getReplaceWord();
             List<MomentEntity> processedMoments = data.map((moment) {
-              moment.timelineDescr = replaceWordUtil.replaceWords(moment.timelineDescr);
-              moment.username = replaceWordUtil.replaceWords(moment.username);
-              if (moment.comments != null) {
-                moment.comments = moment.comments!.map((comment) {
-                  comment.commentContent = replaceWordUtil.replaceWords(comment.commentContent);
-                  comment.username = replaceWordUtil.replaceWords(comment.username);
-                  return comment;
-                }).toList();
-              }
-
-              return moment;
+              var processedMoment = replaceWordUtil.replaceWordsInJson(moment);
+              return MomentEntity.fromJson(processedMoment);
             }).toList();
-
             moments.assignAll(processedMoments);
           }
         },
@@ -63,5 +54,4 @@ class UserMomentsController extends GetxController {
       LogUtil.e(message: e.toString());
     }
   }
-
 }

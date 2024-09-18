@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:first_app/utils/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as getX;
+import '../components/custom_content_dialog.dart';
 import '../constants/constant_data.dart';
 import '../entity/base_entity.dart';
 import '../utils/common_utils.dart';
@@ -177,22 +178,14 @@ class DioClient{
 
   void _showNetworkErrorDialog(VoidCallback onRetry) {
     getX.Get.dialog(
-      AlertDialog(
-        title: Text('Network Error'),
-        content: Text('Failed to connect to the server. Please check your internet connection and try again.'),
-        actions: [
-          TextButton(
-            child: Text('Cancel'),
-            onPressed: () => getX.Get.back(),
-          ),
-          TextButton(
-            child: Text('Retry'),
-            onPressed: () {
-              getX.Get.back();
-              onRetry();
-            },
-          ),
-        ],
+      CustomContentDialog(
+        title: 'Network Error',
+        content: 'Failed to connect to the server. Please check your internet connection and try again.',
+        buttonText: 'Retry',
+        onButtonPressed: () {
+          getX.Get.back(); // 关闭对话框
+          onRetry(); // 执行重试操作
+        },
       ),
       barrierDismissible: false,
     );

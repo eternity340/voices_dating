@@ -108,17 +108,12 @@ class MomentsCard extends StatelessWidget {
       return SizedBox.shrink();
     }
 
-    // 过滤出图片附件
     final imageAttachments = moment.attachments!.where((attachment) =>
     attachment.type == 1 || attachment.type == null).toList();
 
-    // 过滤出音频附件
     final audioAttachments = moment.attachments!.where((attachment) =>
     attachment.type == 2).toList();
 
-
-
-    // 如果只有一个附件
     if (moment.attachments!.length == 1) {
       final attachment = moment.attachments!.first;
       if (attachment.type == 1 || attachment.type == null) {
@@ -127,8 +122,6 @@ class MomentsCard extends StatelessWidget {
         return _buildAudioAttachment(attachment);
       }
     }
-
-    // 如果有多个图片附件
     if (imageAttachments.isNotEmpty) {
       return Column(
         children: [
@@ -153,15 +146,9 @@ class MomentsCard extends StatelessWidget {
               }).toList(),
             ),
           ),
-
-          if (audioAttachments.isNotEmpty) ...[
-            SizedBox(height: 16.h),
-            ...audioAttachments.map((attachment) => _buildAudioAttachment(attachment)),
-          ],
         ],
       );
     }
-
     if (audioAttachments.isNotEmpty) {
       return Column(
         children: audioAttachments.map((attachment) => _buildAudioAttachment(attachment)).toList(),

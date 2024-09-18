@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:permission_handler/permission_handler.dart';
 import '../entity/moment_entity.dart';
+import '../entity/upload_file_entity.dart';
 import '../net/dio.client.dart';
 import '../utils/log_util.dart';
 import '../utils/replace_word_util.dart';
@@ -32,31 +33,44 @@ class GlobalService extends GetxController {
       'file': await dio.MultipartFile.fromFile(file.path, filename: file.path.split('/').last),
     });
 
-    try {
-      final response = await dioClient.dio.post(
-        ApiConstants.uploadFile,
-        data: formData,
-        options: dio.Options(headers: {'token': accessToken}),
-      );
+    String? attachId;
 
-      if (response.data['code'] == 200) {
-        final data = response.data;
-        if (data['data'].isNotEmpty) {
-          return data['data'][0]['attachId'].toString();
+    await dioClient.requestNetwork<dynamic>(
+      method: Method.post,
+      url: ApiConstants.uploadFile,
+      params: formData,
+      options: dio.Options(headers: {'token': accessToken}),
+      onSuccess: (dynamic response) {
+        if (response is List && response.isNotEmpty) {
+          // 假设列表中的第一个元素是我们需要的数据
+          var fileData = response[0];
+          if (fileData is Map<String, dynamic>) {
+            UploadFileEntity uploadedFile = UploadFileEntity.fromJson(fileData);
+            attachId = uploadedFile.attachId;
+          }
+        } else if (response is Map<String, dynamic> &&
+            response['code'] == 200 &&
+            response['data'] is List &&
+            response['data'].isNotEmpty) {
+
+          UploadFileEntity uploadedFile = UploadFileEntity.fromJson(response['data'][0]);
+          attachId = uploadedFile.attachId;
         }
-      }
-      LogUtil.e(message:'${response.statusMessage}');
-      return null;
-    } catch (e) {
-      LogUtil.e(message:e.toString());
-      return null;
-    }
+      },
+      onError: (code, msg, data) {
+        LogUtil.e(message: 'Failed to upload file: $msg');
+      },
+      formParams: true,
+    );
+    return attachId;
   }
+
+
 
   Future<List<MomentEntity>> getMoments({required String userId, required String accessToken}) async {
     List<MomentEntity> moments = [];
 
-    await DioClient.instance.requestNetwork<List<dynamic>>(
+    await dioClient.requestNetwork<List<dynamic>>(
       method: Method.get,
       url: ApiConstants.timelines,
       queryParameters: {
@@ -77,42 +91,32 @@ class GlobalService extends GetxController {
   }
 
   Future<UserDataEntity?> getUserData({required String accessToken}) async {
-    try {
-      final dio = Dio();
-      final response = await dio.get(
-        ApiConstants.getProfile,
-        options: Options(headers: {'token': accessToken}),
-      );
-
-      if (response.statusCode == 200) {
-        final jsonData = response.data;
-        if (jsonData['code'] == 200 && jsonData['data'] != null) {
-          return UserDataEntity.fromJson(jsonData['data']);
-        } else {
-          LogUtil.e(message: '${jsonData['message']}');
+    await dioClient.requestNetwork<UserDataEntity>(
+      method: Method.get,
+      url: ApiConstants.getProfile,
+      options: Options(headers: {'token': accessToken}),
+      onSuccess: (data) {
+        if (data != null) {
+          userDataEntity.value = data;
         }
-      } else {
-        LogUtil.e(message: '${response.statusCode}');
-      }
-    } catch (e) {
-      LogUtil.e(message:'$e');
-    }
-    return null;
+      },
+      onError: (code, message, data) {
+        LogUtil.e(message: 'Failed to get user data: $message');
+      },
+    );
+
+    return userDataEntity.value;
   }
 
   Future<void> refreshUserData(String accessToken) async {
-    UserDataEntity? updatedUserData = await getUserData(
-      accessToken: accessToken,
-    );
-    if (updatedUserData != null) {
-      userDataEntity.value = updatedUserData;
-    }
+    await getUserData(accessToken: accessToken);
   }
+
 
   Future<UserDataEntity?> getUserProfile({required String userId,required String accessToken}) async {
     UserDataEntity? userData;
 
-    await DioClient.instance.requestNetwork<UserDataEntity>(
+    await dioClient.requestNetwork<UserDataEntity>(
       method: Method.get,
       url: ApiConstants.getProfile,
       queryParameters: {'profId': userId},
@@ -120,11 +124,11 @@ class GlobalService extends GetxController {
       onSuccess: (data) {
         if (data != null) {
           userData = data;
-          ReplaceWordUtil replaceWordUtil = ReplaceWordUtil.getInstance();
+         /* ReplaceWordUtil replaceWordUtil = ReplaceWordUtil.getInstance();
           replaceWordUtil.getReplaceWord();
           userData!.username = replaceWordUtil.replaceWords(userData!.username);
           userData!.headline = replaceWordUtil.replaceWords(userData!.headline);
-          userData!.about = replaceWordUtil.replaceWords(userData!.about);
+          userData!.about = replaceWordUtil.replaceWords(userData!.about);*/
         }
       },
       onError: (code, message, data) {

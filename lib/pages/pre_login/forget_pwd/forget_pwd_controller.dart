@@ -18,6 +18,7 @@ class ForgetPwdController extends GetxController {
 
   bool get isLoading => _isLoading.value;
   String get errorMessage => _errorMessage.value;
+  final DioClient dioClient = DioClient.instance;
 
   @override
   void onInit() {
@@ -44,9 +45,10 @@ class ForgetPwdController extends GetxController {
       final TokenEntity tokenEntity = await TokenService.instance.getTokenEntity();
       final Map<String, dynamic> params = {
         'email': email,
+        'indle':1
       };
       final Options options = Options(headers: {'token': tokenEntity.accessToken});
-      await DioClient.instance.requestNetwork<RetEntity>(
+      await dioClient.requestNetwork<RetEntity>(
         method: Method.post,
         url: ApiConstants.forgetPassword,
         params: params,

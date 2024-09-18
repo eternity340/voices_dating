@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'package:first_app/pages/me/my_profile/update_profile/upload_voice/upload_voice_page.dart';
 import 'package:first_app/routes/app_routes.dart';
 import 'package:get/get.dart';
 import '../../../../../../entity/token_entity.dart';
 import '../../../../../../entity/user_data_entity.dart';
 import '../../../../../../service/audio_service.dart';
+import '../../../../../../service/global_service.dart';
 import '../upload_voice_controller.dart';
 
 
@@ -11,6 +13,7 @@ class RecordController extends GetxController {
   final TokenEntity tokenEntity;
   final UserDataEntity userData;
   final AudioService audioService = AudioService();
+  final GlobalService globalService = Get.find<GlobalService>();
 
   int _seconds = 0;
   Timer? _timer;
@@ -74,13 +77,24 @@ class RecordController extends GetxController {
 
   Future<void> saveRecording() async {
     if (recordFilePath != null) {
+      await globalService.refreshUserData(tokenEntity.accessToken.toString());
+
+      UserDataEntity updatedUserData = globalService.userDataEntity.value!;
+
       Get.delete<UploadVoiceController>();
       Get.toNamed(AppRoutes.meMyProfileUploadVoice, arguments: {
-        'token': tokenEntity,
-        'userData': userData,
+        'tokenEntity': tokenEntity,
+        'userDataEntity': updatedUserData,
         'recordFilePath': recordFilePath,
       });
     }
+  }
+
+  void navigateToUploadVoicePage() {
+    Get.to(() => UploadVoicePage(), arguments: {
+      'tokenEntity': tokenEntity,
+      'userDataEntity': userData,
+    });
   }
 
 

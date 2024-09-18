@@ -211,7 +211,8 @@ class MePage extends StatelessWidget {
                 AppRoutes.meMyProfile,
                 arguments: {
                   'tokenEntity': tokenEntity,
-                  'userDataEntity': userDataEntity});
+                  'userDataEntity': userDataEntity
+                });
           },
         ),
         separator(),
@@ -222,18 +223,21 @@ class MePage extends StatelessWidget {
             Get.toNamed(AppRoutes.meVerify,
                 arguments: {
                   'tokenEntity': tokenEntity,
-                  'userDataEntity': userDataEntity});
+                  'userDataEntity': userDataEntity
+                });
           },
+          showVerifiedIcon: userDataEntity.verified == '1',
         ),
         separator(),
         _buildOptionRow(
-            iconPath: ImageRes.imagePathIconHost,
-            text: ConstantData.hostText,
+          iconPath: ImageRes.imagePathIconHost,
+          text: ConstantData.hostText,
           onTap: () {
             Get.toNamed(AppRoutes.meHost,
                 arguments: {
                   'tokenEntity': tokenEntity,
-                  'userDataEntity': userDataEntity});
+                  'userDataEntity': userDataEntity
+                });
           },
         ),
         separator(),
@@ -241,10 +245,13 @@ class MePage extends StatelessWidget {
     );
   }
 
+
   Widget _buildOptionRow({
     required String iconPath,
     required String text,
-    required VoidCallback onTap}) {
+    required VoidCallback onTap,
+    bool showVerifiedIcon = false,
+  }) {
     return GestureDetector(
       onTap: onTap,
       child: Row(
@@ -256,10 +263,27 @@ class MePage extends StatelessWidget {
             text,
             style: ConstantStyles.mePageOptionTextStyle,
           ),
+          if (showVerifiedIcon)
+            SizedBox(width: 8.w),
+          if (showVerifiedIcon)
+            Container(
+              width: 20.w,
+              height: 20.h,
+              decoration: BoxDecoration(
+                color: Color(0xFFAAFCCF),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.check,
+                color: Colors.black,
+                size: 14.w,
+              ),
+            ),
         ],
       ),
     );
   }
+
 
 
 }

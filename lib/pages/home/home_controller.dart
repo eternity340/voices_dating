@@ -28,7 +28,7 @@ class HomeController extends GetxController {
     pageController = PageController(initialPage: 0);
     fetchUsers();
     fetchNearUsers();
-    _initUserData();
+    //_initUserData();
   }
 
   UserDataEntity? get userData => AppService.instance.selfUser;
@@ -59,13 +59,11 @@ class HomeController extends GetxController {
     }
   }
 
-
-
   Future<void> fetchUsers() async {
     if (isLoading.value || !hasMoreData.value) return;
     _setLoading(true);
     try {
-      await DioClient.instance.requestNetwork<List<ListUserEntity>>(
+      await DioClient.instance.requestNetwork<List<dynamic>>(
         method: Method.get,
         url: ApiConstants.search,
         queryParameters: {
@@ -77,11 +75,9 @@ class HomeController extends GetxController {
           if (data != null && data.isNotEmpty) {
             ReplaceWordUtil replaceWordUtil = ReplaceWordUtil.getInstance();
             replaceWordUtil.getReplaceWord();
-
             List<ListUserEntity> processedUsers = data.map((user) {
-              user.username = replaceWordUtil.replaceWords(user.username);
-              user.headline = replaceWordUtil.replaceWords(user.headline);
-              return user;
+              var processedUser = replaceWordUtil.replaceWordsInJson(user);
+              return ListUserEntity.fromJson(processedUser);
             }).toList();
 
             users.addAll(processedUsers);
@@ -105,24 +101,24 @@ class HomeController extends GetxController {
     if (isLoading.value || !hasMoreData.value) return;
     _setLoading(true);
     try {
-      await DioClient.instance.requestNetwork<List<ListUserEntity>>(
+      await DioClient.instance.requestNetwork<List<dynamic>>(
         method: Method.get,
         url: ApiConstants.search,
         queryParameters: {
           'page': nearbyCurrentPage,
           'offset': 20,
-          'find[gender]':userData?.gender,
-          'find[distance]':500
+          'find[gender]': userData?.gender,
+          'find[distance]': 500
         },
         options: Options(headers: {'token': tokenEntity.accessToken}),
         onSuccess: (data) {
           if (data != null && data.isNotEmpty) {
             ReplaceWordUtil replaceWordUtil = ReplaceWordUtil.getInstance();
             replaceWordUtil.getReplaceWord();
-            List<ListUserEntity> processedUsers = data.map((nearUser) {
-              nearUser.username = replaceWordUtil.replaceWords(nearUser.username);
-              nearUser.headline = replaceWordUtil.replaceWords(nearUser.headline);
-              return nearUser;
+
+            List<ListUserEntity> processedUsers = data.map((user) {
+              var processedUser = replaceWordUtil.replaceWordsInJson(user);
+              return ListUserEntity.fromJson(processedUser);
             }).toList();
 
             nearUsers.addAll(processedUsers);

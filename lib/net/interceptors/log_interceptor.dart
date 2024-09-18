@@ -20,7 +20,7 @@ class DioLogInterceptor extends InterceptorsWrapper{
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
     LogUtil.d(message: "\n----- response -----",
-        );
+    );
     LogUtil.d(message: "url = ${response.realUri.toString()}");
     LogUtil.d(message: "code = ${response.statusCode}");
     LogUtil.d(message: "data = ${json.encoder.convert(response.data)}");
@@ -30,7 +30,7 @@ class DioLogInterceptor extends InterceptorsWrapper{
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
     LogUtil.e(message: "\n------Error -----",
-        );
+    );
     LogUtil.e(message: "url = ${err.requestOptions.uri.toString()}");
     LogUtil.e(message:"type = ${err.type}");
     LogUtil.e(message:"error = ${err.error}");

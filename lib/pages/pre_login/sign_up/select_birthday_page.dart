@@ -7,7 +7,7 @@ import '../../../components/gradient_btn.dart';
 import '../../../entity/User.dart';
 import 'components/widget/picker_components.dart';
 import '../../../constants/constant_data.dart'; // Import constant data
-import '../../../constants/constant_styles.dart'; // Import constant styles
+import '../../../constants/constant_styles.dart';
 
 class SelectBirthdayPage extends StatefulWidget {
   final User user;
@@ -19,12 +19,11 @@ class SelectBirthdayPage extends StatefulWidget {
 }
 
 class _SelectBirthdayPageState extends State<SelectBirthdayPage> {
-  // Scroll controllers for day, month, and year pickers
+
   FixedExtentScrollController _dayController = FixedExtentScrollController();
   FixedExtentScrollController _monthController = FixedExtentScrollController();
   FixedExtentScrollController _yearController = FixedExtentScrollController();
 
-  // Current selected values
   int selectedDay = 1;
   int selectedMonth = 1;
   int selectedYear = DateTime.now().year;
@@ -32,20 +31,11 @@ class _SelectBirthdayPageState extends State<SelectBirthdayPage> {
   @override
   void initState() {
     super.initState();
-    // Set initial scroll positions
     _dayController = FixedExtentScrollController(initialItem: selectedDay - 1);
     _monthController = FixedExtentScrollController(initialItem: selectedMonth - 1);
     _yearController = FixedExtentScrollController(initialItem: DateTime.now().year - selectedYear);
   }
 
-  @override
-  void dispose() {
-    // Dispose controllers
-    _dayController.dispose();
-    _monthController.dispose();
-    _yearController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,12 +101,14 @@ class _SelectBirthdayPageState extends State<SelectBirthdayPage> {
 
   Widget _buildContinueButton() {
     return GradientButton(
-      text: ConstantData.continueButtonText, // Use constant data
+      text: ConstantData.continueButtonText,
       onPressed: () {
-        DateTime selectedDate = DateTime(selectedYear, selectedMonth, selectedDay);
-        widget.user.birthday = selectedDate;
+        // 格式化日期为 "YYYY/MM/DD"
+        String formattedDate = "${selectedYear.toString().padLeft(4, '0')}/${selectedMonth.toString().padLeft(2, '0')}/${selectedDay.toString().padLeft(2, '0')}";
+        widget.user.birthday = formattedDate;
 
-        // Calculate age
+        // 计算年龄
+        DateTime selectedDate = DateTime(selectedYear, selectedMonth, selectedDay);
         int age = DateTime.now().year - selectedYear;
         if (DateTime.now().month < selectedMonth ||
             (DateTime.now().month == selectedMonth && DateTime.now().day < selectedDay)) {
@@ -127,5 +119,15 @@ class _SelectBirthdayPageState extends State<SelectBirthdayPage> {
         Get.toNamed('/select_height', arguments: widget.user);
       },
     );
+  }
+
+
+
+  @override
+  void dispose() {
+    _dayController.dispose();
+    _monthController.dispose();
+    _yearController.dispose();
+    super.dispose();
   }
 }

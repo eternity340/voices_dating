@@ -1,10 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-import 'package:dio/dio.dart' as dio;
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import '../../../entity/token_entity.dart';
 import '../../../entity/moment_entity.dart';
 import '../../../entity/user_data_entity.dart';
 import '../../../net/api_constants.dart';
+import '../../../net/dio.client.dart';
 
 class MomentsController extends GetxController {
   late TokenEntity tokenEntity;
@@ -14,6 +15,7 @@ class MomentsController extends GetxController {
   var page = 1;
   final int pageOffset = 5;
   late EasyRefreshController easyRefreshController;
+  final DioClient dioClient = DioClient.instance;
 
   @override
   void onInit() {
@@ -41,9 +43,9 @@ class MomentsController extends GetxController {
     isLoading.value = true;
 
     try {
-      dio.Dio dioInstance = dio.Dio();
-      dio.Response response = await dioInstance.get(
-        ApiConstants.timelines,
+      await dioClient.requestNetwork<List<dynamic>>(
+        method: Method.get,
+        url: ApiConstants.timelines,
         queryParameters: {
           'page': page,
           'offset': pageOffset,
@@ -51,24 +53,27 @@ class MomentsController extends GetxController {
           'filter[day]': 30,
           'filter[photo]': 1,
         },
-        options: dio.Options(
+        options: Options(
           headers: {
             'token': tokenEntity.accessToken,
           },
         ),
+        onSuccess: (data) {
+          if (data != null) {
+            List<MomentEntity> fetchedMoments = data
+                .map((json) => MomentEntity.fromJson(json as Map<String, dynamic>))
+                .toList();
+            moments.addAll(fetchedMoments);
+            page++;
+          } else {
+            easyRefreshController.finishLoad(noMore: true);
+          }
+        },
+        onError: (code, msg, data) {
+          print('Error: $msg');
+          easyRefreshController.finishLoad(noMore: true);
+        },
       );
-
-      if (response.data['code'] == 200) {
-        List<dynamic> momentsJson = response.data['data'];
-        List<MomentEntity> fetchedMoments = momentsJson
-            .map((json) => MomentEntity.fromJson(json as Map<String, dynamic>))
-            .toList();
-        moments.addAll(fetchedMoments);
-        page++;
-      } else {
-        print('Failed to load moments');
-        easyRefreshController.finishLoad(noMore: true);
-      }
     } catch (e) {
       print('Error: $e');
       easyRefreshController.finishLoad(noMore: true);

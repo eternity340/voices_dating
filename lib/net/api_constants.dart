@@ -1,16 +1,24 @@
-import 'dart:io';
+import 'dart:convert' as convert;
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import '../constants/constant_data.dart';
 import '../utils/shared_preference_util.dart';
 
 class ApiConstants{
-
+  static ApiConstants get instance => ApiConstants();
+  static bool useVoicesDating = false;
   static const timeoutSec = 30;
 
-  static const String wsDebugUrl = "wss://chat.masonvips.com/ws";
   static const String debugUrl = "https://api.masonvips.com";
+  static const String productionUrl  = "https://www.masonvips.com/";
+  static const String wsDebugUrl = "wss://chat.masonvips.com/ws";
+
+  static const String voicesDatingDebugUrl= "https://api.voicesdating.com";
+  static const String voicesDatingProductionUrl = "https://www.voicesdating.com/";
+  static const String wsVoicesDatingDebugUrl = "wss://chat.voicesdating.com/ws";
+
   static const String debugCheckId = "Fi5cahyee7ta8iemaecee9Oe3eithia2";//"Joh0ziebob5iuvo1koozaebiagaeD2zo";//"Fi5cahyee7ta8iemaecee9Oe3eithia2";
-  static const String urlVersion = "https://api.masonvips.com/v1";
+  static const String urlVersion = "/v1";
 
   static const String releaseUrl ="https://api.sweetpartnerapp.com";
   static const String wsReleaseUrl = "wss://chat.sweetpartnerapp.com/ws";
@@ -27,6 +35,9 @@ class ApiConstants{
 
   static const String androidDebugAppId = "fed327531298e7f863cdf2c2ad0903e9";
   static const String androidDebugSecret = "0013ce26-7219-b304-1d18-072c46c0aab2";
+
+  static const String voicesDatingAppId = "699010ebcf61c7d459bcce7aa789efc6";
+  static const String voicesDatingAppSecret  ="4568eea9-dd84-31b5-0a04-45efad009df2";
 
   static const String androidReleaseAppId = "d9408842a3e6b1a7c7e851a5421ad49f";
   static const String androidReleaseSecret = "abf5b917-a7c5-804e-2796-75b0185a932f";
@@ -160,24 +171,24 @@ class ApiConstants{
   // static String wsUrl = kReleaseMode?wsDebugUrl:wsDebugUrl;
 
   static getBaseUrl(){
-    return debugUrl;
+    return useVoicesDating ? voicesDatingDebugUrl : debugUrl;
 
   }
 
   static getWsUrl(){
-    return wsDebugUrl;
+    return useVoicesDating ? wsVoicesDatingDebugUrl :wsDebugUrl;
 
   }
 
   static String get appId {
-    var openMain = SharedPreferenceUtil().getValue(key: SharedPresKeys.isOpenToMain)??false;
-    return androidDebugAppId;
+    //var openMain = SharedPreferenceUtil().getValue(key: SharedPresKeys.isOpenToMain)??false;
+    return useVoicesDating ? voicesDatingAppId : androidDebugAppId;
 
   }
 
   static String get appSecret{
-    var openMain = SharedPreferenceUtil().getValue(key: SharedPresKeys.isOpenToMain)??false;
-    return androidDebugSecret;
+    //var openMain = SharedPreferenceUtil().getValue(key: SharedPresKeys.isOpenToMain)??false;
+    return useVoicesDating ? voicesDatingAppSecret : androidDebugSecret;
 
   }
 
@@ -197,6 +208,18 @@ class ApiConstants{
     }else{
       return privacyPolicy;
     }
+  }
+
+  String encodeBase64(String data) {
+    var content = utf8.encode(data);
+    var digest = base64Encode(content);
+    return digest;
+  }
+
+  String decodeBase64(String data) {
+    List<int> bytes = convert.base64Decode(data);
+    String result = convert.utf8.decode(bytes);
+    return result;
   }
 
 }

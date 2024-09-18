@@ -1,42 +1,27 @@
+import 'package:first_app/net/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' as getx;
 import '../../../constants/constant_data.dart';
 import '../../../entity/user_data_entity.dart';
+import '../../../net/dio.client.dart';
 import '../../../service/app_service.dart';
-import '../../../service/token_service.dart';
-import '../../../entity/token_entity.dart';
-import '../../../utils/shared_preference_util.dart';
 
 class SignInModel extends ChangeNotifier {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final Dio _dio = Dio();
+  final DioClient _dioClient = DioClient();
   bool _isLoading = false;
   String? _emailErrorMessage;
   String? _passwordErrorMessage;
   String? _errorMessage;
   bool _isPasswordVisible = false;
 
-
-  SignInModel() {
-    _getToken();
-  }
-
   bool get isLoading => _isLoading;
   String? get emailErrorMessage => _emailErrorMessage;
   String? get passwordErrorMessage => _passwordErrorMessage;
   String? get errorMessage => _errorMessage;
   bool get isPasswordVisible => _isPasswordVisible;
-
-  Future<void> _getToken() async {
-    try {
-      await TokenService.instance.getTokenEntity();
-    } catch (e) {
-      _errorMessage = "Failed to initialize token: $e";
-      notifyListeners();
-    }
-  }
 
   void togglePasswordVisibility() {
     _isPasswordVisible = !_isPasswordVisible;
@@ -47,73 +32,77 @@ class SignInModel extends ChangeNotifier {
     final String email = emailController.text.trim();
     final String password = passwordController.text.trim();
 
+    if (!_validateInputs(email, password)) return;
+
+    _setLoadingState(true);
+
+    // 创建 FormData 对象
+    final formData = FormData.fromMap({
+      'email': email,
+      'password': password,
+    });
+
+    final Map<String, dynamic> params = {
+      'email': email,
+      'password': password,
+    };
+
+    await _dioClient.requestNetwork<UserDataEntity>(
+      method: Method.post,
+      url: ApiConstants.signIn,
+      params: params,  // 直接传入 FormData 对象
+      options: Options(
+        headers: {'Content-Type': 'multipart/form-data'},
+      ),
+      formParams: false,  // 设置为 false，因为我们已经创建了 FormData
+      onSuccess: (data) async {
+        if (data != null) {
+          await AppService.instance.saveUserData(userData: data);
+          getx.Get.offAllNamed('/home');
+        } else {
+          _handleError("User data is missing in the response.");
+        }
+      },
+      onError: (code, msg, data) {
+        if (code == ConstantData.errorCodeInvalidEmailOrPassword) {
+          _handleError(msg);
+        } else {
+          _handleError("Error: $msg");
+        }
+      },
+    );
+
+    _setLoadingState(false);
+  }
+
+  bool _validateInputs(String email, String password) {
     if (email.isEmpty) {
       _emailErrorMessage = "Email cannot be empty!";
       notifyListeners();
-      return;
-    } else {
-      _emailErrorMessage = null;
+      return false;
     }
+    _emailErrorMessage = null;
 
     if (password.isEmpty) {
       _passwordErrorMessage = "Password cannot be empty!";
       notifyListeners();
-      return;
-    } else {
-      _passwordErrorMessage = null;
+      return false;
     }
+    _passwordErrorMessage = null;
 
-    _isLoading = true;
+    return true;
+  }
+
+  void _setLoadingState(bool isLoading) {
+    _isLoading = isLoading;
     _errorMessage = null;
     notifyListeners();
+  }
 
-    try {
-      final TokenEntity tokenEntity = await TokenService.instance.getTokenEntity();
-
-      if (tokenEntity.accessToken == null) {
-        throw Exception("No access token available");
-      }
-
-      final formData = FormData.fromMap({
-        'email': email,
-        'password': password,
-      });
-
-      final response = await _dio.post(
-        'https://api.masonvips.com/v1/signin',
-        data: formData,
-        options: Options(
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            'token': tokenEntity.accessToken,
-          },
-        ),
-      );
-
-      if (response.data[ConstantData.code] == 200) {
-        final userDataJson = response.data['data'];
-
-        if (userDataJson == null) {
-          throw Exception('User data is missing in the response.');
-        }
-        final userData = UserDataEntity.fromJson(userDataJson);
-        await AppService.instance.saveUserData(userData: userData);
-        getx.Get.offAllNamed('/home');
-      } else if (response.data[ConstantData.code] == ConstantData.errorCodeInvalidEmailOrPassword) {
-        _errorMessage = response.data[ConstantData.message];
-        _showErrorDialog(_errorMessage);
-      } else {
-        _errorMessage = "error: ${response.data[ConstantData.message]}";
-        _showErrorDialog(_errorMessage);
-      }
-    } catch (e) {
-      _errorMessage = "exception: $e";
-      print('Exception occurred: $_errorMessage');
-      _showErrorDialog(_errorMessage);
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
+  void _handleError(String errorMessage) {
+    _errorMessage = errorMessage;
+    print(_errorMessage);
+    _showErrorDialog(_errorMessage);
   }
 
   void _showErrorDialog(String? message) {

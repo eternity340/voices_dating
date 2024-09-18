@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:dio/dio.dart';
+import 'package:first_app/net/interceptors/dio_inetercetptor.dart';
 import 'package:first_app/pages/home/home_page.dart';
 import 'package:first_app/pages/me/me_page.dart';
 import 'package:first_app/pages/message/message_page.dart';
@@ -22,11 +23,12 @@ import 'net/interceptors/log_interceptor.dart';
 import 'resources/intl/string_res_i18n.dart';
 import 'utils/log_util.dart';
 
-void main() {
-  _initApp();
+void main() async {
+  await _initApp();
+  runApp(const MyApp());
 }
 
-_initApp() async {
+Future<void> _initApp() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
   await SharedPreferenceUtil.instance.init();
@@ -37,14 +39,15 @@ _initApp() async {
     receiveTimeout: const Duration(milliseconds: receiveTimeout),
     sendTimeout: const Duration(milliseconds: sendTimeout),
     baseUrl: ApiConstants.getBaseUrl(),
-  ), interceptors: [DioLogInterceptor()]);
+  ), interceptors: [DioLogInterceptor(),RequestInterceptor()]);
 
   await _initService();
 
-  runApp(const MyApp());
+  final globalService = Get.find<GlobalService>();
+  await globalService.requestPermissions();
 }
 
-_initService() async {
+Future<void> _initService() async {
   await Get.putAsync(() => TokenService().init());
   await Get.putAsync(() => AppService().init());
   Get.put(GlobalService());

@@ -194,20 +194,26 @@ class UserProfilePage extends StatelessWidget {
       itemCount: controller.moments.length,
       itemBuilder: (context, index) {
         final moment = controller.moments[index];
+        final validAttachments = moment.attachments?.where((attachment) => attachment.type != 2).toList();
+        if (validAttachments == null || validAttachments.isEmpty) {
+          return SizedBox.shrink();
+        }
         return buildMomentItem(moment, controller);
       },
     );
   }
 
+
   Widget buildMomentItem(MomentEntity moment, UserProfileController controller) {
-    final attachments = moment.attachments;
+    final attachments = moment.attachments?.where((attachment) => attachment.type != 2).toList();
     if (attachments == null || attachments.isEmpty) return SizedBox.shrink();
+
     return GestureDetector(
       onTap: () => Get.toNamed(AppRoutes.messageUserMoments,
           arguments: {
-        'userDataEntity': controller.userDataEntity,
-        'tokenEntity': controller.tokenEntity,
-      }),
+            'userDataEntity': controller.userDataEntity,
+            'tokenEntity': controller.tokenEntity,
+          }),
       child: Container(
         width: 105.w,
         height: 105.h,
@@ -219,6 +225,7 @@ class UserProfilePage extends StatelessWidget {
       ),
     );
   }
+
 
   Widget buildAttachmentImage(String? imageUrl) {
     if (imageUrl == null || imageUrl.isEmpty) return SizedBox.shrink();

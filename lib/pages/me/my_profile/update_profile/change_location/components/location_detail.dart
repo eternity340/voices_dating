@@ -50,7 +50,7 @@ class _LocationDetailPageState extends State<LocationDetail> {
               showBackgroundImage: false,
               showMiddleText: true,
               middleText: ConstantData.locationHeaderTitle,
-              child: Container()
+              child: Container(),
           ),
           Positioned(
             top: 150.h,
@@ -288,9 +288,9 @@ class _LocationDetailPageState extends State<LocationDetail> {
       options: Options(headers: {'token': tokenEntity.accessToken}),
       onSuccess: (data) async {
         await globalService.refreshUserData(tokenEntity.accessToken.toString());
-        Get.offNamed(AppRoutes.meMyProfileChangeLocation, arguments: {
-          'userData': globalService.userDataEntity.value,
-          'token': tokenEntity,
+        Get.offNamed(AppRoutes.meMyProfile, arguments: {
+          'userDataEntity': globalService.userDataEntity.value,
+          'tokenEntity': tokenEntity,
         });
       },
       onError: (code, msg, data) {

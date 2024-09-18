@@ -1,7 +1,7 @@
+import 'package:first_app/entity/User.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart' as getx;
-
 import '../../../constants/Constant_styles.dart';
 import '../../../constants/constant_data.dart';
 
@@ -45,16 +45,17 @@ class SignBtn extends StatelessWidget {
           child: OutlinedButton(
             onPressed: () {
               getx.Get.toNamed('/get_mail_code');
+              //getx.Get.toNamed('/select_gender',arguments: User());
             },
             style: OutlinedButton.styleFrom(
-              side: BorderSide(color: Colors.black, width: 2.0.w), // Responsive border width
+              side: BorderSide(color: Colors.black, width: 2.0.w),
               backgroundColor: Colors.transparent,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(24.r), // Responsive border radius
+                borderRadius: BorderRadius.circular(24.r),
               ),
             ),
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 12.h), // Responsive padding
+              padding: EdgeInsets.symmetric(vertical: 12.h),
               child: Text(
                 ConstantData.signUpText.toUpperCase(),
                 style: ConstantStyles.welcomeButtonStyle,

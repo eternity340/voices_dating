@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:first_app/net/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../entity/User.dart';
 import '../../../net/dio.client.dart';
 import '../../../entity/token_entity.dart';
 import '../../../service/token_service.dart';
@@ -16,6 +17,8 @@ class GetEmailCodeController extends GetxController {
   final RxString selectedDomain = '@gmail.com'.obs;
   final RxBool isCustomDomain = false.obs;
   final TextEditingController customDomainController = TextEditingController();
+  final DioClient dioClient = DioClient.instance;
+
   final List<String> emailDomains = [
     '@gmail.com',
     '@yahoo.com',
@@ -58,14 +61,19 @@ class GetEmailCodeController extends GetxController {
         throw Exception("No access token available");
       }
 
-      await DioClient.instance.requestNetwork<Map<String, dynamic>>(
+      await dioClient.requestNetwork<Map<String, dynamic>>(
         method: Method.get,
         url: ApiConstants.emailVerificationCode,
         queryParameters: {'email': fullEmail},
         options: Options(headers: {'token': tokenEntity.accessToken}),
         onSuccess: (data) {
-          final verificationKey = data?['key'];
-          Get.to(() => VerifyEmailPage(email: fullEmail, verificationKey: verificationKey));
+          /*final verificationKey = data?['key'];
+          Get.to(() => VerifyEmailPage(email: fullEmail, verificationKey: verificationKey));*/
+          User user = User(email: fullEmail);
+          Get.toNamed('/verify_success', arguments: {
+            'message': data?['message'] ?? 'Verification successful',
+            'user': user,
+          });
         },
         onError: (code, msg, data) {
           errorMessage.value = "Error: $msg";

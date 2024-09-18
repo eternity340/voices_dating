@@ -27,16 +27,16 @@ class CustomContentDialog extends StatelessWidget {
       child: IntrinsicHeight(
         child: Container(
           width: 335.w,
-          constraints: BoxConstraints(maxHeight: 400.h), // 设置最大高度
+          constraints: BoxConstraints(maxHeight: 500.h), // 设置最大高度
           child: Column(
             children: [
-              SizedBox(height: 47.5.h),
+              SizedBox(height: 30.5.h),
               Text(
                 title,
                 style: ConstantStyles.customDialogTitle,
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 40.5.h),
+              SizedBox(height: 20.5.h),
               Expanded(
                 child: SingleChildScrollView(
                   child: Padding(

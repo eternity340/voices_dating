@@ -5,7 +5,7 @@ class User {
   String? country;
   String? state;
   String? city;
-  DateTime? birthday;
+  String? birthday;
   int? age;
   String? username;
   String? password;
@@ -32,7 +32,7 @@ class User {
       'user[country]': country,
       'user[state]': state,
       'user[city]': city,
-      'user[birthday]': birthday?.toIso8601String(),
+      'user[birthday]': birthday,
       'user[age]': age,
       'user[username]': username,
       'user[password]': password,

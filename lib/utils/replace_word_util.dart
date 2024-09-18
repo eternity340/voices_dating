@@ -1,49 +1,33 @@
-import 'dart:convert';
 import 'package:common_utils/common_utils.dart';
 import 'package:dio/dio.dart';
 import 'package:first_app/net/api_constants.dart';
 import 'package:first_app/net/dio.client.dart';
+import 'package:first_app/service/token_service.dart';
 import 'package:first_app/utils/shared_preference_util.dart';
-import 'package:first_app/entity/token_entity.dart';
-import '../constants/constant_data.dart';
+import 'package:first_app/utils/string_ext.dart';
 
 class ReplaceWordUtil {
   static ReplaceWordUtil? _instance;
   static Map<String, String> words = {};
-  late TokenEntity tokenEntity;
 
   static ReplaceWordUtil getInstance() {
     _instance ??= ReplaceWordUtil._internal();
     return _instance!;
   }
 
-  ReplaceWordUtil._internal() {
-    initializeToken();
-  }
-
-  void initializeToken() {
-    final tokenJson = SharedPreferenceUtil.instance.getValue(key: SharedPresKeys.userToken);
-    if (tokenJson != null) {
-      tokenEntity = TokenEntity.fromJson(json.decode(tokenJson));
-    } else {
-      LogUtil.e(ConstantData.noTokenInLocal);
-    }
-  }
+  ReplaceWordUtil._internal();
 
   Future<void> getReplaceWord() async {
-    loadWordsFromLocalStorage();
+    await loadWordsFromLocalStorage();
     await fetchWordsFromServer();
   }
 
-  void loadWordsFromLocalStorage() {
+  Future<void> loadWordsFromLocalStorage() async {
     if (words.isNotEmpty) return;
-    var temp = SharedPreferenceUtil.instance.getValue(key: 'replaceWords');
-    if (temp is! Map) return;
-    temp.forEach((key, value) {
-      if (value is String) {
-        words[key] = value;
-      }
-    });
+    var temp = await SharedPreferenceUtil.instance.getValue(key: 'replaceWords');
+    if (temp is Map) {
+      words = Map<String, String>.from(temp);
+    }
   }
 
   Future<void> fetchWordsFromServer() async {
@@ -51,7 +35,7 @@ class ReplaceWordUtil {
       await DioClient.instance.requestNetwork<dynamic>(
         method: Method.get,
         url: ApiConstants.getReplaceWords,
-        options: Options(headers: {'token': tokenEntity.accessToken}),
+        options: Options(headers: {'token': await TokenService.instance.getToken()}),
         onSuccess: _handleSuccessResponse,
         onError: _handleErrorResponse,
       );
@@ -61,28 +45,25 @@ class ReplaceWordUtil {
   }
 
   void _handleSuccessResponse(dynamic value) {
-    if (value is! Map<String, dynamic>) return;
-    words.clear();
-    value.forEach((key, value) {
-      if (value is String) {
-        words[key] = value;
-      }
-    });
-    SharedPreferenceUtil.instance.setValue(key: 'replaceWords', value: value);
+    if (value is Map<String, dynamic>) {
+      words = Map<String, String>.from(value);
+      SharedPreferenceUtil.instance.setValue(key: 'replaceWords', value: words);
+    }
   }
 
-  void _handleErrorResponse( code, msg, data) {
+  void _handleErrorResponse(code, msg, data) {
     LogUtil.e(msg);
   }
 
-
-  String replaceWords(String? text) {
-    if (text == null || text.isEmpty) return '';
-
-    words.forEach((key, value) {
-      text = text!.replaceAll(key, value);
-    });
-
-    return text!;
+  dynamic replaceWordsInJson(dynamic data, {bool isSelf = false}) {
+    if (data is Map<String, dynamic>) {
+      return data.map((key, value) => MapEntry(key, replaceWordsInJson(value, isSelf: isSelf)));
+    } else if (data is List) {
+      return data.map((e) => replaceWordsInJson(e, isSelf: isSelf)).toList();
+    } else if (data is String) {
+      return data.replaceWord(isSelf);
+    } else {
+      return data;
+    }
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:first_app/service/token_service.dart';
 import 'package:get/get.dart';
 import 'package:plain_notification_token/plain_notification_token.dart';
@@ -55,7 +56,7 @@ class AppService extends GetxService {
 
   Future<void> forceLogout({bool isDelete = false}) async {
     isLogin = await SharedPreferenceUtil.instance.getValue(key: SharedPresKeys.isLogin) ?? false;
-    LogUtil.d(message: "logout:$isLogin");
+    LogUtil.d(message: "isLogin:$isLogin");
     if (isLogin) {
       await SharedPreferenceUtil.instance.setValue(key: SharedPresKeys.isLogin, value: false);
       CommonUtils.showLoading();
@@ -74,21 +75,38 @@ class AppService extends GetxService {
     Get.offAllNamed('/welcome');
   }
 
-
-
-  syncSelfProfile() async{
-    if(selfUser==null){
-      forceLogout();
+  Future<void> syncUserData() async {
+    if (!isLogin || selfUser == null) {
+      LogUtil.e(message: "User not logged in or selfUser is null");
       return;
     }
-    Map<String,dynamic> params = RequestUtil.getUserProfileMap(userId: selfUser!.userId!);
-    DioClient.instance.requestNetwork<UserDataEntity>(url: ApiConstants.getProfile,method: Method.get,queryParameters: params,
-        onSuccess: (result){
-          if(result!=null){
-            saveUserData(userData: result);
+
+    final token = await TokenService.instance.getToken();
+    if (token == null) {
+      LogUtil.e(message: "Failed to get token");
+      return;
+    }
+
+    try {
+      await DioClient.instance.requestNetwork<UserDataEntity>(
+        method: Method.get,
+        url: ApiConstants.getProfile,
+        queryParameters: {'profId': selfUser!.userId},
+        options: Options(headers: {'token': token}),
+        onSuccess: (data) async {
+          if (data != null) {
+            await saveUserData(userData: data);
+          } else {
+            LogUtil.e(message: "Received null user data from server");
           }
-        }
-    );
+        },
+        onError: (code, msg, data) {
+          LogUtil.e(message:msg);
+        },
+      );
+    } catch (e) {
+      LogUtil.e(message:e.toString());
+    }
   }
 
   void requestNewBadges() {

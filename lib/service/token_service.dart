@@ -19,8 +19,9 @@ class TokenService extends GetxService{
 
 
   @override
-  void onInit(){
+  Future<void> onInit() async {
     super.onInit();
+    await getTokenEntity();
   }
 
 
@@ -126,13 +127,20 @@ class TokenService extends GetxService{
     return currentTime > endTime;
   }
 
-  String? getToken(){
-    if(tokenEntity!=null) {
-      return tokenEntity!.accessToken;
-    } else {
-      return null;
+  Future<String?> getTokenAsync() async {
+    if (tokenEntity == null) {
+      await getTokenEntity();
     }
+    return tokenEntity?.accessToken;
   }
+
+  Future<String?> getToken() async {
+    if (tokenEntity == null) {
+      await getTokenEntity();
+    }
+    return tokenEntity?.accessToken;
+  }
+
 
   clearToken(){
     tokenEntity = null;

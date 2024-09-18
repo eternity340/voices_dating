@@ -9,6 +9,7 @@ class MeController extends GetxController {
   late TokenEntity tokenEntity;
   late UserDataEntity userData;
   final GlobalService globalService = Get.find<GlobalService>();
+
   @override
   void onInit() {
     super.onInit();

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:first_app/service/token_service.dart';
+import 'package:first_app/utils/log_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -15,9 +16,10 @@ import '../../../../net/dio.client.dart';
 import '../../../../storage/location_data_db.dart';
 
 class LocationDetailPage extends StatefulWidget {
-  final User user;
 
-  const LocationDetailPage({Key? key, required this.user}) : super(key: key);
+
+
+  const LocationDetailPage({Key? key, }) : super(key: key);
 
   @override
   _LocationDetailPageState createState() => _LocationDetailPageState();
@@ -27,6 +29,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
   String selectedCountry = ConstantData.selectedCountry;
   String selectedState = ConstantData.selectedState;
   String selectedCity = ConstantData.selectedCity;
+  String? selectedCityId;
   int? selectedStateId;
   List<CityEntity> cities = [];
   bool isCityLoading = false;
@@ -62,6 +65,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                     'country': selectedCountry,
                     'state': selectedState,
                     'city': selectedCity,
+                    'cityId': selectedCityId,
                   });
                 },
                 child: Text(
@@ -182,7 +186,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                 itemBuilder: (BuildContext context, int index) {
                   return ListTile(
                     title: Text(
-                      items[index].toString(),
+                      type == 'city' ? cities[index].cityName! : items[index].toString(),
                       style: ConstantStyles.locationListStyle,
                     ),
                     onTap: () {
@@ -191,13 +195,16 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                           selectedCountry = items[index].toString();
                           selectedState = ConstantData.selectedState;
                           selectedCity = ConstantData.selectedCity;
+                          selectedCityId = null;
                           cities.clear();
                         } else if (type == 'state') {
                           selectedState = items[index].toString();
                           selectedCity = ConstantData.selectedCity;
+                          selectedCityId = null;
                           _getStateId(selectedState);
                         } else if (type == 'city') {
-                          selectedCity = items[index].toString();
+                          selectedCity = cities[index].cityName!;
+                          selectedCityId = cities[index].cityId;
                         }
                       });
                       Get.back();
@@ -216,6 +223,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
       backgroundColor: Colors.transparent,
     );
   }
+
 
 
   Future<List<String>> _getItemsByType(String type) async {
@@ -252,7 +260,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
       method: Method.get,
       url: ApiConstants.getCityList,
       queryParameters: {'stateId': stateId},
-      options: Options(headers: {'token': TokenService.instance.getToken()}),
+      options: Options(headers: {'token':await TokenService.instance.getToken()}),
       onSuccess: (data) {
         if (data != null) {
           setState(() {
@@ -261,7 +269,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
         }
       },
       onError: (code, msg, data) {
-        print("Error fetching cities: $msg");
+        LogUtil.e(message: msg);
       },
     );
   }

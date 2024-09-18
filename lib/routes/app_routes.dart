@@ -228,8 +228,7 @@ class AppRoutes {
     getx.GetPage(
         name: locationDetail,
         page: () {
-          final user = getx.Get.arguments as User;
-          return LocationDetailPage(user: user);
+          return LocationDetailPage();
         },
         transition: defaultTransition,
         transitionDuration: defaultDuration),

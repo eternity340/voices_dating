@@ -11,6 +11,7 @@ class FeelController extends GetxController {
   var isLoading = true.obs;
   var currentPage = 1.obs;
   var hasMore = true.obs;
+  final DioClient dioClient = DioClient.instance;
 
   @override
   void onInit() {
@@ -29,7 +30,7 @@ class FeelController extends GetxController {
 
     const String url = ApiConstants.likedUser;
     try {
-      await DioClient.instance.requestNetwork<List<dynamic>>(
+      await dioClient.requestNetwork<List<dynamic>>(
         method: Method.get,
         url: url,
         queryParameters: {

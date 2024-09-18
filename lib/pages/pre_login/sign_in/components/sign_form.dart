@@ -1,3 +1,4 @@
+import 'package:first_app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -104,7 +105,7 @@ class SignForm extends StatelessWidget {
             children: [
               TextButton(
                 onPressed: () {
-                  getx.Get.toNamed('/forget_pwd');
+                  getx.Get.toNamed(AppRoutes.forgetPwd);
                 },
                 style: ButtonStyle(
                   overlayColor: WidgetStateProperty.all(Colors.transparent),

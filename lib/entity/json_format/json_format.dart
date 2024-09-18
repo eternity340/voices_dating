@@ -1,4 +1,8 @@
+import 'dart:convert';
 import 'dart:developer';
+import 'package:first_app/entity/base_entity.dart';
+import 'package:first_app/entity/upload_file_entity.dart';
+
 import '../../utils/log_util.dart';
 import '../attach_result_entity.dart';
 import '../attachment_entity.dart';
@@ -186,6 +190,12 @@ M _generateItemOBJ<M>(String typeStr, dynamic jsonObj) {
     case 'Buttons':
       obj = Buttons.fromJson(jsonObj);
       break;
+    case 'BaseEntity':
+      obj = BaseEntity.fromJson(jsonObj);
+      break;
+    case 'UploadFileEntity':
+      obj = UploadFileEntity.fromJson(jsonObj);
+      break;
     default:
       LogUtil.logger.e("未解析$typeStr---${jsonObj.toString()}");
       obj = jsonObj;
@@ -371,6 +381,16 @@ T _generateOBJList<T>(String typeStr, List data) {
     case 'Buttons':
       list = data
           .map<Buttons>((e) => _generateItemOBJ<Buttons>(typeStr, e))
+          .toList();
+      break;
+    case 'BaseEntity':
+      list = data
+          .map<BaseEntity>((e) => _generateItemOBJ<BaseEntity>(typeStr, e))
+          .toList();
+      break;
+    case 'UploadFileEntity':
+      list = data
+          .map<UploadFileEntity>((e) => _generateItemOBJ<UploadFileEntity>(typeStr, e))
           .toList();
       break;
 

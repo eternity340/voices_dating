@@ -120,4 +120,14 @@ class ChangeLocationController extends GetxController {
         break;
     }
   }
+
+  void _navigateToMePage() {
+    Get.offAllNamed(
+      AppRoutes.me,
+      arguments: {
+        'tokenEntity': tokenEntity,
+        'userDataEntity': userData,
+      },
+    );
+  }
 }
