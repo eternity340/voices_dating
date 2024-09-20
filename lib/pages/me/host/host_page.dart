@@ -1,5 +1,5 @@
-import 'package:first_app/components/background.dart';
-import 'package:first_app/constants/constant_data.dart';
+import 'package:voices_dating/components/background.dart';
+import 'package:voices_dating/constants/constant_data.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

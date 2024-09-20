@@ -1,4 +1,4 @@
-import 'package:first_app/constants/constant_data.dart';
+import 'package:voices_dating/constants/constant_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../constants.dart';

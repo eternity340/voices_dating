@@ -1,6 +1,7 @@
 import 'dart:convert';
-import 'package:first_app/entity/user_photo_entity.dart';
-import 'package:first_app/entity/user_voice_entity.dart';
+import 'package:voices_dating/entity/user_photo_entity.dart';
+import 'package:voices_dating/entity/user_voice_entity.dart';
+
 import '../utils/config_options_utils.dart';
 import 'json_format/json_format.dart';
 

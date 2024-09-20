@@ -1,10 +1,10 @@
 import 'package:common_utils/common_utils.dart';
 import 'package:dio/dio.dart';
-import 'package:first_app/net/api_constants.dart';
-import 'package:first_app/net/dio.client.dart';
-import 'package:first_app/service/token_service.dart';
-import 'package:first_app/utils/shared_preference_util.dart';
-import 'package:first_app/utils/string_ext.dart';
+import 'package:voices_dating/net/api_constants.dart';
+import 'package:voices_dating/net/dio.client.dart';
+import 'package:voices_dating/service/token_service.dart';
+import 'package:voices_dating/utils/shared_preference_util.dart';
+import 'package:voices_dating/utils/string_ext.dart';
 
 class ReplaceWordUtil {
   static ReplaceWordUtil? _instance;

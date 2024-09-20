@@ -1,9 +1,9 @@
-import 'package:first_app/components/background.dart';
+import 'package:voices_dating/components/background.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:first_app/entity/token_entity.dart';
-import 'package:first_app/entity/user_data_entity.dart';
+import 'package:voices_dating/entity/token_entity.dart';
+import 'package:voices_dating/entity/user_data_entity.dart';
 
 import '../../../../../constants/Constant_styles.dart';
 import '../../../../../constants/constant_data.dart';

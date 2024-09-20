@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:first_app/resources/intl/string_en.dart';
-import 'package:first_app/resources/intl/string_fr.dart';
+import 'package:voices_dating/resources/intl/string_en.dart';
+import 'package:voices_dating/resources/intl/string_fr.dart';
 
 class StringResI18n extends Translations{
   @override

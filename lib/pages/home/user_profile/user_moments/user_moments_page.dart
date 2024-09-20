@@ -1,5 +1,5 @@
-import 'package:first_app/pages/home/user_profile/user_moments/user_moments_controller.dart';
-import 'package:first_app/routes/app_routes.dart';
+import 'package:voices_dating/pages/home/user_profile/user_moments/user_moments_controller.dart';
+import 'package:voices_dating/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';

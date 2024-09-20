@@ -1,4 +1,4 @@
-import 'package:first_app/net/api_constants.dart';
+import 'package:voices_dating/net/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' as getx;

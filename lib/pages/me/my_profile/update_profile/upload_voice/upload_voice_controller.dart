@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:common_utils/common_utils.dart';
 import 'package:dio/dio.dart';
-import 'package:first_app/net/api_constants.dart';
-import 'package:first_app/pages/me/my_profile/update_profile/upload_voice/record/record_page.dart';
-import 'package:first_app/routes/app_routes.dart';
+import 'package:voices_dating/net/api_constants.dart';
+import 'package:voices_dating/pages/me/my_profile/update_profile/upload_voice/record/record_page.dart';
+import 'package:voices_dating/routes/app_routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:first_app/net/api_constants.dart';
-import 'package:first_app/utils/log_util.dart';
+import 'package:voices_dating/net/api_constants.dart';
+import 'package:voices_dating/utils/log_util.dart';
 import 'package:get/get.dart';
 import '../../../../entity/moment_entity.dart';
 import '../../../../entity/token_entity.dart';

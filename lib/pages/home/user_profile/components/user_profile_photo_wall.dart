@@ -1,4 +1,4 @@
-import 'package:first_app/entity/user_data_entity.dart';
+import 'package:voices_dating/entity/user_data_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

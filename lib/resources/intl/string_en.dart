@@ -1,4 +1,4 @@
-import 'package:first_app/resources/string_res.dart';
+import 'package:voices_dating/resources/string_res.dart';
 
 Map<String, String> enStringMap = {
   StringRes.appName: "myLanguage",

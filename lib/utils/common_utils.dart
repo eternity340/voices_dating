@@ -10,12 +10,12 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-import 'package:first_app/utils/date_time_format.dart';
 
 import '../constants/constant_data.dart';
 import '../resources/string_res.dart';
 import 'app_style_utils.dart';
 import 'config_options_utils.dart';
+import 'date_time_format.dart';
 import 'string_extension.dart';
 
 class CommonUtils{

@@ -1,8 +1,8 @@
 import 'dart:io';
-import 'package:first_app/components/background.dart';
-import 'package:first_app/entity/list_user_entity.dart';
-import 'package:first_app/entity/user_data_entity.dart';
-import 'package:first_app/pages/home/user_profile/user_report/user_report_controller.dart';
+import 'package:voices_dating/components/background.dart';
+import 'package:voices_dating/entity/list_user_entity.dart';
+import 'package:voices_dating/entity/user_data_entity.dart';
+import 'package:voices_dating/pages/home/user_profile/user_report/user_report_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';

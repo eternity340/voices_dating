@@ -1,4 +1,4 @@
-import 'package:first_app/components/background.dart';
+import 'package:voices_dating/components/background.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../entity/token_entity.dart';

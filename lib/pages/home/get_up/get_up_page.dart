@@ -1,5 +1,5 @@
-import 'package:first_app/components/background.dart';
-import 'package:first_app/pages/home/get_up/get_up_controller.dart';
+import 'package:voices_dating/components/background.dart';
+import 'package:voices_dating/pages/home/get_up/get_up_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

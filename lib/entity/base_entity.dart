@@ -29,7 +29,7 @@ class BaseEntity<T> {
 
 /*
 import 'dart:convert';
-import 'package:first_app/net/api_constants.dart';
+import 'package:voices_dating/net/api_constants.dart';
 import '../constants/constant_data.dart';
 import '../net/api_constants.dart';
 import 'json_format/json_format.dart';

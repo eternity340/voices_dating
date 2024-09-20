@@ -1,6 +1,6 @@
 
-import 'package:first_app/pages/pre_login/sign_in/components/sign_form.dart';
-import 'package:first_app/pages/pre_login/sign_in/components/sign_screen_top_image.dart';
+import 'package:voices_dating/pages/pre_login/sign_in/components/sign_form.dart';
+import 'package:voices_dating/pages/pre_login/sign_in/components/sign_screen_top_image.dart';
 import 'package:flutter/cupertino.dart';
 
 class MobileSignInScreen extends StatelessWidget {

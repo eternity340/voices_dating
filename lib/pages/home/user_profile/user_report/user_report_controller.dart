@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:first_app/entity/user_data_entity.dart';
-import 'package:first_app/net/api_constants.dart';
+import 'package:voices_dating/entity/user_data_entity.dart';
+import 'package:voices_dating/net/api_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';

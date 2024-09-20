@@ -1,5 +1,5 @@
-import 'package:first_app/components/background.dart';
-import 'package:first_app/routes/app_routes.dart';
+import 'package:voices_dating/components/background.dart';
+import 'package:voices_dating/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

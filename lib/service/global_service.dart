@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
-import 'package:first_app/entity/user_data_entity.dart';
-import 'package:first_app/net/api_constants.dart';
-import 'package:first_app/utils/common_utils.dart';
+import 'package:voices_dating/entity/user_data_entity.dart';
+import 'package:voices_dating/net/api_constants.dart';
+import 'package:voices_dating/utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;

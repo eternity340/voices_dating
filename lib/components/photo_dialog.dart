@@ -86,7 +86,7 @@ class _PhotoDialogState extends State<PhotoDialog> {
               child: Transform.scale(
                 scale: _scale,
                 child: Container(
-                  width: 355.w,
+                  width: 335.w,
                   height: 470.h,
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -139,7 +139,7 @@ class _PhotoDialogState extends State<PhotoDialog> {
           if (widget.showSettings)
             Positioned(
               top: 640.h,
-              left: 265.w,
+              right: 10.w,
               child: Container(
                 width: 100.w,
                 height: 40.h,

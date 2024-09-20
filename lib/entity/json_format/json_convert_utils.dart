@@ -1,8 +1,8 @@
 
-import 'package:first_app/entity/block_member_entity.dart';
-import 'package:first_app/entity/user_photo_entity.dart';
 
+import '../block_member_entity.dart';
 import '../list_user_entity.dart';
+import '../user_photo_entity.dart';
 
 class JsonConvert {
   JsonConvert._();

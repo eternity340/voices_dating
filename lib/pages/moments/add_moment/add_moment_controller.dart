@@ -1,6 +1,6 @@
-import 'package:first_app/net/api_constants.dart';
-import 'package:first_app/routes/app_routes.dart';
-import 'package:first_app/service/global_service.dart';
+import 'package:voices_dating/net/api_constants.dart';
+import 'package:voices_dating/routes/app_routes.dart';
+import 'package:voices_dating/service/global_service.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';

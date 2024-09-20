@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:first_app/pages/me/my_profile/update_profile/upload_voice/upload_voice_page.dart';
-import 'package:first_app/routes/app_routes.dart';
+import 'package:voices_dating/pages/me/my_profile/update_profile/upload_voice/upload_voice_page.dart';
+import 'package:voices_dating/routes/app_routes.dart';
 import 'package:get/get.dart';
 import '../../../../../../entity/token_entity.dart';
 import '../../../../../../entity/user_data_entity.dart';

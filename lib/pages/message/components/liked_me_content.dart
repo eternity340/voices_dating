@@ -1,9 +1,9 @@
-import 'package:first_app/constants/constant_data.dart';
+import 'package:voices_dating/constants/constant_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:first_app/constants/Constant_styles.dart';
+import 'package:voices_dating/constants/Constant_styles.dart';
 import '../../../components/verified_tag.dart';
 import '../../../entity/list_user_entity.dart';
 import '../../../entity/chatted_user_entity.dart';

@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'package:first_app/entity/moment_entity.dart';
+import 'package:voices_dating/entity/moment_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../constants/constant_styles.dart';

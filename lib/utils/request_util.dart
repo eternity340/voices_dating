@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:dio/dio.dart';
-import 'package:first_app/utils/string_extension.dart';
-import 'package:first_app/utils/list_extension.dart';
+import 'package:voices_dating/utils/string_extension.dart';
+import 'package:voices_dating/utils/list_extension.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:http_parser/http_parser.dart';
 import '../entity/user_data_entity.dart';

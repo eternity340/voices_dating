@@ -1,10 +1,10 @@
-import 'package:first_app/routes/app_routes.dart';
+import 'package:voices_dating/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:first_app/entity/token_entity.dart';
-import 'package:first_app/entity/user_data_entity.dart';
+import 'package:voices_dating/entity/token_entity.dart';
+import 'package:voices_dating/entity/user_data_entity.dart';
 import '../../components/all_navigation_bar.dart';
 import '../../components/background.dart';
 import 'components/separator.dart';

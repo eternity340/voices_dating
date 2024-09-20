@@ -1,4 +1,4 @@
-import 'package:first_app/net/api_constants.dart';
+import 'package:voices_dating/net/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';

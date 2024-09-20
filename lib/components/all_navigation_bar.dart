@@ -1,9 +1,9 @@
-import 'package:first_app/entity/user_data_entity.dart';
-import 'package:first_app/image_res/image_res.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../entity/token_entity.dart';
+import '../entity/user_data_entity.dart';
+import '../image_res/image_res.dart';
 
 class AllNavigationBar extends StatelessWidget {
   final TokenEntity tokenEntity;

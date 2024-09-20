@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:first_app/service/token_service.dart';
-import 'package:first_app/utils/log_util.dart';
+import 'package:voices_dating/service/token_service.dart';
+import 'package:voices_dating/utils/log_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';

@@ -1,8 +1,8 @@
 import 'dart:ui';
 import 'package:dio/dio.dart';
-import 'package:first_app/constants/constant_data.dart';
-import 'package:first_app/entity/user_data_entity.dart';
-import 'package:first_app/net/api_constants.dart';
+import 'package:voices_dating/constants/constant_data.dart';
+import 'package:voices_dating/entity/user_data_entity.dart';
+import 'package:voices_dating/net/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../components/verified_tag.dart';

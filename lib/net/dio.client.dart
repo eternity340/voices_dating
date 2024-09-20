@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 import 'package:dio/dio.dart';
-import 'package:first_app/utils/string_extension.dart';
+import 'package:voices_dating/utils/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as getX;
 import '../components/custom_content_dialog.dart';

@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:first_app/service/token_service.dart';
+import 'package:voices_dating/service/token_service.dart';
 import 'package:get/get.dart';
 import 'package:plain_notification_token/plain_notification_token.dart';
-import 'package:first_app/utils/list_extension.dart';
+import 'package:voices_dating/utils/list_extension.dart';
 import '../constants/constant_data.dart';
 import '../entity/badge_entity.dart';
 import '../entity/chatted_user_entity.dart';

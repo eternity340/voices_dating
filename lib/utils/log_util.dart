@@ -1,5 +1,5 @@
 import 'package:logger/logger.dart';
-import 'package:first_app/utils/logger_filter.dart';
+import 'package:voices_dating/utils/logger_filter.dart';
 
 class LogUtil{
 

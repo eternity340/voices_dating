@@ -1,7 +1,7 @@
 import 'package:common_utils/common_utils.dart';
-import 'package:first_app/constants/constant_data.dart';
-import 'package:first_app/entity/token_entity.dart';
-import 'package:first_app/entity/user_data_entity.dart';
+import 'package:voices_dating/constants/constant_data.dart';
+import 'package:voices_dating/entity/token_entity.dart';
+import 'package:voices_dating/entity/user_data_entity.dart';
 import 'package:get/get.dart';
 import '../../service/global_service.dart';
 

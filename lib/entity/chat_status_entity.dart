@@ -1,6 +1,7 @@
 import 'dart:convert';
 
-import 'package:first_app/entity/json_format/json_format.dart';
+import 'json_format/json_format.dart';
+
 
 class ChatStatusEntity {
   ChatStatusEntity({

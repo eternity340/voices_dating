@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:first_app/constants/constant_data.dart';
-import 'package:first_app/entity/moment_entity.dart';
-import 'package:first_app/net/api_constants.dart';
-import 'package:first_app/routes/app_routes.dart';
+import 'package:voices_dating/constants/constant_data.dart';
+import 'package:voices_dating/entity/moment_entity.dart';
+import 'package:voices_dating/net/api_constants.dart';
+import 'package:voices_dating/routes/app_routes.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import '../../../entity/chatted_user_entity.dart';

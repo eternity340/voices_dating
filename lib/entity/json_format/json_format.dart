@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:first_app/entity/base_entity.dart';
-import 'package:first_app/entity/upload_file_entity.dart';
+
 
 import '../../utils/log_util.dart';
 import '../attach_result_entity.dart';
 import '../attachment_entity.dart';
 import '../badge_entity.dart';
+import '../base_entity.dart';
 import '../block_member_entity.dart';
 import '../chat_status_entity.dart';
 import '../chatted_user_entity.dart';
@@ -29,6 +29,7 @@ import '../ret_entity.dart';
 import '../tag_entity.dart';
 import '../token_entity.dart';
 import '../universal_pop_entity.dart';
+import '../upload_file_entity.dart';
 import '../user_data_entity.dart';
 import '../user_location_entity.dart';
 import '../user_options_entity.dart';

@@ -1,4 +1,4 @@
-import 'package:first_app/pages/email/components/verification_box_cursor.dart';
+import 'package:voices_dating/pages/email/components/verification_box_cursor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

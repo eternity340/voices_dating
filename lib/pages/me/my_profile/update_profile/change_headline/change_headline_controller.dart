@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart' as dio;
 import 'package:dio/dio.dart';
-import 'package:first_app/constants/constant_data.dart';
+import 'package:voices_dating/constants/constant_data.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import '../../../../../entity/token_entity.dart';

@@ -1,4 +1,4 @@
-import 'package:first_app/utils/replace_word_util.dart';
+import 'package:voices_dating/utils/replace_word_util.dart';
 
 extension StringExt on String? {
   String replaceWord(bool isSelf) {

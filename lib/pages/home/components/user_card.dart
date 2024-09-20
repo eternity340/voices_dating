@@ -1,6 +1,6 @@
-import 'package:first_app/components/verified_tag.dart';
-import 'package:first_app/constants/Constant_styles.dart';
-import 'package:first_app/routes/app_routes.dart';
+import 'package:voices_dating/components/verified_tag.dart';
+import 'package:voices_dating/constants/Constant_styles.dart';
+import 'package:voices_dating/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

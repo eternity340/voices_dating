@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart' as Dio;
-import 'package:first_app/net/api_constants.dart';
+import 'package:voices_dating/net/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../constants/constant_data.dart';

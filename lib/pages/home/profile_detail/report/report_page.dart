@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:first_app/components/background.dart';
-import 'package:first_app/entity/list_user_entity.dart';
+import 'package:voices_dating/components/background.dart';
+import 'package:voices_dating/entity/list_user_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';

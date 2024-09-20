@@ -1,7 +1,7 @@
 import 'package:common_utils/common_utils.dart';
 import 'package:dio/dio.dart';
-import 'package:first_app/net/api_constants.dart';
-import 'package:first_app/routes/app_routes.dart';
+import 'package:voices_dating/net/api_constants.dart';
+import 'package:voices_dating/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../components/custom_message_dialog.dart';

@@ -1,5 +1,5 @@
-import 'package:first_app/constants/constant_data.dart';
-import 'package:first_app/net/api_constants.dart';
+import 'package:voices_dating/constants/constant_data.dart';
+import 'package:voices_dating/net/api_constants.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
 import '../../../../entity/block_member_entity.dart';

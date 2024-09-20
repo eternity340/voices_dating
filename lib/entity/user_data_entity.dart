@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:first_app/entity/user_voice_entity.dart';
-import 'package:first_app/utils/string_extension.dart';
+import 'package:voices_dating/entity/user_voice_entity.dart';
+import 'package:voices_dating/utils/string_extension.dart';
 import '../constants/constant_data.dart';
 import '../utils/config_options_utils.dart';
 import 'json_format/json_format.dart';

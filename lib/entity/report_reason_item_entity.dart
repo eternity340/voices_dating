@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:first_app/entity/json_format/json_format.dart';
+import 'package:voices_dating/entity/json_format/json_format.dart';
 
 class ReportReasonEntity {
   String? descr;

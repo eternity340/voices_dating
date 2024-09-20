@@ -2,8 +2,8 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 import 'package:common_utils/common_utils.dart';
-import 'package:first_app/constants/constant_styles.dart';
-import 'package:first_app/pages/me/photo/photo_controller.dart';
+import 'package:voices_dating/constants/constant_styles.dart';
+import 'package:voices_dating/pages/me/photo/photo_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -57,8 +57,7 @@ class PhotoPage extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                if (controller.userData.photos != null)
-                                  buildPhotoContainers(controller),
+                                buildPhotoContainers(controller),
                               ],
                             ),
                           ),
@@ -118,50 +117,84 @@ class PhotoPage extends StatelessWidget {
 
   Widget buildMainPhotoContainer(PhotoController controller) {
     if (controller.userData.photos == null || controller.userData.photos!.isEmpty) {
-      return SizedBox.shrink(); // 如果没有照片，返回一个空的 widget
+      // 如果没有主照片，显示加载状态
+      if (controller.uploadingPhotos.isNotEmpty) {
+        return Container(
+          width: 137.09.w,
+          height: 174.h,
+          decoration: BoxDecoration(
+            color: Color(0xFFF8F8F9),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      } else {
+        // 如果没有上传中的照片，显示 "haven't main Photo"
+        return Container(
+          width: 137.09.w,
+          height: 174.h,
+          decoration: BoxDecoration(
+            color: Color(0xFFF8F8F9),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Center(
+            child: Text(
+              "haven't main Photo",
+              style: ConstantStyles.lastActiveTimeStyle,
+            ),
+          ),
+        );
+      }
     }
 
-    final mainPhoto = controller.userData.photos![0]; // 获取第一张照片
+    final mainPhoto = controller.userData.photos![0];
 
-    return Container(
-      width: 137.09.w,
-      height: 174.h,
-      decoration: BoxDecoration(
-        color: Color(0xFFF8F8F9),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Stack(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Image.network(
-              mainPhoto.url!,
-              fit: BoxFit.cover,
-              width: 137.09.w,
-              height: 174.h,
-            ),
-          ),
-          Positioned(
-            bottom: 0,
-            child: Container(
-              width: 137.09.w,
-              height: 34.h,
-              decoration: const BoxDecoration(
-                color: Color(0xFFABFFCF),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(20),
-                  bottomRight: Radius.circular(20),
-                ),
-              ),
-              child: Center(
-                child: Text(
-                  ConstantData.mainPhotoText,
-                  style: ConstantStyles.mainPhotoTextStyle,
-                ),
+    return GestureDetector(
+      onTap: () {
+        controller.showPhotoDialog(mainPhoto.url!, mainPhoto.attachId!);
+      },
+      child: Container(
+        width: 137.09.w,
+        height: 174.h,
+        decoration: BoxDecoration(
+          color: Color(0xFFF8F8F9),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Stack(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Image.network(
+                mainPhoto.url!,
+                fit: BoxFit.cover,
+                width: 137.09.w,
+                height: 174.h,
               ),
             ),
-          ),
-        ],
+            Positioned(
+              bottom: 0,
+              child: Container(
+                width: 137.09.w,
+                height: 34.h,
+                decoration: const BoxDecoration(
+                  color: Color(0xFFABFFCF),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20),
+                  ),
+                ),
+                child: Center(
+                  child: Text(
+                    ConstantData.mainPhotoText,
+                    style: ConstantStyles.mainPhotoTextStyle,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -188,14 +221,16 @@ class PhotoPage extends StatelessWidget {
     }
 
     // 添加正在上传的本地图片
-    controller.uploadingPhotos.forEach((localPath, isUploading) {
-      photoWidgets.add(
-        _buildPhotoContainer(
-          imageProvider: FileImage(File(localPath)),
-          isUploading: true,
-        ),
-      );
-    });
+    if (controller.userData.photos != null && controller.userData.photos!.isNotEmpty) {
+      controller.uploadingPhotos.forEach((localPath, isUploading) {
+        photoWidgets.add(
+          _buildPhotoContainer(
+            imageProvider: FileImage(File(localPath)),
+            isUploading: true,
+          ),
+        );
+      });
+    }
 
     if (photoWidgets.isEmpty) {
       return SizedBox.shrink();

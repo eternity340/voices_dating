@@ -7,7 +7,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:first_app/service/token_service.dart';
+import 'package:voices_dating/service/token_service.dart';
 import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';

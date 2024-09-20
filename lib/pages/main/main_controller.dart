@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:first_app/entity/token_entity.dart';
-import 'package:first_app/entity/user_data_entity.dart';
+import 'package:voices_dating/entity/token_entity.dart';
+import 'package:voices_dating/entity/user_data_entity.dart';
 
 class MainController extends GetxController {
   final TokenEntity tokenEntity;

@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:first_app/service/global_service.dart';
+import 'package:voices_dating/service/global_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_sound/public/flutter_sound_player.dart';
@@ -11,7 +11,7 @@ import '../../../components/bar/bar_scale_pulse_out_loading.dart';
 import '../../../components/photo_dialog.dart';
 import 'components/chat_input_bar.dart';
 import 'private_chat_controller.dart';
-import 'package:first_app/components/background.dart';
+import 'package:voices_dating/components/background.dart';
 
 class PrivateChatPage extends StatefulWidget {
   const PrivateChatPage({Key? key}) : super(key: key);

@@ -1,6 +1,6 @@
 import 'package:camera/camera.dart';
-import 'package:first_app/components/background.dart';
-import 'package:first_app/pages/me/verify/verify_video/verify_video_controller.dart';
+import 'package:voices_dating/components/background.dart';
+import 'package:voices_dating/pages/me/verify/verify_video/verify_video_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

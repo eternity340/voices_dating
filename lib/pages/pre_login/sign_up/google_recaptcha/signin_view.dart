@@ -1,6 +1,6 @@
 /*
-import 'package:first_app/net/api_constants.dart';
-import 'package:first_app/pages/pre_login/sign_up/google_recaptcha/signin_view_logic.dart';
+import 'package:voices_dating/net/api_constants.dart';
+import 'package:voices_dating/pages/pre_login/sign_up/google_recaptcha/signin_view_logic.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';

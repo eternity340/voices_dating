@@ -1,5 +1,5 @@
-import 'package:first_app/pages/pre_login/components/sign_btn.dart';
-import 'package:first_app/pages/pre_login/welcome/components/welcome_image.dart';
+import 'package:voices_dating/pages/pre_login/components/sign_btn.dart';
+import 'package:voices_dating/pages/pre_login/welcome/components/welcome_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as getx;
 import '../../../responsive.dart';

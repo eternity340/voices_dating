@@ -1,5 +1,5 @@
 import 'package:common_utils/common_utils.dart';
-import 'package:first_app/entity/attachment_entity.dart';
+import 'package:voices_dating/entity/attachment_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:dio/dio.dart';
