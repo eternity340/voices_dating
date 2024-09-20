@@ -6,6 +6,7 @@ import '../../../entity/moment_entity.dart';
 import '../../../entity/user_data_entity.dart';
 import '../../../net/api_constants.dart';
 import '../../../net/dio.client.dart';
+import '../../../utils/replace_word_util.dart';
 
 class GetUpController extends GetxController {
   late TokenEntity tokenEntity;
@@ -16,6 +17,7 @@ class GetUpController extends GetxController {
   final int pageOffset = 5;
   final DioClient dioClient = DioClient.instance;
   late EasyRefreshController easyRefreshController;
+  bool _isDisposed = false;
 
   @override
   void onInit() {
@@ -23,70 +25,103 @@ class GetUpController extends GetxController {
     tokenEntity = Get.arguments['token'] as TokenEntity;
     userDataEntity = Get.arguments['userData'] as UserDataEntity;
     easyRefreshController = EasyRefreshController();
-    fetchMoments();
+    ReplaceWordUtil.getInstance().getReplaceWord().then((_) {
+      fetchMoments();
+    });
   }
 
   @override
   void onClose() {
+    _isDisposed = true;
     easyRefreshController.dispose();
     super.onClose();
   }
 
   Future<void> fetchMoments({bool isRefresh = false}) async {
-    if (isRefresh) {
-      page = 1;
-      moments.clear();
-    }
+    if (_isDisposed || isLoading.value) return;
 
-    if (isLoading.value) return;
+    if (isRefresh) {
+      resetPagination();
+    }
 
     isLoading.value = true;
 
     try {
-      await dioClient.requestNetwork<List<dynamic>>(
-        method: Method.get,
-        url: ApiConstants.timelines,
-        queryParameters: {
-          'page': page,
-          'offset': pageOffset,
-          'filter[likes]': 1,
-          'filter[day]': 30,
-          'filter[photo]': 1,
-          'filter[country]': userDataEntity.location!.countryId != null
-              ? int.tryParse(userDataEntity.location!.countryId!) ?? 0
-              : null,
-        },
-        options: Options(
-          headers: {
-            'token': tokenEntity.accessToken,
-          },
-        ),
-        onSuccess: (data) {
-          if (data != null) {
-            List<MomentEntity> fetchedMoments = data
-                .map((json) => MomentEntity.fromJson(json as Map<String, dynamic>))
-                .toList();
-            moments.addAll(fetchedMoments);
-            page++;
-          } else {
-            easyRefreshController.finishLoad(noMore: true);
-          }
-        },
-        onError: (code, msg, data) {
-          print('Error: $msg');
-          easyRefreshController.finishLoad(noMore: true);
-        },
-      );
+      await _fetchMomentsFromApi();
     } catch (e) {
-      print('Error: $e');
-      easyRefreshController.finishLoad(noMore: true);
+      handleError(e);
     } finally {
-      isLoading.value = false;
+      if (!_isDisposed) isLoading.value = false;
     }
   }
 
+  void resetPagination() {
+    page = 1;
+    moments.clear();
+  }
+
+  Future<void> _fetchMomentsFromApi() async {
+    await dioClient.requestNetwork<List<dynamic>>(
+      method: Method.get,
+      url: ApiConstants.timelines,
+      queryParameters: _getQueryParameters(),
+      options: _getRequestOptions(),
+      onSuccess: _handleSuccessResponse,
+      onError: _handleErrorResponse,
+    );
+  }
+
+  Map<String, dynamic> _getQueryParameters() {
+    return {
+      'page': page,
+      'offset': pageOffset,
+      //'filter[day]': 30,
+      'filter[viewed]':1,
+      //'filter[liked]': 1,
+      //'collected':1
+    };
+  }
+
+  Options _getRequestOptions() {
+    return Options(
+      headers: {
+        'token': tokenEntity.accessToken,
+      },
+    );
+  }
+
+  void _handleSuccessResponse(List<dynamic>? data) {
+    if (_isDisposed) return;
+    if (data != null) {
+      data = ReplaceWordUtil.getInstance().replaceWordsInJson(data) as List<dynamic>;
+
+      List<MomentEntity> fetchedMoments = data
+          .map((json) => MomentEntity.fromJson(json as Map<String, dynamic>))
+          .toList();
+      moments.addAll(fetchedMoments);
+      page++;
+    } else {
+      _finishLoadIfNotDisposed(noMore: true);
+    }
+  }
+
+  void _handleErrorResponse(int code, String msg, dynamic data) {
+    print('Error: $msg');
+    _finishLoadIfNotDisposed(noMore: true);
+  }
+
+  void handleError(dynamic error) {
+    print('Error: $error');
+    _finishLoadIfNotDisposed(noMore: true);
+  }
+
+  void _finishLoadIfNotDisposed({required bool noMore}) {
+    if (!_isDisposed) easyRefreshController.finishLoad(noMore: noMore);
+  }
+
   Future<void> refreshMoments() async {
+    if (_isDisposed) return;
     await fetchMoments(isRefresh: true);
-    easyRefreshController.finishRefresh();
+    if (!_isDisposed) easyRefreshController.finishRefresh();
   }
 }

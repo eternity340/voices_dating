@@ -1,5 +1,6 @@
 import 'package:first_app/net/api_constants.dart';
 import 'package:first_app/routes/app_routes.dart';
+import 'package:first_app/service/global_service.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -10,12 +11,14 @@ import '../../../components/custom_message_dialog.dart';
 import '../../../constants/constant_data.dart';
 import '../../../entity/token_entity.dart';
 import '../../../entity/user_data_entity.dart';
+import '../../../net/dio.client.dart';
 
 class AddMomentController extends GetxController {
   final TokenEntity tokenEntity = Get.arguments['tokenEntity'] as TokenEntity;
   final UserDataEntity userDataEntity = Get.arguments['userDataEntity'] as UserDataEntity;
   final textEditingController = TextEditingController();
   final imageFiles = <XFile?>[null].obs;
+  final DioClient dioClient = DioClient.instance;
 
   void showBottomOptions(BuildContext context, int index) {
     showModalBottomSheet(
@@ -82,33 +85,46 @@ class AddMomentController extends GetxController {
     final content = textEditingController.text;
     final formData = dio.FormData();
     formData.fields.add(MapEntry('content', content));
-    for (var imageFile in imageFiles) {
-      if (imageFile != null) {
-        final file = await dio.MultipartFile.fromFile(imageFile.path, filename: imageFile.name);
+
+    for (var i = 0; i < imageFiles.length; i++) {
+      if (imageFiles[i] != null) {
+        final file = await dio.MultipartFile.fromFile(
+            imageFiles[i]!.path,
+            filename: imageFiles[i]!.name
+        );
         formData.files.add(MapEntry('file', file));
       }
     }
 
     try {
-      final response = await dio.Dio().post(
-        ApiConstants.uploadTimeline,
-        data: formData,
+      await dioClient.requestNetwork<dynamic>(
+        method: Method.post,
+        url: ApiConstants.uploadTimeline,
+        params: formData,
         options: dio.Options(
           headers: {
             'token': tokenEntity.accessToken,
           },
+          contentType: 'multipart/form-data',
         ),
+        formParams: true,
+        onSuccess: (data) {
+          //showSuccessDialog();
+          Get.offAllNamed(AppRoutes.moments,
+              arguments: {
+                'tokenEntity': tokenEntity,
+                'userDataEntity': userDataEntity});
+          Get.snackbar(ConstantData.successText, 'Upload Moment Success!');
+        },
+        onError: (code, msg, data) {
+          Get.snackbar('Error', msg );
+        },
       );
-
-      if (response.statusCode == 200) {
-        showSuccessDialog();
-      } else {
-        Get.snackbar('Error', 'Failed to upload moment');
-      }
     } catch (e) {
-      Get.snackbar('Error', 'An error occurred while uploading the moment');
+      Get.snackbar('Error', 'An unexpected error occurred while uploading the moment');
     }
   }
+
 
   void showSuccessDialog() {
     Get.dialog(

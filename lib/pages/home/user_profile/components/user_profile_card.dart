@@ -17,7 +17,8 @@ class UserProfileCard extends StatefulWidget {
   final UserDataEntity? userDataEntity;
   final TokenEntity tokenEntity;
 
-  const UserProfileCard({
+
+  UserProfileCard({
     super.key,
     required this.userDataEntity,
     required this.tokenEntity});
@@ -28,15 +29,19 @@ class UserProfileCard extends StatefulWidget {
 
 class _ProfileCardState extends State<UserProfileCard> {
   late bool _isLiked;
+  final DioClient dioClient = DioClient.instance;
 
   @override
   void initState() {
     super.initState();
     _isLiked = widget.userDataEntity?.liked == 1;
+
   }
 
   @override
   Widget build(BuildContext context) {
+
+
     return Stack(
       children: [
         Container(
@@ -185,7 +190,7 @@ class _ProfileCardState extends State<UserProfileCard> {
   }
 
   void _sendLikeRequest(String url, bool newLikeStatus) {
-    DioClient.instance.requestNetwork<void>(
+    dioClient.requestNetwork<void>(
       method: Method.post,
       url: url,
       params: {'userId': widget.userDataEntity!.userId},

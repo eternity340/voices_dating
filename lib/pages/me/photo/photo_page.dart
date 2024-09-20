@@ -6,6 +6,7 @@ import 'package:first_app/constants/constant_styles.dart';
 import 'package:first_app/pages/me/photo/photo_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -16,64 +17,71 @@ import '../../../components/bottom_options.dart';
 import '../../../constants/constant_data.dart';
 import '../../../image_res/image_res.dart';
 
-
 class PhotoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final PhotoController controller = Get.put(PhotoController());
 
     return PopScope(
-        canPop: false,
-        onPopInvoked: (didPop) {
-          if (didPop) return;
-          controller.navigateToMePage();
-        },
-        child: Scaffold(
-        body: GetBuilder<PhotoController>(
-        builder: (controller) {
-          return RefreshIndicator(
-            onRefresh: controller.fetchUserData,
-            child: Background(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (didPop) return;
+        controller.navigateToMePage();
+      },
+      child: Scaffold(
+        body: Stack(
+          children: [
+            Background(
               showBackgroundImage: false,
               showMiddleText: true,
               middleText: ConstantData.photoTitle,
-              child: Stack(
-                children: [
-                  SingleChildScrollView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(top: 100.0.h, left: 28.0.w, right: 28.0.w),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              buildAddPhotoContainer(context, controller),
-                              buildMainPhotoContainer(controller),
-                            ],
+              child: GetBuilder<PhotoController>(
+                builder: (controller) {
+                  return Column(
+                    children: [
+                      SizedBox(height: 60.h),
+                      Expanded(
+                        child: EasyRefresh(
+                          onRefresh: controller.fetchUserData,
+                          child: SingleChildScrollView(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 28.0.w),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      buildAddPhotoContainer(context, controller),
+                                      buildMainPhotoContainer(controller),
+                                    ],
+                                  ),
+                                ),
+                                if (controller.userData.photos != null)
+                                  buildPhotoContainers(controller),
+                              ],
+                            ),
                           ),
                         ),
-                        if (controller.userData.photos != null)
-                          buildPhotoContainers(controller),
-                      ],
-                    ),
-                  ),
-                  Positioned(
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    height: 50.h,
-                    child: Container(
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
-          );
-        },
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              height: 50.h,
+              child: Container(
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
       ),
-    ));
+    );
   }
 
   Widget buildAddPhotoContainer(BuildContext context, PhotoController controller) {
@@ -109,6 +117,12 @@ class PhotoPage extends StatelessWidget {
   }
 
   Widget buildMainPhotoContainer(PhotoController controller) {
+    if (controller.userData.photos == null || controller.userData.photos!.isEmpty) {
+      return SizedBox.shrink(); // 如果没有照片，返回一个空的 widget
+    }
+
+    final mainPhoto = controller.userData.photos![0]; // 获取第一张照片
+
     return Container(
       width: 137.09.w,
       height: 174.h,
@@ -116,13 +130,12 @@ class PhotoPage extends StatelessWidget {
         color: Color(0xFFF8F8F9),
         borderRadius: BorderRadius.circular(20),
       ),
-      child: controller.userData.avatar != null && controller.userData.avatar!.isNotEmpty
-          ? Stack(
+      child: Stack(
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(20),
             child: Image.network(
-              controller.userData.avatar!,
+              mainPhoto.url!,
               fit: BoxFit.cover,
               width: 137.09.w,
               height: 174.h,
@@ -140,7 +153,7 @@ class PhotoPage extends StatelessWidget {
                   bottomRight: Radius.circular(20),
                 ),
               ),
-              child:  Center(
+              child: Center(
                 child: Text(
                   ConstantData.mainPhotoText,
                   style: ConstantStyles.mainPhotoTextStyle,
@@ -149,8 +162,7 @@ class PhotoPage extends StatelessWidget {
             ),
           ),
         ],
-      )
-          : Container(),
+      ),
     );
   }
 
@@ -200,7 +212,7 @@ class PhotoPage extends StatelessWidget {
       children: photoWidgets,
     );
   }
-  
+
   Widget _buildPhotoContainer({required ImageProvider imageProvider, required bool isUploading}) {
     return Container(
       decoration: BoxDecoration(

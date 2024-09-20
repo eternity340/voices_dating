@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../components/custom_message_dialog.dart';
+import '../../../entity/comment_entity.dart';
 import '../../../entity/moment_entity.dart';
 import '../../../entity/ret_entity.dart';
 import '../../../entity/token_entity.dart';
@@ -18,6 +19,8 @@ class MomentsDetailController extends GetxController {
   final MomentEntity moment = Get.arguments['moment'];
   final TokenEntity tokenEntity = Get.arguments['tokenEntity'];
   final UserDataEntity userData = Get.arguments['userDataEntity'];
+  final DioClient dioClient = DioClient.instance;
+  final isSubmitButtonDisabled = true.obs;
 
   final isCommentInputVisible = false.obs;
   final commentController = TextEditingController();
@@ -31,14 +34,18 @@ class MomentsDetailController extends GetxController {
 
   void toggleCommentInput() {
     if (isCommentInputVisible.value) {
-      submitComment();
+      if (!isSubmitButtonDisabled.value) {
+        submitComment();
+      }
     } else {
       isCommentInputVisible.value = true;
     }
   }
 
+
   void onCommentChanged(String text) {
     commentContent.value = text;
+    isSubmitButtonDisabled.value = text.trim().isEmpty;
   }
 
   List<Widget> buildLikeAvatars() {
@@ -58,11 +65,65 @@ class MomentsDetailController extends GetxController {
   }
 
   Future<void> submitComment() async {
-    // ... (保持原有代码不变)
+    if (commentContent.value.isEmpty) {
+      Get.snackbar('Error', 'Comment cannot be empty');
+      return;
+    }
+
+    try {
+      await dioClient.requestNetwork<dynamic>(
+        method: Method.post,
+        url: ApiConstants.addTimelineComment,
+        queryParameters: {
+          'timelineId': moment.timelineId,
+          'content': commentContent.value,
+        },
+        options: Options(
+          headers: {
+            'token': tokenEntity.accessToken,
+          },
+        ),
+        onSuccess: (data) {
+          if (data['commentId'] != null ) {
+            Get.snackbar('Success', 'Comment added successfully');
+            commentController.clear();
+            commentContent.value = '';
+            isCommentInputVisible.value = false;
+            refreshComments();
+          } else {
+            Get.snackbar('Error', 'Failed to add comment');
+          }
+        },
+        onError: (code, msg, data) {
+          Get.snackbar('Error', msg);
+        },
+      );
+    } catch (e) {
+      Get.snackbar('Error', 'An unexpected error occurred');
+    }
   }
 
-  void refreshComments() {
-    update();
+
+  Future<void> refreshComments() async {
+    try {
+      await dioClient.requestNetwork<List<dynamic>>(
+        method: Method.get,
+        url: ApiConstants.getTimelineComments,
+        queryParameters: {'timelineId': moment.timelineId},
+        options: Options(headers: {'token': tokenEntity.accessToken}),
+        onSuccess: (data) {
+          if (data != null) {
+            moment.comments = data.map((item) => CommentEntity.fromJson(item as Map<String, dynamic>)).toList();
+            update();
+          }
+        },
+        onError: (code, msg, data) {
+          Get.snackbar('Error', 'Failed to refresh comments');
+        },
+      );
+    } catch (e) {
+      Get.snackbar('Error', 'An unexpected error occurred while refreshing comments');
+    }
   }
 
   void showOptionsBottomSheet(BuildContext context) {
@@ -103,7 +164,7 @@ class MomentsDetailController extends GetxController {
   }
 
   void blockUser() {
-    DioClient.instance.requestNetwork<RetEntity>(
+    dioClient.requestNetwork<RetEntity>(
       method: Method.post,
       url: ApiConstants.blockUser,
       queryParameters: {'userId': moment.userId},
@@ -121,4 +182,5 @@ class MomentsDetailController extends GetxController {
       },
     );
   }
+
 }

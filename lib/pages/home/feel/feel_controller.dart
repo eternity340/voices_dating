@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
+import 'package:first_app/constants/constant_data.dart';
 import 'package:first_app/net/api_constants.dart';
 import 'package:get/get.dart';
+import '../../../components/custom_content_dialog.dart';
 import '../../../entity/list_user_entity.dart';
 import '../../../entity/token_entity.dart';
 import '../../../net/dio.client.dart';
@@ -50,15 +52,41 @@ class FeelController extends GetxController {
           }
           hasMore.value = fetchedData.length >= 20;
           isLoading.value = false;
+
+          // 检查是否没有数据
+          if (userList.isEmpty && !isLoadMore) {
+            showNoDataDialog();
+          }
         },
         onError: (code, msg, data) {
           isLoading.value = false;
+          if (!isLoadMore) {
+            showNoDataDialog();
+          }
         },
       );
     } catch (e) {
       isLoading.value = false;
+      if (!isLoadMore) {
+        showNoDataDialog();
+      }
     }
   }
+
+  void showNoDataDialog() {
+    Get.dialog(
+      CustomContentDialog(
+        title:ConstantData.noticeText,
+        content: ConstantData.noticeAboutLiked,
+        buttonText: ConstantData.okText,
+        onButtonPressed: () {
+          Get.back(); // Close the dialog
+          Get.back(); // Return to the previous page
+        },
+      ),
+    );
+  }
+
 
   Future<void> onRefresh() async {
     currentPage.value = 1;

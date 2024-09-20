@@ -26,12 +26,6 @@ class MomentsController extends GetxController {
     fetchMoments();
   }
 
-  @override
-  void onClose() {
-    easyRefreshController.dispose();
-    super.onClose();
-  }
-
   Future<void> fetchMoments({bool isRefresh = false}) async {
     if (isRefresh) {
       page = 1;
@@ -49,9 +43,10 @@ class MomentsController extends GetxController {
         queryParameters: {
           'page': page,
           'offset': pageOffset,
-          'filter[likes]': 1,
-          'filter[day]': 30,
-          'filter[photo]': 1,
+          //'filter[likes]': 1,
+          //'filter[day]': 30,
+          //'filter[photo]': 0,
+
         },
         options: Options(
           headers: {
@@ -85,5 +80,11 @@ class MomentsController extends GetxController {
   Future<void> refreshMoments() async {
     await fetchMoments(isRefresh: true);
     easyRefreshController.finishRefresh();
+  }
+
+  @override
+  void onClose() {
+    easyRefreshController.dispose();
+    super.onClose();
   }
 }

@@ -68,13 +68,16 @@ class PhotoController extends GetxController {
           'Content-Type': 'multipart/form-data',
         },
       ),
-      onSuccess: (data) {
+      onSuccess: (data) async {
         if (data != null && data.isNotEmpty) {
           final List<UserPhotoEntity> photos = data.map((item) => UserPhotoEntity.fromJson(item)).toList();
           if (photos.isNotEmpty) {
             final photo = photos[0];
             Get.snackbar(ConstantData.successText, ConstantData.uploadSuccess);
             print('Uploaded photo: AttachId: ${photo.attachId}, URL: ${photo.url}');
+
+            // 上传成功后立即刷新数据
+            await fetchUserData();
           } else {
             Get.snackbar(ConstantData.errorText, ConstantData.failedUpdateProfile);
           }

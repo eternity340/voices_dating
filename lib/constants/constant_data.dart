@@ -116,6 +116,7 @@ class ConstantData {
   static const cancelText = 'cancel';
   static const yesText='Yes';
   static const noText='No';
+  static const okText = 'OK';
   static const successText = 'success';
   static const sendSuccess ="sent successfully";
   static const failedText = 'failed';
@@ -127,6 +128,7 @@ class ConstantData {
   static const momentUploadSuccess = 'Moment uploaded successfully!';
   static const setAvatarTitle = 'Set Avatar';
   static const setAvatarContent = "Are you sure you want to set this photo as your avatar?";
+  static const noticeAboutLiked = "You haven't added any favorite users yet. We look forward to seeing your preferences soon!";
   //snack
   static const userHasBlocked = 'User has been blocked';
   static const failedBlocked ='Failed to block user';
@@ -216,6 +218,7 @@ class ConstantData {
   static const  getUpLabel = 'Get up';
   static const  gameLabel = 'Game';
   static const  gossipLabel = 'Gossip';
+  static const  viewLabel = 'View';
   //detail_bottom
   static const  winkButton = 'wink';
   static const  callButton = 'call';
@@ -304,6 +307,11 @@ class ConstantData {
   static const  commentText = 'Comment';
   static const  commentWriteText = 'Write a comment...';
   static const  addMomentText = '+';
+  static const  addMomentsText = 'Add Moments';
+  static const  viewedMoments = 'Viewed Moments';
+  static const  viewedText = 'Viewed';
+  static const  localMoments = "Local Moments";
+  static const  sameCityText = 'Same City';
   static const  messageText = "Message";
   static const  viewedMeText = "Viewed Me";
   static const  likedMeText = "Liked Me";

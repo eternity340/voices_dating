@@ -35,12 +35,13 @@ class _HomePageState extends State<HomePage> {
 
 
   void _initializeToken() {
-    final tokenJson = SharedPreferenceUtil.instance.getValue(key: SharedPresKeys.userToken);
+    final tokenJson = SharedPreferenceUtil.instance.getValue(
+        key: SharedPresKeys.userToken);
     if (tokenJson != null) {
       final tokenEntity = TokenEntity.fromJson(json.decode(tokenJson));
       Get.put(HomeController(tokenEntity));
     } else {
-        LogUtil.e(ConstantData.noTokenInLocal);
+      LogUtil.e(ConstantData.noTokenInLocal);
     }
   }
 
@@ -72,7 +73,8 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 if (controller.userData != null)
-                  AllNavigationBar(tokenEntity: controller.tokenEntity, userData: controller.userData!),
+                  AllNavigationBar(tokenEntity: controller.tokenEntity,
+                      userData: controller.userData!),
               ],
             ),
           );
@@ -217,7 +219,7 @@ class _HomePageState extends State<HomePage> {
         _buildButtonWithLabel(
           imagePath: ImageRes.imagePathClock,
           shadowColor: Color(0xFFF6D3FF).withOpacity(0.369),
-          label: ConstantData.getUpLabel,
+          label: ConstantData.viewLabel,
           onTap: controller.navigateToGetUpPage,
         ),
         _buildButtonWithLabel(
@@ -252,9 +254,16 @@ class _HomePageState extends State<HomePage> {
               shadowColor: shadowColor,
             ),
           ),
-          Text(
-            label,
-            style: ConstantStyles.buttonLabelStyle,
+          SizedBox(height: 4.h),
+          Container(
+            height: 40.h,
+            child: Text(
+              label,
+              style: ConstantStyles.buttonLabelStyle,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ],
       ),

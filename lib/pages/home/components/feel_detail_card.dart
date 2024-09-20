@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../components/coin_info_widget.dart';
 import '../../../components/disable_audio_player_widget.dart';
+import '../../../components/verified_tag.dart';
 import '../../../constants/Constant_styles.dart';
 import '../../../constants/constant_data.dart';
 import '../../../entity/list_user_entity.dart';
@@ -105,22 +106,27 @@ class FeelDetailCard extends StatelessWidget {
     return Positioned(
       left: 16.w,
       top: 147.h,
-      child: Container(
-        width: 88.w,
-        height: 19.h,
-        decoration: BoxDecoration(
-          color: Color(0xFFABFFCF),
-          borderRadius: BorderRadius.circular(6.r),
-        ),
-        child: Center(
-          child: Text(
-            ConstantData.photosVerified,
-            style: ConstantStyles.photoVerifiedTextStyle,
-          ),
-        ),
+      child: Row(
+        children: [
+          if (userEntity.member == "1")
+            VerifiedTag(
+              text: ConstantData.superiorText,
+              backgroundColor: Colors.black,
+              textColor: Colors.white,
+            ),
+          if (userEntity.member == "1")
+            SizedBox(width: 8.w),
+          if (userEntity.verified == "1")
+            VerifiedTag(
+              text: ConstantData.photosVerified,
+              backgroundColor: Color(0xFFABFFCF),
+              textColor: Colors.black,
+            ),
+        ],
       ),
     );
   }
+
 
   Widget userInfo() {
     return Positioned(

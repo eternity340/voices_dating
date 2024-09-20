@@ -17,6 +17,7 @@ class DetailBottomBar extends StatefulWidget {
   final bool showMomentLikeButton;
   final MomentEntity? moment; // Made optional
   final TokenEntity? tokenEntity; // Made optional
+  final bool isGradientButtonDisabled;
 
   DetailBottomBar({
     required this.gradientButtonText,
@@ -26,6 +27,7 @@ class DetailBottomBar extends StatefulWidget {
     this.showCallButton = true,
     this.showMessageButton = true,
     this.showMomentLikeButton = true,
+    this.isGradientButtonDisabled = false,
   });
 
   @override
@@ -98,6 +100,7 @@ class _DetailBottomBarState extends State<DetailBottomBar> {
                   onPressed: widget.onGradientButtonPressed,
                   width: 177.w,
                   textStyle: ConstantStyles.bottomBarTextStyle,
+                  isDisabled: widget.isGradientButtonDisabled,
                 ),
               ),
             ],

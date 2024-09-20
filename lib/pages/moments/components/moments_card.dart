@@ -6,6 +6,7 @@ import 'package:first_app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import '../../../components/audio_player_widget.dart';
 import '../../../constants/constant_data.dart';
 import '../../../entity/chatted_user_entity.dart';
@@ -77,8 +78,8 @@ class MomentsCard extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            width: 32.w,
-            height: 32.h,
+            width: 38.w,
+            height: 38.h,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               image: DecorationImage(
@@ -90,18 +91,32 @@ class MomentsCard extends StatelessWidget {
             ),
           ),
           SizedBox(width: 8.w),
-          Flexible(
-            child: Text(
-              moment.username ?? ConstantData.unknownText,
-              style: ConstantStyles.momentUsernameTextStyle,
-              overflow: TextOverflow.ellipsis,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  moment.username ?? ConstantData.unknownText,
+                  style: ConstantStyles.momentUsernameTextStyle,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(height: 2.h),
+                Text(
+                  _formatDate(moment.timelineDate ?? 0),
+                  style: ConstantStyles.momentUsernameTextStyle.copyWith(
+                    fontSize: 10.sp,
+                    color: Colors.grey,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ),
           ),
-          Spacer(),
         ],
       ),
     );
   }
+
 
   Widget _buildAttachments() {
     if (moment.attachments == null || moment.attachments!.isEmpty) {
@@ -271,5 +286,10 @@ class MomentsCard extends StatelessWidget {
       'chattedUser': chattedUser,
       'userDataEntity': userData,
     });
+  }
+
+  String _formatDate(int timestamp) {
+    final DateTime date = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
+    return DateFormat('yyyy-MM-dd HH:mm').format(date);
   }
 }

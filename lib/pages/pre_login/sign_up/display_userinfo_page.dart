@@ -23,7 +23,7 @@ class DisplayUserInfoPage extends StatelessWidget {
               Text("Country: ${user.country}"),
               Text("State: ${user.state}"),
               Text("City: ${user.city}"),
-              Text("Birthday: ${user.birthday?.toLocal()}".split(' ')[0]),
+              //Text("Birthday: ${user.birthday?.toLocal()}".split(' ')[0]),
               Text("Age: ${user.age}"),
               Text("Username: ${user.username}"),
               Text("Password: ${user.password}"), // Note: In a real application, you should not display the password

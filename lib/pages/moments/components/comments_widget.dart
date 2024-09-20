@@ -1,4 +1,6 @@
+import 'package:common_utils/common_utils.dart';
 import 'package:first_app/entity/comment_entity.dart';
+import 'package:first_app/net/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:dio/dio.dart';
@@ -7,6 +9,7 @@ import '../../../constants/Constant_styles.dart';
 import '../../../entity/moment_entity.dart';
 import '../../../entity/token_entity.dart';
 import '../../../image_res/image_res.dart';
+import '../../../net/dio.client.dart';
 
 class CommentWidget extends StatefulWidget {
   final MomentEntity moment;
@@ -23,6 +26,7 @@ class _CommentWidgetState extends State<CommentWidget> {
   late List<String> likeCountList;
   bool isLoading = true;
   List<CommentEntity> comments = [];
+  final DioClient dioClient = DioClient.instance;
 
   @override
   void initState() {
@@ -130,60 +134,59 @@ class _CommentWidgetState extends State<CommentWidget> {
         ),
       );
     }
-
     return commentWidgets;
   }
 
   Future<void> _fetchComments() async {
-    Dio dio = Dio();
-    String? token = widget.tokenEntity.accessToken;
-
-    try {
-      var response = await dio.get(
-        'https://api.masonvips.com/v1/get/timeline/comments',
-        queryParameters: {'timelineId': widget.moment.timelineId},
-        options: Options(headers: {'token': token}),
-      );
-
-      if (response.data['code'] == 200) {
-        List<dynamic> data = response.data['data'];
-        comments = data.map((comment) => CommentEntity.fromJson(comment)).toList();
-        likeCountList = comments.map((comment) => comment.commentLikes.toString()).toList();
-        isLikedList = comments.map((comment) => comment.commentLiked == 1).toList();
+    await dioClient.requestNetwork<List<dynamic>>(
+      method: Method.get,
+      url: ApiConstants.getTimelineComments,
+      queryParameters: {'timelineId': widget.moment.timelineId},
+      options: Options(headers: {'token': widget.tokenEntity.accessToken}),
+      onSuccess: (data) {
+        if (data != null) {
+          comments = data.map((item) => CommentEntity.fromJson(item as Map<String, dynamic>)).toList();
+          likeCountList = comments.map((comment) => comment.commentLikes.toString()).toList();
+          isLikedList = comments.map((comment) => comment.commentLiked == 1).toList();
+          setState(() {
+            isLoading = false;
+          });
+        }
+      },
+      onError: (code, msg, data) {
+        LogUtil.e(msg);
         setState(() {
           isLoading = false;
         });
-      }
-    } catch (e) {
-      print('Failed to fetch comments: $e');
-      setState(() {
-        isLoading = false;
-      });
-    }
+      },
+    );
   }
+
+
 
   Future<void> _toggleLikeStatus(int index, String? commentId) async {
     if (commentId == null) return;
-    Dio dio = Dio();
-    String? token = widget.tokenEntity.accessToken;
     bool isLiked = !isLikedList[index];
 
-    try {
-      var response = await dio.post(
-        'https://api.masonvips.com/v1/like/timeline/comment',
-        queryParameters: {'commentId': int.tryParse(commentId)},
-        options: Options(headers: {'token': token}),
-      );
-      if (response.data['code'] == 200) {
-        setState(() {
-          isLikedList[index] = isLiked;
-          _updateLikeCount(index, isLiked);
-        });
-      }
-    } catch (e) {
-      print('Failed to toggle like status for comment: $e');
-    }
+    await dioClient.requestNetwork<dynamic>(
+      method: Method.post,
+      url: ApiConstants.likeTimelineComment,
+      queryParameters: {'commentId': int.tryParse(commentId)},
+      options: Options(headers: {'token': widget.tokenEntity.accessToken}),
+      onSuccess: (data) {
+        if (data['code'] == 200) {
+          setState(() {
+            isLikedList[index] = isLiked;
+            _updateLikeCount(index, isLiked);
+          });
+        }
+      },
+      onError: (code, msg, data) {
+        print('Failed to toggle like status for comment: $msg');
+      },
+    );
   }
+
 
   void _updateLikeCount(int index, bool isLiked) {
     if (isLiked) {

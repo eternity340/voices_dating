@@ -128,10 +128,13 @@ class MomentsDetailPage extends StatelessWidget {
           children: [
             Text(ConstantData.commentsText, style: ConstantStyles.titleStyle),
             Obx(() => controller.isCommentInputVisible.value ? _buildCommentInput() : SizedBox()),
-            CommentWidget(
+            GetBuilder<MomentsDetailController>(
+              builder: (controller) => CommentWidget(
                 moment: controller.moment,
                 tokenEntity: controller.tokenEntity,
-                key: UniqueKey()),
+                key: UniqueKey(),
+              ),
+            ),
           ],
         ),
       ),

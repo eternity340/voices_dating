@@ -2,6 +2,7 @@ import 'package:first_app/net/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' as getx;
+import '../../../components/custom_content_dialog.dart';
 import '../../../constants/constant_data.dart';
 import '../../../entity/user_data_entity.dart';
 import '../../../net/dio.client.dart';
@@ -35,12 +36,6 @@ class SignInModel extends ChangeNotifier {
     if (!_validateInputs(email, password)) return;
 
     _setLoadingState(true);
-
-    // 创建 FormData 对象
-    final formData = FormData.fromMap({
-      'email': email,
-      'password': password,
-    });
 
     final Map<String, dynamic> params = {
       'email': email,
@@ -107,17 +102,13 @@ class SignInModel extends ChangeNotifier {
 
   void _showErrorDialog(String? message) {
     getx.Get.dialog(
-      AlertDialog(
-        title: const Text('Login Error'),
-        content: Text(message ?? 'An unknown error occurred.'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              getx.Get.back();
-            },
-            child: const Text('OK'),
-          ),
-        ],
+      CustomContentDialog(
+        title: 'Login Error',
+        content: message ?? 'An unknown error occurred.',
+        buttonText: 'OK',
+        onButtonPressed: () {
+          getx.Get.back();
+        },
       ),
     );
   }

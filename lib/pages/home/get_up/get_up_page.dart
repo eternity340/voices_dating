@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import '../../../components/bottom_options.dart';
 import '../../../constants/Constant_styles.dart';
 import '../../../constants/constant_data.dart';
 import '../../../entity/token_entity.dart';
 import '../../../entity/user_data_entity.dart';
+import '../../../image_res/image_res.dart';
 import '../../../routes/app_routes.dart';
 import '../../../utils/common_utils.dart';
 import '../../moments/components/moments_card.dart';
@@ -25,12 +27,14 @@ class GetUpPage extends StatelessWidget{
       body: Stack(
         children: [
           Background(
-            showBackButton: false,
+            showBackButton: true,
             child: Container(),
+            showMiddleText: true,
+            middleText: ConstantData.viewedText,
           ),
-          Positioned(
-            left: 16.w,
-            top: 67.h,
+          /*Positioned(
+            left: 130.w,
+            top: 60.h,
             child: GestureDetector(
               onTap: () {
                 Get.toNamed(AppRoutes.momentsAddMoment,
@@ -43,9 +47,9 @@ class GetUpPage extends StatelessWidget{
                   style:ConstantStyles.momentsTitleStyle
               ),
             ),
-          ),
-          Positioned(
-            left: 90.w,
+          ),*/
+          /*Positioned(
+            right: 20.w,
             top: 45.5.h,
             child: GestureDetector(
               onTap: () {
@@ -74,26 +78,51 @@ class GetUpPage extends StatelessWidget{
                 ),
               ),
             ),
-          ),
-          /*Positioned(
+          ),*/
+          Positioned(
             right: 10.w,
-            top: 59.5.h,
+            top: 55.h,
             child: GestureDetector(
               onTap: () {
-                // Add your search button onTap logic here
+                showModalBottomSheet(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return BottomOptions(
+                      onFirstPressed: () {
+                        Navigator.pop(context);
+                        Get.toNamed(
+                          AppRoutes.momentsAddMoment,
+                          arguments: {
+                            'tokenEntity': controller.tokenEntity,
+                            'userDataEntity': controller.userDataEntity
+                          },
+                        );
+                      },
+                      onSecondPressed: () {},
+                      onCancelPressed: () {
+                        Navigator.pop(context);
+                      },
+                      firstText: ConstantData.addMomentsText,
+                      secondText: '',
+                    );
+                  },
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+                  ),
+                );
               },
               child: Container(
                 width: 40.w,
                 height: 40.h,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage(ImageRes.buttonRoundSearch),
+                    image: AssetImage(ImageRes.settingsButtonImage),
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
             ),
-          ),*/
+          ),
           Positioned(
             left: 10.w,
             top: 109.h,
