@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../../components/audio_player_widget.dart';
 import '../../../../../../image_res/image_res.dart';
-import '../../../../../../service/audio_service.dart';
+import 'audio_duration_display.dart';
 
 class AudioItem extends StatelessWidget {
   final bool isSelected;
@@ -43,22 +43,7 @@ class AudioItem extends StatelessWidget {
                     audioPath: audioPath,
                   ),
                   SizedBox(width: 10.w),
-                  FutureBuilder<int>(
-                    future: AudioService.instance.getAudioDuration(audioPath),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
-                        return Text(
-                          '${snapshot.data}s',
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            color: Colors.black54,
-                          ),
-                        );
-                      } else {
-                        return SizedBox();
-                      }
-                    },
-                  ),
+                  AudioDurationDisplay(audioPath: audioPath),
                 ],
               ),
             ),

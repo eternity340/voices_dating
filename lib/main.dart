@@ -43,13 +43,14 @@ Future<void> _initApp() async {
 
   await _initService();
 
-  final globalService = Get.find<GlobalService>();
-  await globalService.requestPermissions();
+  /*final globalService = Get.find<GlobalService>();
+  await globalService.requestPermissions();*/
 }
 
 Future<void> _initService() async {
   await Get.putAsync(() => TokenService().init());
   await Get.putAsync(() => AppService().init());
+  await Get.putAsync(() => GlobalService().init());
   Get.put(GlobalService());
 }
 

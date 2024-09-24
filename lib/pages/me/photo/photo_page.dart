@@ -34,6 +34,7 @@ class PhotoPage extends StatelessWidget {
             Background(
               showBackgroundImage: false,
               showMiddleText: true,
+              onBackPressed: controller.navigateToMePage,
               middleText: ConstantData.photoTitle,
               child: GetBuilder<PhotoController>(
                 builder: (controller) {

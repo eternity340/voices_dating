@@ -709,4 +709,21 @@ class ConstantStyles {
     fontWeight: FontWeight.w600,
     fontFamily:ConstantData.fontPoppins,
   );
+  static TextStyle buyCactusStyle = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 18.sp,
+    fontWeight: FontWeight.w600,
+    height: 16 / 18,
+    letterSpacing: -0.01,
+    color: Colors.white,
+  );
+  static TextStyle buyCactusContentStyle = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 14.sp,
+    fontWeight: FontWeight.w600,
+    height: 16 / 14, // 设置行高为 16px
+    letterSpacing: -0.01,
+    color: Colors.black,
+    fontStyle: FontStyle.italic,
+  );
 }

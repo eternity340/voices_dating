@@ -13,6 +13,7 @@ import '../chatted_user_entity.dart';
 import '../city_entity.dart';
 import '../comment_entity.dart';
 import '../comment_reply_entity.dart';
+import '../current_location_entity.dart';
 import '../im_message_entity.dart';
 import '../im_new_message_emtity.dart';
 import '../language_match_info_entity.dart';
@@ -20,6 +21,7 @@ import '../list_user_entity.dart';
 import '../match_age_entity.dart';
 import '../moment_entity.dart';
 import '../notification_entity.dart';
+import '../option_entity.dart';
 import '../partner_info_entity.dart';
 import '../profile_comment_entity.dart';
 import '../prompt_no_photo_entity.dart';
@@ -122,6 +124,9 @@ M _generateItemOBJ<M>(String typeStr, dynamic jsonObj) {
     case 'UserLocationEntity':
       obj = UserLocationEntity.fromJson(jsonObj);
       break;
+    case 'CurrentLocationEntity':
+      obj = CurrentLocationEntity.fromJson(jsonObj);
+      break;
     case 'UserOptionsEntity':
       obj = UserOptionsEntity.fromJson(jsonObj);
       break;
@@ -187,6 +192,9 @@ M _generateItemOBJ<M>(String typeStr, dynamic jsonObj) {
       break;
     case 'TagEntity':
       obj = TagEntity.fromJson(jsonObj);
+      break;
+    case 'OptionEntity':
+      obj = OptionEntity.fromJson(jsonObj);
       break;
     case 'Buttons':
       obj = Buttons.fromJson(jsonObj);
@@ -260,6 +268,12 @@ T _generateOBJList<T>(String typeStr, List data) {
       list = data
           .map<UserLocationEntity>(
               (e) => _generateItemOBJ<UserLocationEntity>(typeStr, e))
+          .toList();
+      break;
+    case 'CurrentLocationEntity':
+      list = data
+          .map<CurrentLocationEntity>(
+              (e) => _generateItemOBJ<CurrentLocationEntity>(typeStr, e))
           .toList();
       break;
     case 'UserOptionsEntity':
@@ -377,6 +391,12 @@ T _generateOBJList<T>(String typeStr, List data) {
       list = data
           .map<TagEntity>(
               (e) => _generateItemOBJ<TagEntity>(typeStr, e))
+          .toList();
+      break;
+    case 'OptionEntity':
+      list = data
+          .map<OptionEntity>(
+              (e) => _generateItemOBJ<OptionEntity>(typeStr, e))
           .toList();
       break;
     case 'Buttons':

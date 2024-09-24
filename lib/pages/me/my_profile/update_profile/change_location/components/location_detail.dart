@@ -15,6 +15,7 @@ import '../../../../../../image_res/image_res.dart';
 import '../../../../../../net/dio.client.dart';
 import '../../../../../../service/global_service.dart';
 import '../../../../../../storage/location_data_db.dart';
+import 'location_selection_bottom_sheet.dart';
 
 class LocationDetail extends StatefulWidget {
   const LocationDetail({Key? key}) : super(key: key);
@@ -33,6 +34,7 @@ class _LocationDetailPageState extends State<LocationDetail> {
   int? selectedStateId;
   List<CityEntity> cities = [];
   bool isButtonEnabled = false;
+  bool isCityLoading = false;
 
   @override
   void initState() {
@@ -114,7 +116,7 @@ class _LocationDetailPageState extends State<LocationDetail> {
   Widget _buildLocationBox(String text, String iconPath, String type) {
     bool isEnabled = type == ConstantData.countryText ||
         (type == ConstantData.stateText && selectedCountry != ConstantData.selectedCountry) ||
-        (type == ConstantData.cityText && selectedState != ConstantData.selectedState);
+        (type == ConstantData.cityText && selectedState != ConstantData.selectedState && !isCityLoading);
 
     return GestureDetector(
       onTap: isEnabled ? () => _showLocationSelection(context, type) : null,
@@ -139,11 +141,20 @@ class _LocationDetailPageState extends State<LocationDetail> {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                Image.asset(
-                  iconPath,
-                  width: 10.w,
-                  height: 12.h,
-                ),
+                if (type == ConstantData.cityText && isCityLoading)
+                  SizedBox(
+                    width: 20.w,
+                    height: 20.h,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.w,
+                    ),
+                  )
+                else
+                  Image.asset(
+                    iconPath,
+                    width: 10.w,
+                    height: 12.h,
+                  ),
               ],
             ),
           ),
@@ -152,61 +163,30 @@ class _LocationDetailPageState extends State<LocationDetail> {
     );
   }
 
+
   void _showLocationSelection(BuildContext context, String type) async {
     final items = await _getItemsByType(type);
 
     Get.bottomSheet(
-      Container(
-        height: Get.height * 0.5,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
-        ),
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 16.h),
-              child: Text(
-                'Select ${type.capitalize}',
-                style: ConstantStyles.selectLocationStyle,
-              ),
-            ),
-            Expanded(
-              child: ListView.separated(
-                itemCount: items.length,
-                separatorBuilder: (context, index) => Divider(
-                  height: 1.h,
-                  color: Colors.grey[300],
-                ),
-                itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    title: Text(
-                      items[index].toString(),
-                      style: ConstantStyles.locationListStyle,
-                    ),
-                    onTap: () {
-                      setState(() {
-                        if (type == ConstantData.countryText) {
-                          selectedCountry = items[index].toString();
-                          selectedState = ConstantData.selectedState;
-                          selectedCity = ConstantData.selectedCity;
-                          isButtonEnabled = true;
-                        } else if (type == ConstantData.stateText) {
-                          selectedState = items[index].toString();
-                          selectedCity = ConstantData.selectedCity;
-                          _getStateId(selectedState);
-                        } else if (type == ConstantData.cityText) {
-                          selectedCity = items[index].toString();
-                        }
-                      });
-                      Get.back();
-                    },
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
+      LocationSelectionBottomSheet(
+        title: 'Select ${type.capitalize}',
+        items: items,
+        onItemSelected: (selectedItem) {
+          setState(() {
+            if (type == ConstantData.countryText) {
+              selectedCountry = selectedItem;
+              selectedState = ConstantData.selectedState;
+              selectedCity = ConstantData.selectedCity;
+              isButtonEnabled = true;
+            } else if (type == ConstantData.stateText) {
+              selectedState = selectedItem;
+              selectedCity = ConstantData.selectedCity;
+              _getStateId(selectedState);
+            } else if (type == ConstantData.cityText) {
+              selectedCity = selectedItem;
+            }
+          });
+        },
       ),
       isScrollControlled: true,
       shape: RoundedRectangleBorder(
@@ -233,37 +213,48 @@ class _LocationDetailPageState extends State<LocationDetail> {
   }
 
   void _getStateId(String stateName) async {
+    setState(() {
+      isCityLoading = true;
+    });
     selectedStateId = await LocationDataDB.db.getStateIdByName(stateName);
     if (selectedStateId != null) {
-      _fetchCities(selectedStateId!);
+      await _fetchCities(selectedStateId!);
     }
+    setState(() {
+      isCityLoading = false;
+    });
   }
 
-  void _fetchCities(int stateId) {
-    DioClient.instance.requestNetwork<List<CityEntity>>(
+
+  Future<void> _fetchCities(int stateId) async {
+    await DioClient.instance.requestNetwork<List<CityEntity>>(
       method: Method.get,
-      url:ApiConstants.getCityList,
+      url: ApiConstants.getCityList,
       queryParameters: {'stateId': stateId},
       options: Options(headers: {'token': tokenEntity.accessToken}),
       onSuccess: (data) {
         if (data != null) {
           setState(() {
             cities = data;
+            isCityLoading = false;
           });
         }
       },
       onError: (code, msg, data) {
         LogUtil.e(msg);
+        setState(() {
+          isCityLoading = false;
+        });
       },
     );
   }
+
 
   void updateProfile() async {
     int? countryId = await LocationDataDB.db.getCountryIdByName(selectedCountry);
     int? stateId = await LocationDataDB.db.getStateIdByName(selectedState);
     String? cityId = cities.firstWhereOrNull((city) => city.cityName == selectedCity)?.cityId?.toString();
 
-    // 只检查 countryId，因为我们允许只选择国家就保存
     if (countryId == null) {
       Get.snackbar(ConstantData.errorText, ConstantData.invalidLocation);
       return;
@@ -273,7 +264,6 @@ class _LocationDetailPageState extends State<LocationDetail> {
       'user[countryId]': countryId,
     };
 
-    // 如果选择了州/省和城市，则添加到更新参数中
     if (stateId != null) {
       updateParams['user[stateId]'] = stateId;
     }

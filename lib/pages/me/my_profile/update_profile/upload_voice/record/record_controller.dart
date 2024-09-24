@@ -78,7 +78,6 @@ class RecordController extends GetxController {
   Future<void> saveRecording() async {
     if (recordFilePath != null) {
       await globalService.refreshUserData(tokenEntity.accessToken.toString());
-
       UserDataEntity updatedUserData = globalService.userDataEntity.value!;
 
       Get.delete<UploadVoiceController>();
@@ -89,6 +88,7 @@ class RecordController extends GetxController {
       });
     }
   }
+
 
   void navigateToUploadVoicePage() {
     Get.to(() => UploadVoicePage(), arguments: {

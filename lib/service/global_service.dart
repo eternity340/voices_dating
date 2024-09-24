@@ -3,21 +3,29 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:voices_dating/entity/user_data_entity.dart';
 import 'package:voices_dating/net/api_constants.dart';
+import 'package:voices_dating/service/token_service.dart';
 import 'package:voices_dating/utils/common_utils.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:permission_handler/permission_handler.dart';
 import '../entity/moment_entity.dart';
+import '../entity/option_entity.dart';
 import '../entity/upload_file_entity.dart';
 import '../net/dio.client.dart';
 import '../utils/log_util.dart';
-import '../utils/replace_word_util.dart';
 
-class GlobalService extends GetxController {
+class GlobalService extends GetxService {
+  static GlobalService get to => Get.find();
+
   RxBool needRefresh = false.obs;
   final DioClient dioClient = DioClient.instance;
   Rx<UserDataEntity?> userDataEntity = Rx<UserDataEntity?>(null);
+
+
+  Future<GlobalService> init() async {
+    await requestPermissions();
+    return this;
+  }
 
   void setNeedRefresh(bool value) {
     needRefresh.value = value;
@@ -258,4 +266,71 @@ class GlobalService extends GetxController {
     }
     return status.isGranted;
   }
+
+  Future<List<OptionEntity>> getLanguageOptions() async {
+    try {
+      List<OptionEntity> languageOptions = [];
+
+      await DioClient.instance.requestNetwork<Map<String, dynamic>>(
+        method: Method.get,
+        url: ApiConstants.getProfileOptions,
+        options: Options(headers: {'token': await TokenService.instance.getToken()}),
+        onSuccess: (data) {
+          if (data != null && data['language'] != null) {
+            final languageData = data['language'] as List<dynamic>;
+            languageOptions = languageData
+                .map((lang) => OptionEntity(
+              id: lang['id'] as String,
+              label: lang['label'] as String,
+            ))
+                .toList();
+          } else {
+            throw Exception('failed');
+          }
+        },
+        onError: (code, message, data) {
+          LogUtil.e(message:  message);
+          throw Exception(message);
+        },
+      );
+
+      return languageOptions;
+    } catch (e) {
+      LogUtil.e(message:e.toString());
+      rethrow;
+    }
+  }
+
+  Future<String?> getLocalIpAddress() async {
+    try {
+      final interfaces = await NetworkInterface.list(
+        includeLoopback: false,
+        type: InternetAddressType.IPv4,
+      );
+
+      for (var interface in interfaces) {
+        for (var addr in interface.addresses) {
+          // 过滤掉本地回环地址
+          if (addr.address != '127.0.0.1') {
+            return addr.address;
+          }
+        }
+      }
+    } catch (e) {
+      LogUtil.e(message: 'Error getting local IP address: $e');
+    }
+    return null;
+  }
+
+  Future<void> printDeviceIpAddress() async {
+    String? ipAddress = await getLocalIpAddress();
+    if (ipAddress != null) {
+      print('Device IP Address: $ipAddress');
+    } else {
+      print('Unable to get device IP address');
+    }
+  }
+
 }
+
+

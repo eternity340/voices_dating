@@ -77,7 +77,7 @@ class ProfileContent extends StatelessWidget {
                 value: userData.voice?.description ?? ConstantData.noVoiceText,
                 onTap: () {
                   Get.toNamed(AppRoutes.meMyProfileUploadVoice,
-                    arguments: {'tokenEntity': tokenEntity, 'userDataEntity': userData});
+                      arguments: {'tokenEntity': tokenEntity, 'userDataEntity': userData});
                 }
             ),
           ],

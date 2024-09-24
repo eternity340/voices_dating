@@ -81,7 +81,7 @@ class GetUpPage extends StatelessWidget{
           ),*/
           Positioned(
             right: 10.w,
-            top: 55.h,
+            top: 40.h,
             child: GestureDetector(
               onTap: () {
                 showModalBottomSheet(
@@ -128,16 +128,31 @@ class GetUpPage extends StatelessWidget{
             top: 109.h,
             child: Container(
               width: 335.w,
-              height: 650.h,
+              height: 750.h,
               child: Obx(() {
-                if (controller.isLoading.value && controller.moments.isEmpty) {
+                if (controller.isInitialLoading.value) {
                   return CommonUtils.loadingIndicator();
+                } else if (controller.hasError.value) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Error occurred while loading data.'),
+                        ElevatedButton(
+                          onPressed: controller.initialFetchMoments,
+                          child: Text('Retry'),
+                        ),
+                      ],
+                    ),
+                  );
                 } else {
                   return EasyRefresh(
                     controller: controller.easyRefreshController,
                     onRefresh: () async => controller.refreshMoments(),
                     onLoad: () async => controller.fetchMoments(),
-                    child: ListView.builder(
+                    child: controller.moments.isEmpty
+                        ? Center(child: Text('No moments available'))
+                        : ListView.builder(
                       itemCount: controller.moments.length,
                       itemBuilder: (context, index) {
                         return GestureDetector(

@@ -5,12 +5,14 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import '../../../constants/constant_data.dart';
 import '../../../entity/list_user_entity.dart';
+import '../../../entity/option_entity.dart';
 import '../../../entity/ret_entity.dart';
 import '../../../entity/token_entity.dart';
 import '../../../entity/user_data_entity.dart';
 import '../../../entity/chatted_user_entity.dart';
 import '../../../net/dio.client.dart';
 import '../../../routes/app_routes.dart';
+import '../../../service/global_service.dart';
 import '../../../utils/shared_preference_util.dart';
 import '../../../components/custom_message_dialog.dart';
 
@@ -19,13 +21,32 @@ class ProfileDetailController extends GetxController {
   final TokenEntity tokenEntity;
   late UserDataEntity? userDataEntity;
   final DioClient dioClient = DioClient();
+  final GlobalService globalService = Get.find<GlobalService>();
+  RxString languageLabel = RxString('');
+  RxBool isLoading = true.obs;
 
-  ProfileDetailController({required this.userEntity, required this.tokenEntity}) {
-    _initUserData();
+  ProfileDetailController({required this.userEntity, required this.tokenEntity});
+
+  @override
+  void onInit() {
+    super.onInit();
+    loadInitialData();
   }
 
-  void _initUserData() {
-    final userDataJson = SharedPreferenceUtil.instance.getValue(key: SharedPresKeys.selfEntity);
+  Future<void> loadInitialData() async {
+    try {
+      isLoading.value = true;
+      await _initUserData();
+      await _fetchLanguageLabel();
+    } catch (e) {
+      print('Error loading initial data: $e');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> _initUserData() async {
+    final userDataJson = await SharedPreferenceUtil.instance.getValue(key: SharedPresKeys.selfEntity);
     if (userDataJson != null) {
       try {
         final Map<String, dynamic> userDataMap = json.decode(userDataJson);
@@ -38,9 +59,21 @@ class ProfileDetailController extends GetxController {
     }
   }
 
-  @override
-  void onInit() {
-    super.onInit();
+  Future<void> _fetchLanguageLabel() async {
+    try {
+      List<OptionEntity> languageOptions = await globalService.getLanguageOptions();
+      String? userLanguage = userEntity.language;
+      if (userLanguage != null) {
+        OptionEntity? matchingOption = languageOptions.firstWhereOrNull(
+                (option) => option.id == userLanguage
+        );
+        if (matchingOption != null) {
+          languageLabel.value = matchingOption.label ?? '';
+        }
+      }
+    } catch (e) {
+      print('Error fetching language label: $e');
+    }
   }
 
   void onWinkButtonPressed() {

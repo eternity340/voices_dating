@@ -33,7 +33,7 @@ class MomentsPage extends StatelessWidget {
           ),
           Positioned(
             left: 16.w,
-            top: 67.h,
+            top: 57.h,
             child: GestureDetector(
               onTap: () {
                 Get.toNamed(AppRoutes.momentsAddMoment,
@@ -49,7 +49,7 @@ class MomentsPage extends StatelessWidget {
           ),
           Positioned(
             left: 90.w,
-            top: 45.5.h,
+            top: 35.5.h,
             child: GestureDetector(
               onTap: () {
                 Get.toNamed(
@@ -99,7 +99,7 @@ class MomentsPage extends StatelessWidget {
           ),*/
           Positioned(
             left: 10.w,
-            top: 109.h,
+            top: 99.h,
             child: Container(
               width: 335.w,
               height: 650.h,

@@ -47,11 +47,11 @@ class UserCard extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 10.w),
               child: Row(
                 children: [
-                  if (userEntity.member == "1")
+                /*  if (userEntity.member == "1")
                     VerifiedTag(text: ConstantData.superiorText,
                         backgroundColor: Colors.black,
                         textColor: Colors.white
-                    ),
+                    ),*/
                   SizedBox(width: 8.w),
                   if (userEntity.verified == "1")
                     VerifiedTag(

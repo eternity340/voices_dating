@@ -108,7 +108,8 @@ class HomeController extends GetxController {
           'page': nearbyCurrentPage,
           'offset': 20,
           'find[gender]': userData?.gender,
-          'find[distance]': 500
+
+          //'find[distance]': 500
         },
         options: Options(headers: {'token': tokenEntity.accessToken}),
         onSuccess: (data) {
@@ -183,6 +184,13 @@ class HomeController extends GetxController {
           arguments: {
             'token': tokenEntity,
             'userData': userData});
+    }
+  }
+
+  void navigateToFiltersPage() {
+    if (userData != null) {
+      Get.toNamed(AppRoutes.homeFilters,
+          arguments: {'tokenEntity': tokenEntity});
     }
   }
 }

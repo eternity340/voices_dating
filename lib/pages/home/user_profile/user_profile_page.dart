@@ -27,30 +27,31 @@ class UserProfilePage extends StatelessWidget {
     ));
 
     return Scaffold(
-      body: Stack(
-        children: [
-          Background(
-            showSettingButton: false,
-            showBackButton: true,
-            child: Container(),
-          ),
-          Positioned(
-            left: 308.w,
-            top: 52.h,
-            child: GestureDetector(
-              onTap: () => showOptionsBottomSheet(context, controller),
-              child: Image.asset(
-                ImageRes.imagePathSettingButton,
-                width: 40.w,
-                height: 40.h,
+      body: Background(
+        showSettingButton: false,
+        showBackButton: true,
+        child: Stack(
+          children: [
+            Positioned(
+              right:10.w,
+              top: 0.h,
+              child: GestureDetector(
+                onTap: () => showOptionsBottomSheet(context, controller),
+                child: Image.asset(
+                  ImageRes.imagePathSettingButton,
+                  width: 40.w,
+                  height: 40.h,
+                ),
               ),
             ),
-          ), buildMainContent(controller),
-          buildBottomBar(controller),
-        ],
+            buildMainContent(controller),
+            buildBottomBar(controller),
+          ],
+        ),
       ),
     );
   }
+
 
   void showOptionsBottomSheet(BuildContext context, UserProfileController controller) {
     showModalBottomSheet(
@@ -91,7 +92,7 @@ class UserProfilePage extends StatelessWidget {
 
   Widget buildMainContent(UserProfileController controller) {
     return Positioned.fill(
-      top: 100.h,
+      top: 50.h,
       bottom: 0.h,
       child: SingleChildScrollView(
         child: Column(
@@ -136,9 +137,9 @@ class UserProfilePage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           buildHeadlineSection(controller),
-          SizedBox(height: 50.h),
+          SizedBox(height: 30.h),
           buildMomentsSection(controller),
-          SizedBox(height: 50.h),
+          SizedBox(height: 30.h),
           buildAboutMeSection(controller),
           SizedBox(height: 30.h),
         ],

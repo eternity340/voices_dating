@@ -9,6 +9,7 @@ import '../../../../../constants/constant_data.dart';
 import '../../../../../entity/token_entity.dart';
 import '../../../../../entity/user_data_entity.dart';
 import '../../../../../image_res/image_res.dart';
+import '../../../../../components/custom_content_dialog.dart';
 
 class ChangeLocation extends StatelessWidget {
   final TokenEntity tokenEntity = Get.arguments['tokenEntity'] as TokenEntity;
@@ -69,7 +70,21 @@ class ChangeLocation extends StatelessWidget {
                             height: 24.h,
                           ),
                           onPressed: () {
-                            // Your location button logic
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return CustomContentDialog(
+                                  title: 'Location',
+                                  content: '${userData.location?.city}, '
+                                      '${userData.location?.state}, '
+                                      '${userData.location?.country}',
+                                  buttonText: 'OK',
+                                  onButtonPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                );
+                              },
+                            );
                           },
                         ),
                       ],
@@ -84,15 +99,10 @@ class ChangeLocation extends StatelessWidget {
     );
   }
 
-
   void navigateToMyProfile() {
     Get.offAllNamed(AppRoutes.meMyProfile, arguments: {
       'tokenEntity': tokenEntity,
       'userDataEntity': userData,
     });
-  }
-
-  void handleSave(BuildContext context) {
-    navigateToMyProfile();
   }
 }

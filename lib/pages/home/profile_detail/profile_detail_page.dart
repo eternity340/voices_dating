@@ -18,8 +18,9 @@ import '../components/profile_card.dart';
 import 'profile_detail_controller.dart';
 
 class ProfileDetailPage extends StatelessWidget {
+
   ProfileDetailPage({super.key});
-  final GlobalService globalService = Get.find<GlobalService>();
+
 
   @override
   Widget build(BuildContext context) {
@@ -175,7 +176,7 @@ class ProfileDetailPage extends StatelessWidget {
           Container(
             height: 105.h,
             child: FutureBuilder<List<MomentEntity>>(
-              future: globalService.getMoments(
+              future: controller.globalService.getMoments(
                 userId: controller.userEntity.userId!,
                 accessToken: controller.tokenEntity.accessToken!,
               ),
@@ -280,13 +281,19 @@ class ProfileDetailPage extends StatelessWidget {
                 controller.userEntity.height != null
                     ? '${controller.userEntity.height}cm'
                     : ''),
-            buildInfoRow(ImageRes.iconLanguage,
-                controller.userEntity.language ?? ''),
+            Obx(() {
+              if (controller.languageLabel.value.isNotEmpty) {
+                return buildInfoRow(ImageRes.iconLanguage, controller.languageLabel.value);
+              } else {
+                return SizedBox.shrink();
+              }
+            }),
           ],
         ),
       ],
     );
   }
+
 
   Widget buildInfoRow(String iconPath, String text) {
     return Row(

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
+import '../../../components/custom_content_dialog.dart';
 import '../../../entity/token_entity.dart';
 import '../../../entity/moment_entity.dart';
 import '../../../entity/user_data_entity.dart';
@@ -18,6 +19,8 @@ class GetUpController extends GetxController {
   final DioClient dioClient = DioClient.instance;
   late EasyRefreshController easyRefreshController;
   bool _isDisposed = false;
+  var isInitialLoading = true.obs;
+  var hasError = false.obs;
 
   @override
   void onInit() {
@@ -26,15 +29,29 @@ class GetUpController extends GetxController {
     userDataEntity = Get.arguments['userData'] as UserDataEntity;
     easyRefreshController = EasyRefreshController();
     ReplaceWordUtil.getInstance().getReplaceWord().then((_) {
-      fetchMoments();
+      initialFetchMoments();
     });
   }
+
 
   @override
   void onClose() {
     _isDisposed = true;
     easyRefreshController.dispose();
     super.onClose();
+  }
+
+  Future<void> initialFetchMoments() async {
+    isInitialLoading.value = true;
+    hasError.value = false;
+    try {
+      await _fetchMomentsFromApi();
+    } catch (e) {
+      hasError.value = true;
+      print('Error: $e');
+    } finally {
+      if (!_isDisposed) isInitialLoading.value = false;
+    }
   }
 
   Future<void> fetchMoments({bool isRefresh = false}) async {
@@ -92,7 +109,7 @@ class GetUpController extends GetxController {
 
   void _handleSuccessResponse(List<dynamic>? data) {
     if (_isDisposed) return;
-    if (data != null) {
+    if (data != null && data.isNotEmpty) {
       data = ReplaceWordUtil.getInstance().replaceWordsInJson(data) as List<dynamic>;
 
       List<MomentEntity> fetchedMoments = data
@@ -100,8 +117,12 @@ class GetUpController extends GetxController {
           .toList();
       moments.addAll(fetchedMoments);
       page++;
+      _finishLoadIfNotDisposed(noMore: false);
     } else {
       _finishLoadIfNotDisposed(noMore: true);
+      if (moments.isEmpty) {
+        _showNoDataDialog();
+      }
     }
   }
 
@@ -118,6 +139,18 @@ class GetUpController extends GetxController {
   void _finishLoadIfNotDisposed({required bool noMore}) {
     if (!_isDisposed) easyRefreshController.finishLoad(noMore: noMore);
   }
+
+  void _showNoDataDialog() {
+    Get.dialog(
+      CustomContentDialog(
+        title: "No Data",
+        content: "You haven't browsed other user interfaces and moments yet",
+        buttonText: "OK",
+        onButtonPressed: () => Get.back(),
+      ),
+    );
+  }
+
 
   Future<void> refreshMoments() async {
     if (_isDisposed) return;

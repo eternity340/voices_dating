@@ -24,43 +24,47 @@ class CustomContentDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.r),
       ),
-      child: IntrinsicHeight(
-        child: Container(
-          width: 335.w,
-          constraints: BoxConstraints(maxHeight: 500.h), // 设置最大高度
-          child: Column(
-            children: [
-              SizedBox(height: 30.5.h),
-              Text(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: 335.w,
+          maxHeight: 500.h,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(height: 30.5.h),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: Text(
                 title,
                 style: ConstantStyles.customDialogTitle,
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 20.5.h),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
-                    child: Text(
-                      content,
-                      style: ConstantStyles.customDialogContent,
-                      textAlign: TextAlign.center,
-                    ),
+            ),
+            SizedBox(height: 20.5.h),
+            Flexible(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: Text(
+                    content,
+                    style: ConstantStyles.customDialogContent,
+                    textAlign: TextAlign.center,
                   ),
                 ),
               ),
-              SizedBox(height: 20.h),
-              Padding(
-                padding: EdgeInsets.only(bottom: 20.h),
-                child: GradientButton(
-                  text: buttonText,
-                  onPressed: onButtonPressed,
-                  width: 108.w,
-                  height: 49.h,
-                ),
+            ),
+            SizedBox(height: 20.h),
+            Padding(
+              padding: EdgeInsets.only(bottom: 20.h),
+              child: GradientButton(
+                text: buttonText,
+                onPressed: onButtonPressed,
+                width: 150.w,  // Increased width
+                height: 49.h,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

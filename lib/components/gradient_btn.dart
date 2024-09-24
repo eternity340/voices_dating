@@ -30,7 +30,6 @@ class GradientButton extends StatelessWidget {
         duration: Duration(milliseconds: 300),
         width: width?.w ?? 248.w,
         height: height?.h ?? 49.h,
-        padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 24.w),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: isDisabled
@@ -44,6 +43,7 @@ class GradientButton extends StatelessWidget {
         child: Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
               if (iconPath != null) ...[
                 AnimatedSwitcher(
@@ -62,8 +62,8 @@ class GradientButton extends StatelessWidget {
                 duration: Duration(milliseconds: 300),
                 style: isDisabled
                     ? ConstantStyles.bottomBarTextStyle
-                    : ConstantStyles.bottomBarTextStyle,
-                child: Text(text.toUpperCase()),
+                    : (textStyle ?? ConstantStyles.bottomBarTextStyle),
+                child: Text(text),
               ),
             ],
           ),

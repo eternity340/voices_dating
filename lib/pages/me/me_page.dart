@@ -171,26 +171,57 @@ class MePage extends StatelessWidget {
     );
   }
 
-  Widget middleImageSection(
-      BuildContext context) {
+  Widget middleImageSection(BuildContext context) {
     return Stack(
       children: [
         Positioned(
           left: 15.w,
           child: Container(
-          width: 305.w,
-          height: 116.h,
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-            borderRadius: BorderRadius.circular(10.r),
-            border: Border.all(color: Colors.black, width: 2.w),
+            width: 305.w,
+            height: 116.h,
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(10.r),
+              border: Border.all(color: Colors.black, width: 2.w),
+            ),
           ),
-        )),
-        Image.asset(
-          ImageRes.imagePathBuyCactus,
-          width: 335.w,
-          height: 117.h,
-          fit: BoxFit.contain,
+        ),
+        Stack(
+          children: [
+            Image.asset(
+              ImageRes.buyCactusNoWords,
+              width: 335.w,
+              height: 117.h,
+              fit: BoxFit.contain,
+            ),
+            Positioned(
+              left: 164.w,
+              top: 23.5.h,
+              child: Text(
+                ConstantData.voicesDatingTitle,
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w600,
+                  height: 16 / 18,
+                  letterSpacing: -0.01,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            Positioned(
+              left: 120.w,
+              top: 66.5.h,
+              child: Container(
+                width: 196.w,
+                height: 32.h,
+                child: Text(
+                  ConstantData.voicesDatingContent,
+                  style: ConstantStyles.buyCactusContentStyle
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );

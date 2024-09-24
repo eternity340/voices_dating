@@ -21,7 +21,7 @@ import '../../my_profile_page.dart';
 class UploadVoiceController extends GetxController {
   final TokenEntity tokenEntity;
   late  UserDataEntity userData;
-  final String? recordFilePath;
+  String? recordFilePath;
   RxInt selectedIndex = RxInt(-1);
   late AudioPlayer audioPlayer;
   RxBool isPlaying = false.obs;
@@ -41,12 +41,14 @@ class UploadVoiceController extends GetxController {
   }
 
   bool get isButtonEnabled {
-    if (selectedIndex.value == -1) return false;
+    if (selectedIndex.value == -1 || audioList.isEmpty) return false;
+    if (selectedIndex.value >= audioList.length) return false;
     if (userData.voice != null && userData.voice!.voiceUrl != null) {
       return audioList[selectedIndex.value] != userData.voice!.voiceUrl;
     }
     return true;
   }
+
 
   void _initAudioList() {
     if (userData.voice != null && userData.voice!.voiceUrl != null) {
@@ -106,12 +108,17 @@ class UploadVoiceController extends GetxController {
             await globalService.refreshUserData(tokenEntity.accessToken.toString());
             userData = globalService.userDataEntity.value!;
 
-            // 删除之前从 record 页面获得的音频
+            // 删除本地录音文件并清除 recordFilePath
             if (recordFilePath != null) {
+              if (File(recordFilePath!).existsSync()) {
+                File(recordFilePath!).deleteSync();
+              }
               int recordIndex = audioList.indexOf(recordFilePath!);
               if (recordIndex != -1) {
-                await deleteAudio(recordIndex);
+                audioList.removeAt(recordIndex);
               }
+              // 清除 recordFilePath
+              recordFilePath = null;
             }
 
             // 更新音频列表
@@ -133,6 +140,7 @@ class UploadVoiceController extends GetxController {
       Get.snackbar('Error', 'An unexpected error occurred');
     }
   }
+
 
   Future<void> deleteUserVoice() async {
     if (userData.voice == null || userData.voice!.attachId == null) {
@@ -235,12 +243,11 @@ class UploadVoiceController extends GetxController {
 
   @override
   void onClose() {
-    if (recordFilePath != null) {
-      File(recordFilePath!).delete();
+    if (recordFilePath != null && File(recordFilePath!).existsSync()) {
+      File(recordFilePath!).deleteSync();
     }
     Get.delete<UploadVoiceController>();
     audioPlayer.dispose();
     super.onClose();
   }
-
 }

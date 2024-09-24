@@ -2,12 +2,14 @@ import 'package:dio/dio.dart';
 import 'package:voices_dating/constants/constant_data.dart';
 import 'package:voices_dating/net/api_constants.dart';
 import 'package:get/get.dart';
-import '../../../components/custom_content_dialog.dart';
-import '../../../entity/list_user_entity.dart';
-import '../../../entity/token_entity.dart';
-import '../../../net/dio.client.dart';
 
-class FeelController extends GetxController {
+import '../../../../components/custom_content_dialog.dart';
+import '../../../../entity/list_user_entity.dart';
+import '../../../../entity/token_entity.dart';
+import '../../../../net/dio.client.dart';
+
+
+class FiltersSearchController extends GetxController {
   final TokenEntity tokenEntity = Get.arguments?['tokenEntity'] as TokenEntity;
   var userList = <ListUserEntity>[].obs;
   var isLoading = true.obs;
@@ -53,6 +55,7 @@ class FeelController extends GetxController {
           hasMore.value = fetchedData.length >= 20;
           isLoading.value = false;
 
+          // 检查是否没有数据
           if (userList.isEmpty && !isLoadMore) {
             showNoDataDialog();
           }

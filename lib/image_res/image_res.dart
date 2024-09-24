@@ -59,6 +59,7 @@ class ImageRes{
   static const  imagePathIconNotification = 'assets/images/icon_me_notification.png';
   static const  imagePathIconSetting = 'assets/images/icon_me_settings.png';
   static const  imagePathBuyCactus ='assets/images/buy_cactus.png';
+  static const  buyCactusNoWords = 'assets/images/buy_cactus_no_word.png';
   static const  imagePathIconPerson =  'assets/images/icon_person.png';
   static const  imagePathIconVerify = 'assets/images/icon_verify.png';
   static const  imagePathIconHost = 'assets/images/icon_host.png';

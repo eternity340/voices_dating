@@ -1,3 +1,4 @@
+import 'package:voices_dating/pages/home/filters/filters_page.dart';
 import 'package:voices_dating/pages/home/feel/feel_page.dart';
 import 'package:voices_dating/pages/home/game/game_page.dart';
 import 'package:voices_dating/pages/home/get_up/get_up_page.dart';
@@ -24,6 +25,7 @@ import 'package:get/get.dart' as getx;
 import '../pages/email/page/get_email_code_page.dart';
 import '../pages/email/page/verify_email_page.dart';
 import '../pages/email/page/verify_success_page.dart';
+import '../pages/home/filters/filters_search/filters_search_page.dart';
 import '../pages/home/home_page.dart';
 import '../pages/home/profile_detail/profile_moments/profile_moments_page.dart';
 import '../pages/home/profile_detail/report/report_page.dart';
@@ -73,6 +75,8 @@ class AppRoutes {
   static const String getUp = '/get_up';
   static const String game = '/game';
   static const String gossip = '/gossip';
+  static const String filters = '/filters';
+  static const String filtersSearch = '/filters_search';
   static const String moments = '/moments';
   static const String momentsDetail = '/moments_detail';
   static const String addMoment = '/add_moment';
@@ -110,6 +114,8 @@ class AppRoutes {
   static const String homeGetUp = '$home$getUp';
   static const String homeGame = '$home$game';
   static const String homeGossip = '$home$gossip';
+  static const String homeFilters = '$home$filters';
+  static const String homeFiltersSearch = '$home$filters$filtersSearch';
   static const String momentsMomentsDetail = '$moments$momentsDetail';
   static const String momentsAddMoment = '$moments$addMoment';
   static const String messagePrivateChat = '$message$privateChat';
@@ -295,6 +301,20 @@ class AppRoutes {
           page: () => GossipPage(),
           transition: defaultTransition,
           transitionDuration: defaultDuration,
+        ),
+        getx.GetPage(
+          name: filters,
+          page: () => FiltersPage(),
+          transition: defaultTransition,
+          transitionDuration: defaultDuration,
+          children: [
+            getx.GetPage(
+              name: filtersSearch,
+              page: () => FiltersSearchPage(),
+              transition: defaultTransition,
+              transitionDuration: defaultDuration,
+            ),
+          ]
         ),
       ],
       transition: getx.Transition.noTransition,

@@ -1,20 +1,23 @@
 import 'package:dio/dio.dart';
-import 'package:voices_dating/entity/moment_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../entity/token_entity.dart';
-import '../../../image_res/image_res.dart';
+import 'package:voices_dating/entity/moment_entity.dart';
+import 'package:voices_dating/entity/token_entity.dart';
+import 'package:voices_dating/image_res/image_res.dart';
+import 'package:voices_dating/net/api_constants.dart';
+
+import '../../../net/dio.client.dart';
 
 class LoveButton extends StatefulWidget {
   final MomentEntity moment;
   final TokenEntity tokenEntity;
-  final VoidCallback onLoveButtonPressed; // 添加回调函数
+  final VoidCallback onLoveButtonPressed;
 
   const LoveButton({
     Key? key,
     required this.tokenEntity,
     required this.moment,
-    required this.onLoveButtonPressed, // 添加回调函数
+    required this.onLoveButtonPressed,
   }) : super(key: key);
 
   @override
@@ -23,6 +26,7 @@ class LoveButton extends StatefulWidget {
 
 class _LoveButtonState extends State<LoveButton> {
   late bool isLoved;
+  final DioClient dioClient = DioClient.instance;
 
   @override
   void initState() {
@@ -31,59 +35,51 @@ class _LoveButtonState extends State<LoveButton> {
   }
 
   Future<void> _likeMoment() async {
-    final dio = Dio();
-    try {
-      final response = await dio.post(
-        'https://api.masonvips.com/v1/like_timeline',
-        options: Options(
-          headers: {
-            'token': widget.tokenEntity.accessToken,
-          },
-        ),
-        queryParameters: {
-          'timelineId': widget.moment.timelineId,
+    dioClient.requestNetwork(
+      method: Method.post,
+      url: ApiConstants.likeTimeline,
+      options: Options(
+        headers: {
+          'token': widget.tokenEntity.accessToken,
         },
-      );
-
-      if (response.data['code'] == 200 && response.data['data']['ret'] == true) {
+      ),
+      queryParameters: {
+        'timelineId': widget.moment.timelineId,
+      },
+      onSuccess: (data) {
         setState(() {
           isLoved = true;
         });
-        widget.onLoveButtonPressed(); // 调用回调函数
-      } else {
-        print('Error: ${response.data['message']}');
-      }
-    } catch (e) {
-      print('Error: $e');
-    }
+        widget.onLoveButtonPressed();
+      },
+      onError: (code, msg, data) {
+        print('Error: $msg');
+      },
+    );
   }
 
   Future<void> _cancelLikeMoment() async {
-    final dio = Dio();
-    try {
-      final response = await dio.post(
-        'https://api.masonvips.com/v1/cancel_like_timeline',
-        options: Options(
-          headers: {
-            'token': widget.tokenEntity.accessToken,
-          },
-        ),
-        queryParameters: {
-          'timelineId': widget.moment.timelineId,
+    dioClient.requestNetwork(
+      method: Method.post,
+      url: ApiConstants.cancelLikeTimeline,
+      options: Options(
+        headers: {
+          'token': widget.tokenEntity.accessToken,
         },
-      );
-
-      if (response.data['code'] == 200 && response.data['data']['ret'] == true) {
+      ),
+      queryParameters: {
+        'timelineId': widget.moment.timelineId,
+      },
+      onSuccess: (data) {
         setState(() {
           isLoved = false;
         });
-        widget.onLoveButtonPressed(); // 调用回调函数
-      } else {
-        print('Error: ${response.data['message']}');
-      }
-    } catch (e) {
-      print('Error: $e');
-    }
+        widget.onLoveButtonPressed();
+      },
+      onError: (code, msg, data) {
+        print('Error: $msg');
+      },
+    );
   }
 
   @override

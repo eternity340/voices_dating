@@ -90,11 +90,12 @@ class SignUpController extends GetxController {
           },
         ),
         onSuccess: (data) {
-          print('Sign up successful. Response data: $data');
+          LogUtil.d('Sign up successful. Response data: $data');
+          Get.snackbar(ConstantData.successText, 'Registration successful, return to login interface');
           Get.toNamed(AppRoutes.welcome, arguments: user);
         },
         onError: (code, msg, data) {
-          print('Sign up error. Code: $code, Message: $msg, Data: $data');
+          LogUtil.e('Sign up error. Code: $code, Message: $msg, Data: $data');
           if (code == 30001051) {
             final siteKey = data['siteKey'] as String?;
             if (siteKey != null) {
@@ -126,7 +127,7 @@ class SignUpController extends GetxController {
         },
       );
     } catch (e) {
-      print('Exception during sign up: $e');
+      LogUtil.e('Exception during sign up: $e');
       errorMessage.value = "exception: $e";
       _showCustomDialog('Error', errorMessage.value, 'OK', () => Get.back());
     } finally {

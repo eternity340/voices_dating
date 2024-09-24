@@ -85,7 +85,7 @@ class _HomePageState extends State<HomePage> {
   Widget _buildOptionsRow(HomeController controller) {
     return Container(
       width: double.infinity,
-      height: 40.h,
+      height: 35.h,
       color: Colors.transparent,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -231,8 +231,8 @@ class _HomePageState extends State<HomePage> {
         _buildButtonWithLabel(
           imagePath: ImageRes.imagePathFeel,
           shadowColor: Color(0xFFFFEA31).withOpacity(0.3495),
-          label: ConstantData.gossipLabel,
-          onTap: controller.navigateToGossipPage,
+          label: ConstantData.filtersLabel,
+          onTap: controller.navigateToFiltersPage,
         ),
       ],
     );
@@ -256,7 +256,7 @@ class _HomePageState extends State<HomePage> {
           ),
           SizedBox(height: 4.h),
           Container(
-            height: 40.h,
+            height: 20.h,
             child: Text(
               label,
               style: ConstantStyles.buttonLabelStyle,

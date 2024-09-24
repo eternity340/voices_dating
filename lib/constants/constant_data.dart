@@ -110,6 +110,7 @@ class ConstantData {
   //background
   static const backText = 'Back';
   static const saveText = 'Save';
+  static const searchText = 'Search';
   //bottom_options
   static const CancelText = 'Cancel';
   //custom_message_dialog
@@ -219,6 +220,7 @@ class ConstantData {
   static const  gameLabel = 'Game';
   static const  gossipLabel = 'Gossip';
   static const  viewLabel = 'View';
+  static const  filtersLabel = 'Filters';
   //detail_bottom
   static const  winkButton = 'wink';
   static const  callButton = 'call';
@@ -353,5 +355,11 @@ class ConstantData {
   static const nightReliefText ='Night relief';
   static const lifeGossipText = 'Life gossip';
   static const becomePodcastText = 'Become a podcast';
+  //filter
+  static const lookingForText = 'Looking for';
+  static const multipleChoicesText = 'You can select Multiple Choices';
+  //main
+  static const voicesDatingTitle = 'VoicesDating';
+  static const voicesDatingContent = 'Where Hearts Resonate \Through Sound';
 }
 
