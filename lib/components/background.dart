@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import '../constants/constant_styles.dart';
 import '../constants/constant_data.dart';
 import '../image_res/image_res.dart';
@@ -16,6 +17,8 @@ class Background extends StatelessWidget {
   final VoidCallback? onBackPressed;
   final VoidCallback? onSettingPressed;
   final VoidCallback? onActionButtonPressed;
+  final bool usePopScope;  // 新增参数
+  final VoidCallback? onPopInvoked;  // 新增参数
 
   const Background({
     Key? key,
@@ -29,11 +32,13 @@ class Background extends StatelessWidget {
     this.onBackPressed,
     this.onSettingPressed,
     this.onActionButtonPressed,
+    this.usePopScope = false,  // 默认不使用 PopScope
+    this.onPopInvoked,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    Widget content = Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
@@ -56,9 +61,9 @@ class Background extends StatelessWidget {
                   if (showBackButton)
                     Positioned(
                       top: 8.h,
-                      left: 16.w,
+                      left: 10.w,
                       child: GestureDetector(
-                        onTap: onBackPressed ?? () => Navigator.of(context).pop(),
+                        onTap: onBackPressed ?? () => Get.back(),
                         child: Row(
                           children: [
                             Image.asset(
@@ -136,5 +141,18 @@ class Background extends StatelessWidget {
         ],
       ),
     );
+
+    if (usePopScope) {
+      return PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) async {
+          if (didPop) return;
+          onPopInvoked?.call();
+        },
+        child: content,
+      );
+    } else {
+      return content;
+    }
   }
 }

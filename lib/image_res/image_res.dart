@@ -6,6 +6,8 @@ class ImageRes{
   static const imagePathFeel = 'assets/images/icon_feel.png';
   static const imagePathDecorate = 'assets/images/decorate.png';
   static const imagePathNavigationBar='assets/images/navigation_bar.png';
+  //welcome
+  static const iconsWelcome = "assets/icons/welcome.svg";
   //all navigation bar
   static const imagePathIconHomeActive='assets/images/icon_home_active.png';
   static const imagePathIconHomeInactive='assets/images/icon_home_inactive.png';

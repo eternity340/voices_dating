@@ -8,14 +8,33 @@ import '../../../entity/token_entity.dart';
 import '../../../entity/user_data_entity.dart';
 import '../../../image_res/image_res.dart';
 import '../components/path_box.dart';
+import '../me_page.dart';
 
 class HostPage extends StatelessWidget {
   final TokenEntity tokenEntity = Get.arguments['tokenEntity'] as TokenEntity;
   final UserDataEntity userData = Get.arguments['userDataEntity'] as UserDataEntity;
 
+  void _navigateToMePage() {
+    Get.to(() => MePage(),
+      arguments: {
+        'tokenEntity': tokenEntity,
+        'userDataEntity': userData,
+        'isMeActive': true,
+      },
+      transition: Transition.cupertinoDialog,
+      duration: Duration(milliseconds: 500),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) async {
+      if (didPop) return;
+      _navigateToMePage();
+    },
+      child: Scaffold(
       body: Stack(
         children: [
           Background(
@@ -24,6 +43,7 @@ class HostPage extends StatelessWidget {
             middleText: ConstantData.hostTitle,
             showBackgroundImage: false,
             showBackButton: true,
+            onBackPressed: _navigateToMePage,
           ),
           Positioned(
             top: 109.h,
@@ -87,6 +107,8 @@ class HostPage extends StatelessWidget {
           ),
         ],
       ),
+    ),
     );
   }
 }
+

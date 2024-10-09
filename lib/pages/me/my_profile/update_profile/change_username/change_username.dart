@@ -6,6 +6,7 @@ import '../../../../../constants/Constant_styles.dart';
 import '../../../../../constants/constant_data.dart';
 import '../../../../../entity/token_entity.dart';
 import '../../../../../entity/user_data_entity.dart';
+import '../../my_profile_page.dart';
 import 'change_username_controller.dart';
 
 class ChangeUsername extends StatefulWidget {
@@ -22,12 +23,28 @@ class _ChangeUsernameState extends State<ChangeUsername> {
     final tokenEntity = Get.arguments['tokenEntity'] as TokenEntity;
     final userData = Get.arguments['userDataEntity'] as UserDataEntity;
 
+    void navigateToMeMyProfilePage() {
+      Get.to(
+            () => MyProfilePage(),
+        arguments: {
+          'tokenEntity': tokenEntity,
+          'userDataEntity': userData,
+        },
+        transition: Transition.cupertinoDialog,
+        duration: Duration(milliseconds: 500),
+      );
+    }
+
     return Scaffold(
       body: Background(
         showBackgroundImage: false,
         showMiddleText: true,
         middleText: ConstantData.usernameTitle,
         showActionButton: false,
+        showBackButton: true,
+        onBackPressed: navigateToMeMyProfilePage,
+        usePopScope: true,
+        onPopInvoked: navigateToMeMyProfilePage,
         child: Stack(
           children: [
             Positioned(

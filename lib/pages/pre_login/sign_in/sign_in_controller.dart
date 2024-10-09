@@ -1,127 +1,73 @@
-import 'package:dio/dio.dart' as Dio;
-import 'package:voices_dating/net/api_constants.dart';
-import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-import '../../../constants/constant_data.dart';
-import '../../../entity/user_data_entity.dart';
+import 'package:flutter/material.dart';
+import '../../../components/custom_content_dialog.dart';
 import '../../../net/dio.client.dart';
+import '../../../entity/user_data_entity.dart';
 import '../../../service/app_service.dart';
-import '../../../service/token_service.dart';
-import '../../../entity/token_entity.dart';
-import '../../../utils/shared_preference_util.dart';
-import '../../home/home_page.dart';
+import '../../../net/api_constants.dart';
 
 class SignInController extends GetxController {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final DioClient dioClient = DioClient.instance;
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final DioClient _dioClient = DioClient();
 
-  bool _isLoading = false;
-  String? _emailErrorMessage;
-  String? _passwordErrorMessage;
-  String? _errorMessage;
+  final RxBool isLoading = false.obs;
+  final RxBool isPasswordVisible = false.obs;
+  final RxString emailError = ''.obs;
+  final RxString passwordError = ''.obs;
+  final RxString errorMessage = ''.obs;
 
-  bool get isLoading => _isLoading;
-  String? get emailErrorMessage => _emailErrorMessage;
-  String? get passwordErrorMessage => _passwordErrorMessage;
-  String? get errorMessage => _errorMessage;
-
-  @override
-  void onInit() {
-    super.onInit();
-    _initializeToken();
-  }
-
-  Future<void> _initializeToken() async {
-    try {
-      await TokenService.instance.getTokenEntity();
-    } catch (e) {
-      _errorMessage = "Failed to initialize token: $e";
-      update();
-    }
+  void togglePasswordVisibility() {
+    isPasswordVisible.toggle();
   }
 
   Future<void> signIn() async {
-    final String email = emailController.text.trim();
-    final String password = passwordController.text.trim();
+    if (!_validateInputs()) return;
 
-    if (email.isEmpty) {
-      _emailErrorMessage = "Email cannot be empty!";
-      update();
-      return;
-    } else {
-      _emailErrorMessage = null;
-    }
+    isLoading.value = true;
+    errorMessage.value = '';
 
-    if (password.isEmpty) {
-      _passwordErrorMessage = "Password cannot be empty!";
-      update();
-      return;
-    } else {
-      _passwordErrorMessage = null;
-    }
-
-    _isLoading = true;
-    _errorMessage = null;
-    update();
+    final params = {
+      'email': emailController.text.trim(),
+      'password': passwordController.text.trim(),
+    };
 
     try {
-      final params = Dio.FormData.fromMap({
-        'email': email,
-        'password': password,
-      });
-
-      final options = Dio.Options(
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'token': await TokenService.instance.getToken(),
-        },
-      );
-
-      await dioClient.requestNetwork<UserDataEntity>(
+      final response = await _dioClient.requestNetwork<UserDataEntity>(
         method: Method.post,
         url: ApiConstants.signIn,
         params: params,
-        options: options,
-        onSuccess: (userData)  {
-          AppService.instance.isLogin = true;
-          AppService.instance.saveUserData(userData: userData!);
-          SharedPreferenceUtil.instance.setValue(key: SharedPresKeys.isLogin, value: true);
-          Get.offAll(() => HomePage());
-        },
-        onError: (code, msg, data) {
-          if (code == ConstantData.errorCodeInvalidEmailOrPassword) {
-            _errorMessage = msg;
-          } else {
-            _errorMessage = "error: $msg";
-          }
-          _showErrorDialog(_errorMessage);
-        },
-        formParams: true,  // Ensure this is true when using FormData
+        options: Options(headers: {'Content-Type': 'multipart/form-data'}),
       );
+
+      if (response != null) {
+        await AppService.instance.saveUserData(userData: response);
+        Get.offAllNamed('/home');
+      } else {
+        _handleError("User data is missing in the response.");
+      }
     } catch (e) {
-      _errorMessage = "exception: $e";
-      print('Exception occurred: $_errorMessage');
-      _showErrorDialog(_errorMessage);
+      _handleError(e.toString());
     } finally {
-      _isLoading = false;
-      update();
+      isLoading.value = false;
     }
   }
 
-  void _showErrorDialog(String? message) {
+  bool _validateInputs() {
+    emailError.value = emailController.text.isEmpty ? "Email cannot be empty!" : '';
+    passwordError.value = passwordController.text.isEmpty ? "Password cannot be empty!" : '';
+    return emailError.isEmpty && passwordError.isEmpty;
+  }
+
+  void _handleError(String message) {
+    errorMessage.value = message;
     Get.dialog(
-      AlertDialog(
-        title: const Text('Login Error'),
-        content: Text(message ?? 'An unknown error occurred.'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Get.back();
-            },
-            child: const Text('OK'),
-          ),
-        ],
+      CustomContentDialog(
+        title: 'Login Error',
+        content: message,
+        buttonText: 'OK',
+        onButtonPressed: () => Get.back(),
       ),
     );
   }

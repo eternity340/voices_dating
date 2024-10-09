@@ -334,11 +334,12 @@ class ConstantStyles {
     color: Color(0xFF8E8E93),
   );
   static TextStyle homeOptionTextStyle(bool isSelected) => TextStyle(
-    fontSize: 26.sp,
-    height: 22 / 18,
-    letterSpacing: -0.011249999515712261,
-    fontFamily: ConstantData.fontOpenSans,
-    color: isSelected ? Color(0xFF000000) : Color(0xFF8E8E93),
+    fontFamily: 'Open Sans',
+    fontSize: 18.sp,
+    fontWeight: FontWeight.w600,
+    height: 22 / 18, // 这相当于 line-height: 22px
+    letterSpacing: -0.01,
+    color: isSelected ? Color(0xFF000000) : Color(0xFF9D9D9D),
   );
   //path_box
   static TextStyle pathBoxTextStyle = TextStyle(

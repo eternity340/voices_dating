@@ -24,29 +24,31 @@ class FeelPage extends StatelessWidget {
             child: Container(),
           ),
           Obx(() {
-            return controller.isLoading.value
-                ? CommonUtils.loadingIndicator()
-                : Positioned(
-              top: 100.h,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: EasyRefresh(
-                onRefresh: controller.onRefresh,
-                onLoad: controller.onLoad,
-                child: ListView.builder(
-                  padding: EdgeInsets.zero,
-                  itemCount: controller.userList.length,
-                  itemBuilder: (context, index) {
-                    final user = controller.userList[index];
-                    return FeelDetailCard(
-                      userEntity: user,
-                      tokenEntity: controller.tokenEntity,
-                    );
-                  },
+            if (controller.isInitialLoading.value) {
+              return CommonUtils.loadingIndicator();
+            } else {
+              return Positioned(
+                top: 90.h,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: EasyRefresh(
+                  onRefresh: controller.onRefresh,
+                  onLoad: controller.onLoad,
+                  child: ListView.builder(
+                    padding: EdgeInsets.zero,
+                    itemCount: controller.userList.length,
+                    itemBuilder: (context, index) {
+                      final user = controller.userList[index];
+                      return FeelDetailCard(
+                        userEntity: user,
+                        tokenEntity: controller.tokenEntity,
+                      );
+                    },
+                  ),
                 ),
-              ),
-            );
+              );
+            }
           }),
         ],
       ),

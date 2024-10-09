@@ -27,89 +27,88 @@ class UserReportPage extends StatelessWidget {
     return Scaffold(
       body: GetBuilder<UserReportController>(
         builder: (_) {
-          return Stack(
-            children: [
-              Background(
-                showMiddleText: true,
-                showBackgroundImage: false,
-                middleText: ConstantData.reportTitle,
-                child: Container(),
-              ),
-              Positioned(
-                top: 58.h,
-                right: 0.w,
-                child: AnimatedContainer(
-                  duration: Duration(milliseconds: 300),
-                  curve: Curves.easeOut,
-                  transform: Matrix4.translationValues(-8.w, 0, 0),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                      colors: [Color(0xFF20E2D7), Color(0xFFD6FAAE)],
+          return Background(
+            showMiddleText: true,
+            showBackgroundImage: false,
+            middleText: ConstantData.reportTitle,
+            child: Stack(
+              children: [
+                Positioned(
+                  top: 0.h,
+                  right: 0.w,
+                  child: AnimatedContainer(
+                    duration: Duration(milliseconds: 300),
+                    curve: Curves.easeOut,
+                    transform: Matrix4.translationValues(-8.w, 0, 0),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                        colors: [Color(0xFF20E2D7), Color(0xFFD6FAAE)],
+                      ),
+                      borderRadius: BorderRadius.circular(24.5.r),
                     ),
-                    borderRadius: BorderRadius.circular(24.5.r),
-                  ),
-                  width: 88.w,
-                  height: 36.h,
-                  child: TextButton(
-                    onPressed: () async {
-                      await controller.report();
-                    },
-                    child: Text(
-                      ConstantData.submitButtonText,
-                      style: ConstantStyles.actionButtonTextStyle,
+                    width: 88.w,
+                    height: 36.h,
+                    child: TextButton(
+                      onPressed: () async {
+                        await controller.report();
+                      },
+                      child: Text(
+                        ConstantData.submitButtonText,
+                        style: ConstantStyles.actionButtonTextStyle,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Positioned(
-                left: 10.w,
-                top: 110.h,
-                child: ReportOption(
-                  optionText: ConstantData.pornographicOption,
-                  isSelected: controller.selectedOption == ConstantData.pornographicOption,
-                  onSelect: () => controller.selectOption(ConstantData.pornographicOption),
+                Positioned(
+                  left: 10.w,
+                  top: 60.h,
+                  child: ReportOption(
+                    optionText: ConstantData.pornographicOption,
+                    isSelected: controller.selectedOption == ConstantData.pornographicOption,
+                    onSelect: () => controller.selectOption(ConstantData.pornographicOption),
+                  ),
                 ),
-              ),
-              Positioned(
-                left: 10.w,
-                top: 200.h,
-                child: ReportOption(
-                  optionText: ConstantData.violentOption,
-                  isSelected: controller.selectedOption == ConstantData.violentOption,
-                  onSelect: () => controller.selectOption(ConstantData.violentOption),
+                Positioned(
+                  left: 10.w,
+                  top: 150.h,
+                  child: ReportOption(
+                    optionText: ConstantData.violentOption,
+                    isSelected: controller.selectedOption == ConstantData.violentOption,
+                    onSelect: () => controller.selectOption(ConstantData.violentOption),
+                  ),
                 ),
-              ),
-              Positioned(
-                left: 10.w,
-                top: 290.h,
-                child: ReportOption(
-                  optionText: ConstantData.maliciousAttackOption,
-                  isSelected: controller.selectedOption == ConstantData.maliciousAttackOption,
-                  onSelect: () => controller.selectOption(ConstantData.maliciousAttackOption),
+                Positioned(
+                  left: 10.w,
+                  top: 240.h,
+                  child: ReportOption(
+                    optionText: ConstantData.maliciousAttackOption,
+                    isSelected: controller.selectedOption == ConstantData.maliciousAttackOption,
+                    onSelect: () => controller.selectOption(ConstantData.maliciousAttackOption),
+                  ),
                 ),
-              ),
-              Positioned(
-                left: 10.w,
-                top: 380.h,
-                child: ReportOption(
-                  optionText: ConstantData.disgustingOption,
-                  isSelected: controller.selectedOption == ConstantData.disgustingOption,
-                  onSelect: () => controller.selectOption(ConstantData.disgustingOption),
+                Positioned(
+                  left: 10.w,
+                  top: 330.h,
+                  child: ReportOption(
+                    optionText: ConstantData.disgustingOption,
+                    isSelected: controller.selectedOption == ConstantData.disgustingOption,
+                    onSelect: () => controller.selectOption(ConstantData.disgustingOption),
+                  ),
                 ),
-              ),
-              Positioned(
-                left: 10.w,
-                top: 470.h,
-                child: buildOtherOption(controller),
-              ),
-              Positioned(
-                left: 10.w,
-                top: 690.h,
-                child: buildImagePicker(controller),
-              ),
-            ],
+                Positioned(
+                  left: 10.w,
+                  top: 420.h,
+                  child: buildOtherOption(controller),
+                ),
+                Positioned(
+                  left: 10.w,
+                  top: 640.h,
+                  child: buildImagePicker(controller),
+                ),
+              ],
+            ),
           );
         },
       ),

@@ -10,7 +10,9 @@ import '../../../../net/dio.client.dart';
 
 
 class FiltersSearchController extends GetxController {
-  final TokenEntity tokenEntity = Get.arguments?['tokenEntity'] as TokenEntity;
+  final TokenEntity tokenEntity = Get.arguments['tokenEntity'] as TokenEntity;
+  final Map<String, dynamic> filterParams = Get.arguments?['filterParams'] as Map<String, dynamic>;
+
   var userList = <ListUserEntity>[].obs;
   var isLoading = true.obs;
   var currentPage = 1.obs;
@@ -24,66 +26,110 @@ class FiltersSearchController extends GetxController {
   }
 
   Future<void> fetchData({bool isLoadMore = false}) async {
+    if (!_shouldFetchData(isLoadMore)) return;
+
+    try {
+      await performNetworkRequest(isLoadMore);
+    } catch (e) {
+      _handleError(isLoadMore);
+    }
+  }
+
+  bool _shouldFetchData(bool isLoadMore) {
     if (!isLoadMore) {
       isLoading.value = true;
     }
+    return isLoadMore ? hasMore.value : true;
+  }
 
-    if (!hasMore.value && isLoadMore) {
-      return;
+  Future<void> performNetworkRequest(bool isLoadMore) async {
+    await dioClient.requestNetwork<List<ListUserEntity>>(
+      method: Method.get,
+      url: ApiConstants.search,
+      queryParameters: queryParameters(),
+      options: Options(headers: {'token': tokenEntity.accessToken}),
+      onSuccess: (data) => _handleSuccess(data, isLoadMore),
+      onError: (code, msg, data) => _handleError(isLoadMore),
+    );
+  }
+
+  Map<String, dynamic> queryParameters() {
+    Map<String, dynamic> params = {
+      'page': currentPage.value,
+      'offset': 20,
+    };
+
+    // 添加年龄范围
+    if (filterParams.containsKey('minAge')) {
+      params['find[minAge]'] = filterParams['minAge'];
+    }
+    if (filterParams.containsKey('maxAge')) {
+      params['find[maxAge]'] = filterParams['maxAge'];
     }
 
-    const String url = ApiConstants.likedUser;
-    try {
-      await dioClient.requestNetwork<List<dynamic>>(
-        method: Method.get,
-        url: url,
-        queryParameters: {
-          'page': currentPage.value,
-          'offset': 20
-        },
-        options: Options(headers: {'token': tokenEntity.accessToken}),
-        onSuccess: (data) {
-          final fetchedData = (data ?? [])
-              .map((e) => ListUserEntity.fromJson(e))
-              .toList();
+    // 添加寻找对象
+    if (filterParams.containsKey('lookingFor')) {
+      params['find[seeking]'] = filterParams['lookingFor'];
+    }
 
-          if (isLoadMore) {
-            userList.addAll(fetchedData);
-          } else {
-            userList.assignAll(fetchedData);
-          }
-          hasMore.value = fetchedData.length >= 20;
-          isLoading.value = false;
+    // 添加距离
+    if (filterParams.containsKey('selectedDistance')) {
+      params['find[distance]'] = filterParams['selectedDistance'];
+    }
 
-          // 检查是否没有数据
-          if (userList.isEmpty && !isLoadMore) {
-            showNoDataDialog();
-          }
-        },
-        onError: (code, msg, data) {
-          isLoading.value = false;
-          if (!isLoadMore) {
-            showNoDataDialog();
-          }
-        },
-      );
-    } catch (e) {
-      isLoading.value = false;
-      if (!isLoadMore) {
-        showNoDataDialog();
-      }
+    // 添加地理位置信息
+    if (filterParams.containsKey('countryId')) {
+      params['find[country]'] = filterParams['countryId'];
+    }
+    if (filterParams.containsKey('stateId')) {
+      params['find[state]'] = filterParams['stateId'];
+    }
+    if (filterParams.containsKey('cityId')) {
+      params['find[city]'] = filterParams['cityId'];
+    }
+
+    return params;
+  }
+
+
+  void _handleSuccess(List<ListUserEntity>? data, bool isLoadMore) {
+    if (data != null) {
+      _updateUserList(data, isLoadMore);
+      hasMore.value = data.length >= 20;
+    }
+    isLoading.value = false;
+
+    if (userList.isEmpty && !isLoadMore) {
+      showNoDataDialog();
     }
   }
+
+  void _updateUserList(List<ListUserEntity> data, bool isLoadMore) {
+    if (isLoadMore) {
+      userList.addAll(data);
+    } else {
+      userList.assignAll(data);
+    }
+  }
+
+  void _handleError(bool isLoadMore) {
+    isLoading.value = false;
+    if (!isLoadMore) {
+      showNoDataDialog();
+    }
+  }
+
+
 
   void showNoDataDialog() {
     Get.dialog(
       CustomContentDialog(
-        title:ConstantData.noticeText,
-        content: ConstantData.noticeAboutLiked,
+        title:ConstantData.filterNoResultTitle      ,
+        content: ConstantData.filterNoResultContent,
         buttonText: ConstantData.okText,
         onButtonPressed: () {
-          Get.back(); // Close the dialog
-          Get.back(); // Return to the previous page
+          Get.back();
+          Get.back();
         },
       ),
     );

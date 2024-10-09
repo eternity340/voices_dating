@@ -8,6 +8,7 @@ import 'package:voices_dating/entity/token_entity.dart';
 import 'package:voices_dating/entity/user_data_entity.dart';
 import '../../../../../net/dio.client.dart';
 import '../../../../../service/app_service.dart';
+import '../../my_profile_page.dart';
 
 class ChangeAgeController extends GetxController {
   final FixedExtentScrollController dayController = FixedExtentScrollController();

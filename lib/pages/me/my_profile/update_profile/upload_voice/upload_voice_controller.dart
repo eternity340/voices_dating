@@ -235,10 +235,15 @@ class UploadVoiceController extends GetxController {
   }
 
   void navigateToMeMyProfilePage() {
-    Get.to(() => MyProfilePage(), arguments: {
-      'tokenEntity': tokenEntity,
-      'userDataEntity': userData,
-    });
+    Get.to(
+          () => MyProfilePage(),
+      arguments: {
+        'tokenEntity': tokenEntity,
+        'userDataEntity': userData,
+      },
+      transition: Transition.cupertinoDialog,
+      duration: Duration(milliseconds: 500),
+    );
   }
 
   @override

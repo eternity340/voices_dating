@@ -18,7 +18,7 @@ class MePage extends StatelessWidget {
   final MeController controller = Get.put(MeController());
   final tokenEntity = Get.arguments['tokenEntity'] as TokenEntity;
   final userDataEntity = Get.arguments['userDataEntity'] as UserDataEntity;
-
+  final bool isMeActive = Get.arguments['isMeActive'] as bool? ?? false;
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -56,7 +56,11 @@ class MePage extends StatelessWidget {
               left: 20.w,
               child: optionsSection(context, tokenEntity, userDataEntity),
             ),
-            AllNavigationBar(tokenEntity: tokenEntity, userData: userDataEntity),
+            AllNavigationBar(
+              tokenEntity: tokenEntity,
+              userData: userDataEntity,
+              isMeActive: isMeActive,  // 传递 isMeActive
+            ),
           ],
         ),
       ),
@@ -66,12 +70,12 @@ class MePage extends StatelessWidget {
   Widget topIcons() {
     return Row(
       children: [
-        buildIconButton(ImageRes.imagePathIconNotification, () {
+        /*buildIconButton(ImageRes.imagePathIconNotification, () {
           Get.toNamed(AppRoutes.meNotification,
               arguments: {
                 'tokenEntity': tokenEntity,
                 'userDataEntity': userDataEntity});
-        }),
+        }),*/
         SizedBox(width: 5.w),
         buildIconButton(ImageRes.imagePathIconSetting, () {
           Get.toNamed(AppRoutes.meSettings,
@@ -101,21 +105,32 @@ class MePage extends StatelessWidget {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              CustomPaint(size: Size(95.w, 105.h), painter: OuterOvalPainter()),
+              CustomPaint(size: Size(100.w, 110.h), painter: OuterOvalPainter()),
               ClipOval(
-                child: Image.network(
-                  userData.avatar ?? ImageRes.placeholderAvatar,
-                  width: 95.w,
-                  height: 105.h,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Image.asset(
-                      ImageRes.placeholderAvatar,
-                      width: 95.w,
-                      height: 95.h,
-                      fit: BoxFit.cover,
-                    );
-                  },
+                child: Container(
+                  width: 98.w,
+                  height: 107.h,
+                  child: userData.avatar != null
+                      ? Image.network(
+                    userData.avatar!,
+                    width: 95.w,
+                    height: 105.h,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.asset(
+                        ImageRes.placeholderAvatar,
+                        width: 95.w,
+                        height: 105.h,
+                        fit: BoxFit.cover,
+                      );
+                    },
+                  )
+                      : Image.asset(
+                    ImageRes.placeholderAvatar,
+                    width: 95.w,
+                    height: 105.h,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
               Positioned(
@@ -134,7 +149,8 @@ class MePage extends StatelessWidget {
                       Get.toNamed(AppRoutes.mePhoto,
                           arguments: {
                             'tokenEntity': tokenEntity,
-                            'userDataEntity': userData});
+                            'userDataEntity': userData
+                          });
                     },
                   ),
                 ),

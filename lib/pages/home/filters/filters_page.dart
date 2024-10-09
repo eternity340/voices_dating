@@ -6,6 +6,7 @@ import 'package:voices_dating/components/gradient_btn.dart';
 import 'package:voices_dating/constants/constant_data.dart';
 import 'package:voices_dating/constants/Constant_styles.dart';
 import 'package:voices_dating/pages/home/filters/filters_controller.dart';
+import 'package:voices_dating/pages/home/filters/filters_widget/switch_toggle_filter.dart';
 
 import 'filters_widget/age_filter.dart';
 import 'filters_widget/location_filter.dart';
@@ -48,6 +49,8 @@ class FiltersPage extends StatelessWidget {
                   LookingForFilter(controller: controller),
                   SizedBox(height: 20.h),
                   LocationFilter(controller: controller),
+                  SizedBox(height: 20.h,),
+                  SwitchToggleFilter(controller: controller),
                 ],
               ),
             ),

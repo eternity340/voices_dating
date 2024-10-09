@@ -1,3 +1,6 @@
+import 'package:flutter/services.dart';
+import 'package:voices_dating/components/background.dart';
+import 'package:voices_dating/pages/me/me_page.dart';
 import 'package:voices_dating/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,73 +25,64 @@ class _MyProfilePageState extends State<MyProfilePage> {
   Widget build(BuildContext context) {
     final tokenEntity = Get.arguments['tokenEntity'] as TokenEntity;
     final userData = Get.arguments['userDataEntity'] as UserDataEntity;
-    return Scaffold(
-      body: Stack(
-        children: [
-          Positioned(
-            top: 60.h,
-            left: 16.w,
-            right: 16.w,
-            child: Row(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Get.toNamed(AppRoutes.me,
-                        arguments: {
-                          'tokenEntity': tokenEntity,
-                          'userDataEntity': userData});
-                  },
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        ImageRes.imagePathBackButton,
-                        width: 24.w,
-                        height: 24.h,
-                      ),
-                      SizedBox(width: 8.w),
-                      Text(
-                        ConstantData.backText,
-                        style: ConstantStyles.backButtonTextStyle,
-                      ),
-                    ],
-                  ),
-                ),
-                Spacer(),
-                Text(
-                  ConstantData.myProfileTitle,
-                  style: ConstantStyles.myProfileTitleTextStyle,
-                ),
-                Spacer(flex: 2),
-              ],
+
+    void navigateToMePage() {
+      Get.to(
+            () => MePage(),
+        arguments: {
+          'tokenEntity': tokenEntity,
+          'userDataEntity': userData,
+          'isMeActive': true,
+        },
+        transition: Transition.cupertinoDialog,
+        duration: Duration(milliseconds: 500),
+      );
+    }
+
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) return;
+        navigateToMePage();
+      },
+      child: Scaffold(
+        body: Stack(
+          children: [
+            Background(
+                showBackButton: true,
+                showMiddleText: true,
+                middleText: ConstantData.myProfileTitle,
+                showBackgroundImage: false,
+                onBackPressed: navigateToMePage,
+                child: Stack()),
+            Positioned(
+              top: 100.h,
+              left: 10.w,
+              right: 0,
+              child: _buildOptionsRow(),
             ),
-          ),
-          Positioned(
-            top: 120.h,
-            left: 10.w,
-            right: 0,
-            child: _buildOptionsRow(),
-          ),
-          Positioned(
-            top: 190.h,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: PageView(
-              controller: _pageController,
-              onPageChanged: (index) {
-                setState(() {
-                  selectedOption = index == 0
-                      ? ConstantData.profileOption
-                      : ConstantData.momentsOption;
-                });
-              },
-              children: [
-                ProfileContent(tokenEntity: tokenEntity, userData: userData),
-                MomentsContent(tokenEntity: tokenEntity, userData: userData),
-              ],
+            Positioned(
+              top: 170.h,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: PageView(
+                controller: _pageController,
+                onPageChanged: (index) {
+                  setState(() {
+                    selectedOption = index == 0
+                        ? ConstantData.profileOption
+                        : ConstantData.momentsOption;
+                  });
+                },
+                children: [
+                  ProfileContent(tokenEntity: tokenEntity, userData: userData),
+                  MomentsContent(tokenEntity: tokenEntity, userData: userData),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -15,66 +15,66 @@ class MomentsDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          Background(
-            showBackgroundImage: true,
-            showSettingButton: false,
-            showBackButton: true,
-            child: Container(),
-          ),
-          Positioned(
-            left: 20.w,
-            top: 109.h,
-            right: 20.w,
-            bottom: 70.h,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  MomentsCard(
-                    showButtons: false,
-                    moment: controller.moment,
-                    tokenEntity: controller.tokenEntity,
-                    onLoveButtonPressed: () {},
-                  ),
-                  SizedBox(height: 10.h),
-                  _buildLikesSection(),
-                  SizedBox(height: 24.h),
-                  _buildCommentsSection(),
-                ],
+    return Background(
+      showBackgroundImage: true,
+      showSettingButton: false,
+      showBackButton: true,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Stack(
+          children: [
+            Positioned(
+              left: 20.w,
+              top: 60.h,
+              right: 20.w,
+              bottom: 70.h,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    MomentsCard(
+                      showButtons: false,
+                      moment: controller.moment,
+                      tokenEntity: controller.tokenEntity,
+                      userDataEntity: controller.userData,
+                      onLoveButtonPressed: () {},
+                    ),
+                    SizedBox(height: 10.h),
+                    _buildLikesSection(),
+                    SizedBox(height: 24.h),
+                    _buildCommentsSection(),
+                  ],
+                ),
               ),
             ),
-          ),
-          Positioned(
-            left: 298.w,
-            top: 55.h,
-            child: GestureDetector(
-              onTap: () => controller.showOptionsBottomSheet(context),
-              child: Image.asset(
-                ImageRes.imagePathSettingButton,
-                width: 40.w,
-                height: 40.h,
+            Positioned(
+              right: 18.w,
+              top: 0.h,
+              child: GestureDetector(
+                onTap: () => controller.showOptionsBottomSheet(context),
+                child: Image.asset(
+                  ImageRes.imagePathSettingButton,
+                  width: 40.w,
+                  height: 40.h,
+                ),
               ),
             ),
-          ),
-
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Obx(() => DetailBottomBar(
-              showMomentLikeButton: true,
-              showCallButton: false,
-              showMessageButton: false,
-              gradientButtonText: controller.isCommentInputVisible.value ? ConstantData.sendText : ConstantData.commentText,
-              onGradientButtonPressed: controller.toggleCommentInput,
-              tokenEntity: controller.tokenEntity,
-              moment: controller.moment,
-            )),
-          ),
-        ],
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Obx(() => DetailBottomBar(
+                showMomentLikeButton: true,
+                showCallButton: false,
+                showMessageButton: false,
+                gradientButtonText: controller.isCommentInputVisible.value ? ConstantData.sendText : ConstantData.commentText,
+                onGradientButtonPressed: controller.toggleCommentInput,
+                tokenEntity: controller.tokenEntity,
+                moment: controller.moment,
+              )),
+            ),
+          ],
+        ),
       ),
     );
   }

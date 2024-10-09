@@ -18,9 +18,7 @@ class MeController extends GetxController {
 
   Future<void> fetchUserData() async {
     try {
-      final data = await globalService.getUserData(
-        accessToken: tokenEntity.accessToken!,
-      );
+      final data = await globalService.getUserData();
 
       if (data != null) {
         userData = data;

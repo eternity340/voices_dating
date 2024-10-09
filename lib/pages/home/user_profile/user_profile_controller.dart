@@ -9,17 +9,20 @@ import '../../../entity/chatted_user_entity.dart';
 import '../../../entity/ret_entity.dart';
 import '../../../entity/token_entity.dart';
 import '../../../entity/user_data_entity.dart';
+import '../../../entity/wink_entity.dart';
 import '../../../net/dio.client.dart';
 import '../../../service/global_service.dart';
 import '../../../utils/log_util.dart';
 import '../../../components/custom_message_dialog.dart';
+import '../components/wink_selection_bottom_sheet.dart';
 
 class UserProfileController extends GetxController {
   final TokenEntity tokenEntity;
   final UserDataEntity userDataEntity;
-  final DioClient dioClient = DioClient();
+  final DioClient dioClient = DioClient.instance;
   final GlobalService globalService = Get.find<GlobalService>();
   RxList<MomentEntity> moments = <MomentEntity>[].obs;
+  RxList<WinkEntity> winkTypes = <WinkEntity>[].obs;
 
   UserProfileController({required this.userDataEntity, required this.tokenEntity});
 
@@ -76,7 +79,40 @@ class UserProfileController extends GetxController {
   }
 
   void onWinkButtonPressed() {
+    WinkSelectionBottomSheet.show(
+      title: ConstantData.winkTitle,
+      onItemSelected: (WinkEntity selectedWink) {
+        _sendWink(selectedWink);
+      },
+    );
+  }
 
+  Future<void> _sendWink(WinkEntity selectedWink) async {
+    final userData = await globalService.getUserData();
+    DioClient.instance.requestNetwork<RetEntity>(
+      method: Method.post,
+      url: ApiConstants.setWinkedUser,
+      options: Options(headers: {'token': tokenEntity.accessToken}),
+      params: {
+        'profId': userDataEntity.userId,
+        'winkedType': selectedWink.id,
+        'userId': userData!.userId,
+      },
+      onSuccess: (data) {
+        if (data != null && data.ret) {
+          Get.snackbar(ConstantData.successText, 'Wink sent successfully');
+        } else {
+          Get.snackbar(ConstantData.failedText, 'Failed to send wink');
+        }
+      },
+      onError: (code, msg, data) {
+        if(code == 30004019){
+          Get.snackbar(ConstantData.sorryText, msg);
+        }else{
+          Get.snackbar(ConstantData.errorText, msg);
+        }
+      },
+    );
   }
 
   void onCallButtonPressed() {

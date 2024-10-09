@@ -27,6 +27,8 @@ class DioClient{
 
   late CancelToken cancelToken;
 
+  bool _isNetworkErrorDialogShowing = false;
+
 
   DioClient._(){
     _dio = Dio();
@@ -156,20 +158,22 @@ class DioClient{
       _cancelLogPrint(e, url);
       final NetError error = ExceptionHandler.handleException(e);
       if (error.code == ExceptionHandler.net_error || error.code == ExceptionHandler.socket_error) {
-        _showNetworkErrorDialog(() {
-          // 重试请求
-          requestNetwork(
-            method: method,
-            url: url,
-            onSuccess: onSuccess,
-            onError: onError,
-            params: params,
-            queryParameters: queryParameters,
-            cancelToken: cancelToken,
-            options: options,
-            formParams: formParams,
-          );
-        });
+        if (!_isNetworkErrorDialogShowing) {
+          _showNetworkErrorDialog(() {
+            // 重试请求
+            requestNetwork(
+              method: method,
+              url: url,
+              onSuccess: onSuccess,
+              onError: onError,
+              params: params,
+              queryParameters: queryParameters,
+              cancelToken: cancelToken,
+              options: options,
+              formParams: formParams,
+            );
+          });
+        }
       } else {
         _onError<T>(error.code, error.msg, onError, null, requestUrl: url);
       }
@@ -177,6 +181,9 @@ class DioClient{
   }
 
   void _showNetworkErrorDialog(VoidCallback onRetry) {
+    if (_isNetworkErrorDialogShowing) return;
+
+    _isNetworkErrorDialogShowing = true;
     getX.Get.dialog(
       CustomContentDialog(
         title: 'Network Error',
@@ -184,11 +191,14 @@ class DioClient{
         buttonText: 'Retry',
         onButtonPressed: () {
           getX.Get.back(); // 关闭对话框
+          _isNetworkErrorDialogShowing = false; // 重置标志
           onRetry(); // 执行重试操作
         },
       ),
       barrierDismissible: false,
-    );
+    ).then((_) {
+      _isNetworkErrorDialogShowing = false; // 确保对话框关闭时重置标志
+    });
   }
 
   void asyncRequestNetwork<T>(

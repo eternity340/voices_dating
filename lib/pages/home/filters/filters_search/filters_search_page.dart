@@ -47,6 +47,7 @@ class FiltersSearchPage extends StatelessWidget{
                     return FeelDetailCard(
                       userEntity: user,
                       tokenEntity: controller.tokenEntity,
+                      showCoinAndService: false,
                     );
                   },
                 ),

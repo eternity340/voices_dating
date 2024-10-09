@@ -15,10 +15,10 @@ class LikedMeContent extends StatefulWidget {
   const LikedMeContent({Key? key, required this.controller}) : super(key: key);
 
   @override
-  _ViewedMeContentState createState() => _ViewedMeContentState();
+  _LikedMeContentState createState() => _LikedMeContentState();
 }
 
-class _ViewedMeContentState extends State<LikedMeContent> {
+class _LikedMeContentState extends State<LikedMeContent> {
   late EasyRefreshController _refreshController;
 
   @override
@@ -41,12 +41,24 @@ class _ViewedMeContentState extends State<LikedMeContent> {
         onRefresh: () async {
           await widget.controller.getLikedMeUsers();
           _refreshController.finishRefresh();
+          _refreshController.resetLoadState();
+        },
+        onLoad: () async {
+          await widget.controller.onLoadLikedMe();
+          if (widget.controller.likedMeUsers.length % widget.controller.likeMeOffset == 0) {
+            _refreshController.finishLoad(success: true, noMore: false);
+          } else {
+            _refreshController.finishLoad(success: true, noMore: true);
+          }
         },
         child: widget.controller.likedMeUsers.isEmpty
             ? Center(child: Text(ConstantData.noOneLikedMeText))
             : ListView.builder(
-          itemCount: widget.controller.likedMeUsers.length,
+          itemCount: widget.controller.likedMeUsers.length + 1,
           itemBuilder: (context, index) {
+            if (index == widget.controller.likedMeUsers.length) {
+              return SizedBox(height: 200.h);
+            }
             final user = widget.controller.likedMeUsers[index];
             return _buildUserItem(user);
           },
@@ -76,9 +88,23 @@ class _ViewedMeContentState extends State<LikedMeContent> {
                 Positioned(
                   left: 70.w,
                   top: 0.h,
-                  child: Text(
-                    user.username ?? '',
-                    style: ConstantStyles.usernameMessageStyle,
+                  child: Row(
+                    children: [
+                      Text(
+                        user.username ?? '',
+                        style: ConstantStyles.usernameMessageStyle,
+                      ),
+                      SizedBox(width: 5.w),
+                      if (user.online == "0")
+                        Container(
+                          width: 8.w,
+                          height: 8.w,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Color(0xFFABFFCF),
+                          ),
+                        ),
+                    ],
                   ),
                 ),
                 Positioned(
@@ -115,6 +141,7 @@ class _ViewedMeContentState extends State<LikedMeContent> {
       ),
     );
   }
+
 
   void _navigateToPrivateChat(ListUserEntity user) {
     ChattedUserEntity chattedUser = ChattedUserEntity(

@@ -120,7 +120,7 @@ class SignForm extends StatelessWidget {
           SizedBox(height: 200.h),
           Center(
             child: GradientButton(
-              text: "Submit",
+              text: "SUBMIT",
               onPressed: model.isLoading ? (){} : () => model.signIn(),
             ),
           ),

@@ -37,6 +37,7 @@ import '../user_location_entity.dart';
 import '../user_options_entity.dart';
 import '../user_photo_entity.dart';
 import '../user_voice_entity.dart';
+import '../wink_entity.dart';
 
 void tryCatch(Function? f) {
   try {
@@ -192,6 +193,9 @@ M _generateItemOBJ<M>(String typeStr, dynamic jsonObj) {
       break;
     case 'TagEntity':
       obj = TagEntity.fromJson(jsonObj);
+      break;
+    case 'WinkEntity':
+      obj = WinkEntity.fromJson(jsonObj);
       break;
     case 'OptionEntity':
       obj = OptionEntity.fromJson(jsonObj);
@@ -391,6 +395,12 @@ T _generateOBJList<T>(String typeStr, List data) {
       list = data
           .map<TagEntity>(
               (e) => _generateItemOBJ<TagEntity>(typeStr, e))
+          .toList();
+      break;
+    case 'WinkEntity':
+      list = data
+          .map<WinkEntity>(
+              (e) => _generateItemOBJ<WinkEntity>(typeStr, e))
           .toList();
       break;
     case 'OptionEntity':

@@ -2,6 +2,7 @@ import 'package:common_utils/common_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
+import 'package:voices_dating/routes/app_routes.dart';
 import '../../../entity/current_location_entity.dart';
 import '../../../entity/token_entity.dart';
 import '../../../net/dio.client.dart';
@@ -173,8 +174,6 @@ class FiltersController extends GetxController {
     );
   }
 
-
-
   void onSavePressed() {
     String lookingForValue;
     if (selectedLookingFor.length == 1) {
@@ -182,32 +181,23 @@ class FiltersController extends GetxController {
     } else if (selectedLookingFor.length > 1) {
       lookingForValue = '3';
     } else {
-      lookingForValue = ''; // 或者可以设置一个默认值
+      lookingForValue = '';
     }
 
-    Map<String, dynamic> result = {
+    Map<String, dynamic> filterParams = {
       'minAge': minAge.value,
       'maxAge': maxAge.value,
       'lookingFor': lookingForValue,
-      'locationOption': locationOption.value,
       'countryId': selectedCountryId,
       'stateId': selectedStateId,
       'cityId': selectedCityId,
-      'selectedDistance':selectedDistance
+      'selectedDistance': selectedDistance.value
     };
 
-    // 使用 snackbar 显示信息
-    Get.snackbar(
-      'Filter Settings',
-      'Settings saved successfully',
-      messageText: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: result.entries.map((e) => Text('${e.key}: ${e.value}')).toList(),
-      ),
-      duration: Duration(seconds: 5),
-    );
-
-    // 如果需要返回结果，可以取消注释下面的行
-    // Get.back(result: result);
+    Get.toNamed(AppRoutes.homeFiltersSearch, arguments: {
+      'tokenEntity': tokenEntity,
+      'filterParams': filterParams
+    });
   }
+
 }

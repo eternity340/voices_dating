@@ -10,6 +10,7 @@ import '../../../../../entity/token_entity.dart';
 import '../../../../../entity/user_data_entity.dart';
 import '../../../../../image_res/image_res.dart';
 import '../../../../../components/custom_content_dialog.dart';
+import '../../my_profile_page.dart';
 
 class ChangeLocation extends StatelessWidget {
   final TokenEntity tokenEntity = Get.arguments['tokenEntity'] as TokenEntity;
@@ -100,9 +101,14 @@ class ChangeLocation extends StatelessWidget {
   }
 
   void navigateToMyProfile() {
-    Get.offAllNamed(AppRoutes.meMyProfile, arguments: {
-      'tokenEntity': tokenEntity,
-      'userDataEntity': userData,
-    });
+    Get.offAll(
+          () => MyProfilePage(),
+      arguments: {
+        'tokenEntity': tokenEntity,
+        'userDataEntity': userData,
+      },
+      transition: Transition.cupertinoDialog,
+      duration: Duration(milliseconds: 500),
+    );
   }
 }

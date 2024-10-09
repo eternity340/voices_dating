@@ -102,9 +102,9 @@ class MomentsPage extends StatelessWidget {
             top: 99.h,
             child: Container(
               width: 335.w,
-              height: 650.h,
+              height: ScreenUtil().screenHeight,
               child: Obx(() {
-                if (controller.isLoading.value && controller.moments.isEmpty) {
+                if (controller.isInitialLoading.value) {
                   return CommonUtils.loadingIndicator();
                 } else {
                   return EasyRefresh(
@@ -124,9 +124,10 @@ class MomentsPage extends StatelessWidget {
                                 });
                           },
                           child: MomentsCard(
-                            moment: controller.moments[index],
-                            tokenEntity: controller.tokenEntity,
-                            onLoveButtonPressed: controller.refreshMoments,
+                              moment: controller.moments[index],
+                              tokenEntity: controller.tokenEntity,
+                              onLoveButtonPressed: controller.refreshMoments,
+                              userDataEntity: controller.userDataEntity
                           ),
                         );
                       },

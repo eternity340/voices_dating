@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:dio/dio.dart' as dio;
+import 'package:voices_dating/pages/me/me_page.dart';
 import '../../../../components/custom_content_dialog.dart';
 import '../../../../entity/base_entity.dart';
 import '../../../../entity/ret_entity.dart';
@@ -29,9 +30,9 @@ class VerifyPhotoController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    /*WidgetsBinding.instance.addPostFrameCallback((_) {
       checkVerificationStatus();
-    });
+    });*/
   }
 
   void checkVerificationStatus() {
@@ -56,9 +57,11 @@ class VerifyPhotoController extends GetxController {
         title: ConstantData.verificationApprovalTitle,
         content: ConstantData.verificationApprovalMessage,
         buttonText: ConstantData.gotItText,
-        onButtonPressed: () => Get.offAllNamed(AppRoutes.me,arguments: {
+        onButtonPressed: () => Get.to(()=>MePage(),arguments: {
           'tokenEntity': tokenEntity,
-          'userDataEntity': userData}),
+          'userDataEntity': userData,
+          'isMeActive': true
+        }),
       ),
       barrierDismissible: false,
     );

@@ -223,7 +223,7 @@ class MomentsCard extends StatelessWidget {
     final globalService = Get.find<GlobalService>();
     final userDataEntity = await globalService.getUserProfile(
       userId: moment.userId ?? '',
-      accessToken: tokenEntity.accessToken.toString(),
+      //accessToken: tokenEntity.accessToken.toString(),
     );
 
     if (userDataEntity != null) {

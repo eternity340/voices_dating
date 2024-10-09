@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:voices_dating/constants/Constant_styles.dart';
 import 'package:voices_dating/service/global_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -9,6 +10,7 @@ import 'package:just_audio/just_audio.dart';
 import '../../../components/bar/bar.dart';
 import '../../../components/bar/bar_scale_pulse_out_loading.dart';
 import '../../../components/photo_dialog.dart';
+import '../../../image_res/image_res.dart';
 import 'components/chat_input_bar.dart';
 import 'private_chat_controller.dart';
 import 'package:voices_dating/components/background.dart';
@@ -59,18 +61,28 @@ class _PrivateChatPageState extends State<PrivateChatPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
+      body: Background(
+        showBackButton: true,
+        showMiddleText: true,
+        showBackgroundImage: false,
+        middleText: controller.chattedUser.username.toString(),
+        child: Stack(
         children: [
-          Background(
-            showBackButton: true,
-            showMiddleText: true,
-            showBackgroundImage: false,
-            middleText: controller.chattedUser.username.toString(),
-            child: const SizedBox.shrink(),
+          Positioned(
+            right:10.w,
+            top: 0.h,
+            child: GestureDetector(
+              onTap: () => controller.showOptionsBottomSheet(context),
+              child: Image.asset(
+                ImageRes.imagePathSettingButton,
+                width: 40.w,
+                height: 40.h,
+              ),
+            ),
           ),
           Column(
             children: [
-              SizedBox(height: 100.h),
+              SizedBox(height: 50.h),
               Expanded(
                 child: Obx(() => EasyRefresh(
                     controller: _easyRefreshController,
@@ -92,7 +104,7 @@ class _PrivateChatPageState extends State<PrivateChatPage>
                     itemCount: controller.messages.length,
                     itemBuilder: (context, index) {
                       final message = controller.messages[index];
-                      final isSentByUser = message.profId == controller.chattedUser.userId;
+                      final isSentByChatUser = message.profId == controller.chattedUser.userId;
                       final formattedTime = controller.formatTimestamp(message.created);
                       final avatarUrl = message.sender?.profile?.avatarUrl ?? '';
                       final bool showTimeDivider = index == 0 ||
@@ -101,7 +113,7 @@ class _PrivateChatPageState extends State<PrivateChatPage>
                             controller.messages[index - 1].created,
                           );
                       return Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.w),  
+                        padding: EdgeInsets.symmetric(horizontal: 16.w),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -117,11 +129,11 @@ class _PrivateChatPageState extends State<PrivateChatPage>
                               ),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: isSentByUser
+                              mainAxisAlignment: isSentByChatUser
                                   ? MainAxisAlignment.start
                                   : MainAxisAlignment.end,
                               children: [
-                                if (isSentByUser)
+                                if (isSentByChatUser)
                                   GestureDetector(
                                     onTap: () => controller.onAvatarTap(controller.chattedUser.userId ?? ''),
                                     child: CircleAvatar(
@@ -129,17 +141,17 @@ class _PrivateChatPageState extends State<PrivateChatPage>
                                       backgroundImage: NetworkImage(avatarUrl),
                                     ),
                                   ),
-                                if (isSentByUser) SizedBox(width: 10.w),
+                                if (isSentByChatUser) SizedBox(width: 10.w),
                                 Flexible(
                                   child: ConstrainedBox(
                                     constraints: BoxConstraints(
-                                      maxWidth: MediaQuery.of(context).size.width * 0.73 - 32.w,  // 减去左右边距
+                                      maxWidth: MediaQuery.of(context).size.width * 0.73 - 32.w,
                                     ),
                                     child: Container(
                                       margin: EdgeInsets.symmetric(vertical: 10.h),
                                       padding: EdgeInsets.all(10.w),
                                       decoration: BoxDecoration(
-                                        color: isSentByUser
+                                        color: isSentByChatUser
                                             ? Color(0xFFFFAFAB)
                                             : Color(0xFFABFFCF),
                                         borderRadius: BorderRadius.circular(10.w),
@@ -148,10 +160,10 @@ class _PrivateChatPageState extends State<PrivateChatPage>
                                     ),
                                   ),
                                 ),
-                                if (!isSentByUser) SizedBox(width: 10.w),
-                                if (!isSentByUser)
+                                if (!isSentByChatUser) SizedBox(width: 10.w),
+                                if (!isSentByChatUser)
                                   GestureDetector(
-                                    onTap: () => controller.onAvatarTap(controller.chattedUser.userId ?? ''),
+                                    onTap: () => controller.onAvatarTap(controller.userDataEntity.userId ?? ''),
                                     child: CircleAvatar(
                                       radius: 20.w,
                                       backgroundImage: NetworkImage(avatarUrl),
@@ -175,6 +187,7 @@ class _PrivateChatPageState extends State<PrivateChatPage>
             ],
           ),
         ],
+      ),
       ),
       resizeToAvoidBottomInset: true,
     );
@@ -209,12 +222,7 @@ class _PrivateChatPageState extends State<PrivateChatPage>
       default: // Text message
         return Text(
           message.message.toString(),
-          style: TextStyle(
-              fontFamily: 'Poppins',
-              fontWeight: FontWeight.w500,
-              fontSize: 16.sp,
-              color: Colors.black
-          ),
+          style: ConstantStyles.yourIdTextStyle
         );
     }
   }
@@ -241,7 +249,7 @@ class _PrivateChatPageState extends State<PrivateChatPage>
                   progress: _currentlyPlayingIndex == index
                       ? _animationController
                       : AlwaysStoppedAnimation(0),
-                  color: Colors.black,  // Changed to black
+                  color: Colors.black,
                   size: 20.sp,
                 ),
               ),
@@ -254,7 +262,7 @@ class _PrivateChatPageState extends State<PrivateChatPage>
                     ? BarScalePulseOutLoading(
                   width: 2.w,
                   height: 15.h,
-                  color: Colors.black,  // Changed to black
+                  color: Colors.black,
                   duration: const Duration(milliseconds: 800),
                 )
                     : Row(
@@ -275,7 +283,7 @@ class _PrivateChatPageState extends State<PrivateChatPage>
               width: 18.w,
               child: Text(
                 '${durationSeconds.toInt()}"',
-                style: TextStyle(color: Colors.black, fontSize: 12.sp),  // Changed to black
+                style: TextStyle(color: Colors.black, fontSize: 12.sp),
                 textAlign: TextAlign.right,
               ),
             ),
@@ -354,3 +362,120 @@ class _PrivateChatPageState extends State<PrivateChatPage>
   }
 }
 
+/*Stack(
+        children: [
+          Background(
+            showBackButton: true,
+            showMiddleText: true,
+            showBackgroundImage: false,
+            middleText: controller.chattedUser.username.toString(),
+            child: const SizedBox.shrink(),
+          ),
+          Column(
+            children: [
+              SizedBox(height: 100.h),
+              Expanded(
+                child: Obx(() => EasyRefresh(
+                    controller: _easyRefreshController,
+                    header: ClassicalHeader(
+                      refreshText: "Pull to load more",
+                      refreshReadyText: "Release to load more",
+                      refreshingText: "Loading...",
+                      refreshedText: "Loaded successfully",
+                      bgColor: Colors.transparent,
+                      textColor: Colors.grey,
+                      infoColor: Colors.grey,
+                    ),
+                    onRefresh: () async {
+                      await controller.loadMoreMessages();
+                      _easyRefreshController.finishRefresh();
+                    },
+                  child: ListView.builder(
+                    controller: controller.scrollController,
+                    itemCount: controller.messages.length,
+                    itemBuilder: (context, index) {
+                      final message = controller.messages[index];
+                      final isSentByChatUser = message.profId == controller.chattedUser.userId;
+                      final formattedTime = controller.formatTimestamp(message.created);
+                      final avatarUrl = message.sender?.profile?.avatarUrl ?? '';
+                      final bool showTimeDivider = index == 0 ||
+                          controller.shouldShowTimeDivider(
+                            message.created,
+                            controller.messages[index - 1].created,
+                          );
+                      return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (showTimeDivider)
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 10.h),
+                                child: Center(
+                                  child: Text(
+                                    formattedTime,
+                                    style: TextStyle(color: Colors.grey, fontSize: 12.sp),
+                                  ),
+                                ),
+                              ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: isSentByChatUser
+                                  ? MainAxisAlignment.start
+                                  : MainAxisAlignment.end,
+                              children: [
+                                if (isSentByChatUser)
+                                  GestureDetector(
+                                    onTap: () => controller.onAvatarTap(controller.chattedUser.userId ?? ''),
+                                    child: CircleAvatar(
+                                      radius: 20.w,
+                                      backgroundImage: NetworkImage(avatarUrl),
+                                    ),
+                                  ),
+                                if (isSentByChatUser) SizedBox(width: 10.w),
+                                Flexible(
+                                  child: ConstrainedBox(
+                                    constraints: BoxConstraints(
+                                      maxWidth: MediaQuery.of(context).size.width * 0.73 - 32.w,
+                                    ),
+                                    child: Container(
+                                      margin: EdgeInsets.symmetric(vertical: 10.h),
+                                      padding: EdgeInsets.all(10.w),
+                                      decoration: BoxDecoration(
+                                        color: isSentByChatUser
+                                            ? Color(0xFFFFAFAB)
+                                            : Color(0xFFABFFCF),
+                                        borderRadius: BorderRadius.circular(10.w),
+                                      ),
+                                      child: _buildMessageContent(message, index),
+                                    ),
+                                  ),
+                                ),
+                                if (!isSentByChatUser) SizedBox(width: 10.w),
+                                if (!isSentByChatUser)
+                                  GestureDetector(
+                                    onTap: () => controller.onAvatarTap(controller.userDataEntity.userId ?? ''),
+                                    child: CircleAvatar(
+                                      radius: 20.w,
+                                      backgroundImage: NetworkImage(avatarUrl),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                )),
+              ),
+              ChatInputBar(
+                textController: controller.textController,
+                onSend: controller.sendTextMessage,
+                tokenEntity: controller.tokenEntity,
+                chattedUserEntity: controller.chattedUser,
+              ),
+            ],
+          ),
+        ],
+      )*/

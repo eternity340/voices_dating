@@ -118,9 +118,11 @@ class ConstantData {
   static const yesText='Yes';
   static const noText='No';
   static const okText = 'OK';
+  static const andText = " and ";
   static const successText = 'success';
   static const sendSuccess ="sent successfully";
   static const failedText = 'failed';
+  static const sorryText = 'sorry';
   static const sendFailed = "Failed to send ";
   static const confirmDel = 'Confirm Delete';
   static const userDataNotFound = 'User data not found. Please log in again.';
@@ -130,6 +132,8 @@ class ConstantData {
   static const setAvatarTitle = 'Set Avatar';
   static const setAvatarContent = "Are you sure you want to set this photo as your avatar?";
   static const noticeAboutLiked = "You haven't added any favorite users yet. We look forward to seeing your preferences soon!";
+  static const filterNoResultTitle = 'No results found';
+  static const filterNoResultContent = 'You may want to try adjusting your search criteria, it might yield more relevant results.';
   //snack
   static const userHasBlocked = 'User has been blocked';
   static const failedBlocked ='Failed to block user';
@@ -154,6 +158,8 @@ class ConstantData {
   static const noticeText = 'Notice';
   static const gotItText = 'Got it';
   static const registerFailed = 'Register failed';
+  static const deleteConversationTitle = 'Delete Conversation';
+  static const deleteConversationContent = 'Are you sure you want to delete this conversation?';
   //detail_bottom_bar
   static const likeText='like';
   //get_email_code
@@ -161,6 +167,9 @@ class ConstantData {
   static const  enterEmailText = "Please enter your email";
   static const  emailLabelText = "Email";
   static const  nextButtonText = "Next";
+  static const  ppsaContent = "By creating an account or logging in, you agree to our ";
+  static const  serviceAgreement = "Service Agreement";
+  static const  privacyPolicy = "Privacy Policy";
   //verify_email
   static const  verifyCodeTitle = "Verify Code";
   static const  verifyCodeSubtitle = "Enter the verify code sent to your email";
@@ -209,7 +218,8 @@ class ConstantData {
   static const  moments = 'Moments';
   static const  aboutMe = 'About Me';
   static const  chatButton = 'Chat';
-  static const noMomentsData = "This user hasn't shared any moments yet.";
+  static const  noMomentsData = "This user hasn't shared any moments yet.";
+  static const  winkTitle = 'tap to send a wink';
   //bottom_options
   static const reportButton = 'report';
   static const blockButton = 'block';
@@ -221,6 +231,9 @@ class ConstantData {
   static const  gossipLabel = 'Gossip';
   static const  viewLabel = 'View';
   static const  filtersLabel = 'Filters';
+  static const  verifiedMemberLabel = 'verify';
+  //game_page
+  static const  verifiedPageTitle ='verified member';
   //detail_bottom
   static const  winkButton = 'wink';
   static const  callButton = 'call';
@@ -358,6 +371,8 @@ class ConstantData {
   //filter
   static const lookingForText = 'Looking for';
   static const multipleChoicesText = 'You can select Multiple Choices';
+  static const sortByTitle = 'Sort by';
+
   //main
   static const voicesDatingTitle = 'VoicesDating';
   static const voicesDatingContent = 'Where Hearts Resonate \Through Sound';

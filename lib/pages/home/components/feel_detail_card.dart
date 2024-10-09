@@ -20,8 +20,16 @@ class FeelDetailCard extends StatelessWidget {
   final ListUserEntity userEntity;
   final TokenEntity tokenEntity;
   final GlobalService globalService = Get.find<GlobalService>();
+  final bool showCoinAndService;
+  bool get hasVerifiedTag => userEntity.member == "1" || userEntity.verified == "1";
 
-  FeelDetailCard({required this.userEntity, required this.tokenEntity});
+  FeelDetailCard({
+    required this.userEntity,
+    required this.tokenEntity,
+    this.showCoinAndService = true, // 默认显示
+  });
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +39,7 @@ class FeelDetailCard extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),
         child: Container(
           width: 335.w,
-          height: 221.21.h,
+          height: cardHeight,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(10.r),
@@ -54,7 +62,7 @@ class FeelDetailCard extends StatelessWidget {
     try {
       final UserDataEntity? userDataEntity = await globalService.getUserProfile(
         userId: userEntity.userId!,
-        accessToken: tokenEntity.accessToken!,
+        //accessToken: tokenEntity.accessToken!,
       );
       CommonUtils.hideLoading();
 
@@ -77,11 +85,13 @@ class FeelDetailCard extends StatelessWidget {
     return Stack(
       children: [
         avatar(),
-        photoVerifiedBadge(),
+        if (hasVerifiedTag) photoVerifiedBadge(),
         userInfo(),
-        coinInfo(100),
         audioPlayer(),
-        serviceInfo(),
+        if (showCoinAndService) ...[
+          coinInfo(100),
+          serviceInfo(),
+        ],
       ],
     );
   }
@@ -180,7 +190,7 @@ class FeelDetailCard extends StatelessWidget {
   Widget coinInfo(int coinAmount) {
     return Positioned(
       left: 10.w,
-      bottom: 17.h,
+      bottom: 10.h,
       child: CoinInfoWidget(
         coinAmount: coinAmount,
         timeText: ConstantData.oneHourText,
@@ -191,7 +201,9 @@ class FeelDetailCard extends StatelessWidget {
   Widget audioPlayer() {
     return Positioned(
       left: 120.w,
-      bottom: 90.h,
+      bottom: showCoinAndService
+          ? (hasVerifiedTag ? 90.h : 60.h)
+          : (hasVerifiedTag ? 60.h : 30.h),
       child: userEntity.voice?.voiceUrl != null
           ? AudioPlayerWidget(audioPath: userEntity.voice!.voiceUrl!)
           : DisabledAudioPlayerWidget(),
@@ -201,12 +213,19 @@ class FeelDetailCard extends StatelessWidget {
   Widget serviceInfo() {
     return Positioned(
       left: 190.5.w,
-      bottom: 17.h,
+      bottom: 10.h,
       child: Text(
         'Service: 45 persons',
         style: ConstantStyles.coinTimeTextStyle,
         textAlign: TextAlign.right,
       ),
     );
+  }
+
+  double get cardHeight {
+    if (showCoinAndService && hasVerifiedTag) return 211.21.h;
+    if (showCoinAndService && !hasVerifiedTag) return 181.h;
+    if (!showCoinAndService && hasVerifiedTag) return 181.h;
+    return 151.h; // 没有 coin/service 信息，也没有 VerifiedTag
   }
 }

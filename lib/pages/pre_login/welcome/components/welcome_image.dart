@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:voices_dating/image_res/image_res.dart';
 import '../../../../../constants.dart';
 
 class WelcomeImage extends StatelessWidget {
@@ -11,24 +12,18 @@ class WelcomeImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Text(
-          "WELCOME TO Valerie",
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: defaultPadding * 2),
         Row(
           children: [
             const Spacer(),
             Expanded(
               flex: 8,
               child: SvgPicture.asset(
-                "assets/icons/welcome.svg",
+                ImageRes.iconsWelcome,
               ),
             ),
             const Spacer(),
           ],
         ),
-        const SizedBox(height: defaultPadding * 2),
       ],
     );
   }

@@ -29,8 +29,8 @@ class LookingForFilter extends StatelessWidget {
             onTap: () {
               Get.bottomSheet(
                 MultiSelectBottomSheet(
-                  number: 3,
-                  options: ['Men', 'Women', 'Couple'],
+                  number: 2,
+                  options: ['Men', 'Women'],
                   initialSelection: controller.selectedLookingFor,
                   onConfirm: (selected) {
                     controller.updateSelectedLookingFor(selected);

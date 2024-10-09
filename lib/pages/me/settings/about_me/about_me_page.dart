@@ -2,6 +2,7 @@ import 'package:voices_dating/components/background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:voices_dating/routes/app_routes.dart';
 import '../../../../constants/Constant_styles.dart';
 import '../../../../constants/constant_data.dart';
 import '../../../../entity/token_entity.dart';
@@ -38,9 +39,16 @@ class AboutMePage extends StatelessWidget {
           ),
           PathBox(
             top: 300.h,
-            text: ConstantData.privacyAgreement,
+            text: ConstantData.privacyPolicy,
             onPressed: () {
-              Get.toNamed('', arguments: {'token': tokenEntity, 'userData': userData});
+              Get.toNamed(AppRoutes.privacyPolicy);
+            },
+          ),
+          PathBox(
+            top: 380.h,
+            text: ConstantData.serviceAgreement,
+             onPressed: () {
+              Get.toNamed(AppRoutes.serviceAgreement);
             },
           ),
           Positioned(

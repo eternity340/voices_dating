@@ -11,6 +11,8 @@ import 'package:voices_dating/storage/location_data_db.dart';
 import 'package:voices_dating/constants/constant_data.dart';
 import 'package:common_utils/common_utils.dart';
 
+import '../../my_profile_page.dart';
+
 class ChangeLocationController extends GetxController {
   final GlobalService globalService = Get.find<GlobalService>();
 
@@ -121,13 +123,16 @@ class ChangeLocationController extends GetxController {
     }
   }
 
-  void _navigateToMePage() {
-    Get.offAllNamed(
-      AppRoutes.me,
+  void navigateToMyProfile() {
+    Get.offAll(
+          () => MyProfilePage(),
       arguments: {
         'tokenEntity': tokenEntity,
         'userDataEntity': userData,
       },
+      transition: Transition.cupertinoDialog,
+      duration: Duration(milliseconds: 500),
     );
   }
+
 }

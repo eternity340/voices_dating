@@ -10,6 +10,7 @@ import '../../../net/dio.client.dart';
 class FeelController extends GetxController {
   final TokenEntity tokenEntity = Get.arguments?['tokenEntity'] as TokenEntity;
   var userList = <ListUserEntity>[].obs;
+  var isInitialLoading = true.obs;
   var isLoading = true.obs;
   var currentPage = 1.obs;
   var hasMore = true.obs;
@@ -32,7 +33,7 @@ class FeelController extends GetxController {
 
     const String url = ApiConstants.likedUser;
     try {
-      await dioClient.requestNetwork<List<dynamic>>(
+      await dioClient.requestNetwork<List<ListUserEntity>>(
         method: Method.get,
         url: url,
         queryParameters: {
@@ -41,16 +42,15 @@ class FeelController extends GetxController {
         },
         options: Options(headers: {'token': tokenEntity.accessToken}),
         onSuccess: (data) {
-          final fetchedData = (data ?? [])
-              .map((e) => ListUserEntity.fromJson(e))
-              .toList();
-
-          if (isLoadMore) {
-            userList.addAll(fetchedData);
-          } else {
-            userList.assignAll(fetchedData);
+          if (data != null) {
+            if (isLoadMore) {
+              userList.addAll(data);
+            } else {
+              userList.assignAll(data);
+            }
+            hasMore.value = data.length >= 20;
           }
-          hasMore.value = fetchedData.length >= 20;
+          isInitialLoading.value = false;
           isLoading.value = false;
 
           if (userList.isEmpty && !isLoadMore) {
@@ -58,6 +58,7 @@ class FeelController extends GetxController {
           }
         },
         onError: (code, msg, data) {
+          isInitialLoading.value = false;
           isLoading.value = false;
           if (!isLoadMore) {
             showNoDataDialog();
@@ -65,6 +66,7 @@ class FeelController extends GetxController {
         },
       );
     } catch (e) {
+      isInitialLoading.value = false;
       isLoading.value = false;
       if (!isLoadMore) {
         showNoDataDialog();
@@ -75,7 +77,7 @@ class FeelController extends GetxController {
   void showNoDataDialog() {
     Get.dialog(
       CustomContentDialog(
-        title:ConstantData.noticeText,
+        title: ConstantData.noticeText,
         content: ConstantData.noticeAboutLiked,
         buttonText: ConstantData.okText,
         onButtonPressed: () {
@@ -85,7 +87,6 @@ class FeelController extends GetxController {
       ),
     );
   }
-
 
   Future<void> onRefresh() async {
     currentPage.value = 1;

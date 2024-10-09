@@ -85,10 +85,16 @@ class LiveInOptions extends StatelessWidget {
   }
 
   bool _isEnabled(String type) {
-    return type == ConstantData.countryText ||
-        (type == ConstantData.stateText && controller.selectedCountry.value != ConstantData.selectedCountry) ||
-        (type == ConstantData.cityText && controller.selectedState.value != ConstantData.selectedState &&
-            controller.selectedState.value != 'All states' && !controller.isCityLoading.value);
+    return type == ConstantData.countryText
+        || (type == ConstantData.stateText
+            && controller.selectedCountry.value
+            != ConstantData.selectedCountry)
+        || (type == ConstantData.cityText
+            && controller.selectedState.value
+            != ConstantData.selectedState
+            && controller.selectedState.value
+            != 'All states'
+            && !controller.isCityLoading.value);
   }
 
   void _showLocationSelection(BuildContext context, String type) async {

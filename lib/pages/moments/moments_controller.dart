@@ -16,6 +16,7 @@ class MomentsController extends GetxController {
   final int pageOffset = 5;
   late EasyRefreshController easyRefreshController;
   final DioClient dioClient = DioClient.instance;
+  var isInitialLoading = true.obs;
 
   @override
   void onInit() {
@@ -74,6 +75,7 @@ class MomentsController extends GetxController {
       easyRefreshController.finishLoad(noMore: true);
     } finally {
       isLoading.value = false;
+      isInitialLoading.value = false;
     }
   }
 

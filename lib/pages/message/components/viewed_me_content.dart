@@ -42,12 +42,24 @@ class _ViewedMeContentState extends State<ViewedMeContent> {
         onRefresh: () async {
           await widget.controller.getViewedMeUsers();
           _refreshController.finishRefresh();
+          _refreshController.resetLoadState();
+        },
+        onLoad: () async {
+          await widget.controller.onLoadViewedMe();
+          if (widget.controller.visitedMeUsers.length % widget.controller.viewedMeOffset == 0) {
+            _refreshController.finishLoad(success: true, noMore: false);
+          } else {
+            _refreshController.finishLoad(success: true, noMore: true);
+          }
         },
         child: widget.controller.visitedMeUsers.isEmpty
-            ? Center(child: Text('No one has viewed your profile yet.'))
+            ? Center(child: Text('——No one has viewed your profile yet.——'))
             : ListView.builder(
-          itemCount: widget.controller.visitedMeUsers.length,
+          itemCount: widget.controller.visitedMeUsers.length + 1,
           itemBuilder: (context, index) {
+            if (index == widget.controller.visitedMeUsers.length) {
+              return SizedBox(height: 72.h);
+            }
             final user = widget.controller.visitedMeUsers[index];
             return _buildUserItem(user);
           },
@@ -55,6 +67,7 @@ class _ViewedMeContentState extends State<ViewedMeContent> {
       );
     });
   }
+
 
   Widget _buildUserItem(ListUserEntity user) {
     return GestureDetector(
@@ -77,9 +90,23 @@ class _ViewedMeContentState extends State<ViewedMeContent> {
                 Positioned(
                   left: 70.w,
                   top: 0.h,
-                  child: Text(
-                    user.username ?? '',
-                    style: ConstantStyles.usernameMessageStyle,
+                  child: Row(
+                    children: [
+                      Text(
+                        user.username ?? '',
+                        style: ConstantStyles.usernameMessageStyle,
+                      ),
+                      SizedBox(width: 5.w),
+                      if (user.online == "0")
+                        Container(
+                          width: 8.w,
+                          height: 8.w,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Color(0xFFABFFCF),
+                          ),
+                        ),
+                    ],
                   ),
                 ),
                 Positioned(
@@ -94,7 +121,7 @@ class _ViewedMeContentState extends State<ViewedMeContent> {
                           textColor: Colors.black,
                         ),
                       if(user.member == '1')
-                      SizedBox(width: 8.w),
+                        SizedBox(width: 8.w),
                       if(user.verified == '1')
                         VerifiedTag(
                           text: ConstantData.photosVerified,
@@ -127,7 +154,7 @@ class _ViewedMeContentState extends State<ViewedMeContent> {
     Get.toNamed(AppRoutes.messagePrivateChat, arguments: {
       'tokenEntity': widget.controller.tokenEntity,
       'chattedUser': chattedUser,
-      'userDataEntity':widget.controller.userDataEntity
+      'userDataEntity': widget.controller.userDataEntity
     });
   }
 }

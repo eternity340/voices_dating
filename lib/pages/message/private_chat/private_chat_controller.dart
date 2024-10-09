@@ -8,11 +8,16 @@ import 'package:voices_dating/entity/chatted_user_entity.dart';
 import 'package:intl/intl.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:uuid/uuid.dart';
+import '../../../components/bottom_options.dart';
+import '../../../components/custom_message_dialog.dart';
+import '../../../constants/constant_data.dart';
 import '../../../entity/im_message_entity.dart';
 import '../../../entity/im_new_message_emtity.dart';
+import '../../../entity/ret_entity.dart';
 import '../../../entity/token_entity.dart';
 import '../../../net/dio.client.dart';
 import 'package:voices_dating/net/api_constants.dart';
+import '../../../routes/app_routes.dart';
 import '../../../service/audio_service.dart';
 import '../../../service/global_service.dart';
 import '../../../service/im_service.dart';
@@ -190,10 +195,6 @@ class PrivateChatController extends GetxController {
   }
 
   void sendTextMessage() {
-    /*if(chattedUser.canChat!=1){
-      Get.toNamed('/me/settings/purchase_record', arguments: {'token': tokenEntity});
-      return;
-    }*/
     String text = textController.text.trim();
     if (text.isEmpty) {
       return;
@@ -248,10 +249,9 @@ class PrivateChatController extends GetxController {
     final GlobalService globalService = Get.find<GlobalService>();
     final UserDataEntity? userDataEntity = await globalService.getUserProfile(
       userId: userId,
-      accessToken: tokenEntity.accessToken.toString(),
     );
     if (userDataEntity != null) {
-      Get.to(() => UserProfilePage(), arguments: {
+      Get.toNamed(AppRoutes.messageUserProfile, arguments: {
         'userDataEntity': userDataEntity,
         'tokenEntity': tokenEntity,
       });
@@ -259,6 +259,63 @@ class PrivateChatController extends GetxController {
       LogUtil.e(message: 'Failed to get user profile');
       Get.snackbar('Error', 'Failed to load user profile');
     }
+  }
+
+  void showOptionsBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return BottomOptions(
+          onFirstPressed: () {
+            Navigator.pop(context);
+            Get.toNamed(AppRoutes.messageUserReport, arguments: {
+              'userDataEntity': userDataEntity,
+              'tokenEntity': tokenEntity,
+            });
+          },
+          onSecondPressed: () {
+            Navigator.pop(context);
+            showBlockUserDialog(context);
+          },
+          onCancelPressed: () => Navigator.pop(context),
+          firstText: ConstantData.reportButton,
+          secondText: ConstantData.blockButton,
+        );
+      },
+    );
+  }
+
+  void showBlockUserDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CustomMessageDialog(
+          title: const Text(ConstantData.blockUserText),
+          content: const Text(ConstantData.blockUserDialogText),
+          onYesPressed:blockUser,
+        );
+      },
+    );
+  }
+
+  void blockUser() {
+    DioClient.instance.requestNetwork<RetEntity>(
+      method: Method.post,
+      url: ApiConstants.blockUser,
+      queryParameters: {'userId': chattedUser.userId},
+      options: Options(headers: {'token': tokenEntity.accessToken}),
+      onSuccess: (data) {
+        if (data != null && data.ret) {
+          Get.back();
+          Get.snackbar(ConstantData.successText, ConstantData.userHasBlocked);
+        } else {
+          Get.snackbar(ConstantData.failedText, ConstantData.failedBlocked);
+        }
+      },
+      onError: (code, msg, data) {
+        Get.snackbar(ConstantData.errorText, msg);
+      },
+    );
   }
 
   @override

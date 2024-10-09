@@ -20,6 +20,7 @@ import 'love_button.dart';
 
 class MomentsCard extends StatelessWidget {
   final MomentEntity moment;
+  final UserDataEntity userDataEntity;
   final bool showButtons;
   final TokenEntity tokenEntity;
   final VoidCallback onLoveButtonPressed;
@@ -30,6 +31,7 @@ class MomentsCard extends StatelessWidget {
     required this.tokenEntity,
     required this.onLoveButtonPressed,
     this.showButtons = true,
+    required this.userDataEntity,
   }) : super(key: key);
 
   @override
@@ -251,7 +253,7 @@ class MomentsCard extends StatelessWidget {
     final globalService = Get.find<GlobalService>();
     final userDataEntity = await globalService.getUserProfile(
       userId: moment.userId ?? '',
-      accessToken: tokenEntity.accessToken.toString(),
+      //accessToken: tokenEntity.accessToken.toString(),
     );
 
     if (userDataEntity != null) {
@@ -270,7 +272,7 @@ class MomentsCard extends StatelessWidget {
       username: moment.username ?? ConstantData.unknownText,
       avatar: moment.avatar,
     );
-    final userDataJson = SharedPreferenceUtil.instance.getValue(key: SharedPresKeys.userToken);
+    /*final userDataJson = SharedPreferenceUtil.instance.getValue(key: SharedPresKeys.userToken);
     UserDataEntity? userData;
     if (userDataJson != null) {
       try {
@@ -279,12 +281,13 @@ class MomentsCard extends StatelessWidget {
       } catch (e) {
         print('Error parsing user data: $e');
       }
-    }
+    }*/
+
 
     Get.toNamed(AppRoutes.messagePrivateChat, arguments: {
       'tokenEntity': tokenEntity,
       'chattedUser': chattedUser,
-      'userDataEntity': userData,
+      'userDataEntity': userDataEntity,
     });
   }
 

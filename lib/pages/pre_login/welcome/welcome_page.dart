@@ -1,3 +1,4 @@
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:voices_dating/pages/pre_login/components/sign_btn.dart';
 import 'package:voices_dating/pages/pre_login/welcome/components/welcome_image.dart';
 import 'package:flutter/material.dart';
@@ -11,31 +12,16 @@ class WelcomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Background(
-      child: SingleChildScrollView(
         child: SafeArea(
           child: Responsive(
             desktop: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Expanded(
-                  child: WelcomeImage(),
-                ),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: 450,
-                        child: SignBtn(),
-                      ),
-                    ],
-                  ),
-                ),
+                WelcomeImage(),
+                SignBtn(),
               ],
             ),
             mobile: MobileWelcomeScreen(),
           ),
-        ),
       ),
     );
   }

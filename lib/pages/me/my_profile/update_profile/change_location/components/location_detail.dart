@@ -45,70 +45,70 @@ class _LocationDetailPageState extends State<LocationDetail> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          Background(
-              showBackgroundImage: false,
-              showMiddleText: true,
-              middleText: ConstantData.locationHeaderTitle,
-              child: Container(),
-          ),
-          Positioned(
-            top: 150.h,
-            left: 20.w,
-            right: 20.w,
-            child: Column(
-              children: [
-                _buildLocationBox(
-                    'Country: $selectedCountry',
-                    ImageRes.pathBoxImage,
-                    ConstantData.countryText
-                ),
-                SizedBox(height: 20.h),
-                _buildLocationBox(
-                    'State: $selectedState',
-                    ImageRes.pathBoxImage,
-                    ConstantData.stateText
-                ),
-                SizedBox(height: 20.h),
-                _buildLocationBox(
-                    'City: $selectedCity',
-                    ImageRes.pathBoxImage,
-                    ConstantData.cityText
-                ),
-              ],
-            ),
-          ),
-          Positioned(
-            top: 58.h,
-            right: 0.w,
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 300),
-              curve: Curves.easeOut,
-              transform: Matrix4.translationValues(-8.w, 0, 0),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  colors: isButtonEnabled
-                      ? [Color(0xFFD6FAAE), Color(0xFF20E2D7)]
-                      : [Color(0xFFC3C3CB), Color(0xFFC3C3CB)],
-                ),
-                borderRadius: BorderRadius.circular(24.5.r),
-              ),
-              width: 88.w,
-              height: 36.h,
-              child: TextButton(
-                onPressed: isButtonEnabled ? updateProfile : null,
-                child: Text(
-                  ConstantData.saveText,
-                  style: ConstantStyles.actionButtonTextStyle
-                ),
+    return Background(
+      showBackgroundImage: false,
+      showMiddleText: true,
+      middleText: ConstantData.locationHeaderTitle,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Stack(
+          children: [
+            Positioned(
+              top: 100.h,
+              left: 20.w,
+              right: 20.w,
+              child: Column(
+                children: [
+                  _buildLocationBox(
+                      'Country: $selectedCountry',
+                      ImageRes.pathBoxImage,
+                      ConstantData.countryText
+                  ),
+                  SizedBox(height: 20.h),
+                  _buildLocationBox(
+                      'State: $selectedState',
+                      ImageRes.pathBoxImage,
+                      ConstantData.stateText
+                  ),
+                  SizedBox(height: 20.h),
+                  _buildLocationBox(
+                      'City: $selectedCity',
+                      ImageRes.pathBoxImage,
+                      ConstantData.cityText
+                  ),
+                ],
               ),
             ),
-          )
-        ],
+            Positioned(
+              top: 0.h,
+              right: 0.w,
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: 300),
+                curve: Curves.easeOut,
+                transform: Matrix4.translationValues(-8.w, 0, 0),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: isButtonEnabled
+                        ? [Color(0xFFD6FAAE), Color(0xFF20E2D7)]
+                        : [Color(0xFFC3C3CB), Color(0xFFC3C3CB)],
+                  ),
+                  borderRadius: BorderRadius.circular(24.5.r),
+                ),
+                width: 88.w,
+                height: 36.h,
+                child: TextButton(
+                  onPressed: isButtonEnabled ? updateProfile : null,
+                  child: Text(
+                      ConstantData.saveText,
+                      style: ConstantStyles.actionButtonTextStyle
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

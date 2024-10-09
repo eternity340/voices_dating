@@ -76,7 +76,8 @@ class HomeController extends GetxController {
             ReplaceWordUtil replaceWordUtil = ReplaceWordUtil.getInstance();
             replaceWordUtil.getReplaceWord();
             List<ListUserEntity> processedUsers = data.map((user) {
-              var processedUser = replaceWordUtil.replaceWordsInJson(user);
+              Map<String, dynamic> userMap = Map<String, dynamic>.from(user);
+              var processedUser = replaceWordUtil.replaceWordsInJson(userMap);
               return ListUserEntity.fromJson(processedUser);
             }).toList();
 
@@ -97,6 +98,7 @@ class HomeController extends GetxController {
     }
   }
 
+
   Future<void> fetchNearUsers() async {
     if (isLoading.value || !hasMoreData.value) return;
     _setLoading(true);
@@ -107,9 +109,7 @@ class HomeController extends GetxController {
         queryParameters: {
           'page': nearbyCurrentPage,
           'offset': 20,
-          'find[gender]': userData?.gender,
-
-          //'find[distance]': 500
+          'find[distance]':'500'
         },
         options: Options(headers: {'token': tokenEntity.accessToken}),
         onSuccess: (data) {
@@ -118,7 +118,8 @@ class HomeController extends GetxController {
             replaceWordUtil.getReplaceWord();
 
             List<ListUserEntity> processedUsers = data.map((user) {
-              var processedUser = replaceWordUtil.replaceWordsInJson(user);
+              Map<String, dynamic> userMap = Map<String, dynamic>.from(user);
+              var processedUser = replaceWordUtil.replaceWordsInJson(userMap);
               return ListUserEntity.fromJson(processedUser);
             }).toList();
 
@@ -138,6 +139,7 @@ class HomeController extends GetxController {
       _setLoading(false);
     }
   }
+
 
   void loadNearbyUsersIfNeeded() {
     if (nearUsers.isEmpty) {
@@ -172,9 +174,7 @@ class HomeController extends GetxController {
   void navigateToGamePage() {
     if (userData != null) {
       Get.toNamed(AppRoutes.homeGame,
-          arguments: {
-            'token': tokenEntity,
-            'userData': userData});
+          arguments: {'tokenEntity': tokenEntity});
     }
   }
 

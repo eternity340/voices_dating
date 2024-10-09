@@ -8,6 +8,7 @@ import 'package:voices_dating/entity/user_data_entity.dart';
 import '../../../../../constants/Constant_styles.dart';
 import '../../../../../constants/constant_data.dart';
 import '../../../../pre_login/sign_up/components/widget/picker_components.dart';
+import '../../my_profile_page.dart';
 import 'change_age_controller.dart';
 
 class ChangeAge extends StatefulWidget {
@@ -28,12 +29,26 @@ class _ChangeAgeState extends State<ChangeAge> {
     double pickerHeight = 280.h;
     double itemExtent = 40.h;
 
+    void navigateToMeMyProfilePage() {
+      Get.to(() => MyProfilePage(),
+        arguments: {
+          'tokenEntity': tokenEntity,
+          'userDataEntity': userData,
+        },
+        transition: Transition.cupertinoDialog,
+        duration: Duration(milliseconds: 500),
+      );
+    }
+
     return Scaffold(
       body: Background(
         showMiddleText: true,
         middleText: ConstantData.ageHead,
         showActionButton: false,
         showBackgroundImage: false,
+        onBackPressed: navigateToMeMyProfilePage,
+        usePopScope: true,
+        onPopInvoked: navigateToMeMyProfilePage,
         child: Stack(
           children: [
             Positioned(
@@ -106,4 +121,6 @@ class _ChangeAgeState extends State<ChangeAge> {
       ),
     );
   }
+
+
 }

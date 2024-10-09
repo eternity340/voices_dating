@@ -69,7 +69,7 @@ class _MessagePageState extends State<MessagePage> {
                   child: Container(),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: 16.w, top: 67.h),
+                  padding: EdgeInsets.only(left: 10.w, top: 67.h,right: 10.w),
                   child: Row(
                     children: [
                       _buildOption(controller, 'Messages', 0),
@@ -100,6 +100,7 @@ class _MessagePageState extends State<MessagePage> {
                         MessageContent(
                           chattedUsers: controller.chattedUsers,
                           onRefresh: controller.fetchChattedUsers,
+                          onLoad: controller.onLoadChat,
                           controller: controller,
                         ),
                         ViewedMeContent(controller: controller),
@@ -130,7 +131,9 @@ class _MessagePageState extends State<MessagePage> {
           Text(
             title,
             style: TextStyle(
-              color: controller.selectedIndex == index ? Colors.black : const Color(0xFF898A8D),
+              color: controller.selectedIndex == index
+                  ? Colors.black
+                  : const Color(0xFF898A8D),
               fontWeight: FontWeight.bold,
               fontSize: 16.sp,
             ),
@@ -140,7 +143,9 @@ class _MessagePageState extends State<MessagePage> {
             width: 24.w,
             height: 3.h,
             decoration: BoxDecoration(
-              color: controller.selectedIndex == index ? const Color(0xFF222222) : Colors.transparent,
+              color: controller.selectedIndex == index
+                  ? const Color(0xFF222222)
+                  : Colors.transparent,
               borderRadius: BorderRadius.circular(2.r),
             ),
           ),
@@ -149,3 +154,4 @@ class _MessagePageState extends State<MessagePage> {
     );
   }
 }
+

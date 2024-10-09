@@ -9,25 +9,19 @@ import '../../../../image_res/image_res.dart';
 import '../../../../routes/app_routes.dart';
 import 'verify_photo_controller.dart';
 
-class VerifyPhotoPage extends StatefulWidget {
+class VerifyPhotoPage extends StatelessWidget {
   @override
-  _VerifyPhotoPageState createState() => _VerifyPhotoPageState();
-}
-
-class _VerifyPhotoPageState extends State<VerifyPhotoPage> {
-  late VerifyPhotoController controller;
-
-  @override
-  void initState() {
-    super.initState();
-    controller = Get.put(VerifyPhotoController(
+  Widget build(BuildContext context) {
+    final VerifyPhotoController controller = Get.put(VerifyPhotoController(
       tokenEntity: Get.arguments['tokenEntity'],
       userData: Get.arguments['userDataEntity'],
     ));
-  }
 
-  @override
-  Widget build(BuildContext context) {
+    // 每次构建时检查验证状态
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.checkVerificationStatus();
+    });
+
     return Scaffold(
       body: Stack(
         children: [
@@ -96,3 +90,4 @@ class _VerifyPhotoPageState extends State<VerifyPhotoPage> {
     );
   }
 }
+

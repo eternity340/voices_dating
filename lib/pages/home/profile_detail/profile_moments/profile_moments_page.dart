@@ -55,6 +55,7 @@ class ProfileMomentsPage extends StatelessWidget {
                             moment: controller.moments[index],
                             tokenEntity: controller.tokenEntity,
                             onLoveButtonPressed: refreshMoments,
+                            userDataEntity: controller.userDataEntity,
                           ),
                         );
                       },

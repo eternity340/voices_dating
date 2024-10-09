@@ -20,6 +20,8 @@ import 'package:voices_dating/pages/me/verify/verify_page.dart';
 import 'package:voices_dating/pages/message/private_chat/private_chat_page.dart';
 import 'package:voices_dating/pages/moments/add_moment/add_moment_page.dart';
 import 'package:voices_dating/pages/moments/moments_detail/moments_detail_page.dart';
+import 'package:voices_dating/pages/pre_login/welcome/privacy_policy.dart';
+import 'package:voices_dating/pages/pre_login/welcome/service_agreement.dart';
 import 'package:voices_dating/pages/voice/voice_page.dart';
 import 'package:get/get.dart' as getx;
 import '../pages/email/page/get_email_code_page.dart';
@@ -56,6 +58,8 @@ import '../entity/User.dart';
 
 class AppRoutes {
   static const String welcome = '/welcome';
+  static const String privacyPolicy = '/privacy_policy';
+  static const String serviceAgreement = '/service_agreement';
   static const String signIn = '/sign_in';
   static const String getMailCode = '/get_mail_code';
   static const String verifyEmail = '/verify_email';
@@ -146,13 +150,28 @@ class AppRoutes {
 
   //route transition
   static const defaultTransition = getx.Transition.cupertino;
+  static const rightToLeft = getx.Transition.rightToLeft;
   static const fadeTransition = getx.Transition.fade;
-  static final defaultDuration = Duration(milliseconds: 300);
+  static final defaultDuration = Duration(milliseconds: 500);
 
   static final routes = [
     getx.GetPage(
       name: welcome,
       page: () => const WelcomePage(),
+      transition: defaultTransition,
+      transitionDuration: defaultDuration,
+    ),
+
+    getx.GetPage(
+      name: privacyPolicy,
+      page: () =>  PrivacyPolicy(),
+      transition: defaultTransition,
+      transitionDuration: defaultDuration,
+    ),
+
+    getx.GetPage(
+      name: serviceAgreement,
+      page: () =>  ServiceAgreement(),
       transition: defaultTransition,
       transitionDuration: defaultDuration,
     ),

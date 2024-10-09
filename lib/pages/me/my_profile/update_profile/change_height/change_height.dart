@@ -7,6 +7,7 @@ import '../../../../../constants/constant_data.dart';
 import '../../../../../entity/token_entity.dart';
 import '../../../../../entity/user_data_entity.dart';
 import '../../../../pre_login/sign_up/components/height_picker.dart';
+import '../../my_profile_page.dart';
 import 'change_height_controller.dart';
 
 class ChangeHeight extends StatefulWidget {
@@ -22,12 +23,26 @@ class _ChangeHeightState extends State<ChangeHeight> {
   Widget build(BuildContext context) {
     final TokenEntity tokenEntity = Get.arguments['tokenEntity'] as TokenEntity;
     final UserDataEntity userData = Get.arguments['userDataEntity'] as UserDataEntity;
+    void navigateToMyProfile() {
+      Get.offAll(
+            () => MyProfilePage(),
+        arguments: {
+          'tokenEntity': tokenEntity,
+          'userDataEntity': userData,
+        },
+        transition: Transition.cupertinoDialog,
+        duration: Duration(milliseconds: 500),
+      );
+    }
     return Scaffold(
       body: Background(
         showBackgroundImage: false,
         showActionButton: false,
         showMiddleText: true,
         middleText: ConstantData.heightHeadTitle,
+        onBackPressed: navigateToMyProfile,
+        usePopScope: true,
+        onPopInvoked: navigateToMyProfile,
         child: Stack(
           children: [
             Positioned(

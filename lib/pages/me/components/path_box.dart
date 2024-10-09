@@ -19,7 +19,7 @@ class PathBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return Positioned(
       top: top,
-      left: (MediaQuery.of(context).size.width - 335.w) / 2,
+      left: 10.w,
       child: Container(
         width: 335.w,
         height: 69.h,

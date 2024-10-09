@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> {
                         SizedBox(height: 50.h),
                         _buildOptionsRow(controller),
                         _buildButtonRow(controller),
-                        SizedBox(height: 20.h),
+                        SizedBox(height: 0.h),
                         Expanded(
                           child: _buildAnimatedPageView(controller),
                         ),
@@ -107,8 +107,8 @@ class _HomePageState extends State<HomePage> {
           children: [
             if (isSelected)
               Positioned(
-                top: 3,
-                right: 45.w,
+                top: 0.h,
+                right: 47.w,
                 child: Image.asset(
                   ImageRes.imagePathDecorate,
                   width: 17.w,
@@ -135,20 +135,39 @@ class _HomePageState extends State<HomePage> {
           left: 0,
           right: 0,
           bottom: 0,
-          child: PageView(
-            controller: controller.pageController,
-            onPageChanged: (index) {
-              controller.onPageChanged(index);
-            },
+          child: Column(
             children: [
-              honeyOption(controller),
-              nearbyOption(controller)
+              Container(
+                height: 15.h,
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color(0x0A000000),
+                      blurRadius: 14.r,
+                      offset: Offset(0, 7.h),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: PageView(
+                  controller: controller.pageController,
+                  onPageChanged: (index) {
+                    controller.onPageChanged(index);
+                  },
+                  children: [
+                    honeyOption(controller),
+                    nearbyOption(controller)
+                  ],
+                ),
+              ),
             ],
           ),
         ),
       ],
     );
   }
+
 
   Widget honeyOption(HomeController controller) {
     return Obx(() {
@@ -194,7 +213,7 @@ class _HomePageState extends State<HomePage> {
           itemCount: controller.nearUsers.length,
           itemBuilder: (context, index) {
             return Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.h),
+              padding: EdgeInsets.symmetric(vertical: 5.h),
               child: UserCard(
                 userEntity: controller.nearUsers[index],
                 tokenEntity: controller.tokenEntity,
@@ -207,63 +226,34 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildButtonRow(HomeController controller) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        _buildButtonWithLabel(
-          imagePath: ImageRes.imagePathLike,
-          shadowColor: Color(0xFFFFD1D1).withOpacity(0.3736),
-          label: ConstantData.feelLabel,
-          onTap: controller.navigateToFeelPage,
-        ),
-        _buildButtonWithLabel(
-          imagePath: ImageRes.imagePathClock,
-          shadowColor: Color(0xFFF6D3FF).withOpacity(0.369),
-          label: ConstantData.viewLabel,
-          onTap: controller.navigateToGetUpPage,
-        ),
-        _buildButtonWithLabel(
-          imagePath: ImageRes.imagePathGame,
-          shadowColor: Color(0xFFFCA6C5).withOpacity(0.2741),
-          label: ConstantData.gameLabel,
-          onTap: controller.navigateToGamePage,
-        ),
-        _buildButtonWithLabel(
-          imagePath: ImageRes.imagePathFeel,
-          shadowColor: Color(0xFFFFEA31).withOpacity(0.3495),
-          label: ConstantData.filtersLabel,
-          onTap: controller.navigateToFiltersPage,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildButtonWithLabel({
-    required String imagePath,
-    required Color shadowColor,
-    required String label,
-    required VoidCallback onTap,
-  }) {
-    return Expanded(
-      child: Column(
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 5.w),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          GestureDetector(
-            onTap: onTap,
-            child: HomeIconButton(
-              imagePath: imagePath,
-              shadowColor: shadowColor,
-            ),
+          HomeIconButton(
+            imagePath: ImageRes.imagePathLike,
+            shadowColor: Color(0xFFFFD1D1).withOpacity(0.3736),
+            label: ConstantData.feelLabel,
+            onTap: controller.navigateToFeelPage,
           ),
-          SizedBox(height: 4.h),
-          Container(
-            height: 20.h,
-            child: Text(
-              label,
-              style: ConstantStyles.buttonLabelStyle,
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
+          HomeIconButton(
+            imagePath: ImageRes.imagePathClock,
+            shadowColor: Color(0xFFF6D3FF).withOpacity(0.369),
+            label: ConstantData.viewLabel,
+            onTap: controller.navigateToGetUpPage,
+          ),
+          HomeIconButton(
+            imagePath: ImageRes.imagePathGame,
+            shadowColor: Color(0xFFFCA6C5).withOpacity(0.2741),
+            label: ConstantData.verifiedMemberLabel,
+            onTap: controller.navigateToGamePage,
+          ),
+          HomeIconButton(
+            imagePath: ImageRes.imagePathFeel,
+            shadowColor: Color(0xFFFFEA31).withOpacity(0.3495),
+            label: ConstantData.filtersLabel,
+            onTap: controller.navigateToFiltersPage,
           ),
         ],
       ),

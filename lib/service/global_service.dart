@@ -98,11 +98,11 @@ class GlobalService extends GetxService {
     return moments;
   }
 
-  Future<UserDataEntity?> getUserData({required String accessToken}) async {
+  Future<UserDataEntity?> getUserData() async {
     await dioClient.requestNetwork<UserDataEntity>(
       method: Method.get,
       url: ApiConstants.getProfile,
-      options: Options(headers: {'token': accessToken}),
+      options: Options(headers: {'token': await TokenService.instance.getToken()}),
       onSuccess: (data) {
         if (data != null) {
           userDataEntity.value = data;
@@ -117,18 +117,18 @@ class GlobalService extends GetxService {
   }
 
   Future<void> refreshUserData(String accessToken) async {
-    await getUserData(accessToken: accessToken);
+    await getUserData();
   }
 
 
-  Future<UserDataEntity?> getUserProfile({required String userId,required String accessToken}) async {
+  Future<UserDataEntity?> getUserProfile({required String userId}) async {
     UserDataEntity? userData;
 
     await dioClient.requestNetwork<UserDataEntity>(
       method: Method.get,
       url: ApiConstants.getProfile,
       queryParameters: {'profId': userId},
-      options: Options(headers: {'token': accessToken}),
+      options: Options(headers: {'token': await TokenService.instance.getToken()}),
       onSuccess: (data) {
         if (data != null) {
           userData = data;

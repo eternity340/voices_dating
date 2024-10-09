@@ -13,6 +13,7 @@ import '../../../entity/moment_entity.dart';
 import '../../../image_res/image_res.dart';
 import '../../../routes/app_routes.dart';
 import '../../../service/global_service.dart';
+import '../components/about_me_selection.dart';
 import '../components/profile_photo_wall.dart';
 import '../components/profile_card.dart';
 import 'profile_detail_controller.dart';
@@ -30,31 +31,31 @@ class ProfileDetailPage extends StatelessWidget {
     ));
 
     return Scaffold(
-      body: Stack(
-        children: [
-          Background(
-            showSettingButton: false,
-            showBackButton: true,
-            child: Container(),
-          ),
-          Positioned(
-            left: 308.w,
-            top: 50.h,
-            child: GestureDetector(
-              onTap: () => showOptionsBottomSheet(context, controller),
-              child: Image.asset(
-                ImageRes.imagePathSettingButton,
-                width: 40.w,
-                height: 40.h,
+      body: Background(
+        showSettingButton: false,
+        showBackButton: true,
+        child: Stack(
+          children: [
+            Positioned(
+              right: 10.w,
+              top: 0.h,
+              child: GestureDetector(
+                onTap: () => showOptionsBottomSheet(context, controller),
+                child: Image.asset(
+                  ImageRes.imagePathSettingButton,
+                  width: 40.w,
+                  height: 40.h,
+                ),
               ),
             ),
-          ),
-          buildMainContent(controller),
-          buildBottomBar(controller),
-        ],
+            buildMainContent(controller),
+            buildBottomBar(controller),
+          ],
+        ),
       ),
     );
   }
+
 
   void showOptionsBottomSheet(BuildContext context, ProfileDetailController controller) {
     showModalBottomSheet(
@@ -95,7 +96,7 @@ class ProfileDetailPage extends StatelessWidget {
 
   Widget buildMainContent(ProfileDetailController controller) {
     return Positioned.fill(
-      top: 100.h,
+      top: 60.h,
       bottom: 72.h,
       child: SingleChildScrollView(
         child: Column(
@@ -143,7 +144,7 @@ class ProfileDetailPage extends StatelessWidget {
           SizedBox(height: 50.h),
           buildMomentsSection(controller),
           SizedBox(height: 50.h),
-          buildAboutMeSection(controller),
+          AboutMeSection(controller: controller),  // 使用新的 AboutMeSection 组件
           SizedBox(height: 30.h),
         ],
       ),

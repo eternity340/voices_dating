@@ -10,11 +10,13 @@ import '../../../entity/ret_entity.dart';
 import '../../../entity/token_entity.dart';
 import '../../../entity/user_data_entity.dart';
 import '../../../entity/chatted_user_entity.dart';
+import '../../../entity/wink_entity.dart';
 import '../../../net/dio.client.dart';
 import '../../../routes/app_routes.dart';
 import '../../../service/global_service.dart';
 import '../../../utils/shared_preference_util.dart';
 import '../../../components/custom_message_dialog.dart';
+import '../components/wink_selection_bottom_sheet.dart';
 
 class ProfileDetailController extends GetxController {
   final ListUserEntity userEntity;
@@ -24,6 +26,7 @@ class ProfileDetailController extends GetxController {
   final GlobalService globalService = Get.find<GlobalService>();
   RxString languageLabel = RxString('');
   RxBool isLoading = true.obs;
+  RxList<WinkEntity> winkTypes = <WinkEntity>[].obs;
 
   ProfileDetailController({required this.userEntity, required this.tokenEntity});
 
@@ -77,7 +80,39 @@ class ProfileDetailController extends GetxController {
   }
 
   void onWinkButtonPressed() {
+    WinkSelectionBottomSheet.show(
+      title: ConstantData.winkTitle,
+      onItemSelected: (WinkEntity selectedWink) {
+        _sendWink(selectedWink);
+      },
+    );
+  }
 
+  void _sendWink(WinkEntity selectedWink) {
+    DioClient.instance.requestNetwork<RetEntity>(
+      method: Method.post,
+      url: ApiConstants.setWinkedUser,
+      options: Options(headers: {'token': tokenEntity.accessToken}),
+      params: {
+        'profId': userEntity.userId,
+        'winkedType': selectedWink.id,
+        'userId': userDataEntity?.userId,
+      },
+      onSuccess: (data) {
+        if (data != null && data.ret) {
+          Get.snackbar(ConstantData.successText, 'Wink sent successfully');
+        } else {
+          Get.snackbar(ConstantData.failedText, 'Failed to send wink');
+        }
+      },
+      onError: (code, msg, data) {
+        if(code == 30004019){
+          Get.snackbar(ConstantData.sorryText, msg);
+        }else{
+          Get.snackbar(ConstantData.errorText, msg);
+        }
+      },
+    );
   }
 
   void onCallButtonPressed() {
