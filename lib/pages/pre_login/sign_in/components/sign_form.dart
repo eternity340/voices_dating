@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../components/gradient_btn.dart';
+import '../../../../components/no_underline_input_field.dart';
 import '../../../../constants.dart';
 import '../../../../constants/Constant_styles.dart';
 import '../../../../constants/constant_data.dart';
 import '../../../../image_res/image_res.dart';
 import '../sign_in_model.dart';
 import 'package:get/get.dart' as getx;
-
 
 class SignForm extends StatelessWidget {
   const SignForm({Key? key}) : super(key: key);
@@ -24,80 +24,59 @@ class SignForm extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 50.h),
-          Text(
-            ConstantData.enterYourEmail,
-            style: ConstantStyles.signEmailTextStyle,
+          NoUnderlineInputField(
+            label: ConstantData.enterYourEmail,
+            isEmail: true,
+            controller: model.emailController,
           ),
           SizedBox(height: 20.h),
-          Container(
-            width: 303.w,
-            child: TextFormField(
-              controller: model.emailController,
-              keyboardType: TextInputType.emailAddress,
-              textInputAction: TextInputAction.next,
-              cursorColor: kPrimaryColor,
-              decoration: const InputDecoration(
-                hintText: null,
-                border: InputBorder.none,
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFEBEBEB), width: 1),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFEBEBEB), width: 1),
-                ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                ConstantData.enterPasswordText,
+                style: ConstantStyles.passwordTextStyle,
               ),
-              style: ConstantStyles.inputTextStyle,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "Please enter a valid email";
-                }
-                return null;
-              },
-            ),
-          ),
-          SizedBox(height: 20.h),
-          Text(
-            ConstantData.enterPasswordText,
-            style: ConstantStyles.passwordTextStyle,
-          ),
-          SizedBox(height: 10.h),
-          Container(
-            width: 303.w,
-            child: TextFormField(
-              controller: model.passwordController,
-              textInputAction: TextInputAction.done,
-              obscureText: !model.isPasswordVisible,
-              cursorColor: kPrimaryColor,
-              decoration: InputDecoration(
-                hintText: null,
-                enabledBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFEBEBEB), width: 1),
-                ),
-                focusedBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFEBEBEB), width: 1),
-                ),
-                border: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFEBEBEB), width: 1),
-                ),
-                suffixIcon: IconButton(
-                  icon: Image.asset(
-                    model.isPasswordVisible
-                        ? ImageRes.iconVisiblePath
-                        : ImageRes.iconInvisiblePath,
-                    width: 24,
-                    height: 24,
+              SizedBox(height: 8.h),
+              Container(
+                width: 303.w,
+                child: TextFormField(
+                  controller: model.passwordController,
+                  textInputAction: TextInputAction.done,
+                  obscureText: !model.isPasswordVisible,
+                  cursorColor: kPrimaryColor,
+                  decoration: InputDecoration(
+                    hintText: null,
+                    enabledBorder: const UnderlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFFEBEBEB), width: 1),
+                    ),
+                    focusedBorder: const UnderlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFFEBEBEB), width: 1),
+                    ),
+                    border: const UnderlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFFEBEBEB), width: 1),
+                    ),
+                    suffixIcon: IconButton(
+                      icon: Image.asset(
+                        model.isPasswordVisible
+                            ? ImageRes.iconVisiblePath
+                            : ImageRes.iconInvisiblePath,
+                        width: 24,
+                        height: 24,
+                      ),
+                      onPressed: model.togglePasswordVisibility,
+                    ),
                   ),
-                  onPressed: model.togglePasswordVisibility,
+                  style: ConstantStyles.inputTextStyle,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter a password";
+                    }
+                    return null;
+                  },
                 ),
               ),
-              style: ConstantStyles.inputTextStyle,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "Please enter a password";
-                }
-                return null;
-              },
-            ),
+            ],
           ),
           SizedBox(height: 20.h),
           Row(
@@ -105,10 +84,10 @@ class SignForm extends StatelessWidget {
             children: [
               TextButton(
                 onPressed: () {
-                  getx.Get.toNamed(AppRoutes.forgetPwd);
+                  getx.Get.toNamed(AppRoutes.preFeedback);
                 },
                 style: ButtonStyle(
-                  overlayColor: WidgetStateProperty.all(Colors.transparent),
+                  overlayColor: MaterialStateProperty.all(Colors.transparent),
                 ),
                 child: const Text(
                   ConstantData.forgetPassword,

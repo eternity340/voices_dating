@@ -181,11 +181,11 @@ class _ChatInputBarState extends State<ChatInputBar> {
                   isScrollControlled: true,
                   builder: (context) => BottomOptions(
                     onFirstPressed: () async {
-                      await pickAndUploadPhoto(context, ImageSource.camera);
+                      await pickAndUploadPhotos(context, ImageSource.camera);
                       Navigator.pop(context);
                     },
                     onSecondPressed: () async {
-                      await pickAndUploadPhoto(context, ImageSource.gallery);
+                      await pickAndUploadPhotos(context, ImageSource.gallery);
                       Navigator.pop(context);
                     },
                     onCancelPressed: () {
@@ -355,24 +355,36 @@ class _ChatInputBarState extends State<ChatInputBar> {
   }
 
 
-  Future<void> pickAndUploadPhoto(BuildContext context, ImageSource source) async {
+  Future<void> pickAndUploadPhotos(BuildContext context, ImageSource source) async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     Permission permission = source == ImageSource.camera ? Permission.camera : Permission.photos;
 
     if (await permission.request().isGranted) {
       final ImagePicker picker = ImagePicker();
-      final XFile? image = await picker.pickImage(source: source);
-      if (image != null) {
-        var localId = uuid.v4().toString();
-        var success = await uploadImage(image, localId);
-        if (success) {
-          scaffoldMessenger.showSnackBar(
-            const SnackBar(content: Text('Image sent successfully')),
-          );
-        } else {
-          scaffoldMessenger.showSnackBar(
-            const SnackBar(content: Text('Failed to send image')),
-          );
+      List<XFile>? images;
+
+      if (source == ImageSource.camera) {
+        final XFile? image = await picker.pickImage(source: source);
+        if (image != null) {
+          images = [image];
+        }
+      } else {
+        images = await picker.pickMultiImage();
+      }
+
+      if (images != null && images.isNotEmpty) {
+        for (var image in images) {
+          var localId = uuid.v4().toString();
+          var success = await uploadImage(image, localId);
+          if (success) {
+            scaffoldMessenger.showSnackBar(
+              const SnackBar(content: Text('Image sent successfully')),
+            );
+          } else {
+            scaffoldMessenger.showSnackBar(
+              const SnackBar(content: Text('Failed to send image')),
+            );
+          }
         }
       }
     } else {
@@ -381,6 +393,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
       );
     }
   }
+
 
   Future<bool> uploadImage(XFile image, String localId) async {
     try {

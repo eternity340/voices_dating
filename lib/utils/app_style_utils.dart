@@ -2,9 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class AppStyleUtils{
-
-
+class AppStyleUtils {
   static final ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
     primaryColor: primaryColor,
@@ -22,6 +20,10 @@ class AppStyleUtils{
         bgGroundColor,
         bgGroundColor,
         true),
+    // 添加 textSelectionTheme 来设置光标颜色
+    textSelectionTheme: TextSelectionThemeData(
+      cursorColor: Color(0xFF20E2D7),
+    ),
   );
 
   static TextStyle get titleStyles => TextStyle(fontSize: 16.sp,fontWeight: FontWeight.bold,color: textColor);

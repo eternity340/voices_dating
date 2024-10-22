@@ -9,6 +9,7 @@ import '../../../constants/constant_data.dart';
 import '../../../utils/common_utils.dart';
 import '../components/verify_code_input.dart';
 import '../controller/verify_email_controller.dart';
+import '../controller/get_email_code_controller.dart'; // 添加这行
 
 class VerifyEmailPage extends StatefulWidget {
   final String email;
@@ -22,24 +23,25 @@ class VerifyEmailPage extends StatefulWidget {
 
 class _VerifyEmailPageState extends State<VerifyEmailPage> {
   late VerifyEmailController controller;
+  late GetEmailCodeController getEmailCodeController; // 添加这行
   late Timer timer;
-  int _start = 60;
+  int _start = 10;
   bool _isResendButtonVisible = false;
 
   @override
   void initState() {
     super.initState();
-    controller =
-        Get.put(VerifyEmailController(
-            email: widget.email,
-            verificationKey: widget.verificationKey));
+    controller = Get.put(VerifyEmailController(
+        email: widget.email,
+        verificationKey: widget.verificationKey));
+    getEmailCodeController = Get.find<GetEmailCodeController>(); // 添加这行
     startTimer();
   }
 
   void startTimer() {
     setState(() {
       _isResendButtonVisible = false;
-      _start = 60;
+      _start = 10;
     });
     timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (_start == 0) {
@@ -97,31 +99,48 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
                   },
                 ),
                 SizedBox(height: 20.h),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: _isResendButtonVisible
-                      ? Container()
-                      : Text(
-                    '$_start ${ConstantData.timerText}',
-                    style: ConstantStyles.timerText,
-                  ),
-                ),
-                SizedBox(height: 20.h),
-                _isResendButtonVisible
-                    ? Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {
-                      //controller.resendVerificationCode();
-                      startTimer();
-                    },
-                    child: Text(
-                      ConstantData.resendCode,
-                      style: ConstantStyles.resendButtonText,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Expanded(child: SizedBox()),
+                    SizedBox(
+                      width: 120.w,
+                      height: 40.h,
+                      child: AnimatedSwitcher(
+                        duration: Duration(milliseconds: 300),
+                        layoutBuilder: (currentChild, previousChildren) {
+                          return Stack(
+                            alignment: Alignment.centerRight,
+                            children: <Widget>[
+                              ...previousChildren,
+                              if (currentChild != null) currentChild,
+                            ],
+                          );
+                        },
+                        child: _isResendButtonVisible
+                            ? TextButton(
+                          key: ValueKey<bool>(true),
+                          onPressed: () async {
+                            await getEmailCodeController.sendVerificationCode();
+                            startTimer();
+                          },
+                          child: Text(
+                            ConstantData.resendCode,
+                            style: ConstantStyles.resendButtonText,
+                          ),
+                        )
+                            : Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            '$_start ${ConstantData.timerText}',
+                            key: ValueKey<bool>(false),
+                            style: ConstantStyles.timerText,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                )
-                    : Container(),
+                  ],
+                ),
                 SizedBox(height: 250.h),
                 Obx(() => controller.isLoading.value
                     ? CommonUtils.loadingIndicator(

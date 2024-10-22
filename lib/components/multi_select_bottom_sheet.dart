@@ -10,7 +10,7 @@ class MultiSelectBottomSheet extends StatelessWidget {
   final List<String> initialSelection;
   final Function(List<String>) onConfirm;
   final bool allowEmptySelection;
-  final bool isSingleSelect; // 新增参数
+  final bool isSingleSelect;
 
   MultiSelectBottomSheet({
     required this.number,
@@ -18,7 +18,7 @@ class MultiSelectBottomSheet extends StatelessWidget {
     required this.initialSelection,
     required this.onConfirm,
     this.allowEmptySelection = false,
-    this.isSingleSelect = false, // 默认为多选
+    this.isSingleSelect = false,
   }) : assert(number == options.length);
 
   final selectedOptions = RxList<String>([]);
@@ -28,12 +28,12 @@ class MultiSelectBottomSheet extends StatelessWidget {
     selectedOptions.value = List.from(initialSelection);
 
     return Container(
-      height: (number * 56 + 150).h,
+      height: MediaQuery.of(context).size.height * 0.5,
       color: Colors.white,
       child: Column(
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 0.w, vertical: 0.h),
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -44,19 +44,14 @@ class MultiSelectBottomSheet extends StatelessWidget {
                 Text(ConstantData.lookingForText.toUpperCase(), style: ConstantStyles.middleTextStyle),
                 TextButton(
                   onPressed: () {
-                    if (allowEmptySelection || selectedOptions.isNotEmpty) {
-                      onConfirm(selectedOptions);
-                      Get.back();
-                    } else {
-                      Get.snackbar('Warning', 'You must select at least one option');
-                    }
+                    onConfirm(selectedOptions);
+                    Get.back();
                   },
                   child: Text('Done', style: ConstantStyles.welcomeButtonStyle),
                 ),
               ],
             ),
           ),
-          SizedBox(height: 20.h,),
           Padding(
             padding: EdgeInsets.only(bottom: 10.h),
             child: Text(
@@ -64,24 +59,29 @@ class MultiSelectBottomSheet extends StatelessWidget {
               style: ConstantStyles.feedbackHintStyle,
             ),
           ),
-          ...List.generate(number, (index) {
-            return ListTile(
-              title: Text(options[index], style: ConstantStyles.welcomeButtonStyle),
-              trailing: Obx(() => isSingleSelect
-                  ? Radio<String>(
-                value: (index + 1).toString(),
-                groupValue: selectedOptions.isNotEmpty ? selectedOptions.first : null,
-                onChanged: (_) => toggleOption((index + 1).toString()),
-                activeColor: Color(0xFF20E2D7),
-              )
-                  : Checkbox(
-                value: selectedOptions.contains((index + 1).toString()),
-                onChanged: (_) => toggleOption((index + 1).toString()),
-                activeColor: Color(0xFF20E2D7),
-              )),
-              onTap: () => toggleOption((index + 1).toString()),
-            );
-          }),
+          Expanded(
+            child: ListView.builder(
+              itemCount: number,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(options[index], style: ConstantStyles.welcomeButtonStyle),
+                  trailing: Obx(() => isSingleSelect
+                      ? Radio<String>(
+                    value: options[index],
+                    groupValue: selectedOptions.isNotEmpty ? selectedOptions.first : null,
+                    onChanged: (_) => toggleOption(options[index]),
+                    activeColor: Color(0xFF20E2D7),
+                  )
+                      : Checkbox(
+                    value: selectedOptions.contains(options[index]),
+                    onChanged: (_) => toggleOption(options[index]),
+                    activeColor: Color(0xFF20E2D7),
+                  )),
+                  onTap: () => toggleOption(options[index]),
+                );
+              },
+            ),
+          ),
         ],
       ),
     );

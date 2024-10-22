@@ -219,6 +219,7 @@ class ConstantData {
   static const  aboutMe = 'About Me';
   static const  chatButton = 'Chat';
   static const  noMomentsData = "This user hasn't shared any moments yet.";
+  static const  noMomentsText = 'No moments yet, come and publish your first one!';
   static const  winkTitle = 'tap to send a wink';
   //bottom_options
   static const reportButton = 'report';
@@ -261,6 +262,8 @@ class ConstantData {
   static const  introductionText = 'introduction';
   static const  noVoiceText = 'No voice introduction';
   static const  noDescription = 'No description available';
+  static const  languageTitle = 'Language';
+  static const  tagsTitle = 'Tags';
   //photo
   static const  mainPhotoText='main photo';
   static const  photoTitle='Photo';
@@ -351,8 +354,12 @@ class ConstantData {
   static const  starText = 'Star';
   static const  endText = 'End';
   //likedMe
-  static const  noOneLikedMeText = 'No one has liked you yet.';
+  static const  noOneLikedMeText = 'The stage is set for your future connections.';
   static const  noTokenInLocal = 'Token not found in SharedPreferences';
+  //viewed_me
+  static const onOneViewedMeText = 'Your profile is waiting to be discovered.';
+  //message_content
+  static const noMessageText = 'The chat bubble is inflating - messages coming soon.';
   //notification
   static const notificationTitle = 'notification';
   //private_chat
@@ -372,7 +379,20 @@ class ConstantData {
   static const lookingForText = 'Looking for';
   static const multipleChoicesText = 'You can select Multiple Choices';
   static const sortByTitle = 'Sort by';
-
+  //delete_account
+  static const  deleteAccountTitle = 'Delete Account';
+  static const  disableAccountTitle = 'Disable Account';
+  static const  permanentlyDeleteAccountTitle = 'Permanently Delete Account';
+  static const  disableAccountDescription = 'Once you disable your account, others will not be able to contact you. However, you can reactivate it at any time.';
+  static const  premiumMembershipInfo = 'If you are a PREMIUM MEMBER, your membership will expire when it\'s supposed to regardless of being disabled or not.';
+  static const  disableAccountButtonText = 'Disable Account';
+  static const  permanentlyDeleteAccountButtonText = 'Permanently Delete Account';
+  static const  disableAccountConfirmation = 'Are you sure you want to disable your account? You can reactivate it at any time.';
+  static const  permanentlyDeleteAccountConfirmation = 'Are you sure you want to permanently delete your account? This action cannot be undone.';
+  static const  accountDisabledMessage = 'Your account has been disabled.';
+  static const  accountDeletedMessage = 'Your account has been permanently deleted.';
+  static const  failedToDisableAccount = 'Failed to disable account.';
+  static const  failedToDeleteAccount = 'Failed to delete account.';
   //main
   static const voicesDatingTitle = 'VoicesDating';
   static const voicesDatingContent = 'Where Hearts Resonate \Through Sound';

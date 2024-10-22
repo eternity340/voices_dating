@@ -12,7 +12,6 @@ import '../../../constants/constant_data.dart';
 import '../../../entity/moment_entity.dart';
 import '../../../image_res/image_res.dart';
 import '../../../routes/app_routes.dart';
-import '../../../service/global_service.dart';
 import '../components/about_me_selection.dart';
 import '../components/profile_photo_wall.dart';
 import '../components/profile_card.dart';

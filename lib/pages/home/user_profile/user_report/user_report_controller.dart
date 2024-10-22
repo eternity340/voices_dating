@@ -47,8 +47,8 @@ class UserReportController extends GetxController {
     String? attachId;
     if (selectedImagePath.isNotEmpty) {
       attachId = await globalService.uploadFile(
-          selectedImagePath,
-          tokenEntity.accessToken.toString());
+          selectedImagePath
+      );
     }
 
     int commentId;

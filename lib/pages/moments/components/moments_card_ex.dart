@@ -15,6 +15,7 @@ import '../../../entity/user_data_entity.dart';
 import '../../../image_res/image_res.dart';
 import '../../../service/global_service.dart';
 import '../../../utils/shared_preference_util.dart';
+import '../moments_detail/moments_detail_controller.dart';
 import 'love_button.dart';
 
 class MomentsCard extends StatelessWidget {
@@ -211,8 +212,9 @@ class MomentsCard extends StatelessWidget {
           SizedBox(width: 8.w),
           LoveButton(
             moment: moment,
-            tokenEntity: tokenEntity,
-            onLoveButtonPressed: onLoveButtonPressed,
+            onLikeChanged: (int isLike) {
+              //Get.find<MomentsDetailController>().updateLikeStatus(isLike);
+            },
           ),
         ],
       ),

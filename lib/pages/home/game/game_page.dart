@@ -12,6 +12,7 @@ class GamePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final GameController controller = Get.put(GameController());
+    final EasyRefreshController _refreshController = EasyRefreshController();
 
     return Scaffold(
       body: Stack(
@@ -24,29 +25,43 @@ class GamePage extends StatelessWidget {
             child: Container(),
           ),
           Obx(() {
-            return controller.isLoading.value
-                ? CommonUtils.loadingIndicator()
-                : Positioned(
-              top: 80.h,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: EasyRefresh(
-                onRefresh: controller.onRefresh,
-                onLoad: controller.onLoad,
-                child: ListView.builder(
-                  padding: EdgeInsets.zero,
-                  itemCount: controller.userList.length,
-                  itemBuilder: (context, index) {
-                    final user = controller.userList[index];
-                    return FeelDetailCard(
-                      userEntity: user,
-                      tokenEntity: controller.tokenEntity,
-                    );
+            if (controller.isInitialLoading.value) {
+              return CommonUtils.loadingIndicator();
+            } else {
+              return Positioned(
+                top: 100.h,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: EasyRefresh(
+                  controller: _refreshController,
+                  onRefresh: () async {
+                    await controller.onRefresh();
+                    _refreshController.finishRefresh();
+                    _refreshController.resetLoadState();
                   },
+                  onLoad: () async {
+                    await controller.onLoad();
+                    if (controller.hasMore.value) {
+                      _refreshController.finishLoad();
+                    } else {
+                      _refreshController.finishLoad(noMore: true);
+                    }
+                  },
+                  child: ListView.builder(
+                    padding: EdgeInsets.zero,
+                    itemCount: controller.userList.length,
+                    itemBuilder: (context, index) {
+                      final user = controller.userList[index];
+                      return FeelDetailCard(
+                        userEntity: user,
+                        tokenEntity: controller.tokenEntity,
+                      );
+                    },
+                  ),
                 ),
-              ),
-            );
+              );
+            }
           }),
         ],
       ),

@@ -8,22 +8,27 @@ import 'package:voices_dating/pages/home/user_profile/user_moments/user_moments_
 import 'package:voices_dating/pages/home/user_profile/user_profile_page.dart';
 import 'package:voices_dating/pages/home/user_profile/user_report/user_report_page.dart';
 import 'package:voices_dating/pages/me/host/host_page.dart';
+import 'package:voices_dating/pages/me/my_profile/update_profile/add_tags/add_tags_page.dart';
 import 'package:voices_dating/pages/me/my_profile/update_profile/change_username/change_username.dart';
 import 'package:voices_dating/pages/me/my_profile/update_profile/upload_voice/record/record_page.dart';
 import 'package:voices_dating/pages/me/my_profile/update_profile/upload_voice/upload_voice_page.dart';
 import 'package:voices_dating/pages/me/photo/photo_page.dart';
 import 'package:voices_dating/pages/me/settings/about_me/about_me_page.dart';
 import 'package:voices_dating/pages/me/settings/block_member/block_member_page.dart';
+import 'package:voices_dating/pages/me/settings/delete_account/delete_account_page.dart';
 import 'package:voices_dating/pages/me/settings/feedback/feedback_page.dart';
 import 'package:voices_dating/pages/me/settings/purchase_record/purchase_record_page.dart';
 import 'package:voices_dating/pages/me/verify/verify_page.dart';
 import 'package:voices_dating/pages/message/private_chat/private_chat_page.dart';
 import 'package:voices_dating/pages/moments/add_moment/add_moment_page.dart';
 import 'package:voices_dating/pages/moments/moments_detail/moments_detail_page.dart';
+import 'package:voices_dating/pages/pre_login/account_suspended/account_suspended_page.dart';
+import 'package:voices_dating/pages/pre_login/account_suspended/pre_feedback/pre_feedback_page.dart';
 import 'package:voices_dating/pages/pre_login/welcome/privacy_policy.dart';
 import 'package:voices_dating/pages/pre_login/welcome/service_agreement.dart';
 import 'package:voices_dating/pages/voice/voice_page.dart';
 import 'package:get/get.dart' as getx;
+import '../components/image_viewer_page.dart';
 import '../pages/email/page/get_email_code_page.dart';
 import '../pages/email/page/verify_email_page.dart';
 import '../pages/email/page/verify_success_page.dart';
@@ -36,6 +41,7 @@ import '../pages/me/my_profile/update_profile/change_age/change_age.dart';
 import '../pages/me/my_profile/update_profile/change_headline/change_headline.dart';
 import '../pages/me/my_profile/update_profile/change_height/change_height.dart';
 import '../pages/me/my_profile/my_profile_page.dart';
+import '../pages/me/my_profile/update_profile/change_language/change_language.dart';
 import '../pages/me/my_profile/update_profile/change_location/change_location.dart';
 import '../pages/me/my_profile/update_profile/change_location/components/location_detail.dart';
 import '../pages/me/notification/notification_page.dart';
@@ -98,6 +104,7 @@ class AppRoutes {
   static const String changeHeadline = '/change_headline';
   static const String changeHeight = '/change_height';
   static const String changeLocation = '/change_location';
+  static const String changeLanguage = '/change_language';
   static const String uploadVoice = '/upload_voice';
   static const String record = '/record';
   static const String verify = '/verify';
@@ -110,6 +117,11 @@ class AppRoutes {
   static const String aboutMe = '/about_me';
   static const String notification = '/notification';
   static const String host = '/host';
+  static const String accountSuspended = '/account_suspended';
+  static const String preFeedback = '/pre_feedback';
+  static const String imageViewer = '/image_viewer';
+  static const String deleteAccount = '/delete_account';
+  static const String addTags = '/add_tags';
 
   static const String homeProfileDetail = '$home$profileDetail';
   static const String homeProfileMoments = '$homeProfileDetail$profileMoments';
@@ -136,6 +148,7 @@ class AppRoutes {
   static const String meMyProfileChangeHeadline = '$meMyProfile$changeHeadline';
   static const String meMyProfileChangeHeight = '$meMyProfile$changeHeight';
   static const String meMyProfileChangeLocation = '$meMyProfile$changeLocation';
+  static const String meMyProfileChangeLanguage = '$meMyProfile$changeLanguage';
   static const String meMyProfileUploadVoice = '$meMyProfile$uploadVoice';
   static const String meMyProfileRecord = '$meMyProfileUploadVoice$record';
   static const String meVerifyPhoto = '$meVerify$verifyPhoto';
@@ -144,9 +157,10 @@ class AppRoutes {
   static const String meSettingsFeedback = '$meSettings$feedback';
   static const String meSettingsPurchaseRecord = '$meSettings$purchaseRecord';
   static const String meSettingsAboutMe = '$meSettings$aboutMe';
+  static const String meSettingsDeleteAccount = '$meSettings$deleteAccount';
   static const String meLocationDetail = '$meMyProfileChangeLocation$locationDetail';
   static const String meHost ='$me$host';
-
+  static const String meMyProfileAddTags = '$me$myProfile$addTags';
 
   //route transition
   static const defaultTransition = getx.Transition.cupertino;
@@ -184,10 +198,32 @@ class AppRoutes {
     ),
 
     getx.GetPage(
+      name: accountSuspended,
+      page: () => AccountSuspendedPage(),
+      transition: defaultTransition,
+      transitionDuration: defaultDuration,
+    ),
+
+    getx.GetPage(
+      name: preFeedback,
+      page: () => PreFeedbackPage(),
+      transition: defaultTransition,
+      transitionDuration: defaultDuration,
+    ),
+
+    getx.GetPage(
       name: getMailCode,
       page: () => GetMailCodePage(),
       transition: defaultTransition,
       transitionDuration: defaultDuration,
+    ),
+
+    getx.GetPage(
+      name: imageViewer,
+      page: () => ImageViewerPage(
+        imageUrls: getx.Get.arguments['imageUrls'] ?? [],
+        initialIndex: getx.Get.arguments['initialIndex'] ?? 0,
+      ),
     ),
 
     getx.GetPage(
@@ -448,6 +484,18 @@ class AppRoutes {
               transitionDuration: defaultDuration,
             ),
             getx.GetPage(
+              name: changeLanguage,
+              page: () => ChangeLanguage(),
+              transition: defaultTransition,
+              transitionDuration: defaultDuration,
+            ),
+            getx.GetPage(
+              name: addTags,
+              page: () => AddTagsPage(),
+              transition: defaultTransition,
+              transitionDuration: defaultDuration,
+            ),
+            getx.GetPage(
               name: changeLocation,
               page: () => ChangeLocation(),
               transition: defaultTransition,
@@ -524,6 +572,12 @@ class AppRoutes {
             getx.GetPage(
               name: aboutMe,
               page: () => AboutMePage(),
+              transition: defaultTransition,
+              transitionDuration: defaultDuration,
+            ),
+            getx.GetPage(
+              name: deleteAccount,
+              page: () => DeleteAccountPage(),
               transition: defaultTransition,
               transitionDuration: defaultDuration,
             ),

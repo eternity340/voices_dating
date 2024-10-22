@@ -22,7 +22,7 @@ class ProfileDetailController extends GetxController {
   final ListUserEntity userEntity;
   final TokenEntity tokenEntity;
   late UserDataEntity? userDataEntity;
-  final DioClient dioClient = DioClient();
+  final DioClient dioClient = DioClient.instance;
   final GlobalService globalService = Get.find<GlobalService>();
   RxString languageLabel = RxString('');
   RxBool isLoading = true.obs;
@@ -89,7 +89,7 @@ class ProfileDetailController extends GetxController {
   }
 
   void _sendWink(WinkEntity selectedWink) {
-    DioClient.instance.requestNetwork<RetEntity>(
+    dioClient.requestNetwork<RetEntity>(
       method: Method.post,
       url: ApiConstants.setWinkedUser,
       options: Options(headers: {'token': tokenEntity.accessToken}),

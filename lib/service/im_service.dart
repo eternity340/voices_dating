@@ -24,6 +24,7 @@ import '../utils/common_utils.dart';
 import '../utils/log_util.dart';
 import '../utils/shared_preference_util.dart';
 import 'app_service.dart';
+import 'notification_service.dart';
 
 enum ConnectionStatusEnum {
   connecting(0),
@@ -177,9 +178,13 @@ class IMService extends GetxService {
     currentTimeInterval = 1000;
   }
 
-  IMService init(){
+  Future<IMService> init() async {
+    // 在这里进行 IM 服务的初始化
+    // 例如：连接到 IM 服务器，初始化配置等
+    await Future.delayed(Duration(seconds: 1)); // 模拟异步初始化
     return this;
   }
+
   @override
   void onInit() {
     super.onInit();
@@ -188,6 +193,8 @@ class IMService extends GetxService {
     ///网络变化监听
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+    Get.put(NotificationService());
+    NotificationService.to.init();
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -326,7 +333,8 @@ class IMService extends GetxService {
 
     var type = MessageTypeEnum.values.firstWhere(
             (element) => element.value == messageEntity.type,
-        orElse: () => MessageTypeEnum.UN_KNOW);
+        orElse: () => MessageTypeEnum.UN_KNOW
+    );
     switch (type) {
       case MessageTypeEnum.PING:
         pingInterval = DateTime.now().millisecondsSinceEpoch;
@@ -340,6 +348,10 @@ class IMService extends GetxService {
         needReConnect = true;
         break;
       case MessageTypeEnum.RECALL:
+        break;
+      case MessageTypeEnum.SAY:
+      // 当收到聊天消息时,显示通知
+        _showNotificationForMessage(messageEntity);
         break;
       case MessageTypeEnum.REPORT:
 
@@ -371,6 +383,23 @@ class IMService extends GetxService {
       listener(messageEntity);
     }
   }
+
+  void _showNotificationForMessage(IMMessageEntity message) {
+    if (message.typeId == MessageTypeIdEnum.TEXT.value) {
+      LogUtil.d(message: "Attempting to show notification");
+      if (NotificationService.to.showNotifications) {
+        NotificationService.to.showNotification(
+            message.fromName ?? "New Message",
+            message.content ?? "",
+            payload: json.encode(message.toJson())
+        );
+      } else {
+        LogUtil.d(message: "Notification suppressed due to current page");
+      }
+    }
+  }
+
+
 
   ///
   /// If there's an error connecting, the channel's stream emits a

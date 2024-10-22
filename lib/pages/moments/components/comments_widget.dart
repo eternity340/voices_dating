@@ -1,5 +1,6 @@
 import 'package:common_utils/common_utils.dart';
 import 'package:voices_dating/entity/comment_entity.dart';
+import 'package:voices_dating/entity/ret_entity.dart';
 import 'package:voices_dating/net/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -168,13 +169,13 @@ class _CommentWidgetState extends State<CommentWidget> {
     if (commentId == null) return;
     bool isLiked = !isLikedList[index];
 
-    await dioClient.requestNetwork<dynamic>(
+    await dioClient.requestNetwork<RetEntity>(
       method: Method.post,
       url: ApiConstants.likeTimelineComment,
       queryParameters: {'commentId': int.tryParse(commentId)},
       options: Options(headers: {'token': widget.tokenEntity.accessToken}),
       onSuccess: (data) {
-        if (data['code'] == 200) {
+        if (data?.ret == true) {
           setState(() {
             isLikedList[index] = isLiked;
             _updateLikeCount(index, isLiked);
@@ -182,7 +183,7 @@ class _CommentWidgetState extends State<CommentWidget> {
         }
       },
       onError: (code, msg, data) {
-        print('Failed to toggle like status for comment: $msg');
+        LogUtil.e(msg);
       },
     );
   }

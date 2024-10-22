@@ -10,20 +10,23 @@ import '../../../net/dio.client.dart';
 class GameController extends GetxController {
   final TokenEntity tokenEntity = Get.arguments?['tokenEntity'] as TokenEntity;
   var userList = <ListUserEntity>[].obs;
-  var isLoading = true.obs;
-  var currentPage = 1.obs;
+  var isInitialLoading = true.obs;
+  var isRefreshing = false.obs;
+  var currentPage = 1;
   var hasMore = true.obs;
   final DioClient dioClient = DioClient.instance;
 
   @override
   void onInit() {
     super.onInit();
-    fetchData();
+    fetchData(isInitial: true);
   }
 
-  Future<void> fetchData({bool isLoadMore = false}) async {
-    if (!isLoadMore) {
-      isLoading.value = true;
+  Future<void> fetchData({bool isLoadMore = false, bool isInitial = false}) async {
+    if (isInitial) {
+      isInitialLoading.value = true;
+    } else if (!isLoadMore) {
+      isRefreshing.value = true;
     }
 
     if (!hasMore.value && isLoadMore) {
@@ -32,11 +35,11 @@ class GameController extends GetxController {
 
     const String url = ApiConstants.search;
     try {
-      await dioClient.requestNetwork<List<ListUserEntity>>(
+      final response = await dioClient.requestNetwork<List<ListUserEntity>>(
         method: Method.get,
         url: url,
         queryParameters: {
-          'page': currentPage.value,
+          'page': currentPage,
           'offset': 20,
         },
         options: Options(headers: {'token': tokenEntity.accessToken}),
@@ -49,29 +52,35 @@ class GameController extends GetxController {
             } else {
               userList.assignAll(filteredData);
             }
-            hasMore.value = filteredData.length >= 20;
+
+            // 修改hasMore的判断逻辑
+            hasMore.value = data.length >= 20; // 使用原始数据长度判断，而不是过滤后的数据
+
+            if (hasMore.value) {
+              currentPage++; // 只有在还有更多数据时才增加页码
+            }
           }
-          isLoading.value = false;
 
           if (userList.isEmpty && !isLoadMore) {
             showNoDataDialog();
           }
         },
         onError: (code, msg, data) {
-          isLoading.value = false;
           if (!isLoadMore) {
             showNoDataDialog();
           }
         },
       );
+      return response;
     } catch (e) {
-      isLoading.value = false;
       if (!isLoadMore) {
         showNoDataDialog();
       }
+    } finally {
+      isInitialLoading.value = false;
+      isRefreshing.value = false;
     }
   }
-
 
   void showNoDataDialog() {
     Get.dialog(
@@ -88,15 +97,15 @@ class GameController extends GetxController {
   }
 
   Future<void> onRefresh() async {
-    currentPage.value = 1;
+    currentPage = 1;
     hasMore.value = true;
     await fetchData();
   }
 
   Future<void> onLoad() async {
     if (hasMore.value) {
-      currentPage.value++;
       await fetchData(isLoadMore: true);
     }
   }
 }
+

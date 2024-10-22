@@ -4,9 +4,11 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:voices_dating/constants/Constant_styles.dart';
+import '../../../components/empty_state_widget.dart';
 import '../../../components/verified_tag.dart';
 import '../../../entity/list_user_entity.dart';
 import '../../../entity/chatted_user_entity.dart';
+import '../../../image_res/image_res.dart';
 import '../message_controller.dart';
 
 class LikedMeContent extends StatefulWidget {
@@ -52,7 +54,14 @@ class _LikedMeContentState extends State<LikedMeContent> {
           }
         },
         child: widget.controller.likedMeUsers.isEmpty
-            ? Center(child: Text(ConstantData.noOneLikedMeText))
+            ? EmptyStateWidget(
+          imagePath: ImageRes.emptyLikeMeContentSvg,
+          message: ConstantData.noOneLikedMeText,
+          textStyle: ConstantStyles.selectLocationStyle,
+          imageWidth: 200.w,
+          imageHeight: 200.h,
+          topPadding: 100.h,
+        )
             : ListView.builder(
           itemCount: widget.controller.likedMeUsers.length + 1,
           itemBuilder: (context, index) {

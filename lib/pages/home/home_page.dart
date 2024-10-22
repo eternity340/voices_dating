@@ -6,11 +6,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../components/all_navigation_bar.dart';
 import '../../components/background.dart';
+import '../../components/empty_state_widget.dart';
 import '../../constants/Constant_styles.dart';
 import '../../constants/constant_data.dart';
 import '../../entity/token_entity.dart';
 import '../../image_res/image_res.dart';
 import '../../service/app_service.dart';
+import '../../utils/common_utils.dart';
 import '../../utils/shared_preference_util.dart';
 import 'components/home_icon_button.dart';
 import 'components/user_card.dart';
@@ -171,6 +173,9 @@ class _HomePageState extends State<HomePage> {
 
   Widget honeyOption(HomeController controller) {
     return Obx(() {
+      if (controller.isInitialHoneyLoading.value) {
+        return Center(child: CommonUtils.loadingIndicator());
+      }
       return EasyRefresh(
         onRefresh: () async {
           controller.honeyCurrentPage = 1;
@@ -199,6 +204,18 @@ class _HomePageState extends State<HomePage> {
 
   Widget nearbyOption(HomeController controller) {
     return Obx(() {
+      if (controller.isInitialNearbyLoading.value) {
+        return Center(child: CommonUtils.loadingIndicator());
+      }
+      if (controller.nearUsers.isEmpty) {
+        return EmptyStateWidget(
+          imagePath: ImageRes.emptyNearOptionSvg,
+          message: 'No nearby users found',
+          imageWidth: 200.w,
+          imageHeight: 200.h,
+          topPadding: 0.h,
+        );
+      }
       return EasyRefresh(
         onRefresh: () async {
           controller.nearbyCurrentPage = 1;

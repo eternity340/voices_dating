@@ -51,6 +51,24 @@ class PhotoController extends GetxController {
     }
   }
 
+  Future<void> pickAndUploadMultiplePhotos(String accessToken) async {
+    final ImagePicker _picker = ImagePicker();
+    final List<XFile>? images = await _picker.pickMultiImage();
+    if (images != null && images.isNotEmpty) {
+      for (var image in images) {
+        final String localPath = image.path;
+        uploadingPhotos[localPath] = true;
+        update();
+
+        await uploadPhoto(accessToken, image);
+
+        uploadingPhotos.remove(localPath);
+      }
+      await fetchUserData();
+    }
+  }
+
+
   Future<void> uploadPhoto(String accessToken, XFile image) async {
     final dio.FormData formData = dio.FormData.fromMap({
       'file': await dio.MultipartFile.fromFile(image.path),

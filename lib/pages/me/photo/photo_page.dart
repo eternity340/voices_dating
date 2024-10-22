@@ -298,7 +298,7 @@ class PhotoPage extends StatelessWidget {
           },
           onSecondPressed: () async {
             if (await controller.requestPermission(Permission.photos)) {
-              await controller.pickAndUploadPhoto(accessToken, ImageSource.gallery);
+              await controller.pickAndUploadMultiplePhotos(accessToken);
             }
             Navigator.pop(context);
           },
@@ -311,4 +311,5 @@ class PhotoPage extends StatelessWidget {
       },
     );
   }
+
 }

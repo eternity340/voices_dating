@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../../../components/audio_player_widget.dart';
+import '../../../components/image_viewer_page.dart';
 import '../../../constants/constant_data.dart';
 import '../../../entity/chatted_user_entity.dart';
 import '../../../entity/moment_entity.dart';
@@ -16,6 +17,7 @@ import '../../../entity/user_data_entity.dart';
 import '../../../image_res/image_res.dart';
 import '../../../service/global_service.dart';
 import '../../../utils/shared_preference_util.dart';
+import '../moments_controller.dart';
 import 'love_button.dart';
 
 class MomentsCard extends StatelessWidget {
@@ -23,13 +25,11 @@ class MomentsCard extends StatelessWidget {
   final UserDataEntity userDataEntity;
   final bool showButtons;
   final TokenEntity tokenEntity;
-  final VoidCallback onLoveButtonPressed;
 
   const MomentsCard({
     Key? key,
     required this.moment,
     required this.tokenEntity,
-    required this.onLoveButtonPressed,
     this.showButtons = true,
     required this.userDataEntity,
   }) : super(key: key);
@@ -133,76 +133,81 @@ class MomentsCard extends StatelessWidget {
     final audioAttachments = moment.attachments!.where((attachment) =>
     attachment.type == 2).toList();
 
-
-
-    // 如果只有一个附件
-    if (moment.attachments!.length == 1) {
-      final attachment = moment.attachments!.first;
-      if (attachment.type == 1 || attachment.type == null) {
-        return _buildImageAttachment(attachment);
-      } else if (attachment.type == 2) {
-        return _buildAudioAttachment(attachment);
-      }
-    }
-
-    // 如果有多个图片附件
-    if (imageAttachments.isNotEmpty) {
-      return Column(
-        children: [
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: imageAttachments.map((attachment) {
-                return Container(
-                  width: 137.09.w,
-                  height: 174.h,
-                  margin: EdgeInsets.only(right: 10.w),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20.r),
-                    image: DecorationImage(
-                      image: attachment.url != null
-                          ? NetworkImage(attachment.url!)
-                          : AssetImage(ImageRes.placeholderAvatar) as ImageProvider,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
-          ),
-
-          if (audioAttachments.isNotEmpty) ...[
-            SizedBox(height: 16.h),
-            ...audioAttachments.map((attachment) => _buildAudioAttachment(attachment)),
-          ],
+    return Column(
+      children: [
+        if (imageAttachments.isNotEmpty)
+          _buildImageAttachments(imageAttachments),
+        if (audioAttachments.isNotEmpty) ...[
+          SizedBox(height: 16.h),
+          ...audioAttachments.map((attachment) => _buildAudioAttachment(attachment)),
         ],
-      );
-    }
-
-    if (audioAttachments.isNotEmpty) {
-      return Column(
-        children: audioAttachments.map((attachment) => _buildAudioAttachment(attachment)).toList(),
-      );
-    }
-
-    return SizedBox.shrink();
+      ],
+    );
   }
 
-  Widget _buildImageAttachment(AttachmentEntity attachment) {
-    return Container(
-      width: 303.w,
-      height: 400.h,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20.r),
-        image: DecorationImage(
-          image: attachment.url != null
-              ? NetworkImage(attachment.url!)
-              : AssetImage(ImageRes.placeholderAvatar) as ImageProvider,
-          fit: BoxFit.cover,
+  Widget _buildImageAttachments(List<AttachmentEntity> imageAttachments) {
+    if (imageAttachments.length == 1) {
+      return _buildSingleImageAttachment(imageAttachments.first);
+    } else {
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: imageAttachments.asMap().entries.map((entry) {
+            int index = entry.key;
+            AttachmentEntity attachment = entry.value;
+            return GestureDetector(
+              onTap: () {
+                Get.to(() => ImageViewerPage(
+                  imageUrls: imageAttachments.map((a) => a.url ?? '').toList(),
+                  initialIndex: index,
+                ));
+              },
+              child: Container(
+                width: 137.09.w,
+                height: 174.h,
+                margin: EdgeInsets.only(right: 10.w),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20.r),
+                  image: DecorationImage(
+                    image: attachment.url != null
+                        ? NetworkImage(attachment.url!)
+                        : AssetImage(ImageRes.placeholderAvatar) as ImageProvider,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      );
+    }
+  }
+
+  Widget _buildSingleImageAttachment(AttachmentEntity attachment) {
+    return GestureDetector(
+      onTap: () {
+        Get.to(() => ImageViewerPage(
+          imageUrls: [attachment.url ?? ''],
+          initialIndex: 0,
+        ));
+      },
+      child: Container(
+        width: 303.w,
+        height: 400.h,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20.r),
+          image: DecorationImage(
+            image: attachment.url != null
+                ? NetworkImage(attachment.url!)
+                : AssetImage(ImageRes.placeholderAvatar) as ImageProvider,
+            fit: BoxFit.cover,
+          ),
         ),
       ),
     );
   }
+
+
 
   Widget _buildAudioAttachment(AttachmentEntity attachment) {
     return Container(
@@ -238,12 +243,13 @@ class MomentsCard extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(width: 8.w),
-          LoveButton(
+          SizedBox(width: 16.w),
+          /*LoveButton(
             moment: moment,
-            tokenEntity: tokenEntity,
-            onLoveButtonPressed: onLoveButtonPressed,
-          ),
+            onLikeChanged: (int isLike) {
+              moment.liked = isLike;
+            },
+          ),*/
         ],
       ),
     );

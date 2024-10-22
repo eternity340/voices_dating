@@ -342,7 +342,7 @@ class MessageController extends GetxController {
     _disposed = true;
     pageController.dispose();
     IMService.instance.removeMessageCallBack(_handleWebSocketMessage);
-    IMService.instance.disconnect();
+    //IMService.instance.disconnect();
     super.onClose();
   }
 }

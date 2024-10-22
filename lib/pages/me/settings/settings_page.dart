@@ -46,12 +46,17 @@ import '../components/path_box.dart';
               text: ConstantData.aboutMe,
               onPressed: () => _navigateTo(AppRoutes.meSettingsAboutMe),
             ),
-            CleanUpPathBox(  // 使用新的清除缓存组件
+            PathBox(
               top: ConstantStyles.pathBoxTopSpacing + 380.h,
+              text: ConstantData.deleteAccountTitle,
+              onPressed: () => controller.showDeleteAccountConfirmation(),
+            ),
+            CleanUpPathBox(
+              top: ConstantStyles.pathBoxTopSpacing + 475.h,
               text: ConstantData.cleanUpMemory,
             ),
             Positioned(
-              top: ConstantStyles.signOutButtonTop,
+              top: 670.h,
               left: 0,
               right: 0,
               child: Center(

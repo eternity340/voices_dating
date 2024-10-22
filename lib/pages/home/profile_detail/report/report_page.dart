@@ -8,7 +8,7 @@ import '../../../../constants/Constant_styles.dart';
 import '../../../../constants/constant_data.dart';
 import '../../../../entity/token_entity.dart';
 import '../../../../image_res/image_res.dart';
-import 'components/report_option.dart';
+import '../../../../components/option_selector.dart';
 import 'report_controller.dart';
 
 class ReportPage extends StatelessWidget {
@@ -64,7 +64,7 @@ class ReportPage extends StatelessWidget {
               Positioned(
                 left: 10.w,
                 top: 110.h,
-                child: ReportOption(
+                child: OptionSelector(
                   optionText: ConstantData.pornographicOption,
                   isSelected: controller.selectedOption == ConstantData.pornographicOption,
                   onSelect: () => controller.selectOption(ConstantData.pornographicOption),
@@ -73,7 +73,7 @@ class ReportPage extends StatelessWidget {
               Positioned(
                 left: 10.w,
                 top: 200.h,
-                child: ReportOption(
+                child: OptionSelector(
                   optionText: ConstantData.violentOption,
                   isSelected: controller.selectedOption == ConstantData.violentOption,
                   onSelect: () => controller.selectOption(ConstantData.violentOption),
@@ -82,7 +82,7 @@ class ReportPage extends StatelessWidget {
               Positioned(
                 left: 10.w,
                 top: 290.h,
-                child: ReportOption(
+                child: OptionSelector(
                   optionText: ConstantData.maliciousAttackOption,
                   isSelected: controller.selectedOption == ConstantData.maliciousAttackOption,
                   onSelect: () => controller.selectOption(ConstantData.maliciousAttackOption),
@@ -91,7 +91,7 @@ class ReportPage extends StatelessWidget {
               Positioned(
                 left: 10.w,
                 top: 380.h,
-                child: ReportOption(
+                child: OptionSelector(
                   optionText: ConstantData.disgustingOption,
                   isSelected: controller.selectedOption == ConstantData.disgustingOption,
                   onSelect: () => controller.selectOption(ConstantData.disgustingOption),

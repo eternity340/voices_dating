@@ -3,10 +3,12 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:voices_dating/constants/Constant_styles.dart';
+import '../../../components/empty_state_widget.dart';
 import '../../../components/verified_tag.dart';
 import '../../../constants/constant_data.dart';
 import '../../../entity/list_user_entity.dart';
 import '../../../entity/chatted_user_entity.dart';
+import '../../../image_res/image_res.dart';
 import '../../../routes/app_routes.dart';
 import '../message_controller.dart';
 
@@ -53,7 +55,14 @@ class _ViewedMeContentState extends State<ViewedMeContent> {
           }
         },
         child: widget.controller.visitedMeUsers.isEmpty
-            ? Center(child: Text('——No one has viewed your profile yet.——'))
+            ? EmptyStateWidget(
+          imagePath: ImageRes.emptyViewedMeSvg,
+          message: ConstantData.onOneViewedMeText,
+          textStyle: ConstantStyles.selectLocationStyle,
+          imageWidth: 200.w,
+          imageHeight: 200.h,
+          topPadding: 100.h,
+        )
             : ListView.builder(
           itemCount: widget.controller.visitedMeUsers.length + 1,
           itemBuilder: (context, index) {

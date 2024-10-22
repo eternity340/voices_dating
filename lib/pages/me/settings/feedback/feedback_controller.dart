@@ -27,7 +27,7 @@ class FeedbackController extends GetxController {
   }
 
   Future<void> submitFeedback() async {
-    final attachId = await globalService.uploadFile(selectedImagePath.value, tokenEntity.accessToken!);
+    final attachId = await globalService.uploadFile(selectedImagePath.value);
     if (attachId == null) {
       LogUtil.e(message: 'Image upload failed');
       return;

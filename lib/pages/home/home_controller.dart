@@ -24,14 +24,24 @@ class HomeController extends GetxController {
   var hasMoreData = true.obs;
   final Rx<UserDataEntity?> rxUserData = Rx<UserDataEntity?>(null);
 
+  var isInitialHoneyLoading = true.obs;
+  var isInitialNearbyLoading = true.obs;
+
+  UserDataEntity? get userData => AppService.instance.selfUser;
+
   HomeController(this.tokenEntity) {
     pageController = PageController(initialPage: 0);
-    fetchUsers();
-    fetchNearUsers();
+    // fetchUsers();
+    // fetchNearUsers();
+    fetchInitialUsers();
     //_initUserData();
   }
 
-  UserDataEntity? get userData => AppService.instance.selfUser;
+  Future<void> fetchInitialUsers() async {
+    await fetchUsers(isInitial: true);
+    isInitialHoneyLoading.value = false;
+  }
+
 
   void _initUserData() {
     rxUserData.value = AppService.instance.rxSelfUser.value;
@@ -59,8 +69,8 @@ class HomeController extends GetxController {
     }
   }
 
-  Future<void> fetchUsers() async {
-    if (isLoading.value || !hasMoreData.value) return;
+  Future<void> fetchUsers({bool isInitial = false}) async {
+    if (!isInitial && (isLoading.value || !hasMoreData.value)) return;
     _setLoading(true);
     try {
       await DioClient.instance.requestNetwork<List<dynamic>>(
@@ -99,8 +109,8 @@ class HomeController extends GetxController {
   }
 
 
-  Future<void> fetchNearUsers() async {
-    if (isLoading.value || !hasMoreData.value) return;
+  Future<void> fetchNearUsers({bool isInitial = false}) async {
+    if (!isInitial && (isLoading.value || !hasMoreData.value)) return;
     _setLoading(true);
     try {
       await DioClient.instance.requestNetwork<List<dynamic>>(
@@ -109,7 +119,7 @@ class HomeController extends GetxController {
         queryParameters: {
           'page': nearbyCurrentPage,
           'offset': 20,
-          'find[distance]':'500'
+          'find[distance]':'300'
         },
         options: Options(headers: {'token': tokenEntity.accessToken}),
         onSuccess: (data) {
@@ -137,13 +147,16 @@ class HomeController extends GetxController {
       _setErrorMessage(e.toString());
     } finally {
       _setLoading(false);
+      if (isInitial) {
+        isInitialNearbyLoading.value = false;
+      }
     }
   }
 
 
   void loadNearbyUsersIfNeeded() {
     if (nearUsers.isEmpty) {
-      fetchNearUsers();
+      fetchNearUsers(isInitial: true);
     }
   }
 

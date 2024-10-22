@@ -86,8 +86,8 @@ class UploadVoiceController extends GetxController {
 
     String selectedAudioPath = audioList[selectedIndex.value];
     String? attachId = await globalService.uploadFile(
-        selectedAudioPath,
-        tokenEntity.accessToken.toString());
+        selectedAudioPath
+    );
     if (attachId == null) {
       return;
     }

@@ -2,6 +2,7 @@ import 'package:voices_dating/components/background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:voices_dating/image_res/image_res.dart';
 import 'package:voices_dating/routes/app_routes.dart';
 import '../../../../constants/Constant_styles.dart';
 import '../../../../constants/constant_data.dart';
@@ -26,14 +27,20 @@ class AboutMePage extends StatelessWidget {
             child: Container(),
           ),
           Positioned(
-            left: 132.w,
+            left: ScreenUtil().screenWidth/2-50.h,
             top: 139.h,
-            child: Container(
-              width: 91.w,
-              height: 91.h,
-              decoration: BoxDecoration(
-                color: Color(0xFFD8D8D8),
-                borderRadius: BorderRadius.circular(10.r),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10.r),
+              child: Container(
+                width: 100.w,
+                height: 100.h,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                ),
+                child: Image.asset(
+                  ImageRes.iconVoicesDatingLogo,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),
@@ -47,7 +54,7 @@ class AboutMePage extends StatelessWidget {
           PathBox(
             top: 380.h,
             text: ConstantData.serviceAgreement,
-             onPressed: () {
+            onPressed: () {
               Get.toNamed(AppRoutes.serviceAgreement);
             },
           ),

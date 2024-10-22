@@ -14,6 +14,8 @@ import '../../../components/bottom_options.dart';
 import '../../../net/api_constants.dart';
 import '../../../net/dio.client.dart';
 import '../../../routes/app_routes.dart';
+import '../moments_controller.dart';
+import '../moments_page.dart';
 
 class MomentsDetailController extends GetxController {
   final MomentEntity moment = Get.arguments['moment'];
@@ -25,12 +27,6 @@ class MomentsDetailController extends GetxController {
   final isCommentInputVisible = false.obs;
   final commentController = TextEditingController();
   final commentContent = ''.obs;
-
-  @override
-  void onClose() {
-    commentController.dispose();
-    super.onClose();
-  }
 
   void toggleCommentInput() {
     if (isCommentInputVisible.value) {
@@ -183,4 +179,21 @@ class MomentsDetailController extends GetxController {
     );
   }
 
+  /*void navigationToMomentPage() {
+    Get.to(
+      //AppRoutes.moments,
+          () => MomentsPage(),
+      arguments: {
+        'tokenEntity': tokenEntity,
+        'userDataEntity': userData,
+      },
+      transition: Transition.noTransition,
+    );
+  }*/
+
+  @override
+  void onClose() {
+    commentController.dispose();
+    super.onClose();
+  }
 }

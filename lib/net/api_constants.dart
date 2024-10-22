@@ -168,7 +168,8 @@ class ApiConstants{
   static const String getReplaceWords = "$urlVersion/get/replace/words";
   static const String readMessage ="$urlVersion/read/message";
   static const String winkTypeList = "$urlVersion/wink/type/list";
-
+  static const String confirmPassword = "$urlVersion/confirm_password";
+  static const String deleteAccount = "$urlVersion/delete/account";
 
   // static String baseUrl = kReleaseMode?debugUrl:debugUrl;
   //

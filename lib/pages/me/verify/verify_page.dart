@@ -47,7 +47,7 @@ class VerifyPage extends StatelessWidget {
               child: Container(),
               onBackPressed: _navigateToMePage,
             ),
-            PathBox(
+            /*PathBox(
               top: 124.h,
               text: ConstantData.verifyPhotoText,
               onPressed: () {
@@ -57,9 +57,9 @@ class VerifyPage extends StatelessWidget {
                       'userDataEntity': userData
                     });
               },
-            ),
+            ),*/
             PathBox(
-              top: 219.h,
+              top: 124.h,
               text: ConstantData.verifyVideoText,
               onPressed: () {
                 Get.toNamed(AppRoutes.meVerifyID,

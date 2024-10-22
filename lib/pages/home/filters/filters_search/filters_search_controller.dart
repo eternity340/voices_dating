@@ -18,28 +18,65 @@ class FiltersSearchController extends GetxController {
   var currentPage = 1.obs;
   var hasMore = true.obs;
   final DioClient dioClient = DioClient.instance;
+  var initialLoading = true.obs;
 
   @override
   void onInit() {
     super.onInit();
-    fetchData();
+    fetchData(isInitial: true);
   }
 
-  Future<void> fetchData({bool isLoadMore = false}) async {
-    if (!_shouldFetchData(isLoadMore)) return;
+
+  Future<void> fetchData({bool isLoadMore = false, bool isInitial = false}) async {
+    if (!_shouldFetchData(isLoadMore, isInitial)) return;
 
     try {
       await performNetworkRequest(isLoadMore);
     } catch (e) {
       _handleError(isLoadMore);
+    } finally {
+      if (isInitial) {
+        initialLoading.value = false;
+      }
     }
   }
 
-  bool _shouldFetchData(bool isLoadMore) {
-    if (!isLoadMore) {
-      isLoading.value = true;
+  bool _shouldFetchData(bool isLoadMore, bool isInitial) {
+    if (isInitial) {
+      initialLoading.value = true;
+      return true;
     }
     return isLoadMore ? hasMore.value : true;
+  }
+
+  void _handleSuccess(List<ListUserEntity>? data, bool isLoadMore) {
+    if (data != null) {
+      _updateUserList(data, isLoadMore);
+      hasMore.value = data.length >= 20;
+    }
+
+    if (userList.isEmpty && !isLoadMore) {
+      showNoDataDialog();
+    }
+  }
+
+  void _handleError(bool isLoadMore) {
+    if (!isLoadMore) {
+      showNoDataDialog();
+    }
+  }
+
+  Future<void> onRefresh() async {
+    currentPage.value = 1;
+    hasMore.value = true;
+    await fetchData();
+  }
+
+  Future<void> onLoad() async {
+    if (hasMore.value) {
+      currentPage.value++;
+      await fetchData(isLoadMore: true);
+    }
   }
 
   Future<void> performNetworkRequest(bool isLoadMore) async {
@@ -91,19 +128,6 @@ class FiltersSearchController extends GetxController {
     return params;
   }
 
-
-  void _handleSuccess(List<ListUserEntity>? data, bool isLoadMore) {
-    if (data != null) {
-      _updateUserList(data, isLoadMore);
-      hasMore.value = data.length >= 20;
-    }
-    isLoading.value = false;
-
-    if (userList.isEmpty && !isLoadMore) {
-      showNoDataDialog();
-    }
-  }
-
   void _updateUserList(List<ListUserEntity> data, bool isLoadMore) {
     if (isLoadMore) {
       userList.addAll(data);
@@ -111,15 +135,6 @@ class FiltersSearchController extends GetxController {
       userList.assignAll(data);
     }
   }
-
-  void _handleError(bool isLoadMore) {
-    isLoading.value = false;
-    if (!isLoadMore) {
-      showNoDataDialog();
-    }
-  }
-
-
 
   void showNoDataDialog() {
     Get.dialog(
@@ -133,19 +148,5 @@ class FiltersSearchController extends GetxController {
         },
       ),
     );
-  }
-
-
-  Future<void> onRefresh() async {
-    currentPage.value = 1;
-    hasMore.value = true;
-    await fetchData();
-  }
-
-  Future<void> onLoad() async {
-    if (hasMore.value) {
-      currentPage.value++;
-      await fetchData(isLoadMore: true);
-    }
   }
 }

@@ -2,11 +2,13 @@ import 'package:voices_dating/net/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' as getx;
+import 'package:voices_dating/routes/app_routes.dart';
 import '../../../components/custom_content_dialog.dart';
 import '../../../constants/constant_data.dart';
 import '../../../entity/user_data_entity.dart';
 import '../../../net/dio.client.dart';
 import '../../../service/app_service.dart';
+import '../../../service/im_service.dart';
 
 class SignInModel extends ChangeNotifier {
   final TextEditingController emailController = TextEditingController();
@@ -45,28 +47,31 @@ class SignInModel extends ChangeNotifier {
     await _dioClient.requestNetwork<UserDataEntity>(
       method: Method.post,
       url: ApiConstants.signIn,
-      params: params,  // 直接传入 FormData 对象
+      params: params,
       options: Options(
         headers: {'Content-Type': 'multipart/form-data'},
       ),
-      formParams: false,  // 设置为 false，因为我们已经创建了 FormData
+      formParams: false,
       onSuccess: (data) async {
         if (data != null) {
           await AppService.instance.saveUserData(userData: data);
+          IMService.instance.connect();
           getx.Get.offAllNamed('/home');
         } else {
-          _handleError("User data is missing in the response.");
+          _showErrorDialog("User data is missing in the response.");
         }
       },
       onError: (code, msg, data) {
-        if (code == ConstantData.errorCodeInvalidEmailOrPassword) {
-          _handleError(msg);
+        if (code == 30001055) {
+          _showSuspendedDialog();
+        } else if (code == ConstantData.errorCodeInvalidEmailOrPassword) {
+          print(msg); // 打印 message
+          _showErrorDialog(msg);
         } else {
-          _handleError("Error: $msg");
+          _showErrorDialog("Error: $msg");
         }
       },
     );
-
     _setLoadingState(false);
   }
 
@@ -90,25 +95,30 @@ class SignInModel extends ChangeNotifier {
 
   void _setLoadingState(bool isLoading) {
     _isLoading = isLoading;
-    _errorMessage = null;
     notifyListeners();
   }
 
-  void _handleError(String errorMessage) {
-    _errorMessage = errorMessage;
-    print(_errorMessage);
-    _showErrorDialog(_errorMessage);
-  }
-
-  void _showErrorDialog(String? message) {
+  void _showSuspendedDialog() {
     getx.Get.dialog(
       CustomContentDialog(
-        title: 'Login Error',
-        content: message ?? 'An unknown error occurred.',
-        buttonText: 'OK',
+        title: 'Login Failed',
+        content: 'Your account has been suspended due to possible violations.',
+        buttonText: 'Details',
         onButtonPressed: () {
-          getx.Get.back();
+          //getx.Get.back();
+          getx.Get.toNamed(AppRoutes.accountSuspended);
         },
+      ),
+    );
+  }
+
+  void _showErrorDialog(String message) {
+    getx.Get.dialog(
+      CustomContentDialog(
+        title: 'Login Failed',
+        content: message,
+        buttonText: 'OK',
+        onButtonPressed: () => getx.Get.back(),
       ),
     );
   }

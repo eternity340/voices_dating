@@ -1,3 +1,4 @@
+import 'package:flutter_svg/svg.dart';
 import 'package:voices_dating/components/background.dart';
 import 'package:voices_dating/pages/home/get_up/get_up_controller.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../components/bottom_options.dart';
+import '../../../components/empty_state_widget.dart';
 import '../../../constants/Constant_styles.dart';
 import '../../../constants/constant_data.dart';
 import '../../../entity/token_entity.dart';
@@ -101,8 +103,8 @@ class GetUpPage extends StatelessWidget {
                       controller: controller.easyRefreshController,
                       onRefresh: () async => controller.refreshMoments(),
                       onLoad: () async => controller.fetchMoments(),
-                      child: controller.moments.isEmpty
-                          ? Center(child: Text('No moments available'))
+                      child: controller.moments.isEmpty && !controller.isInitialLoading.value && !controller.isRefreshing.value
+                          ? _buildEmptyState()
                           : ListView.builder(
                         itemCount: controller.moments.length,
                         itemBuilder: (context, index) {
@@ -118,7 +120,6 @@ class GetUpPage extends StatelessWidget {
                             child: MomentsCard(
                               moment: controller.moments[index],
                               tokenEntity: controller.tokenEntity,
-                              onLoveButtonPressed: controller.refreshMoments,
                               userDataEntity: controller.userDataEntity,
                             ),
                           );
@@ -134,4 +135,14 @@ class GetUpPage extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildEmptyState() {
+    return EmptyStateWidget(
+      imagePath: ImageRes.emptyMomentsImage,
+      message: 'No moments available',
+      textStyle: ConstantStyles.selectLocationStyle,
+    );
+  }
+
 }
+

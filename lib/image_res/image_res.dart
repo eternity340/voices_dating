@@ -6,6 +6,8 @@ class ImageRes{
   static const imagePathFeel = 'assets/images/icon_feel.png';
   static const imagePathDecorate = 'assets/images/decorate.png';
   static const imagePathNavigationBar='assets/images/navigation_bar.png';
+  static const emptyFeelSvg = 'assets/icons/empty_feel.svg';
+  static const emptyNearOptionSvg = 'assets/icons/empty_nearby_option.svg';
   //welcome
   static const iconsWelcome = "assets/icons/welcome.svg";
   //all navigation bar
@@ -49,6 +51,7 @@ class ImageRes{
   static const  pathBoxImage = 'assets/images/Path.png';
   //moments_card
   static const  settingsButtonImage = 'assets/images/button_round_setting.png';
+  static const  emptyMomentsImage = 'assets/icons/empty_moments_test2.svg';
   //moments_content
   static const  pathIcon = 'assets/images/Path.png';
   //change_location
@@ -80,6 +83,22 @@ class ImageRes{
   static const  iconChatMessagePath = 'assets/images/icon_chat_message.png';
   static const  iconChatVoiceImagePath = 'assets/images/icon_chat_voice.png';
   static const  iconChatPhotoImagePath = 'assets/images/icon_chat_photo.png';
+  static const  messageContentSvg = 'assets/icons/message_content.svg';
+  static const  matchMessageSvg = 'assets/icons/match_message.svg';
   //host
   static const  hostLiveImagePath = 'assets/images/host_live.png';
+  //empty_content
+  static const  emptyPeopleSearchSvg = 'assets/icons/empty_people_search.svg';
+  static const  emptyMyMomentsSvg = 'assets/icons/empty_my_moments.svg';
+  static const  emptyMusicSvg = 'assets/icons/empty_music.svg';
+  static const  emptyMomentsDemo1Svg = 'assets/icons/empty_moments_demo2.svg';
+  static const  emptyLikeMeContentSvg = 'assets/icons/empty_like_me_content.svg';
+  static const  emptyPrivateChatSvg = 'assets/icons/empty_private_chat.svg';
+  static const  emptyViewedMeSvg = 'assets/icons/empty_viewed_me.svg';
+  static const  emptyUserListSvg = 'assets/icons/empty_user_list.svg';
+  //private_chat
+  static const  chatWinkSvg = 'assets/icons/chat_wink.svg';
+  static const  chatWinkDemo1Svg = 'assets/icons/chat_wink_demo1.svg';
+  //app_logo
+  static const iconVoicesDatingLogo = 'assets/images/icon_voices_dating.png';
 }

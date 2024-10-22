@@ -81,8 +81,8 @@ class FeelController extends GetxController {
         content: ConstantData.noticeAboutLiked,
         buttonText: ConstantData.okText,
         onButtonPressed: () {
-          Get.back(); // Close the dialog
-          Get.back(); // Return to the previous page
+          Get.back();
+          //Get.back();
         },
       ),
     );

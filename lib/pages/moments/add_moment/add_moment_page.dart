@@ -87,38 +87,63 @@ class AddMomentPage extends StatelessWidget {
         child: Obx(() => GridView.builder(
           padding: EdgeInsets.zero,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
+            crossAxisCount: 3,
             crossAxisSpacing: 10.w,
             mainAxisSpacing: 10.h,
             childAspectRatio: 1.0,
           ),
-          itemCount: controller.imageFiles.length,
+          itemCount: controller.imageFiles.length < controller.maxImages
+              ? controller.imageFiles.length + 1
+              : controller.imageFiles.length,
           itemBuilder: (context, index) {
-            return InkWell(
-              borderRadius: BorderRadius.circular(10.r),
-              onTap: () => controller.showBottomOptions(context, index),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Color(0xFFF8F8F9),
-                  borderRadius: BorderRadius.circular(10.r),
-                ),
-                child: controller.imageFiles[index] == null
-                    ? Center(
-                  child: Image.asset(
-                    ImageRes.imagePathIconAddPhoto,
-                    width: 24.w,
-                    height: 24.h,
+            if (index == controller.imageFiles.length && controller.imageFiles.length < controller.maxImages) {
+              return InkWell(
+                borderRadius: BorderRadius.circular(10.r),
+                onTap: () => controller.showBottomOptions(context),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Color(0xFFF8F8F9),
+                    borderRadius: BorderRadius.circular(10.r),
                   ),
-                )
-                    : ClipRRect(
-                  borderRadius: BorderRadius.circular(10.r),
-                  child: Image.file(
-                    File(controller.imageFiles[index]!.path),
-                    fit: BoxFit.cover,
+                  child: Center(
+                    child: Image.asset(
+                      ImageRes.imagePathIconAddPhoto,
+                      width: 24.w,
+                      height: 24.h,
+                    ),
                   ),
                 ),
-              ),
-            );
+              );
+            } else {
+              return Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10.r),
+                    child: Image.file(
+                      File(controller.imageFiles[index].path),
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: double.infinity,
+                    ),
+                  ),
+                  Positioned(
+                    top: 5,
+                    right: 5,
+                    child: GestureDetector(
+                      onTap: () => controller.removeImageFile(index),
+                      child: Container(
+                        padding: EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.5),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(Icons.close, color: Colors.white, size: 18),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            }
           },
         )),
       ),

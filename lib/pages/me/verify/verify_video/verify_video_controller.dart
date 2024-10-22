@@ -204,7 +204,7 @@ class VerifyVideoController extends GetxController {
     await File(file.path).copy(videoPath);
     LogUtil.d('Video saved to: $videoPath');
 
-    final attachId = await _globalService.uploadFile(videoPath, tokenEntity.accessToken.toString());
+    final attachId = await _globalService.uploadFile(videoPath);
     if (attachId != null) {
       LogUtil.d(attachId);
 

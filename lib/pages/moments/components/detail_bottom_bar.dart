@@ -1,10 +1,12 @@
 import 'dart:ui';
+import 'package:get/get.dart';
 import 'package:voices_dating/entity/moment_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../constants/constant_styles.dart';
 import '../../../constants/constant_data.dart';
 import '../../../image_res/image_res.dart';
+import '../moments_detail/moments_detail_controller.dart';
 import 'love_button.dart';
 import '../../../components/gradient_btn.dart';
 import '../../../../../entity/token_entity.dart';
@@ -15,19 +17,19 @@ class DetailBottomBar extends StatefulWidget {
   final bool showCallButton;
   final bool showMessageButton;
   final bool showMomentLikeButton;
-  final MomentEntity? moment; // Made optional
-  final TokenEntity? tokenEntity; // Made optional
+  final MomentEntity? moment;
   final bool isGradientButtonDisabled;
+  final Function(int)? onLikeChanged;
 
   DetailBottomBar({
     required this.gradientButtonText,
     required this.onGradientButtonPressed,
     this.moment,
-    this.tokenEntity,
     this.showCallButton = true,
     this.showMessageButton = true,
     this.showMomentLikeButton = true,
     this.isGradientButtonDisabled = false,
+    this.onLikeChanged,
   });
 
   @override
@@ -75,15 +77,17 @@ class _DetailBottomBarState extends State<DetailBottomBar> {
                     height: 43.5.h,
                   ),
                 ),
-              if (widget.showMomentLikeButton && widget.moment != null && widget.tokenEntity != null)
+              if (widget.showMomentLikeButton && widget.moment != null)
                 Positioned(
                   left: 52.w,
                   top: 10.h,
                   child: Column(
                     children: [
                       LoveButton(
-                        tokenEntity: widget.tokenEntity!,
-                        moment: widget.moment!, onLoveButtonPressed: () {},
+                        moment: widget.moment!,
+                        onLikeChanged: (int isLike ) {
+                          widget.moment!.liked = isLike;
+                        },
                       ),
                       Text(
                         ConstantData.likeText,

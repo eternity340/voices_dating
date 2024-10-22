@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../../../components/background.dart';
+import '../../../../../components/empty_state_widget.dart';
 import '../../../../../constants/Constant_styles.dart';
 import '../../../../../constants/constant_data.dart';
 import '../../../../../image_res/image_res.dart';
@@ -86,20 +87,34 @@ class UploadVoicePage extends StatelessWidget {
 
 
   Widget buildAudioList(UploadVoiceController controller) {
-    return Obx(() => Column(
-      children: List.generate(controller.audioList.length, (index) {
-        return Padding(
-          padding: EdgeInsets.only(left: 0.w, top: (index == 0 ? 20 : 20).h),
-          child: AudioItem(
-            isSelected: controller.selectedIndex.value == index,
-            onTap: () => controller.toggleSelection(index),
-            onDelete: () => controller.deleteAudio(index),
-            audioPath: controller.audioList[index],
-          ),
+    return Obx(() {
+      if (controller.audioList.isEmpty) {
+        // 当音频列表为空时,显示空状态组件
+        return EmptyStateWidget(
+          imagePath: ImageRes.emptyMusicSvg, // 使用适当的空状态图片
+          message: 'No voice introductions yet. Tap the button below to record one!',
+          imageWidth: 200.w,
+          imageHeight: 200.h,
+          topPadding: 100.h,
         );
-      }),
-    ));
+      }
+
+      return Column(
+        children: List.generate(controller.audioList.length, (index) {
+          return Padding(
+            padding: EdgeInsets.only(left: 0.w, top: (index == 0 ? 20 : 20).h),
+            child: AudioItem(
+              isSelected: controller.selectedIndex.value == index,
+              onTap: () => controller.toggleSelection(index),
+              onDelete: () => controller.deleteAudio(index),
+              audioPath: controller.audioList[index],
+            ),
+          );
+        }),
+      );
+    });
   }
+
 
   Widget buildRecordButton(UploadVoiceController controller) {
     return Positioned(

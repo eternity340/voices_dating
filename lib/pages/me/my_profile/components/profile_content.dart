@@ -80,6 +80,26 @@ class ProfileContent extends StatelessWidget {
                       arguments: {'tokenEntity': tokenEntity, 'userDataEntity': userData});
                 }
             ),
+         /*   _buildInfoSection(
+              context,
+              title: ConstantData.languageTitle,
+              value: userData.language.toString(),
+              onTap: () {
+                Get.toNamed(AppRoutes.meMyProfileChangeLanguage,
+                    arguments: {'tokenEntity': tokenEntity, 'userDataEntity': userData}
+                );
+              },
+            ),*/
+            _buildInfoSection(
+              context,
+              title: ConstantData.tagsTitle,
+              value: '',
+              onTap: () {
+                Get.toNamed(AppRoutes.meMyProfileAddTags,
+                    arguments: {'tokenEntity': tokenEntity, 'userDataEntity': userData}
+                );
+              },
+            ),
           ],
         ),
       ),

@@ -252,7 +252,7 @@ class _VerifyVideoPageState extends State<VerifyVideoPage> with SingleTickerProv
     await File(file.path).copy(videoPath);
     LogUtil.d('Video saved to: $videoPath');
 
-    final attachId = await _globalService.uploadFile(videoPath, widget.tokenEntity.accessToken.toString());
+    final attachId = await _globalService.uploadFile(videoPath);
     if (attachId != null) {
       LogUtil.d('Video uploaded successfully. AttachId: $attachId');
     } else {

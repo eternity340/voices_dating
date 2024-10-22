@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import '../../../../constants/Constant_styles.dart';
 import '../../../../constants/constant_data.dart';
 import '../filters_controller.dart';
-import '../components/multi_select_bottom_sheet.dart';
+import '../../../../components/multi_select_bottom_sheet.dart';
 
 class LookingForFilter extends StatelessWidget {
   final FiltersController controller;

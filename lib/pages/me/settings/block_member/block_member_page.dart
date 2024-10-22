@@ -5,7 +5,9 @@ import 'package:get/get.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import '../../../../constants/Constant_styles.dart';
 import '../../../../constants/constant_data.dart';
+import '../../../../image_res/image_res.dart';
 import '../../../../utils/common_utils.dart';
+import '../../../../components/empty_state_widget.dart';
 import 'block_member_controller.dart';
 import 'components/blocked_member_item.dart';
 
@@ -33,11 +35,17 @@ class BlockMemberPage extends StatelessWidget {
               height: 680.h,
               decoration: ConstantStyles.blockMemberContainerDecoration,
               child: Obx(() {
-                if (controller.isLoading.value && controller.blockedMembers.isEmpty) {
+                if (controller.isLoading.value) {
                   return CommonUtils.loadingIndicator();
                 }
                 if (controller.blockedMembers.isEmpty) {
-                  return Center(child: Text(ConstantData.noBlockedMembersText));
+                  return EmptyStateWidget(
+                    imagePath: ImageRes.emptyUserListSvg,
+                    message: ConstantData.noBlockedMembersText,
+                    imageWidth: 200.w,
+                    imageHeight: 200.h,
+                    topPadding: 0.h,
+                  );
                 }
                 return EasyRefresh(
                   onRefresh: () async {

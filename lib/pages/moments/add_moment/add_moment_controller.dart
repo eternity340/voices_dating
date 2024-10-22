@@ -1,6 +1,5 @@
 import 'package:voices_dating/net/api_constants.dart';
 import 'package:voices_dating/routes/app_routes.dart';
-import 'package:voices_dating/service/global_service.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,11 +15,18 @@ import '../../../net/dio.client.dart';
 class AddMomentController extends GetxController {
   final TokenEntity tokenEntity = Get.arguments['tokenEntity'] as TokenEntity;
   final UserDataEntity userDataEntity = Get.arguments['userDataEntity'] as UserDataEntity;
+  final bool isMomentsPage = Get.arguments['isMomentsPage'] as bool? ?? true;
   final textEditingController = TextEditingController();
-  final imageFiles = <XFile?>[null].obs;
+  final imageFiles = <XFile>[].obs;
+  final maxImages = 9;
   final DioClient dioClient = DioClient.instance;
 
-  void showBottomOptions(BuildContext context, int index) {
+  void showBottomOptions(BuildContext context) {
+    if (imageFiles.length >= maxImages) {
+      Get.snackbar('Error', 'You can only upload up to 9 images');
+      return;
+    }
+
     showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
@@ -30,11 +36,11 @@ class AddMomentController extends GetxController {
         return BottomOptions(
           onFirstPressed: () async {
             Navigator.pop(context);
-            await handleCameraPermission(index);
+            await handleCameraPermission();
           },
           onSecondPressed: () async {
             Navigator.pop(context);
-            await handleStoragePermission(index);
+            await handleStoragePermission();
           },
           onCancelPressed: () {
             Navigator.pop(context);
@@ -46,36 +52,49 @@ class AddMomentController extends GetxController {
     );
   }
 
-  Future<void> handleCameraPermission(int index) async {
+  Future<void> handleCameraPermission() async {
     final status = await Permission.camera.request();
     if (status.isGranted) {
       final picker = ImagePicker();
       final pickedFile = await picker.pickImage(source: ImageSource.camera);
       if (pickedFile != null) {
-        updateImageFiles(index, pickedFile);
+        addImageFile(pickedFile);
       }
     } else {
       // Handle permission denied
     }
   }
 
-  Future<void> handleStoragePermission(int index) async {
+  Future<void> handleStoragePermission() async {
     final status = await Permission.photos.request();
     if (status.isGranted) {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-      if (pickedFile != null) {
-        updateImageFiles(index, pickedFile);
+      final pickedFiles = await picker.pickMultiImage();
+      if (pickedFiles != null) {
+        for (var file in pickedFiles) {
+          if (imageFiles.length < maxImages) {
+            addImageFile(file);
+          } else {
+            break;
+          }
+        }
       }
     } else {
       // Handle permission denied
     }
   }
+
+  void addImageFile(XFile file) {
+    if (imageFiles.length < maxImages) {
+      imageFiles.add(file);
+    }
+  }
+
 
   void updateImageFiles(int index, XFile pickedFile) {
     if (index == imageFiles.length - 1) {
       imageFiles[index] = pickedFile;
-      imageFiles.add(null);
+      //imageFiles.add();
     } else {
       imageFiles[index] = pickedFile;
     }
@@ -85,12 +104,11 @@ class AddMomentController extends GetxController {
     final content = textEditingController.text;
     final formData = dio.FormData();
     formData.fields.add(MapEntry('content', content));
-
     for (var i = 0; i < imageFiles.length; i++) {
       if (imageFiles[i] != null) {
         final file = await dio.MultipartFile.fromFile(
-            imageFiles[i]!.path,
-            filename: imageFiles[i]!.name
+            imageFiles[i].path,
+            filename: imageFiles[i].name
         );
         formData.files.add(MapEntry('file', file));
       }
@@ -109,11 +127,20 @@ class AddMomentController extends GetxController {
         ),
         formParams: true,
         onSuccess: (data) {
-          //showSuccessDialog();
-          Get.offAllNamed(AppRoutes.moments,
-              arguments: {
-                'tokenEntity': tokenEntity,
-                'userDataEntity': userDataEntity});
+          // 根据 isMomentsPage 的值决定跳转到哪个页面
+          if (isMomentsPage) {
+            Get.offAllNamed(AppRoutes.moments,
+                arguments: {
+                  'tokenEntity': tokenEntity,
+                  'userDataEntity': userDataEntity
+                });
+          } else {
+            Get.offAllNamed(AppRoutes.meMyProfile,
+                arguments: {
+                  'tokenEntity': tokenEntity,
+                  'userDataEntity': userDataEntity
+                });
+          }
           Get.snackbar(ConstantData.successText, 'Upload Moment Success!');
         },
         onError: (code, msg, data) {
@@ -140,6 +167,11 @@ class AddMomentController extends GetxController {
       ),
     );
   }
+
+  void removeImageFile(int index) {
+    imageFiles.removeAt(index);
+  }
+
 
   @override
   void onClose() {

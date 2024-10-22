@@ -19,6 +19,9 @@ class MomentsDetailPage extends StatelessWidget {
       showBackgroundImage: true,
       showSettingButton: false,
       showBackButton: true,
+      /*onBackPressed: controller.navigationToMomentPage,
+      usePopScope: true,
+      onPopInvoked: controller.navigationToMomentPage,*/
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Stack(
@@ -37,7 +40,6 @@ class MomentsDetailPage extends StatelessWidget {
                       moment: controller.moment,
                       tokenEntity: controller.tokenEntity,
                       userDataEntity: controller.userData,
-                      onLoveButtonPressed: () {},
                     ),
                     SizedBox(height: 10.h),
                     _buildLikesSection(),
@@ -69,7 +71,6 @@ class MomentsDetailPage extends StatelessWidget {
                 showMessageButton: false,
                 gradientButtonText: controller.isCommentInputVisible.value ? ConstantData.sendText : ConstantData.commentText,
                 onGradientButtonPressed: controller.toggleCommentInput,
-                tokenEntity: controller.tokenEntity,
                 moment: controller.moment,
               )),
             ),

@@ -21,6 +21,7 @@ class GetUpController extends GetxController {
   bool _isDisposed = false;
   var isInitialLoading = true.obs;
   var hasError = false.obs;
+  var isRefreshing = false.obs;
 
   @override
   void onInit() {
@@ -154,7 +155,11 @@ class GetUpController extends GetxController {
 
   Future<void> refreshMoments() async {
     if (_isDisposed) return;
+    isRefreshing.value = true;
     await fetchMoments(isRefresh: true);
-    if (!_isDisposed) easyRefreshController.finishRefresh();
+    if (!_isDisposed) {
+      easyRefreshController.finishRefresh();
+      isRefreshing.value = false;
+    }
   }
 }

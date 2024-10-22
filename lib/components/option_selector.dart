@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 
-class ReportOption extends StatelessWidget {
+class OptionSelector extends StatelessWidget {
   final String optionText;
   final bool isSelected;
   final VoidCallback onSelect;
 
-  const ReportOption({
+  const OptionSelector({
     Key? key,
     required this.optionText,
     required this.isSelected,

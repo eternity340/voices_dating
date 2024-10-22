@@ -1,5 +1,4 @@
 import 'dart:ffi';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -8,10 +7,13 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
 import 'package:voices_dating/net/api_constants.dart';
+import '../../../constants/constant_data.dart';
 import '../../../constants/constant_styles.dart';
 import '../../../entity/chatted_user_entity.dart';
+import '../../../image_res/image_res.dart';
 import '../../../net/dio.client.dart';
 import '../message_controller.dart';
+
 
 class MessageContent extends StatelessWidget {
   final List<ChattedUserEntity> chattedUsers;
@@ -30,44 +32,46 @@ class MessageContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
-    return Padding(padding: EdgeInsets.only(bottom: 72.h),
-    child: SlidableAutoCloseBehavior(
-      child: EasyRefresh(
-      onRefresh: onRefresh,
-      onLoad: onLoad,
-      child: ListView.builder(
-        itemCount: chattedUsers.length,
-        itemBuilder: (context, index) {
-          final user = chattedUsers[index];
-          return Slidable(
-            key: Key(user.userId.toString()),
-            endActionPane: ActionPane(
-              motion: const ScrollMotion(),
-              extentRatio: 0.5,
-              children: [
-                SlidableAction(
-                  onPressed: (context) {
-                    controller.deleteChat(user);
-                  },
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
-                  icon: Icons.delete,
-                  label: 'Delete',
+    return Padding(
+      padding: EdgeInsets.only(bottom: 72.h),
+      child: SlidableAutoCloseBehavior(
+        child: EasyRefresh(
+          onRefresh: onRefresh,
+          onLoad: onLoad,
+          child: chattedUsers.isEmpty
+              ? SizedBox.shrink()
+              : ListView.builder(
+            itemCount: chattedUsers.length,
+            itemBuilder: (context, index) {
+              final user = chattedUsers[index];
+              return Slidable(
+                key: Key(user.userId.toString()),
+                endActionPane: ActionPane(
+                  motion: const ScrollMotion(),
+                  extentRatio: 0.5,
+                  children: [
+                    SlidableAction(
+                      onPressed: (context) {
+                        controller.deleteChat(user);
+                      },
+                      backgroundColor: Colors.red,
+                      foregroundColor: Colors.white,
+                      icon: Icons.delete,
+                      label: 'Delete',
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            child: GestureDetector(
-              onTap: () {
-                controller.navigateToPrivateChat(user);
-                controller.sendReadMessageRequest(user);
-              },
-              child: Column(
-                children: [
-                  Container(
-                    height: 100.h,
-                    padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
-                    child: Stack(
+                child: GestureDetector(
+                  onTap: () {
+                    controller.navigateToPrivateChat(user);
+                    controller.sendReadMessageRequest(user);
+                  },
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 100.h,
+                        padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
+                        child: Stack(
                       children: [
                         Positioned(
                           left: 19.w,
@@ -143,22 +147,26 @@ class MessageContent extends StatelessWidget {
                           ),
                       ],
                     ),
+                      ),
+                      SizedBox(height: 10.h),
+                      Divider(
+                        thickness: 1,
+                        color: Color(0xFFEBEBEB),
+                        indent: 16.w,
+                        endIndent: 16.w,
+                        height: 1,
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 10.h),
-                  Divider(
-                    thickness: 1,
-                    color: Color(0xFFEBEBEB),
-                    indent: 16.w,
-                    endIndent: 16.w,
-                    height: 1,
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
+                ),
+              );
+            },
+          ),
+        ),
       ),
-    ),
-    ),);
+    );
   }
 }
+
+
+

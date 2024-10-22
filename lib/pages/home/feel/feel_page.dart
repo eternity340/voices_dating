@@ -3,10 +3,12 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../components/background.dart';
+import '../../../components/empty_state_widget.dart';
 import '../../../constants/constant_data.dart';
 import '../../../utils/common_utils.dart';
 import '../components/feel_detail_card.dart';
 import 'feel_controller.dart';
+import '../../../image_res/image_res.dart'; // 导入你的图片资源
 
 class FeelPage extends StatelessWidget {
   @override
@@ -26,6 +28,18 @@ class FeelPage extends StatelessWidget {
           Obx(() {
             if (controller.isInitialLoading.value) {
               return CommonUtils.loadingIndicator();
+            } else if (controller.userList.isEmpty) {
+              return Positioned(
+                top: 90.h,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: EmptyStateWidget(
+                  imagePath: ImageRes.emptyFeelSvg,
+                  message: 'No users available',
+                  topPadding: 0.h,
+                ),
+              );
             } else {
               return Positioned(
                 top: 90.h,

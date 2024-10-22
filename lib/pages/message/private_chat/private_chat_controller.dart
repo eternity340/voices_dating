@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:image_picker/image_picker.dart';
 import 'package:voices_dating/entity/user_data_entity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +26,7 @@ import '../../../service/global_service.dart';
 import '../../../service/im_service.dart';
 import '../../../utils/log_util.dart';
 import '../../../components/photo_dialog.dart';
+import '../../../utils/shared_preference_util.dart';
 import '../../home/user_profile/user_profile_page.dart';
 
 class PrivateChatController extends GetxController {
@@ -36,14 +40,18 @@ class PrivateChatController extends GetxController {
   Sender? currentUserSender;
   Sender? currentChatSender;
   RxBool isRecording = false.obs;
+  final ImagePicker _picker = ImagePicker();
   int currentPage = 1;
   static const int pageSize = 20;
   final AudioService audioService = AudioService();
+  final String _storageKey = 'chat_messages_';
 
   @override
   void onInit() {
     super.onInit();
-    getHistoryMessages();
+    loadMessagesFromLocal().then((_) {
+      getHistoryMessages();
+    });
     _subscribeToIMMessages();
     _initAudioRecorder();
     currentUserSender = Sender(
@@ -108,6 +116,49 @@ class PrivateChatController extends GetxController {
     }
   }
 
+  /*Future<void> pickMultipleImages() async {
+    final List<XFile>? images = await _picker.pickMultiImage();
+    if (images != null) {
+      for (var image in images) {
+        await sendImageMessage(image.path);
+      }
+    }
+  }*/
+
+  /*Future<void> sendImageMessage(String imagePath) async {
+    var localId = const Uuid().v4().toString();
+    String imageUrl = await uploadImageFile(imagePath);
+
+    var sendSuccess = await IMService.instance.sendImage(
+      imageUrl: imageUrl,
+      receiverId: chattedUser.userId!,
+      localId: localId,
+      attachId: '',
+    );
+
+    *//*if (sendSuccess) {
+      final newMessage = IMNewMessageEntity(
+        localId: localId,
+        message: 'Image message',
+        url: imageUrl,
+        messageType: 2,
+        created: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+        profId: currentUserSender?.profile?.userId,
+        sender: currentUserSender,
+      );
+      if (!messages.any((msg) => msg.localId == localId)) {
+        messages.add(newMessage);
+        scrollToBottom();
+      }
+    }*//*
+  }*/
+
+  Future<String> uploadImageFile(String filePath) async {
+    // 实现图片上传逻辑
+    // 返回上传后的图片 URL
+    return 'https://example.com/image.jpg';
+  }
+
   Future<String> uploadAudioFile(String filePath) async {
     return 'https://example.com/audio.aac';
   }
@@ -150,7 +201,13 @@ class PrivateChatController extends GetxController {
   }
 
   Future<void> getHistoryMessages({int page = 1, bool isLoadMore = false}) async {
-    DioClient.instance.requestNetwork<List<IMNewMessageEntity>>(
+    if (page == 1 && !isLoadMore) {
+      // 首次加载时，先尝试从本地加载数据
+      await loadMessagesFromLocal();
+    }
+
+    // 从服务器获取数据
+    await DioClient.instance.requestNetwork<List<IMNewMessageEntity>>(
       method: Method.get,
       url: ApiConstants.historyMessages,
       queryParameters: {
@@ -178,16 +235,25 @@ class PrivateChatController extends GetxController {
           if (isLoadMore) {
             messages.insertAll(0, mappedData.reversed);
           } else {
+            // 如果不是加载更多，则替换现有消息
             messages.value = mappedData.reversed.toList();
             scrollToBottom();
           }
+
+          // 保存新消息到本地
+          saveMessagesToLocal();
         }
       },
       onError: (int code, String msg, dynamic data) {
         LogUtil.e(message: "get HistoryMessageError${msg.toString()}");
+        // 如果网络请求失败，但本地有数据，则使用本地数据
+        if (messages.isEmpty) {
+          loadMessagesFromLocal();
+        }
       },
     );
   }
+
 
   Future<void> loadMoreMessages() async {
     currentPage++;
@@ -316,6 +382,21 @@ class PrivateChatController extends GetxController {
         Get.snackbar(ConstantData.errorText, msg);
       },
     );
+  }
+
+  void saveMessagesToLocal() {
+    final String key = _storageKey + chattedUser.userId!;
+    final List<Map<String, dynamic>> messagesList = messages.map((m) => m.toJson()).toList();
+    SharedPreferenceUtil.instance.setValue(key: key, value: json.encode(messagesList));
+  }
+
+  Future<void> loadMessagesFromLocal() async {
+    final String key = _storageKey + chattedUser.userId!;
+    final String? storedMessages = SharedPreferenceUtil.instance.getValue(key: key);
+    if (storedMessages != null) {
+      final List<dynamic> decodedMessages = json.decode(storedMessages);
+      messages.value = decodedMessages.map((m) => IMNewMessageEntity.fromJson(m)).toList();
+    }
   }
 
   @override

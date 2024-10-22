@@ -67,13 +67,13 @@ class GetEmailCodeController extends GetxController {
         queryParameters: {'email': fullEmail},
         options: Options(headers: {'token': tokenEntity.accessToken}),
         onSuccess: (data) {
-          /*final verificationKey = data?['key'];
-          Get.to(() => VerifyEmailPage(email: fullEmail, verificationKey: verificationKey));*/
-          User user = User(email: fullEmail);
+          final verificationKey = data?['key'];
+          Get.to(() => VerifyEmailPage(email: fullEmail, verificationKey: verificationKey));
+          /*User user = User(email: fullEmail);
           Get.toNamed('/verify_success', arguments: {
             'message': data?['message'] ?? 'Verification successful',
             'user': user,
-          });
+          });*/
         },
         onError: (code, msg, data) {
           errorMessage.value = "Error: $msg";
