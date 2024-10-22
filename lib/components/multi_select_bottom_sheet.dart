@@ -10,6 +10,7 @@ class MultiSelectBottomSheet extends StatelessWidget {
   final List<String> initialSelection;
   final Function(List<String>) onConfirm;
   final bool allowEmptySelection;
+  final bool isSingleSelect; // 新增参数
 
   MultiSelectBottomSheet({
     required this.number,
@@ -17,6 +18,7 @@ class MultiSelectBottomSheet extends StatelessWidget {
     required this.initialSelection,
     required this.onConfirm,
     this.allowEmptySelection = false,
+    this.isSingleSelect = false, // 默认为多选
   }) : assert(number == options.length);
 
   final selectedOptions = RxList<String>([]);
@@ -58,14 +60,21 @@ class MultiSelectBottomSheet extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(bottom: 10.h),
             child: Text(
-              ConstantData.multipleChoicesText,
+              isSingleSelect ? 'Select one option' : ConstantData.multipleChoicesText,
               style: ConstantStyles.feedbackHintStyle,
             ),
           ),
           ...List.generate(number, (index) {
             return ListTile(
               title: Text(options[index], style: ConstantStyles.welcomeButtonStyle),
-              trailing: Obx(() => Checkbox(
+              trailing: Obx(() => isSingleSelect
+                  ? Radio<String>(
+                value: (index + 1).toString(),
+                groupValue: selectedOptions.isNotEmpty ? selectedOptions.first : null,
+                onChanged: (_) => toggleOption((index + 1).toString()),
+                activeColor: Color(0xFF20E2D7),
+              )
+                  : Checkbox(
                 value: selectedOptions.contains((index + 1).toString()),
                 onChanged: (_) => toggleOption((index + 1).toString()),
                 activeColor: Color(0xFF20E2D7),
@@ -79,13 +88,17 @@ class MultiSelectBottomSheet extends StatelessWidget {
   }
 
   void toggleOption(String option) {
-    if (selectedOptions.contains(option)) {
-      if (allowEmptySelection || selectedOptions.length > 1) {
-        selectedOptions.remove(option);
-      }
-    } else {
+    if (isSingleSelect) {
+      selectedOptions.clear();
       selectedOptions.add(option);
+    } else {
+      if (selectedOptions.contains(option)) {
+        if (allowEmptySelection || selectedOptions.length > 1) {
+          selectedOptions.remove(option);
+        }
+      } else {
+        selectedOptions.add(option);
+      }
     }
   }
 }
-
