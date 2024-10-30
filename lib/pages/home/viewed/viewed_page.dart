@@ -1,6 +1,4 @@
-import 'package:flutter_svg/svg.dart';
 import 'package:voices_dating/components/background.dart';
-import 'package:voices_dating/pages/home/get_up/get_up_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,15 +13,16 @@ import '../../../image_res/image_res.dart';
 import '../../../routes/app_routes.dart';
 import '../../../utils/common_utils.dart';
 import '../../moments/components/moments_card.dart';
-import '../../moments/moments_controller.dart';
+import 'viewed_controller.dart';
 
-class GetUpPage extends StatelessWidget {
+
+class ViewedPage extends StatelessWidget {
   final TokenEntity tokenEntity = Get.arguments['token'] as TokenEntity;
   final UserDataEntity userData = Get.arguments['userData'] as UserDataEntity;
 
   @override
   Widget build(BuildContext context) {
-    final GetUpController controller = Get.put(GetUpController());
+    final ViewedController controller = Get.put(ViewedController());
 
     return Scaffold(
       body: Background(

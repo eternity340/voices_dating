@@ -9,7 +9,10 @@ import '../../../../entity/token_entity.dart';
 import '../../../../net/dio.client.dart';
 import 'package:dio/dio.dart' as dio;
 import '../../../../service/global_service.dart';
+import '../../../../utils/event_bus.dart';
 import '../../../../utils/log_util.dart';
+import '../../home_controller.dart';
+import '../../viewed/viewed_controller.dart';
 
 class ReportController extends GetxController {
   final TokenEntity tokenEntity;
@@ -22,6 +25,10 @@ class ReportController extends GetxController {
   String selectedImagePath = '';
 
   ReportController(this.tokenEntity, this.userId);
+
+  bool get isSubmitEnabled {
+    return selectedOption.isNotEmpty;
+  }
 
   void selectOption(String option) {
     if (selectedOption == option) {
@@ -43,9 +50,7 @@ class ReportController extends GetxController {
   Future<void> report() async {
     String? attachId;
     if (selectedImagePath.isNotEmpty) {
-      attachId = await globalService.uploadFile(
-          selectedImagePath,
-          );
+      attachId = await globalService.uploadFile(selectedImagePath);
     }
 
     int commentId;
@@ -81,18 +86,24 @@ class ReportController extends GetxController {
           if (isOtherSelected) 'content': textEditingController.text,
         },
         onSuccess: (data) {
-          if (data != null && data.ret ==true) {
+          if (data != null && data.ret == true) {
+            // 举报成功后，发布用户被举报的事件
+            EventBus().reportUser(userId);
             Get.back();
+            Get.back();
+            Get.snackbar(ConstantData.successText, 'User reported successfully');
           }
         },
         onError: (code, msg, data) {
-          LogUtil.e(message:msg);
+          LogUtil.e(message: msg);
           Get.back();
+          Get.snackbar(ConstantData.failedText, msg);
         },
       );
     } catch (e) {
       LogUtil.e(message: e.toString());
       Get.back();
+      Get.snackbar(ConstantData.errorText, e.toString());
     }
   }
 

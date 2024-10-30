@@ -11,8 +11,27 @@ import '../../../../components/empty_state_widget.dart';
 import 'block_member_controller.dart';
 import 'components/blocked_member_item.dart';
 
-class BlockMemberPage extends StatelessWidget {
+class BlockMemberPage extends StatefulWidget {
+  @override
+  _BlockMemberPageState createState() => _BlockMemberPageState();
+}
+
+class _BlockMemberPageState extends State<BlockMemberPage> {
   final BlockMemberController controller = Get.put(BlockMemberController());
+  bool isInitialLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _initialLoad();
+  }
+
+  Future<void> _initialLoad() async {
+    await controller.fetchBlockedMembers();
+    setState(() {
+      isInitialLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +53,9 @@ class BlockMemberPage extends StatelessWidget {
               width: 335.w,
               height: 680.h,
               decoration: ConstantStyles.blockMemberContainerDecoration,
-              child: Obx(() {
-                if (controller.isLoading.value) {
-                  return CommonUtils.loadingIndicator();
-                }
+              child: isInitialLoading
+                  ? CommonUtils.loadingIndicator()
+                  : Obx(() {
                 if (controller.blockedMembers.isEmpty) {
                   return EmptyStateWidget(
                     imagePath: ImageRes.emptyUserListSvg,
@@ -53,12 +71,14 @@ class BlockMemberPage extends StatelessWidget {
                   },
                   child: ListView.separated(
                     itemCount: controller.blockedMembers.length,
-                    separatorBuilder: (context, index) => ConstantStyles.blockMemberDivider,
+                    separatorBuilder: (context, index) =>
+                    ConstantStyles.blockMemberDivider,
                     itemBuilder: (context, index) {
                       final member = controller.blockedMembers[index];
                       return BlockedMemberItem(
                         member: member,
-                        onUnblock: () => controller.unblockUser(member.userId!),
+                        onUnblock: () =>
+                            controller.unblockUser(member.userId!),
                       );
                     },
                   ),

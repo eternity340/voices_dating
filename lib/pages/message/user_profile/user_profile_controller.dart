@@ -12,9 +12,11 @@ import '../../../entity/user_data_entity.dart';
 import '../../../entity/wink_entity.dart';
 import '../../../net/dio.client.dart';
 import '../../../service/global_service.dart';
+import '../../../utils/event_bus.dart';
 import '../../../utils/log_util.dart';
 import '../../../components/custom_message_dialog.dart';
-import '../components/wink_selection_bottom_sheet.dart';
+import '../../home/components/wink_selection_bottom_sheet.dart';
+import '../../home/feel/feel_controller.dart';
 
 class UserProfileController extends GetxController {
   final TokenEntity tokenEntity;
@@ -66,6 +68,7 @@ class UserProfileController extends GetxController {
       options: Options(headers: {'token': tokenEntity.accessToken}),
       onSuccess: (data) {
         if (data != null && data.ret) {
+          EventBus().reportUser(userDataEntity.userId!);
           Get.back();
           Get.snackbar(ConstantData.successText, ConstantData.userHasBlocked);
         } else {

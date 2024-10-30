@@ -16,8 +16,24 @@ class ChangeLocation extends StatelessWidget {
   final TokenEntity tokenEntity = Get.arguments['tokenEntity'] as TokenEntity;
   final UserDataEntity userData = Get.arguments['userDataEntity'] as UserDataEntity;
 
+  String getFormattedLocation() {
+    List<String> locationParts = [];
+    if (userData.location?.city?.isNotEmpty == true) {
+      locationParts.add(userData.location!.city!);
+    }
+    if (userData.location?.state?.isNotEmpty == true) {
+      locationParts.add(userData.location!.state!);
+    }
+    if (userData.location?.country?.isNotEmpty == true) {
+      locationParts.add(userData.location!.country!);
+    }
+    return locationParts.join(', ');
+  }
+
   @override
   Widget build(BuildContext context) {
+    String formattedLocation = getFormattedLocation();
+
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) {
@@ -55,9 +71,7 @@ class ChangeLocation extends StatelessWidget {
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 12.w),
                             child: Text(
-                              '${userData.location?.city},'
-                                  '${userData.location?.state},'
-                                  '${userData.location?.country}',
+                              formattedLocation,
                               style: ConstantStyles.changeLocationTextStyle,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
@@ -76,9 +90,7 @@ class ChangeLocation extends StatelessWidget {
                               builder: (BuildContext context) {
                                 return CustomContentDialog(
                                   title: 'Location',
-                                  content: '${userData.location?.city}, '
-                                      '${userData.location?.state}, '
-                                      '${userData.location?.country}',
+                                  content: formattedLocation,
                                   buttonText: 'OK',
                                   onButtonPressed: () {
                                     Navigator.of(context).pop();

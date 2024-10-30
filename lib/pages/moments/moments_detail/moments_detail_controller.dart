@@ -14,6 +14,8 @@ import '../../../components/bottom_options.dart';
 import '../../../net/api_constants.dart';
 import '../../../net/dio.client.dart';
 import '../../../routes/app_routes.dart';
+import '../../../utils/event_bus.dart';
+import '../../home/viewed/viewed_controller.dart';
 import '../moments_controller.dart';
 import '../moments_page.dart';
 
@@ -167,6 +169,7 @@ class MomentsDetailController extends GetxController {
       options: Options(headers: {'token': tokenEntity.accessToken}),
       onSuccess: (data) {
         if (data != null && data.ret) {
+          EventBus().reportUser(moment.userId!);
           Get.back();
           Get.snackbar(ConstantData.successText, ConstantData.userHasBlocked);
         } else {
@@ -178,6 +181,7 @@ class MomentsDetailController extends GetxController {
       },
     );
   }
+
 
   /*void navigationToMomentPage() {
     Get.to(

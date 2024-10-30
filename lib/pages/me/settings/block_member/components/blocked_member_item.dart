@@ -43,17 +43,19 @@ class BlockedMemberItem extends StatelessWidget {
                 SizedBox(height: 8.h),
                 Row(
                   children: [
-                    VerifiedTag(
-                      text: 'Superior',
-                      backgroundColor: Color(0xFFFFA6CB),
-                      textColor: Colors.black,
-                    ),
+                    if (member.member == "1")
+                      VerifiedTag(
+                        text: 'Superior',
+                        backgroundColor: Color(0xFFFFA6CB),
+                        textColor: Colors.black,
+                      ),
                     SizedBox(width: 8.w),
-                    VerifiedTag(
-                      text: 'Photos verified',
-                      backgroundColor: Color(0xFFD7FAAD),
-                      textColor: Colors.black,
-                    ),
+                    if (member.verified == "1")
+                      VerifiedTag(
+                        text: 'Photos verified',
+                        backgroundColor: Color(0xFFD7FAAD),
+                        textColor: Colors.black,
+                      ),
                   ],
                 ),
               ],

@@ -35,7 +35,6 @@ class _HomePageState extends State<HomePage> {
     await AppService.instance.syncUserData();
   }
 
-
   void _initializeToken() {
     final tokenJson = SharedPreferenceUtil.instance.getValue(
         key: SharedPresKeys.userToken);
@@ -51,33 +50,35 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return GetBuilder<HomeController>(
         builder: (controller) {
-          return Scaffold(
-            body: Stack(
-              children: [
-                Background(
-                  showBackButton: false,
-                  child: Container(),
-                ),
-                Positioned.fill(
-                  child: Padding(
-                    padding: EdgeInsets.all(16.0.sp),
-                    child: Column(
-                      children: [
-                        SizedBox(height: 50.h),
-                        _buildOptionsRow(controller),
-                        _buildButtonRow(controller),
-                        SizedBox(height: 0.h),
-                        Expanded(
-                          child: _buildAnimatedPageView(controller),
-                        ),
-                      ],
+          return SafeArea(
+            child: Scaffold(
+              body: Stack(
+                children: [
+                  Background(
+                    showBackButton: false,
+                    child: Container(),
+                  ),
+                  Positioned.fill(
+                    child: Padding(
+                      padding: EdgeInsets.all(16.0.sp),
+                      child: Column(
+                        children: [
+                          SizedBox(height: 10.h),
+                          _buildOptionsRow(controller),
+                          _buildButtonRow(controller),
+                          SizedBox(height: 0.h),
+                          Expanded(
+                            child: _buildAnimatedPageView(controller),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                if (controller.userData != null)
-                  AllNavigationBar(tokenEntity: controller.tokenEntity,
-                      userData: controller.userData!),
-              ],
+                  if (controller.userData != null)
+                    AllNavigationBar(tokenEntity: controller.tokenEntity,
+                        userData: controller.userData!),
+                ],
+              ),
             ),
           );
         }
@@ -169,7 +170,6 @@ class _HomePageState extends State<HomePage> {
       ],
     );
   }
-
 
   Widget honeyOption(HomeController controller) {
     return Obx(() {

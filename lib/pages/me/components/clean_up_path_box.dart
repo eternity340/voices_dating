@@ -1,3 +1,4 @@
+import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -24,7 +25,7 @@ class CleanUpPathBox extends StatefulWidget {
 
 class _CleanUpPathBoxState extends State<CleanUpPathBox> {
   bool _isLoading = false;
-  String _cacheSize = "计算中...";
+  String _cacheSize = "...";
 
   @override
   void initState() {
@@ -50,7 +51,8 @@ class _CleanUpPathBoxState extends State<CleanUpPathBox> {
         }
       }
     } catch (e) {
-      print('Error while getting directory size: $e');
+      LogUtil.e('Error while getting directory size: $e');
+      Get.snackbar(ConstantData.errorText, e.toString());
     }
     return size;
   }

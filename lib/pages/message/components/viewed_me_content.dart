@@ -42,7 +42,9 @@ class _ViewedMeContentState extends State<ViewedMeContent> {
       return EasyRefresh(
         controller: _refreshController,
         onRefresh: () async {
+          widget.controller.isRefreshing.value = true;
           await widget.controller.getViewedMeUsers();
+          widget.controller.isRefreshing.value = false;
           _refreshController.finishRefresh();
           _refreshController.resetLoadState();
         },
@@ -54,7 +56,7 @@ class _ViewedMeContentState extends State<ViewedMeContent> {
             _refreshController.finishLoad(success: true, noMore: true);
           }
         },
-        child: widget.controller.visitedMeUsers.isEmpty
+        child: widget.controller.visitedMeUsers.isEmpty && !widget.controller.isRefreshing.value
             ? EmptyStateWidget(
           imagePath: ImageRes.emptyViewedMeSvg,
           message: ConstantData.onOneViewedMeText,
@@ -76,7 +78,6 @@ class _ViewedMeContentState extends State<ViewedMeContent> {
       );
     });
   }
-
 
   Widget _buildUserItem(ListUserEntity user) {
     return GestureDetector(

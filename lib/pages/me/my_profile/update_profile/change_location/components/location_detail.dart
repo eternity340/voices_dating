@@ -35,6 +35,8 @@ class _LocationDetailPageState extends State<LocationDetail> {
   List<CityEntity> cities = [];
   bool isButtonEnabled = false;
   bool isCityLoading = false;
+  bool isStateLoading = false;
+  List<String> states = [];
 
   @override
   void initState() {
@@ -115,8 +117,15 @@ class _LocationDetailPageState extends State<LocationDetail> {
 
   Widget _buildLocationBox(String text, String iconPath, String type) {
     bool isEnabled = type == ConstantData.countryText ||
-        (type == ConstantData.stateText && selectedCountry != ConstantData.selectedCountry) ||
-        (type == ConstantData.cityText && selectedState != ConstantData.selectedState && !isCityLoading);
+        (type == ConstantData.stateText &&
+            selectedCountry != ConstantData.selectedCountry &&
+            !isStateLoading &&
+            states.isNotEmpty) ||
+        (type == ConstantData.cityText &&
+            selectedState != ConstantData.selectedState &&
+            selectedState.isNotEmpty &&
+            !isCityLoading &&
+            cities.isNotEmpty);
 
     return GestureDetector(
       onTap: isEnabled ? () => _showLocationSelection(context, type) : null,
@@ -141,7 +150,8 @@ class _LocationDetailPageState extends State<LocationDetail> {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                if (type == ConstantData.cityText && isCityLoading)
+                if ((type == ConstantData.stateText && isStateLoading) ||
+                    (type == ConstantData.cityText && isCityLoading))
                   SizedBox(
                     width: 20.w,
                     height: 20.h,
@@ -149,12 +159,14 @@ class _LocationDetailPageState extends State<LocationDetail> {
                       strokeWidth: 2.w,
                     ),
                   )
-                else
+                else if (isEnabled)
                   Image.asset(
                     iconPath,
                     width: 10.w,
                     height: 12.h,
-                  ),
+                  )
+                else
+                  SizedBox(width: 10.w, height: 12.h), // 占位
               ],
             ),
           ),
@@ -164,8 +176,18 @@ class _LocationDetailPageState extends State<LocationDetail> {
   }
 
 
+
   void _showLocationSelection(BuildContext context, String type) async {
     final items = await _getItemsByType(type);
+
+    if (items.isEmpty) {
+      Get.snackbar(
+        'No Items Available',
+        'Please select a ${type == ConstantData.stateText ? 'country' : 'state'} first.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return;
+    }
 
     Get.bottomSheet(
       LocationSelectionBottomSheet(
@@ -178,6 +200,7 @@ class _LocationDetailPageState extends State<LocationDetail> {
               selectedState = ConstantData.selectedState;
               selectedCity = ConstantData.selectedCity;
               isButtonEnabled = true;
+              _getStates(selectedCountry);
             } else if (type == ConstantData.stateText) {
               selectedState = selectedItem;
               selectedCity = ConstantData.selectedCity;
@@ -194,6 +217,31 @@ class _LocationDetailPageState extends State<LocationDetail> {
       ),
       backgroundColor: Colors.transparent,
     );
+  }
+
+ /* Future<List<String>> _getItemsByType(String type) async {
+    if (type == ConstantData.countryText) {
+      return (await LocationDataDB.db.getCountries).map((country) => country.couName!).toList();
+    } else if (type == ConstantData.stateText) {
+      return states;
+    } else if (type == ConstantData.cityText) {
+      return cities.map((city) => city.cityName!).toList();
+    }
+    return [];
+  }*/
+
+  void _getStates(String countryName) async {
+    setState(() {
+      isStateLoading = true;
+      states = [];
+    });
+    int countryId = await LocationDataDB.db.getCountryIdByName(countryName) ?? -1;
+    if (countryId != -1) {
+      states = (await LocationDataDB.db.getStatesListById(countryId)).map((state) => state.sttName!).toList();
+    }
+    setState(() {
+      isStateLoading = false;
+    });
   }
 
   Future<List<String>> _getItemsByType(String type) async {
@@ -215,16 +263,18 @@ class _LocationDetailPageState extends State<LocationDetail> {
   void _getStateId(String stateName) async {
     setState(() {
       isCityLoading = true;
+      selectedCity = ConstantData.selectedCity; // 重置城市选择
     });
     selectedStateId = await LocationDataDB.db.getStateIdByName(stateName);
     if (selectedStateId != null) {
       await _fetchCities(selectedStateId!);
+    } else {
+      setState(() {
+        isCityLoading = false;
+        cities = []; // 清空城市列表
+      });
     }
-    setState(() {
-      isCityLoading = false;
-    });
   }
-
 
   Future<void> _fetchCities(int stateId) async {
     await DioClient.instance.requestNetwork<List<CityEntity>>(
@@ -233,17 +283,20 @@ class _LocationDetailPageState extends State<LocationDetail> {
       queryParameters: {'stateId': stateId},
       options: Options(headers: {'token': tokenEntity.accessToken}),
       onSuccess: (data) {
-        if (data != null) {
-          setState(() {
-            cities = data;
-            isCityLoading = false;
-          });
-        }
+        setState(() {
+          cities = data ?? [];
+          isCityLoading = false;
+          if (cities.isEmpty) {
+            selectedCity = ConstantData.selectedCity; // 如果城市列表为空，重置城市选择
+          }
+        });
       },
       onError: (code, msg, data) {
         LogUtil.e(msg);
         setState(() {
           isCityLoading = false;
+          cities = []; // 发生错误时清空城市列表
+          selectedCity = ConstantData.selectedCity; // 重置城市选择
         });
       },
     );
@@ -251,25 +304,23 @@ class _LocationDetailPageState extends State<LocationDetail> {
 
 
   void updateProfile() async {
-    int? countryId = await LocationDataDB.db.getCountryIdByName(selectedCountry);
-    int? stateId = await LocationDataDB.db.getStateIdByName(selectedState);
-    String? cityId = cities.firstWhereOrNull((city) => city.cityName == selectedCity)?.cityId?.toString();
+    int countryId = await LocationDataDB.db.getCountryIdByName(selectedCountry) ?? 0;
+    int stateId = 0;
+    int cityId = 0;
 
-    if (countryId == null) {
-      Get.snackbar(ConstantData.errorText, ConstantData.invalidLocation);
-      return;
+    if (selectedState.isNotEmpty && selectedState != ConstantData.selectedState) {
+      stateId = await LocationDataDB.db.getStateIdByName(selectedState) ?? 0;
+    }
+
+    if (selectedCity.isNotEmpty && selectedCity != ConstantData.selectedCity) {
+      cityId = int.tryParse(cities.firstWhereOrNull((city) => city.cityName == selectedCity)?.cityId ?? '') ?? 0;
     }
 
     Map<String, dynamic> updateParams = {
       'user[countryId]': countryId,
+      'user[stateId]': stateId,
+      'user[cityId]': cityId,
     };
-
-    if (stateId != null) {
-      updateParams['user[stateId]'] = stateId;
-    }
-    if (cityId != null && cityId.isNotEmpty) {
-      updateParams['user[cityId]'] = cityId;
-    }
 
     await DioClient.instance.requestNetwork<void>(
       method: Method.post,
@@ -277,9 +328,10 @@ class _LocationDetailPageState extends State<LocationDetail> {
       queryParameters: updateParams,
       options: Options(headers: {'token': tokenEntity.accessToken}),
       onSuccess: (data) async {
-        await globalService.refreshUserData(tokenEntity.accessToken.toString());
+        await globalService.refreshUserData();
+        UserDataEntity? updatedUserData = globalService.userDataEntity.value;
         Get.offNamed(AppRoutes.meMyProfile, arguments: {
-          'userDataEntity': globalService.userDataEntity.value,
+          'userDataEntity': updatedUserData,
           'tokenEntity': tokenEntity,
         });
       },
@@ -288,5 +340,6 @@ class _LocationDetailPageState extends State<LocationDetail> {
       },
     );
   }
+
 }
 

@@ -6,6 +6,7 @@ import '../../../components/custom_content_dialog.dart';
 import '../../../entity/list_user_entity.dart';
 import '../../../entity/token_entity.dart';
 import '../../../net/dio.client.dart';
+import '../../../utils/event_bus.dart';
 
 class GameController extends GetxController {
   final TokenEntity tokenEntity = Get.arguments?['tokenEntity'] as TokenEntity;
@@ -20,6 +21,9 @@ class GameController extends GetxController {
   void onInit() {
     super.onInit();
     fetchData(isInitial: true);
+    EventBus().onUserReported.listen((userId) {
+      removeUser(userId);
+    });
   }
 
   Future<void> fetchData({bool isLoadMore = false, bool isInitial = false}) async {
@@ -54,11 +58,9 @@ class GameController extends GetxController {
             }
 
             // 修改hasMore的判断逻辑
-            hasMore.value = data.length >= 20; // 使用原始数据长度判断，而不是过滤后的数据
+            hasMore.value = data.isNotEmpty; // 只有当返回的数据为空时，才认为没有更多数据
 
-            if (hasMore.value) {
-              currentPage++; // 只有在还有更多数据时才增加页码
-            }
+            currentPage++; // 每次成功加载后都增加页码
           }
 
           if (userList.isEmpty && !isLoadMore) {
@@ -106,6 +108,11 @@ class GameController extends GetxController {
     if (hasMore.value) {
       await fetchData(isLoadMore: true);
     }
+  }
+
+  void removeUser(String userId) {
+    userList.removeWhere((user) => user.userId == userId);
+    update(); // 通知 UI 更新
   }
 }
 

@@ -158,11 +158,10 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
           LogUtil.e(message: 'Failed to get user data: $message');
         },
       );
-
       return userDataEntity.value;
     }
 
-    Future<void> refreshUserData(String accessToken) async {
+    Future<void> refreshUserData() async {
       await getUserData();
     }
 

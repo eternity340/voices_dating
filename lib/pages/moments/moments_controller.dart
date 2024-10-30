@@ -6,6 +6,7 @@ import '../../../entity/moment_entity.dart';
 import '../../../entity/user_data_entity.dart';
 import '../../../net/api_constants.dart';
 import '../../../net/dio.client.dart';
+import '../../utils/event_bus.dart';
 
 class MomentsController extends GetxController {
   late TokenEntity tokenEntity;
@@ -25,6 +26,9 @@ class MomentsController extends GetxController {
     userDataEntity = Get.arguments['userDataEntity'] as UserDataEntity;
     easyRefreshController = EasyRefreshController();
     fetchMoments();
+    EventBus().onUserReported.listen((userId) {
+      removeUser(userId);
+    });
   }
 
   Future<void> fetchMoments({bool isRefresh = false}) async {
@@ -82,6 +86,11 @@ class MomentsController extends GetxController {
   Future<void> refreshMoments() async {
     await fetchMoments(isRefresh: true);
     easyRefreshController.finishRefresh();
+  }
+
+  void removeUser(String userId) {
+    moments.removeWhere((moment) => moment.userId == userId);
+    update(); // 通知 UI 更新
   }
 
   @override

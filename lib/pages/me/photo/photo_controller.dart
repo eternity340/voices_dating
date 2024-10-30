@@ -31,7 +31,7 @@ class PhotoController extends GetxController {
   }
 
   Future<void> fetchUserData() async {
-    await globalService.refreshUserData(tokenEntity.accessToken.toString());
+    await globalService.refreshUserData();
     userData = globalService.userDataEntity.value!;
     update();
   }

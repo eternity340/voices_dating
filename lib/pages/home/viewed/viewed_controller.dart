@@ -7,9 +7,10 @@ import '../../../entity/moment_entity.dart';
 import '../../../entity/user_data_entity.dart';
 import '../../../net/api_constants.dart';
 import '../../../net/dio.client.dart';
+import '../../../utils/event_bus.dart';
 import '../../../utils/replace_word_util.dart';
 
-class GetUpController extends GetxController {
+class ViewedController extends GetxController {
   late TokenEntity tokenEntity;
   late UserDataEntity userDataEntity;
   var moments = <MomentEntity>[].obs;
@@ -26,6 +27,9 @@ class GetUpController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    EventBus().onUserReported.listen((userId) {
+      removeBlockedUserMoments(userId);
+    });
     tokenEntity = Get.arguments['token'] as TokenEntity;
     userDataEntity = Get.arguments['userData'] as UserDataEntity;
     easyRefreshController = EasyRefreshController();
@@ -161,5 +165,10 @@ class GetUpController extends GetxController {
       easyRefreshController.finishRefresh();
       isRefreshing.value = false;
     }
+  }
+
+  void removeBlockedUserMoments(String userId) {
+    moments.removeWhere((moment) => moment.userId == userId);
+    update(); // 通知 UI 更新
   }
 }

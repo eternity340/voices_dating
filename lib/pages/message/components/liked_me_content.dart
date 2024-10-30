@@ -41,7 +41,9 @@ class _LikedMeContentState extends State<LikedMeContent> {
       return EasyRefresh(
         controller: _refreshController,
         onRefresh: () async {
+          widget.controller.isRefreshing.value = true;
           await widget.controller.getLikedMeUsers();
+          widget.controller.isRefreshing.value = false;
           _refreshController.finishRefresh();
           _refreshController.resetLoadState();
         },
@@ -53,7 +55,7 @@ class _LikedMeContentState extends State<LikedMeContent> {
             _refreshController.finishLoad(success: true, noMore: true);
           }
         },
-        child: widget.controller.likedMeUsers.isEmpty
+        child: widget.controller.likedMeUsers.isEmpty && !widget.controller.isRefreshing.value
             ? EmptyStateWidget(
           imagePath: ImageRes.emptyLikeMeContentSvg,
           message: ConstantData.noOneLikedMeText,

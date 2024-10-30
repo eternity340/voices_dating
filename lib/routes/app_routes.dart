@@ -1,12 +1,11 @@
 import 'package:voices_dating/pages/home/filters/filters_page.dart';
 import 'package:voices_dating/pages/home/feel/feel_page.dart';
 import 'package:voices_dating/pages/home/game/game_page.dart';
-import 'package:voices_dating/pages/home/get_up/get_up_page.dart';
 import 'package:voices_dating/pages/home/gossip/gossip_page.dart';
 import 'package:voices_dating/pages/home/profile_detail/profile_detail_page.dart';
-import 'package:voices_dating/pages/home/user_profile/user_moments/user_moments_page.dart';
-import 'package:voices_dating/pages/home/user_profile/user_profile_page.dart';
-import 'package:voices_dating/pages/home/user_profile/user_report/user_report_page.dart';
+import 'package:voices_dating/pages/message/user_profile/user_moments/user_moments_page.dart';
+import 'package:voices_dating/pages/message/user_profile/user_profile_page.dart';
+import 'package:voices_dating/pages/message/user_profile/user_report/user_report_page.dart';
 import 'package:voices_dating/pages/me/host/host_page.dart';
 import 'package:voices_dating/pages/me/my_profile/update_profile/add_tags/add_tags_page.dart';
 import 'package:voices_dating/pages/me/my_profile/update_profile/change_username/change_username.dart';
@@ -26,7 +25,7 @@ import 'package:voices_dating/pages/pre_login/account_suspended/account_suspende
 import 'package:voices_dating/pages/pre_login/account_suspended/pre_feedback/pre_feedback_page.dart';
 import 'package:voices_dating/pages/pre_login/welcome/privacy_policy.dart';
 import 'package:voices_dating/pages/pre_login/welcome/service_agreement.dart';
-import 'package:voices_dating/pages/voice/voice_page.dart';
+import 'package:voices_dating/pages/voice/voice_room_page.dart';
 import 'package:get/get.dart' as getx;
 import '../components/image_viewer_page.dart';
 import '../pages/email/page/get_email_code_page.dart';
@@ -36,6 +35,7 @@ import '../pages/home/filters/filters_search/filters_search_page.dart';
 import '../pages/home/home_page.dart';
 import '../pages/home/profile_detail/profile_moments/profile_moments_page.dart';
 import '../pages/home/profile_detail/report/report_page.dart';
+import '../pages/home/viewed/viewed_page.dart';
 import '../pages/me/me_page.dart';
 import '../pages/me/my_profile/update_profile/change_age/change_age.dart';
 import '../pages/me/my_profile/update_profile/change_headline/change_headline.dart';
@@ -82,7 +82,8 @@ class AppRoutes {
   static const String profileMoments = '/profile_moments';
   static const String report = '/report';
   static const String feel = '/feel';
-  static const String getUp = '/get_up';
+  //static const String getUp = '/get_up';
+  static const String viewed = '/viewed';
   static const String game = '/game';
   static const String gossip = '/gossip';
   static const String filters = '/filters';
@@ -90,7 +91,7 @@ class AppRoutes {
   static const String moments = '/moments';
   static const String momentsDetail = '/moments_detail';
   static const String addMoment = '/add_moment';
-  static const String voice = '/voice';
+  static const String voiceRoom = '/voice_room';
   static const String message = '/message';
   static const String privateChat = '/private_chat';
   static const String userProfile = '/user_profile';
@@ -127,7 +128,8 @@ class AppRoutes {
   static const String homeProfileMoments = '$homeProfileDetail$profileMoments';
   static const String homeReport = '$homeProfileDetail$report';
   static const String homeFeel = '$home$feel';
-  static const String homeGetUp = '$home$getUp';
+  //static const String homeGetUp = '$home$getUp';
+  static const String homeViewed = '$home$viewed';
   static const String homeGame = '$home$game';
   static const String homeGossip = '$home$gossip';
   static const String homeFilters = '$home$filters';
@@ -339,8 +341,8 @@ class AppRoutes {
         ),
 
         getx.GetPage(
-          name: getUp,
-          page: () => GetUpPage(),
+          name: viewed,
+          page: () => ViewedPage(),
           transition: defaultTransition,
           transitionDuration: defaultDuration,
         ),
@@ -398,8 +400,8 @@ class AppRoutes {
     ),
 
     getx.GetPage(
-      name: voice,
-      page: () => VoicePage(),
+      name: voiceRoom,
+      page: () => VoiceRoomPage(),
       transition: defaultTransition,
       transitionDuration: defaultDuration,
     ),

@@ -14,9 +14,11 @@ import '../../../entity/wink_entity.dart';
 import '../../../net/dio.client.dart';
 import '../../../routes/app_routes.dart';
 import '../../../service/global_service.dart';
+import '../../../utils/event_bus.dart';
 import '../../../utils/shared_preference_util.dart';
 import '../../../components/custom_message_dialog.dart';
 import '../components/wink_selection_bottom_sheet.dart';
+import '../home_controller.dart';
 
 class ProfileDetailController extends GetxController {
   final ListUserEntity userEntity;
@@ -28,7 +30,8 @@ class ProfileDetailController extends GetxController {
   RxBool isLoading = true.obs;
   RxList<WinkEntity> winkTypes = <WinkEntity>[].obs;
 
-  ProfileDetailController({required this.userEntity, required this.tokenEntity});
+  ProfileDetailController(
+      {required this.userEntity, required this.tokenEntity});
 
   @override
   void onInit() {
@@ -49,7 +52,8 @@ class ProfileDetailController extends GetxController {
   }
 
   Future<void> _initUserData() async {
-    final userDataJson = await SharedPreferenceUtil.instance.getValue(key: SharedPresKeys.selfEntity);
+    final userDataJson = await SharedPreferenceUtil.instance.getValue(
+        key: SharedPresKeys.selfEntity);
     if (userDataJson != null) {
       try {
         final Map<String, dynamic> userDataMap = json.decode(userDataJson);
@@ -64,7 +68,8 @@ class ProfileDetailController extends GetxController {
 
   Future<void> _fetchLanguageLabel() async {
     try {
-      List<OptionEntity> languageOptions = await globalService.getLanguageOptions();
+      List<OptionEntity> languageOptions = await globalService
+          .getLanguageOptions();
       String? userLanguage = userEntity.language;
       if (userLanguage != null) {
         OptionEntity? matchingOption = languageOptions.firstWhereOrNull(
@@ -106,9 +111,9 @@ class ProfileDetailController extends GetxController {
         }
       },
       onError: (code, msg, data) {
-        if(code == 30004019){
+        if (code == 30004019) {
           Get.snackbar(ConstantData.sorryText, msg);
-        }else{
+        } else {
           Get.snackbar(ConstantData.errorText, msg);
         }
       },
@@ -158,7 +163,9 @@ class ProfileDetailController extends GetxController {
       options: Options(headers: {'token': tokenEntity.accessToken}),
       onSuccess: (data) {
         if (data != null && data.ret) {
+          EventBus().reportUser(userEntity.userId!);
           Get.back();
+          Get.back(); // 返回到 Home 页面
           Get.snackbar(ConstantData.successText, ConstantData.userHasBlocked);
         } else {
           Get.snackbar(ConstantData.failedText, ConstantData.failedBlocked);
@@ -169,4 +176,5 @@ class ProfileDetailController extends GetxController {
       },
     );
   }
+
 }

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:voices_dating/entity/ret_entity.dart';
 import 'package:voices_dating/entity/user_data_entity.dart';
 import 'package:voices_dating/net/api_constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,7 +11,9 @@ import '../../../../entity/token_entity.dart';
 import '../../../../net/dio.client.dart';
 import 'package:dio/dio.dart' as dio;
 import '../../../../service/global_service.dart';
+import '../../../../utils/event_bus.dart';
 import '../../../../utils/log_util.dart';
+import '../../../home/feel/feel_controller.dart';
 
 class UserReportController extends GetxController {
   final TokenEntity tokenEntity;
@@ -71,9 +74,8 @@ class UserReportController extends GetxController {
       default:
         return;
     }
-
     try {
-      final response = await dioClient.requestNetwork<Map<String, dynamic>>(
+      final response = await dioClient.requestNetwork<RetEntity>(
         method: Method.post,
         url: ApiConstants.blockUser,
         options: dio.Options(headers: {'token': tokenEntity.accessToken}),
@@ -84,8 +86,11 @@ class UserReportController extends GetxController {
           if (isOtherSelected) 'content': textEditingController.text,
         },
         onSuccess: (data) {
-          if (data != null && data['code'] == 200) {
+          if(data?.ret == true){
+            EventBus().reportUser(userDataEntity.userId!);
             Get.back();
+            Get.back();
+            Get.snackbar(ConstantData.successText, 'User reported successfully');
           }
         },
         onError: (code, msg, data) {

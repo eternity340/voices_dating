@@ -6,6 +6,7 @@ import '../../../components/custom_content_dialog.dart';
 import '../../../entity/list_user_entity.dart';
 import '../../../entity/token_entity.dart';
 import '../../../net/dio.client.dart';
+import '../../../utils/event_bus.dart';
 
 class FeelController extends GetxController {
   final TokenEntity tokenEntity = Get.arguments?['tokenEntity'] as TokenEntity;
@@ -20,6 +21,9 @@ class FeelController extends GetxController {
   void onInit() {
     super.onInit();
     fetchData();
+    EventBus().onUserReported.listen((userId) {
+      removeUser(userId);
+    });
   }
 
   Future<void> fetchData({bool isLoadMore = false}) async {
@@ -99,5 +103,10 @@ class FeelController extends GetxController {
       currentPage.value++;
       await fetchData(isLoadMore: true);
     }
+  }
+
+  void removeUser(String userId) {
+    userList.removeWhere((user) => user.userId == userId);
+    update();
   }
 }

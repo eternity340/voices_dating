@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class VerificationBoxCursor extends StatefulWidget {
@@ -7,7 +6,7 @@ class VerificationBoxCursor extends StatefulWidget {
   final double indent;
   final double endIndent;
 
-  VerificationBoxCursor({
+   VerificationBoxCursor({super.key,
     required this.color,
     this.width = 2,
     this.indent = 10,

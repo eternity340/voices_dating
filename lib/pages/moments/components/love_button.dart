@@ -147,7 +147,7 @@ class _LoveButtonState extends State<LoveButton> with SingleTickerProviderStateM
           height: 40.h,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14.r),
-            color: Color(0xFFF8F8F9),
+            color: Colors.transparent,
           ),
           child: Center(
             child: Image.asset(

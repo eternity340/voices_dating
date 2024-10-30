@@ -93,7 +93,7 @@ class ChangeLocationController extends GetxController {
       },
       options: Options(headers: {'token': tokenEntity.accessToken}),
       onSuccess: (data) async {
-        await globalService.refreshUserData(tokenEntity.accessToken.toString());
+        await globalService.refreshUserData();
         Get.offNamed(AppRoutes.meMyProfileChangeLocation, arguments: {
           'userDataEntity': globalService.userDataEntity.value,
           'tokenEntity': tokenEntity,

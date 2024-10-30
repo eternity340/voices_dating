@@ -77,7 +77,7 @@ class RecordController extends GetxController {
 
   Future<void> saveRecording() async {
     if (recordFilePath != null) {
-      await globalService.refreshUserData(tokenEntity.accessToken.toString());
+      await globalService.refreshUserData();
       UserDataEntity updatedUserData = globalService.userDataEntity.value!;
 
       Get.delete<UploadVoiceController>();

@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../entity/list_user_entity.dart';
 import '../../../components/image_viewer_page.dart';
+import '../../../image_res/image_res.dart';
 
 class ProfilePhotoWall extends StatefulWidget {
   final ListUserEntity userEntity;
@@ -44,7 +46,9 @@ class _PhotoWallState extends State<ProfilePhotoWall> {
 
   @override
   Widget build(BuildContext context) {
-    int photoCount = (widget.userEntity.photos?.length ?? 0).clamp(0, 9);
+    int photoCount = max(1, (widget.userEntity.photos?.length ?? 0).clamp(0, 9));
+
+
     List<String> photoUrls = widget.userEntity.photos
         ?.map((photo) => photo.url ?? '')
         .where((url) => url.isNotEmpty)
@@ -62,42 +66,66 @@ class _PhotoWallState extends State<ProfilePhotoWall> {
                 _currentPage = index % photoCount;
               });
             },
-            itemBuilder: (context, index) {
-              final actualIndex = index % photoCount;
-              String? photoUrl = widget.userEntity.photos?[actualIndex].url;
-              return GestureDetector(
-                onTap: () {
-                  Get.to(() => ImageViewerPage(
-                    imageUrls: photoUrls,
-                    initialIndex: actualIndex,
-                  ));
-                },
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: Container(
-                    width: 337.w,
-                    height: 322.h,
-                    margin: EdgeInsets.symmetric(horizontal: 8.w),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(24.r),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(24.r),
-                      child: photoUrl != null
-                          ? Image.network(
-                        photoUrl,
+        itemBuilder: (context, index) {
+          final actualIndex = index % photoCount;
+          String? photoUrl = widget.userEntity.photos?.isNotEmpty == true
+              ? widget.userEntity.photos![actualIndex].url
+              : null;
+          return GestureDetector(
+            onTap: () {
+              if (photoUrls.isNotEmpty) {
+                Get.to(() => ImageViewerPage(
+                  imageUrls: photoUrls,
+                  initialIndex: actualIndex,
+                ));
+              }
+            },
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                width: 337.w,
+                height: 322.h,
+                margin: EdgeInsets.symmetric(horizontal: 8.w),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(24.r),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(24.r),
+                  child: photoUrl != null && photoUrl.isNotEmpty
+                      ? Image.network(
+                    photoUrl,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: double.infinity,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Image.asset(
+                        ImageRes.placeholderAvatar,
                         fit: BoxFit.cover,
                         width: double.infinity,
                         height: double.infinity,
-                      )
-                          : Container(
-                        color: Colors.grey,
-                      ),
-                    ),
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.asset(
+                        ImageRes.placeholderAvatar,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity,
+                      );
+                    },
+                  )
+                      : Image.asset(
+                    ImageRes.placeholderAvatar,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: double.infinity,
                   ),
                 ),
-              );
-            },
+              ),
+            ),
+          );
+        },
           ),
           Positioned(
             top: 10.h,

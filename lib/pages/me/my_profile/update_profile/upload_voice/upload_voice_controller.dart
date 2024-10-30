@@ -105,7 +105,7 @@ class UploadVoiceController extends GetxController {
         },
         onSuccess: (data) async {
           if (data != null) {
-            await globalService.refreshUserData(tokenEntity.accessToken.toString());
+            await globalService.refreshUserData();
             userData = globalService.userDataEntity.value!;
 
             // 删除本地录音文件并清除 recordFilePath
@@ -158,7 +158,7 @@ class UploadVoiceController extends GetxController {
         },
         onSuccess: (data) async {
           if (data!.ret == true) {
-            await globalService.refreshUserData(tokenEntity.accessToken.toString());
+            await globalService.refreshUserData();
             userData = globalService.userDataEntity.value!;
             audioList.clear();
             _initAudioList();

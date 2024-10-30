@@ -1,6 +1,6 @@
-import 'package:voices_dating/pages/home/user_profile/components/user_profile_card.dart';
-import 'package:voices_dating/pages/home/user_profile/components/user_profile_photo_wall.dart';
-import 'package:voices_dating/pages/home/user_profile/user_profile_controller.dart';
+import 'package:voices_dating/pages/message/user_profile/components/user_profile_card.dart';
+import 'package:voices_dating/pages/message/user_profile/components/user_profile_photo_wall.dart';
+import 'package:voices_dating/pages/message/user_profile/user_profile_controller.dart';
 import 'package:voices_dating/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

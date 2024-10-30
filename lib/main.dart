@@ -11,7 +11,7 @@ import 'package:voices_dating/pages/home/home_page.dart';
 import 'package:voices_dating/pages/me/me_page.dart';
 import 'package:voices_dating/pages/message/message_page.dart';
 import 'package:voices_dating/pages/moments/moments_page.dart';
-import 'package:voices_dating/pages/voice/voice_page.dart';
+import 'package:voices_dating/pages/voice/voice_room_page.dart';
 import 'package:voices_dating/routes/app_routes.dart';
 import 'package:voices_dating/service/app_service.dart';
 import 'package:voices_dating/service/global_service.dart';
@@ -119,7 +119,7 @@ class MyApp extends StatelessWidget {
       case '/moments':
         return MomentsPage();
       case '/voice':
-        return VoicePage();
+        return VoiceRoomPage();
       case '/message':
         return MessagePage();
       case '/me':

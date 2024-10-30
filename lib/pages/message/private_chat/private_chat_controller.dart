@@ -24,10 +24,11 @@ import '../../../routes/app_routes.dart';
 import '../../../service/audio_service.dart';
 import '../../../service/global_service.dart';
 import '../../../service/im_service.dart';
+import '../../../utils/event_bus.dart';
 import '../../../utils/log_util.dart';
 import '../../../components/photo_dialog.dart';
 import '../../../utils/shared_preference_util.dart';
-import '../../home/user_profile/user_profile_page.dart';
+import '../user_profile/user_profile_page.dart';
 
 class PrivateChatController extends GetxController {
   final TokenEntity tokenEntity = Get.arguments['tokenEntity'] as TokenEntity;
@@ -372,6 +373,7 @@ class PrivateChatController extends GetxController {
       options: Options(headers: {'token': tokenEntity.accessToken}),
       onSuccess: (data) {
         if (data != null && data.ret) {
+          EventBus().reportUser(chattedUser.userId!);
           Get.back();
           Get.snackbar(ConstantData.successText, ConstantData.userHasBlocked);
         } else {

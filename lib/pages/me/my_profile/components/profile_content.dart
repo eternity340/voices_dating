@@ -61,11 +61,7 @@ class ProfileContent extends StatelessWidget {
             _buildInfoSection(
               context,
               title: ConstantData.locationTitle,
-              value: userData.location != null &&
-                  userData.location!.city != null &&
-                  userData.location!.country != null
-                  ? '${userData.location!.city}, ${userData.location!.country}'
-                  : '',
+              value: getFormattedLocation(),
               onTap: () {
                 Get.toNamed(AppRoutes.meMyProfileChangeLocation,
                     arguments: {'tokenEntity': tokenEntity, 'userDataEntity': userData});
@@ -153,4 +149,19 @@ class ProfileContent extends StatelessWidget {
       ],
     );
   }
+
+  String getFormattedLocation() {
+    List<String> locationParts = [];
+    if (userData.location?.city?.isNotEmpty == true) {
+      locationParts.add(userData.location!.city!);
+    }
+    if (userData.location?.state?.isNotEmpty == true) {
+      locationParts.add(userData.location!.state!);
+    }
+    if (userData.location?.country?.isNotEmpty == true) {
+      locationParts.add(userData.location!.country!);
+    }
+    return locationParts.join(', ');
+  }
+
 }

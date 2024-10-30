@@ -1,13 +1,7 @@
-import 'dart:ffi';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:intl/intl.dart';
-import 'package:get/get.dart';
-import 'package:voices_dating/net/api_constants.dart';
-import '../../../constants/constant_data.dart';
 import '../../../constants/constant_styles.dart';
 import '../../../entity/chatted_user_entity.dart';
 import '../../../image_res/image_res.dart';
@@ -72,16 +66,31 @@ class MessageContent extends StatelessWidget {
                         height: 100.h,
                         padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
                         child: Stack(
-                      children: [
-                        Positioned(
-                          left: 19.w,
-                          top: 16.h,
-                          child: CircleAvatar(
-                            radius: 31.w,
-                            backgroundImage: NetworkImage(user.avatar.toString()),
-                          ),
-                        ),
-                        if (user.newNumber != null && user.newNumber != '0')
+                          children: [
+                            Positioned(
+                              left: 19.w,
+                              top: 16.h,
+                              child: CircleAvatar(
+                                radius: 31.w,
+                                backgroundColor: Colors.transparent,
+                                child: ClipOval(
+                                  child: user.username == 'Support'
+                                      ? Image.asset(
+                                    ImageRes.iconVoicesDatingLogo,
+                                    width: 62.w,
+                                    height: 62.w,
+                                    fit: BoxFit.cover,
+                                  )
+                                      : Image.network(
+                                    user.avatar.toString(),
+                                    width: 62.w,
+                                    height: 62.w,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            if (user.newNumber != null && user.newNumber != '0')
                           Positioned(
                             left: 65.w,
                             bottom: 8.h,

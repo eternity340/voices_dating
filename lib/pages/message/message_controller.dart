@@ -16,6 +16,7 @@ import '../../../utils/log_util.dart';
 import '../../net/api_constants.dart';
 import '../../service/global_service.dart';
 import '../../service/im_service.dart';
+import '../../utils/event_bus.dart';
 import '../../utils/replace_word_util.dart';
 
 class MessageController extends GetxController {
@@ -29,7 +30,7 @@ class MessageController extends GetxController {
   final RxList<ListUserEntity> likedMeUsers = <ListUserEntity>[].obs;
   final ReplaceWordUtil replaceWordUtil = ReplaceWordUtil.getInstance();
   final DioClient dioClient = DioClient.instance;
-
+  final RxBool isRefreshing = false.obs;
   int chatPage = 1;
   final int chatOffset = 10;
 
@@ -46,10 +47,15 @@ class MessageController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    EventBus().onUserReported.listen((userId) {
+      removeUser(userId);
+    });
+    fetchChattedUsers();
     fetchChattedUsers();
     getViewedMeUsers();
     getLikedMeUsers();
     connectWebSocket();
+
   }
 
   void connectWebSocket() {
@@ -344,5 +350,12 @@ class MessageController extends GetxController {
     IMService.instance.removeMessageCallBack(_handleWebSocketMessage);
     //IMService.instance.disconnect();
     super.onClose();
+  }
+
+  void removeUser(String userId) {
+    chattedUsers.removeWhere((user) => user.userId == userId);
+    visitedMeUsers.removeWhere((user) =>user.userId == userId);
+    likedMeUsers.removeWhere((user) =>user.userId == userId);
+    update();
   }
 }

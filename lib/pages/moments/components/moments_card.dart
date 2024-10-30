@@ -207,8 +207,6 @@ class MomentsCard extends StatelessWidget {
     );
   }
 
-
-
   Widget _buildAudioAttachment(AttachmentEntity attachment) {
     return Container(
       width: 303.w,

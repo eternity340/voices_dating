@@ -9,6 +9,7 @@ import '../../entity/token_entity.dart';
 import '../../entity/user_data_entity.dart';
 import '../../net/dio.client.dart';
 import '../../service/app_service.dart';
+import '../../utils/event_bus.dart';
 import '../../utils/replace_word_util.dart';
 
 class HomeController extends GetxController {
@@ -28,6 +29,14 @@ class HomeController extends GetxController {
   var isInitialNearbyLoading = true.obs;
 
   UserDataEntity? get userData => AppService.instance.selfUser;
+
+  @override
+  void onInit() {
+    super.onInit();
+    EventBus().onUserReported.listen((userId) {
+      removeUser(userId);
+    });
+  }
 
   HomeController(this.tokenEntity) {
     pageController = PageController(initialPage: 0);
@@ -177,7 +186,7 @@ class HomeController extends GetxController {
 
   void navigateToGetUpPage() {
     if (userData != null) {
-      Get.toNamed(AppRoutes.homeGetUp,
+      Get.toNamed(AppRoutes.homeViewed,
           arguments: {
             'token': tokenEntity,
             'userData': userData});
@@ -205,5 +214,11 @@ class HomeController extends GetxController {
       Get.toNamed(AppRoutes.homeFilters,
           arguments: {'tokenEntity': tokenEntity});
     }
+  }
+
+  void removeUser(String userId) {
+    users.removeWhere((user) => user.userId == userId);
+    nearUsers.removeWhere((user) => user.userId == userId);
+    update(); // 通知 UI 更新
   }
 }

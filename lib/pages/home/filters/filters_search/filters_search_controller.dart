@@ -7,6 +7,7 @@ import '../../../../components/custom_content_dialog.dart';
 import '../../../../entity/list_user_entity.dart';
 import '../../../../entity/token_entity.dart';
 import '../../../../net/dio.client.dart';
+import '../../../../utils/event_bus.dart';
 
 
 class FiltersSearchController extends GetxController {
@@ -24,6 +25,9 @@ class FiltersSearchController extends GetxController {
   void onInit() {
     super.onInit();
     fetchData(isInitial: true);
+    EventBus().onUserReported.listen((userId) {
+      removeUser(userId);
+    });
   }
 
 
@@ -148,5 +152,10 @@ class FiltersSearchController extends GetxController {
         },
       ),
     );
+  }
+
+  void removeUser(String userId) {
+    userList.removeWhere((user) => user.userId == userId);
+    update(); // 通知 UI 更新
   }
 }
