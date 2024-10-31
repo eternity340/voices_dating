@@ -33,6 +33,15 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
   int? selectedStateId;
   List<CityEntity> cities = [];
   bool isCityLoading = false;
+  bool hasStates = false;
+  bool hasCities = false;
+
+  @override
+  void initState() {
+    super.initState();
+    updateHasStates();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -91,8 +100,8 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                     ConstantData.countryText),
                 SizedBox(height: 20.h),
                 _buildLocationBox(
-                    'State: $selectedState'
-                    ,ImageRes.imagePathBackButton,
+                    'State: $selectedState',
+                    ImageRes.imagePathBackButton,
                     ConstantData.stateText),
                 SizedBox(height: 20.h),
                 _buildLocationBox(
@@ -109,8 +118,8 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
 
   Widget _buildLocationBox(String text, String iconPath, String type) {
     bool isEnabled = type == 'country' ||
-        (type == 'state' && selectedCountry != ConstantData.selectedCountry) ||
-        (type == 'city' && selectedState != ConstantData.selectedState && !isCityLoading);
+        (type == 'state' && hasStates) ||
+        (type == 'city' && (hasCities || isCityLoading));
 
     return GestureDetector(
       onTap: isEnabled ? () => _showLocationSelection(context, type) : null,
@@ -179,14 +188,16 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
             Expanded(
               child: ListView.separated(
                 itemCount: items.length,
-                separatorBuilder: (context, index) => Divider(
-                  height: 1.h,
-                  color: Colors.grey[300],
-                ),
+                separatorBuilder: (context, index) =>
+                    Divider(
+                      height: 1.h,
+                      color: Colors.grey[300],
+                    ),
                 itemBuilder: (BuildContext context, int index) {
                   return ListTile(
                     title: Text(
-                      type == 'city' ? cities[index].cityName! : items[index].toString(),
+                      type == 'city' ? cities[index].cityName! : items[index]
+                          .toString(),
                       style: ConstantStyles.locationListStyle,
                     ),
                     onTap: () {
@@ -197,6 +208,8 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
                           selectedCity = ConstantData.selectedCity;
                           selectedCityId = null;
                           cities.clear();
+                          updateHasStates();
+                          updateHasCities();
                         } else if (type == 'state') {
                           selectedState = items[index].toString();
                           selectedCity = ConstantData.selectedCity;
@@ -224,23 +237,52 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
     );
   }
 
+  void updateHasStates() async {
+    if (selectedCountry != ConstantData.selectedCountry) {
+      int countryId = await LocationDataDB.db.getCountryIdByName(
+          selectedCountry) ?? -1;
+      if (countryId != -1) {
+        List<String> states = (await LocationDataDB.db.getStatesListById(
+            countryId)).map((state) => state.sttName!).toList();
+        setState(() {
+          hasStates = states.isNotEmpty;
+        });
+      }
+    } else {
+      setState(() {
+        hasStates = false;
+      });
+    }
+  }
 
+  void updateHasCities() {
+    setState(() {
+      hasCities = cities.isNotEmpty;
+    });
+  }
 
   Future<List<String>> _getItemsByType(String type) async {
     if (type == 'country') {
-      return (await LocationDataDB.db.getCountries).map((country) => country.couName!).toList();
+      return (await LocationDataDB.db.getCountries).map((country) =>
+      country.couName!).toList();
     } else if (type == 'state') {
       if (selectedCountry != ConstantData.selectedCountry) {
-        int countryId = await LocationDataDB.db.getCountryIdByName(selectedCountry) ?? -1;
+        int countryId = await LocationDataDB.db.getCountryIdByName(
+            selectedCountry) ?? -1;
         if (countryId != -1) {
-          return (await LocationDataDB.db.getStatesListById(countryId)).map((state) => state.sttName!).toList();
+          return (await LocationDataDB.db.getStatesListById(countryId)).map((
+              state) => state.sttName!).toList();
         }
       }
     } else if (type == 'city') {
+      setState(() {
+        hasCities = cities.isNotEmpty;
+      });
       return cities.map((city) => city.cityName!).toList();
     }
     return [];
   }
+
 
   void _getStateId(String stateName) async {
     setState(() {
@@ -253,6 +295,7 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
     setState(() {
       isCityLoading = false;
     });
+    updateHasCities();
   }
 
   Future<void> _fetchCities(int stateId) async {
@@ -260,12 +303,14 @@ class _LocationDetailPageState extends State<LocationDetailPage> {
       method: Method.get,
       url: ApiConstants.getCityList,
       queryParameters: {'stateId': stateId},
-      options: Options(headers: {'token':await TokenService.instance.getToken()}),
+      options: Options(
+          headers: {'token': await TokenService.instance.getToken()}),
       onSuccess: (data) {
         if (data != null) {
           setState(() {
             cities = data;
           });
+          updateHasCities();
         }
       },
       onError: (code, msg, data) {

@@ -67,13 +67,14 @@ class _SelectGenderPageState extends State<SelectGenderPage> {
                 SizedBox(height: 180.h),
                 GradientButton(
                   text: ConstantData.continueButtonText,
-                  onPressed: () {
-                    if (selectedGender != null) {
-                      widget.user.gender = selectedGender;
-                      Get.toNamed('/select_location', arguments: widget.user);
-                    }
-                  },
+                  onPressed: selectedGender != null
+                      ? () {
+                    widget.user.gender = selectedGender;
+                    Get.toNamed('/select_location', arguments: widget.user);
+                  }
+                      : null,
                   width: 200.w,
+                  isDisabled: selectedGender == null,
                 ),
               ],
             ),

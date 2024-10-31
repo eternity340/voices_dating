@@ -33,7 +33,6 @@ class ApiConstants{
   static const String privacyPolicyMain = "https://www.sdmapp.co/privacyPolicy";
   static const String termOfUseMain = "https://www.sdmapp.co/serviceAgreement";
 
-
   static const String androidDebugAppId = "fed327531298e7f863cdf2c2ad0903e9";
   static const String androidDebugSecret = "0013ce26-7219-b304-1d18-072c46c0aab2";
 

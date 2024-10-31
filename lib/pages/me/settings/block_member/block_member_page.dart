@@ -18,19 +18,18 @@ class BlockMemberPage extends StatefulWidget {
 
 class _BlockMemberPageState extends State<BlockMemberPage> {
   final BlockMemberController controller = Get.put(BlockMemberController());
-  bool isInitialLoading = true;
+  late EasyRefreshController _easyRefreshController;
 
   @override
   void initState() {
     super.initState();
-    _initialLoad();
+    _easyRefreshController = EasyRefreshController();
   }
 
-  Future<void> _initialLoad() async {
-    await controller.fetchBlockedMembers();
-    setState(() {
-      isInitialLoading = false;
-    });
+  @override
+  void dispose() {
+    _easyRefreshController.dispose();
+    super.dispose();
   }
 
   @override
@@ -53,9 +52,10 @@ class _BlockMemberPageState extends State<BlockMemberPage> {
               width: 335.w,
               height: 680.h,
               decoration: ConstantStyles.blockMemberContainerDecoration,
-              child: isInitialLoading
-                  ? CommonUtils.loadingIndicator()
-                  : Obx(() {
+              child: Obx(() {
+                if (controller.isLoading.value && controller.page.value == 1) {
+                  return CommonUtils.loadingIndicator();
+                }
                 if (controller.blockedMembers.isEmpty) {
                   return EmptyStateWidget(
                     imagePath: ImageRes.emptyUserListSvg,
@@ -66,9 +66,20 @@ class _BlockMemberPageState extends State<BlockMemberPage> {
                   );
                 }
                 return EasyRefresh(
+                  controller: _easyRefreshController,
                   onRefresh: () async {
-                    await controller.fetchBlockedMembers();
+                    await controller.onRefresh();
+                    _easyRefreshController.finishRefresh();
+                    _easyRefreshController.resetLoadState();
                   },
+                  onLoad: controller.hasMore.value
+                      ? () async {
+                    await controller.onLoading();
+                    _easyRefreshController.finishLoad(
+                      noMore: !controller.hasMore.value,
+                    );
+                  }
+                      : null,
                   child: ListView.separated(
                     itemCount: controller.blockedMembers.length,
                     separatorBuilder: (context, index) =>

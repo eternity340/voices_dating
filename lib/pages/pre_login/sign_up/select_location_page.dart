@@ -45,6 +45,10 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
     }
   }
 
+  bool get isCountrySelected {
+    return selectedCountry != null && selectedCountry != ConstantData.selectedCountry;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,13 +73,16 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
                 SizedBox(height: 350.h),
                 GradientButton(
                   text: ConstantData.continueButtonText,
-                  onPressed: () {
+                  onPressed: isCountrySelected
+                      ? () {
                     widget.user.country = selectedCountryId.toString();
-                    widget.user.state = selectedStateId.toString();
-                    widget.user.city = selectedCityId;
+                    widget.user.state = selectedStateId?.toString() ?? "";
+                    widget.user.city = selectedCityId ?? "";
                     Get.toNamed('/select_birthday', arguments: widget.user);
-                  },
+                  }
+                      : null,
                   width: 200.w,
+                  isDisabled: !isCountrySelected,
                 ),
               ],
             ),

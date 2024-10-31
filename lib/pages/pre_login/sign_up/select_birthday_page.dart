@@ -6,7 +6,7 @@ import '../../../components/background.dart';
 import '../../../components/gradient_btn.dart';
 import '../../../entity/User.dart';
 import 'components/widget/picker_components.dart';
-import '../../../constants/constant_data.dart'; // Import constant data
+import '../../../constants/constant_data.dart';
 import '../../../constants/constant_styles.dart';
 
 class SelectBirthdayPage extends StatefulWidget {
@@ -19,7 +19,6 @@ class SelectBirthdayPage extends StatefulWidget {
 }
 
 class _SelectBirthdayPageState extends State<SelectBirthdayPage> {
-
   FixedExtentScrollController _dayController = FixedExtentScrollController();
   FixedExtentScrollController _monthController = FixedExtentScrollController();
   FixedExtentScrollController _yearController = FixedExtentScrollController();
@@ -27,6 +26,7 @@ class _SelectBirthdayPageState extends State<SelectBirthdayPage> {
   int selectedDay = 1;
   int selectedMonth = 1;
   int selectedYear = DateTime.now().year;
+  bool isOver18 = false;
 
   @override
   void initState() {
@@ -34,17 +34,26 @@ class _SelectBirthdayPageState extends State<SelectBirthdayPage> {
     _dayController = FixedExtentScrollController(initialItem: selectedDay - 1);
     _monthController = FixedExtentScrollController(initialItem: selectedMonth - 1);
     _yearController = FixedExtentScrollController(initialItem: DateTime.now().year - selectedYear);
+    _checkAge();
   }
 
+  void _checkAge() {
+    DateTime selectedDate = DateTime(selectedYear, selectedMonth, selectedDay);
+    DateTime today = DateTime.now();
+    Duration difference = today.difference(selectedDate);
+    int age = (difference.inDays / 365).floor();
+    setState(() {
+      isOver18 = age >= 18;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: Background(
         child: Center(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.0.w, vertical: 20.0.h), // Adjust padding
+            padding: EdgeInsets.symmetric(horizontal: 10.0.w, vertical: 20.0.h),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -52,7 +61,7 @@ class _SelectBirthdayPageState extends State<SelectBirthdayPage> {
                 _buildTitle(),
                 SizedBox(height: 20.h),
                 SizedBox(
-                  width: double.infinity, // Ensure the pickers take full width
+                  width: double.infinity,
                   child: buildPickers(
                     context: context,
                     pickerWidth: 100.0.w,
@@ -67,16 +76,19 @@ class _SelectBirthdayPageState extends State<SelectBirthdayPage> {
                     onDayChanged: (index) {
                       setState(() {
                         selectedDay = index + 1;
+                        _checkAge();
                       });
                     },
                     onMonthChanged: (index) {
                       setState(() {
                         selectedMonth = index + 1;
+                        _checkAge();
                       });
                     },
                     onYearChanged: (index) {
                       setState(() {
                         selectedYear = DateTime.now().year - index;
+                        _checkAge();
                       });
                     },
                   ),
@@ -102,12 +114,10 @@ class _SelectBirthdayPageState extends State<SelectBirthdayPage> {
   Widget _buildContinueButton() {
     return GradientButton(
       text: ConstantData.continueButtonText,
-      onPressed: () {
-        // 格式化日期为 "YYYY/MM/DD"
+      onPressed: isOver18 ? () {
         String formattedDate = "${selectedYear.toString().padLeft(4, '0')}/${selectedMonth.toString().padLeft(2, '0')}/${selectedDay.toString().padLeft(2, '0')}";
         widget.user.birthday = formattedDate;
 
-        // 计算年龄
         DateTime selectedDate = DateTime(selectedYear, selectedMonth, selectedDay);
         int age = DateTime.now().year - selectedYear;
         if (DateTime.now().month < selectedMonth ||
@@ -117,11 +127,10 @@ class _SelectBirthdayPageState extends State<SelectBirthdayPage> {
         widget.user.age = age;
 
         Get.toNamed('/select_height', arguments: widget.user);
-      },
+      } : null,
+      isDisabled: !isOver18,
     );
   }
-
-
 
   @override
   void dispose() {
